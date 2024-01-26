@@ -30,6 +30,9 @@ dependencies:
   # Lottie
   lottie: ^3.0.0
 
+  # Font
+  google_fonts: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,3 +50,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/animations/
