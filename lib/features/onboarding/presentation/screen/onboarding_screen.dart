@@ -4,9 +4,14 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/page_view_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  OnboardingScreen({Key? key}) : super(key: key);
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({Key? key}) : super(key: key);
 
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
   final descriptions = const [
     StringConstants.onboardingDescriptionOne,
     StringConstants.onboardingDescriptionTwo,
@@ -21,10 +26,14 @@ class OnboardingScreen extends StatelessWidget {
 
   final _pageController = PageController();
 
-  void nextButtonClick() => _pageController.nextPage(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeIn,
-      );
+  bool _isLastPage = false;
+
+  void nextButtonClick() => !_isLastPage
+      ? _pageController.nextPage(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeIn,
+        )
+      : null;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,9 @@ class OnboardingScreen extends StatelessWidget {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
+                onPageChanged: (index) => setState(
+                  () => _isLastPage = descriptions.length - 1 == index,
+                ),
                 itemCount: descriptions.length,
                 itemBuilder: (context, index) => PageViewItem(
                   description: descriptions[index],
@@ -60,7 +72,7 @@ class OnboardingScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: DefaultFilledButtonFullWidth(
-                StringConstants.next,
+                _isLastPage ? StringConstants.skip : StringConstants.next,
                 () => nextButtonClick(),
               ),
             ),

@@ -3,6 +3,6 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/scr
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart';
 
 final routes = {
-  RouteConstants.root: (context) => OnboardingScreen(),
+  RouteConstants.root: (context) => const OnboardingScreen(),
   RouteConstants.home: (context) => const HomeScreen(),
 };
