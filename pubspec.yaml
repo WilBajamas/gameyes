@@ -19,6 +19,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # Bloc
+  flutter_bloc: ^8.1.1
+
   # Lottie
   lottie: ^3.0.0
 
