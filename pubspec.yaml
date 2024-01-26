@@ -14,6 +14,14 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
+  # intl Localization
+  intl: any
+  flutter_localizations:
+    sdk: flutter
+
+  # Lottie
+  lottie: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
