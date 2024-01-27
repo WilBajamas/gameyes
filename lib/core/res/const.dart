@@ -27,6 +27,9 @@ class StringConstants {
       'Make a savelist of anticipated upcoming games.';
   static const next = 'Next';
   static const skip = 'Skip';
+  static const featured = 'Featured';
+  static const games = 'Games';
+  static const settings = 'Settings';
 }
 
 class RouteConstants {

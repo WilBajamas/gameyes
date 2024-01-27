@@ -32,8 +32,17 @@ ThemeData buildDarkTheme() {
     ),
   );
 
+  final navigationBarTheme = NavigationBarThemeData(
+    labelTextStyle: MaterialStateProperty.all(
+      const TextStyle(fontSize: 14),
+    ),
+    backgroundColor: kDarkColorScheme.primaryContainer,
+    indicatorColor: kDarkColorScheme.onBackground,
+  );
+
   return baseTheme.copyWith(
     filledButtonTheme: filledButtonTheme,
     textTheme: textTheme,
+    navigationBarTheme: navigationBarTheme,
   );
 }
