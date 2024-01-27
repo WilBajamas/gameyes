@@ -27,6 +27,9 @@ dependencies:
   injectable: ^2.1.2
   injectable_generator: ^2.1.6
 
+  # Equate
+  equatable: ^2.0.5
+
   # Lottie
   lottie: ^3.0.0
 

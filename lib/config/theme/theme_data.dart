@@ -34,8 +34,17 @@ ThemeData buildTheme() {
     ),
   );
 
+  final navigationBarTheme = NavigationBarThemeData(
+    labelTextStyle: MaterialStateProperty.all(
+      TextStyle(color: Colors.grey[100], fontSize: 14),
+    ),
+    backgroundColor: kColorScheme.primary,
+    indicatorColor: Colors.grey[100],
+  );
+
   return baseTheme.copyWith(
     filledButtonTheme: filledButtonTheme,
     textTheme: textTheme,
+    navigationBarTheme: navigationBarTheme,
   );
 }
