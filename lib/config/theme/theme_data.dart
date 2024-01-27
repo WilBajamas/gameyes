@@ -20,6 +20,16 @@ ThemeData buildTheme() {
       fontWeight: FontWeight.w600,
       textStyle: baseTheme.textTheme.bodyLarge,
     ),
+    displaySmall: GoogleFonts.openSans(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      textStyle: baseTheme.textTheme.displaySmall,
+    ),
+    displayMedium: GoogleFonts.chakraPetch(
+      fontSize: 20,
+      fontWeight: FontWeight.w800,
+      textStyle: baseTheme.textTheme.displayMedium,
+    ),
   );
 
   final filledButtonTheme = FilledButtonThemeData(

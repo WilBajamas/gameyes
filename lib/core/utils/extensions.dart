@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 extension ContextExtensions on BuildContext {
   ThemeData themeData() => Theme.of(this);
   double get screenHeight => MediaQuery.of(this).size.height;
-  double get screenWidget => MediaQuery.of(this).size.width;
+  double get screenWidth => MediaQuery.of(this).size.width;
 }
 
 extension DateFormatters on String? {

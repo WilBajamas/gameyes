@@ -7,6 +7,8 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/cubit/home_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
+import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
+    as injection;
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => HomeCubit(),
+          create: (context) => injection.getIt<HomeCubit>(),
           child: const HomeScreen(),
         ),
       ],
