@@ -53,6 +53,9 @@ dependencies:
   # Font
   google_fonts: ^6.1.0
 
+  # Envied - Privatise file
+  envied: ^0.5.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,6 +70,9 @@ dev_dependencies:
 
   # Testing
   bloc_test: ^9.1.5
+
+  # Envied generator
+  envied_generator: ^0.5.3
 
 flutter:
   uses-material-design: true

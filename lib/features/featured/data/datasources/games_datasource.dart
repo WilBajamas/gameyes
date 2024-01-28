@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/data/models/error_response.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
@@ -38,14 +37,14 @@ class GamesDataSource {
 
       return Right(GamesResponse.fromJson(response.data));
     } on DioException catch (dioException) {
-      final ErrorResponse? errorResponse = dioException.response?.data;
+      final Map<String, dynamic>? errorResponse = dioException.response?.data;
 
       return Left(
         ErrorType.errorType(
           exception: dioException,
-          message: errorResponse?.message,
-          error: errorResponse?.error,
-          statusCode: errorResponse?.statusCode,
+          message: errorResponse?['message'],
+          error: errorResponse?['error'],
+          statusCode: dioException.response?.statusCode,
         ),
       );
     }

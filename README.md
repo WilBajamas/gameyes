@@ -1,16 +1,8 @@
 # gaming_library_assessment_flutter
 
-A new Flutter project.
+Flutter assessment - Gaming library with RAWG
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To run this, please create a `secret.env` file in the root project.
+Place your api key in the file like this: "API_KEY=<your_api_key>"

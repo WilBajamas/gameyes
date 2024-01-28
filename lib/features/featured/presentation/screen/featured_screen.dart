@@ -40,7 +40,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                 background: Stack(
                   children: [
                     Image.asset(
-                      'assets/images/featured_title_img.jpeg',
+                      '${PathConstants.imagePath}featured_title_img.jpeg',
                       width: context.screenWidth,
                       height: context.screenHeight,
                       fit: BoxFit.cover,
