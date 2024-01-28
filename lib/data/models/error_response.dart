@@ -3,10 +3,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'error_response.g.dart';
 
+//! TODO: Might not be used - remove
 @JsonSerializable()
 class ErrorResponse extends Equatable {
   @JsonKey(name: 'message')
-  final String message;
+  final String? message;
   @JsonKey(name: 'statusCode')
   final int? statusCode;
   @JsonKey(name: 'error')

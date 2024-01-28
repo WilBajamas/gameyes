@@ -17,10 +17,14 @@ enum GameOrdering {
 class ConfigConstants {
   static const baseUrl = 'https://api.rawg.io/api/';
   static const gamesEndpoint = 'games';
+  static const apiKey = 'API_KEY';
+  static const enviedFilePath =
+      '../gaming_library_assessment_flutter/secret.env';
 }
 
 class PathConstants {
   static const lottieAnimationAssetPath = 'assets/animations/';
+  static const imagePath = 'assets/images/';
 }
 
 class AssetConstants {

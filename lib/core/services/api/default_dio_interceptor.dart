@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:gaming_library_assessment_flutter/config/config_envied.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -8,8 +9,7 @@ class DefaultDioInterceptor extends InterceptorsWrapper {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // TODO: use envied package to store api key
-    options.queryParameters['key'] = '17b1b8cb8a1b4ca3a9dd0b15504a0d02';
+    options.queryParameters['key'] = Env.apiKey;
     super.onRequest(options, handler);
   }
 }

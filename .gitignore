@@ -30,6 +30,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+*.env
+config_envied.g.dart
 
 # Symbolication related
 app.*.symbols
