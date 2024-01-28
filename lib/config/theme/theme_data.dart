@@ -74,10 +74,24 @@ ThemeData buildTheme() {
     indicatorColor: Colors.grey[100],
   );
 
+  const iconTheme = IconThemeData(
+    color: Colors.white,
+  );
+
+  final iconButtonTheme = IconButtonThemeData(
+    style: ButtonStyle(
+      foregroundColor: MaterialStateProperty.all<Color>(
+        Colors.white,
+      ),
+    ),
+  );
+
   return baseTheme.copyWith(
     filledButtonTheme: filledButtonTheme,
     textTheme: textTheme,
     navigationBarTheme: navigationBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
+    iconTheme: iconTheme,
+    iconButtonTheme: iconButtonTheme,
   );
 }

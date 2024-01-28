@@ -35,11 +35,14 @@ class MostAnticipatedListSection extends StatelessWidget {
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: results?.length,
-                      itemBuilder: (context, index) => GameItem(
-                        imageUrl: results![index].backgroundImage,
-                        name: results[index].name,
-                        date: results[index].released,
-                        score: results[index].metacritic,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: GameItem(
+                          imageUrl: results![index].backgroundImage,
+                          name: results[index].name,
+                          date: results[index].released,
+                          score: results[index].metacritic,
+                        ),
                       ),
                     );
 
