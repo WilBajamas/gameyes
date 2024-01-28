@@ -30,6 +30,12 @@ ThemeData buildDarkTheme() {
       color: kDarkColorScheme.background,
       textStyle: baseTheme.textTheme.titleLarge,
     ),
+    titleMedium: GoogleFonts.chakraPetch(
+      fontSize: 18,
+      fontWeight: FontWeight.w800,
+      color: kDarkColorScheme.background,
+      textStyle: baseTheme.textTheme.titleLarge,
+    ),
     bodyLarge: GoogleFonts.openSans(
       fontSize: 16,
       fontWeight: FontWeight.w600,
@@ -45,6 +51,11 @@ ThemeData buildDarkTheme() {
       fontWeight: FontWeight.w800,
       textStyle: baseTheme.textTheme.displayMedium,
     ),
+    displayLarge: GoogleFonts.chakraPetch(
+      fontSize: 22,
+      fontWeight: FontWeight.w800,
+      textStyle: baseTheme.textTheme.displayLarge,
+    ),
   );
 
   final navigationBarTheme = NavigationBarThemeData(
@@ -55,9 +66,22 @@ ThemeData buildDarkTheme() {
     indicatorColor: kDarkColorScheme.onBackground,
   );
 
+  final elevatedButtonTheme = ElevatedButtonThemeData(
+    style: const ButtonStyle().copyWith(
+      backgroundColor: MaterialStateProperty.all<Color>(
+        kDarkColorScheme.primary,
+      ),
+      foregroundColor: MaterialStateProperty.all<Color>(
+        kDarkColorScheme.background,
+      ),
+      textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
+    ),
+  );
+
   return baseTheme.copyWith(
     filledButtonTheme: filledButtonTheme,
     textTheme: textTheme,
     navigationBarTheme: navigationBarTheme,
+    elevatedButtonTheme: elevatedButtonTheme,
   );
 }

@@ -3,11 +3,12 @@
   - specify them within their own folders */
 
 import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 
 import 'package:intl/intl.dart';
 
 extension ContextExtensions on BuildContext {
-  ThemeData themeData() => Theme.of(this);
+  ThemeData get themeData => Theme.of(this);
   double get screenHeight => MediaQuery.of(this).size.height;
   double get screenWidth => MediaQuery.of(this).size.width;
 }
@@ -15,28 +16,25 @@ extension ContextExtensions on BuildContext {
 extension DateFormatters on String? {
   String? formatDate() {
     try {
-      DateTime? dateTime = DateTime.tryParse(this ?? '-');
-      return DateFormat('MMMM y').format(dateTime ?? DateTime.now());
+      final dateTime = DateFormat('yyyy-MM-dd').parse(this!);
+      return DateFormat('d MMMM yyyy').format(dateTime);
     } on Exception {
-      return '-';
-    }
-  }
-
-  DateTime stringToDatetime() {
-    try {
-      return DateFormat('yyyy-MM-dd').parse(this ?? '');
-    } catch (_) {
-      return DateTime.now();
+      return StringConstants.emptyStringPlaceholder;
     }
   }
 }
 
-extension DateToStringFormatters on DateTime {
-  String? formatDate({required String format}) {
-    try {
-      return DateFormat(format).format(this);
-    } on Exception {
-      return '-';
-    }
+extension DateTimeExtension on DateTime {
+  String getFormattedDateMonthsAgo({int monthsAgo = 0}) {
+    final dateMonthsAgo = DateTime(year, month - monthsAgo, day);
+    final formattedDate = DateFormat('yyyy-MM-dd').format(dateMonthsAgo);
+    return formattedDate;
+  }
+
+  String getFormattedDateYearsRange({int years = 0, bool after = false}) {
+    final dateYearsAgo =
+        DateTime(after ? year + years : year - years, month, day);
+    final formattedDate = DateFormat('yyyy-MM-dd').format(dateYearsAgo);
+    return formattedDate;
   }
 }

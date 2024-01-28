@@ -51,7 +51,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                   child: Text(
                     StringConstants.skip,
-                    style: context.themeData().textTheme.bodyLarge,
+                    style: context.themeData.textTheme.bodyLarge,
                   ),
                 ),
               ),
