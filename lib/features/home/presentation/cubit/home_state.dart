@@ -14,7 +14,7 @@ class HomeState extends Equatable {
   }
 
   const HomeState({
-    this.currentTabScreen = CurrentTabScreen.games,
+    this.currentTabScreen = CurrentTabScreen.featured,
   });
 
   @override

@@ -38,7 +38,7 @@ class PageViewItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               description,
-              style: context.themeData().textTheme.titleLarge,
+              style: context.themeData.textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
           ),
