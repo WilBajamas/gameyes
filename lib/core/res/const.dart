@@ -69,4 +69,6 @@ class StringConstants {
 class RouteConstants {
   static const root = '/';
   static const home = '/home';
+  static const featured = '/featured';
+  static const games = '/games';
 }

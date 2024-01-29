@@ -6,8 +6,6 @@ import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.d
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/best_metacritic_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/latest_releases_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart';
@@ -15,8 +13,6 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/home/presentation/cubit/home_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,10 +26,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => injection.getIt<HomeCubit>(),
-          child: const HomeScreen(),
-        ),
         BlocProvider(
           create: (context) => injection.getIt<MostAnticipatedCubit>(),
           child: const FeaturedScreen(),
@@ -54,12 +46,11 @@ class MyApp extends StatelessWidget {
           child: const GamesScreen(),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         themeMode: ThemeMode.system,
         theme: buildTheme(),
         darkTheme: buildDarkTheme(),
-        routes: routes,
-        initialRoute: RouteConstants.root,
+        routerConfig: goRouter,
       ),
     );
   }

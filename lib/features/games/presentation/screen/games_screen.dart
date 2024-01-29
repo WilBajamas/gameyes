@@ -66,7 +66,6 @@ class _GamesScreenState extends State<GamesScreen> {
     return Scaffold(
       body: SafeArea(
         child: NestedScrollView(
-          floatHeaderSlivers: true,
           headerSliverBuilder: (context, _) => [
             SliverAppBar(
               backgroundColor: context.themeData.colorScheme.primary,

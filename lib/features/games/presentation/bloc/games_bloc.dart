@@ -27,12 +27,16 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     GamesFetched event,
     Emitter<GamesState> emit,
   ) async {
+
+    // Reset state because filter changed
     if (event.resetPage) {
       emit(const GamesState());
     } else if (state.response?.next == null) {
+      // Next page not available
       return;
     }
 
+    // Increment page based on current page (returned from response)
     final nextPage = state.status == GamesStatus.initial
         ? 1
         : state.response!.currentPage! + 1;
