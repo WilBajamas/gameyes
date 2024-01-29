@@ -12,6 +12,7 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/latest_releases_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/cubit/home_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
 
@@ -42,6 +43,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => injection.getIt<LatestReleasesCubit>(),
           child: const FeaturedScreen(),
+        ),
+        BlocProvider(
+          create: (context) => injection.getIt<FilterCubit>(),
         ),
       ],
       child: MaterialApp(

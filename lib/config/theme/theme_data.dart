@@ -86,6 +86,24 @@ ThemeData buildTheme() {
     ),
   );
 
+  final chipTheme = ChipThemeData(
+    checkmarkColor: Colors.white,
+    selectedColor: kColorScheme.primary,
+    backgroundColor: kColorScheme.background,
+    labelStyle: TextStyle(color: kColorScheme.background),
+    shape: StadiumBorder(
+      side: const BorderSide().copyWith(color: kColorScheme.primary),
+    ),
+  );
+
+  final inputDecorationTheme = InputDecorationTheme(
+    labelStyle: const TextStyle(color: Colors.grey),
+    suffixIconColor: Colors.grey,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12), // Set desired radius
+    ),
+  );
+
   return baseTheme.copyWith(
     filledButtonTheme: filledButtonTheme,
     textTheme: textTheme,
@@ -93,5 +111,7 @@ ThemeData buildTheme() {
     elevatedButtonTheme: elevatedButtonTheme,
     iconTheme: iconTheme,
     iconButtonTheme: iconButtonTheme,
+    chipTheme: chipTheme,
+    inputDecorationTheme: inputDecorationTheme,
   );
 }

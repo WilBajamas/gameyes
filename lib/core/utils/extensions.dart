@@ -24,7 +24,23 @@ extension DateFormatters on String? {
   }
 }
 
+// ** Nullable (Date time)
+extension DateTimeNullableExtension on DateTime? {
+  String? getFormattedStringFromDateTime() {
+    if (this != null) {
+      return DateFormat('yyyy-MM-dd').format(this!);
+    }
+
+    return null;
+  }
+}
+
+// ** Non null (Date time)
 extension DateTimeExtension on DateTime {
+  String getStringFromDateTime() {
+    return DateFormat('yyyy-MM-dd').format(this);
+  }
+
   String getFormattedDateMonthsAgo({int monthsAgo = 0}) {
     final dateMonthsAgo = DateTime(year, month - monthsAgo, day);
     final formattedDate = DateFormat('yyyy-MM-dd').format(dateMonthsAgo);
@@ -36,5 +52,13 @@ extension DateTimeExtension on DateTime {
         DateTime(after ? year + years : year - years, month, day);
     final formattedDate = DateFormat('yyyy-MM-dd').format(dateYearsAgo);
     return formattedDate;
+  }
+
+  DateTime getDateTimeLater({
+    int yearsLater = 0,
+    int monthsLater = 0,
+    int daysLater = 0,
+  }) {
+    return DateTime(year + yearsLater, month + monthsLater, day + daysLater);
   }
 }

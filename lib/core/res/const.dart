@@ -54,6 +54,13 @@ class StringConstants {
   static const noResultsFound = 'No results found';
   static const errorResults = 'Error retrieving results';
   static const retry = 'Retry';
+  static const save = 'Save';
+  static const searchGames = 'Search games';
+  static const dateRange = 'Date range';
+  static const from = 'From';
+  static const to = 'To';
+  static const platforms = 'Platforms';
+  static const ordering = 'Ordering';
   static const featuredScreenTitle =
       // ignore: lines_longer_than_80_chars
       'Check out our featured lists of games, from most anticipated to the latest releases.';

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/latest_releases_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_loading_shimmer.dart';
@@ -50,8 +49,9 @@ class LatestReleasedListSection extends StatelessWidget {
                   case LatestReleasesStatus.empty:
                     return Center(
                       child: ErrorRetryWidget(
-                        onRetryClicked: () =>
-                            context.read<MostAnticipatedCubit>(),
+                        onRetryClicked: () => context
+                            .read<LatestReleasesCubit>()
+                            .fetchLatestReleases(),
                         text: StringConstants.noResultsFound,
                       ),
                     );
@@ -59,8 +59,9 @@ class LatestReleasedListSection extends StatelessWidget {
                   case LatestReleasesStatus.failed:
                     return Center(
                       child: ErrorRetryWidget(
-                        onRetryClicked: () =>
-                            context.read<MostAnticipatedCubit>(),
+                        onRetryClicked: () => context
+                            .read<LatestReleasesCubit>()
+                            .fetchLatestReleases(),
                       ),
                     );
 

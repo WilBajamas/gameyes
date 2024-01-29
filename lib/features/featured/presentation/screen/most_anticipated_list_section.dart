@@ -49,8 +49,9 @@ class MostAnticipatedListSection extends StatelessWidget {
                   case MostAnticipatedStatus.empty:
                     return Center(
                       child: ErrorRetryWidget(
-                        onRetryClicked: () =>
-                            context.read<MostAnticipatedCubit>(),
+                        onRetryClicked: () => context
+                            .read<MostAnticipatedCubit>()
+                            .fetchMostAnticipated(),
                         text: StringConstants.noResultsFound,
                       ),
                     );
@@ -58,8 +59,9 @@ class MostAnticipatedListSection extends StatelessWidget {
                   case MostAnticipatedStatus.failed:
                     return Center(
                       child: ErrorRetryWidget(
-                        onRetryClicked: () =>
-                            context.read<MostAnticipatedCubit>(),
+                        onRetryClicked: () => context
+                            .read<MostAnticipatedCubit>()
+                            .fetchMostAnticipated(),
                       ),
                     );
 

@@ -22,6 +22,7 @@ class GamesDataSource {
     List<int>? platforms,
   }) async {
     final dateRange =
+        // ignore: lines_longer_than_80_chars
         '$dateFrom${dateFrom.isNotEmpty && dateTo.isNotEmpty ? ',' : ''}$dateTo';
 
     try {
