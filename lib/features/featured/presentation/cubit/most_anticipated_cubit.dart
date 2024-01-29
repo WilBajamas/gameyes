@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repository/featured_repository.dart';

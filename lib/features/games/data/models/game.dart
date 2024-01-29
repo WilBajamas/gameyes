@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'game.g.dart';
 
 @JsonSerializable()
-class Game extends Equatable {
+final class Game extends Equatable {
   final String? name;
 
   final String? released;

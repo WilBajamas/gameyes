@@ -22,84 +22,80 @@ class GameItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final itemWidth = context.screenWidth / 2.2;
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Card(
-        child: SizedBox(
-          width: itemWidth,
-          height: context.screenHeight,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 4 / 4.8,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                      ),
-                      child: imageUrl != null
+    return Card(
+      child: SizedBox(
+        width: itemWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 4 / 4.8,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                    ),
+                    child: imageUrl != null
 
-                          //** Image */
-                          ? CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: imageUrl!,
-                              placeholder: (context, url) => const Center(
-                                child: SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Center(child: Icon(Icons.error)),
-                            )
-                          : Center(
-                              child: Icon(
-                                Icons.error,
-                                color: context.themeData.colorScheme.primary,
-                                size: 40,
+                        //** Image */
+                        ? CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: imageUrl!,
+                            placeholder: (context, url) => const Center(
+                              child: SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: CircularProgressIndicator(),
                               ),
                             ),
-                    ),
+                            errorWidget: (context, url, error) =>
+                                const Center(child: Icon(Icons.error)),
+                          )
+                        : Center(
+                            child: Icon(
+                              Icons.error,
+                              color: context.themeData.colorScheme.primary,
+                              size: 40,
+                            ),
+                          ),
                   ),
+                ),
 
-                  //** Score */
-                  Positioned(
-                    bottom: 8,
-                    right: 8,
-                    child: MetacriticIndicator(
-                      score: score,
-                    ),
+                //** Score */
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: MetacriticIndicator(
+                    score: score,
                   ),
-                ],
-              ),
-
-              const SizedBox(height: 4),
-
-              //** Name */
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(
-                  name ?? StringConstants.emptyStringPlaceholder,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.themeData.textTheme.displaySmall,
                 ),
-              ),
-              const SizedBox(height: 4),
+              ],
+            ),
 
-              //** Date */
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(
-                  date.formatDate() ?? StringConstants.emptyStringPlaceholder,
-                ),
+            const SizedBox(height: 4),
+
+            //** Name */
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                name ?? StringConstants.emptyStringPlaceholder,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: context.themeData.textTheme.displaySmall,
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 4),
+
+            //** Date */
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                date.formatDate(),
+              ),
+            ),
+          ],
         ),
       ),
     );

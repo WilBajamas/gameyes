@@ -12,10 +12,13 @@ class GameItemLoadingShimmer extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 3,
-        itemBuilder: (_, i) => const GameItem(
-          imageUrl: null,
-          name: StringConstants.noResultsFound,
-          date: StringConstants.noResultsFound,
+        itemBuilder: (_, i) => const Padding(
+          padding: EdgeInsets.only(left: 8),
+          child: GameItem(
+            imageUrl: null,
+            name: StringConstants.noResultsFound,
+            date: StringConstants.noResultsFound,
+          ),
         ),
       ),
     );

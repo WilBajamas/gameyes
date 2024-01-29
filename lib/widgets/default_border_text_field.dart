@@ -1,0 +1,60 @@
+import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+
+class DefaultBorderTextField extends StatelessWidget {
+  final BuildContext context;
+  final TextInputType? inputType;
+  final TextEditingController? textEditingController;
+  final bool isRequired;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final String title;
+  final int? minLines;
+  final int? maxLines;
+  final String? hint;
+  final bool readOnly;
+  final VoidCallback? onClicked;
+
+  const DefaultBorderTextField({
+    required this.context,
+    required this.title,
+    this.inputType = TextInputType.text,
+    this.textEditingController,
+    this.isRequired = false,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.minLines,
+    this.maxLines = 1,
+    this.hint,
+    this.readOnly = false,
+    this.onClicked,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: textEditingController,
+      keyboardType: inputType,
+      minLines: minLines,
+      maxLines: maxLines,
+      readOnly: readOnly,
+      style: const TextStyle().copyWith(
+        color: context.themeData.colorScheme.onBackground,
+        fontWeight: FontWeight.normal,
+      ),
+      decoration: InputDecoration(
+        errorStyle: const TextStyle(color: Colors.red),
+        hintText: hint ?? '',
+        alignLabelWithHint: true,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade400),
+        ),
+        labelText: title,
+      ),
+      onTap: onClicked,
+    );
+  }
+}

@@ -14,17 +14,36 @@ extension ContextExtensions on BuildContext {
 }
 
 extension DateFormatters on String? {
-  String? formatDate() {
+  String formatDate() {
     try {
-      final dateTime = DateFormat('yyyy-MM-dd').parse(this!);
-      return DateFormat('d MMMM yyyy').format(dateTime);
+      if (this != null) {
+        final dateTime = DateFormat('yyyy-MM-dd').parse(this!);
+        return DateFormat('d MMMM yyyy').format(dateTime);
+      }
+      return StringConstants.emptyStringPlaceholder;
     } on Exception {
       return StringConstants.emptyStringPlaceholder;
     }
   }
 }
 
+// ** Nullable (Date time)
+extension DateTimeNullableExtension on DateTime? {
+  String? getFormattedStringFromDateTime() {
+    if (this != null) {
+      return DateFormat('yyyy-MM-dd').format(this!);
+    }
+
+    return null;
+  }
+}
+
+// ** Non null (Date time)
 extension DateTimeExtension on DateTime {
+  String getStringFromDateTime() {
+    return DateFormat('yyyy-MM-dd').format(this);
+  }
+
   String getFormattedDateMonthsAgo({int monthsAgo = 0}) {
     final dateMonthsAgo = DateTime(year, month - monthsAgo, day);
     final formattedDate = DateFormat('yyyy-MM-dd').format(dateMonthsAgo);
@@ -36,5 +55,13 @@ extension DateTimeExtension on DateTime {
         DateTime(after ? year + years : year - years, month, day);
     final formattedDate = DateFormat('yyyy-MM-dd').format(dateYearsAgo);
     return formattedDate;
+  }
+
+  DateTime getDateTimeLater({
+    int yearsLater = 0,
+    int monthsLater = 0,
+    int daysLater = 0,
+  }) {
+    return DateTime(year + yearsLater, month + monthsLater, day + daysLater);
   }
 }
