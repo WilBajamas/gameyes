@@ -14,10 +14,13 @@ extension ContextExtensions on BuildContext {
 }
 
 extension DateFormatters on String? {
-  String? formatDate() {
+  String formatDate() {
     try {
-      final dateTime = DateFormat('yyyy-MM-dd').parse(this!);
-      return DateFormat('d MMMM yyyy').format(dateTime);
+      if (this != null) {
+        final dateTime = DateFormat('yyyy-MM-dd').parse(this!);
+        return DateFormat('d MMMM yyyy').format(dateTime);
+      }
+      return StringConstants.emptyStringPlaceholder;
     } on Exception {
       return StringConstants.emptyStringPlaceholder;
     }

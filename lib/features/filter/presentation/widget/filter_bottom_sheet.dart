@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/data/models/games_platform.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/type_values_selection.dart';
 
 class FilterBottomSheet extends StatefulWidget {
+  final VoidCallback onSaveClick;
+
   const FilterBottomSheet({
     Key? key,
+    required this.onSaveClick,
   }) : super(key: key);
 
   @override
@@ -22,6 +25,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   final _searchTextController = TextEditingController();
   final _dateFromController = TextEditingController();
   final _dateToController = TextEditingController();
+
+  @override
+  void initState() {
+    _filterCubit = context.read<FilterCubit>();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -47,12 +56,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   void saveButtonClick(FilterState state) {
-    final filterCubit = context.read<FilterCubit>();
-
-    filterCubit.changeSelectionValue(
+    _filterCubit.changeSelectionValue(
       searchTerm: _searchTextController.text,
     );
 
+    widget.onSaveClick();
     Navigator.pop(context);
   }
 

@@ -2,7 +2,7 @@ part of 'home_cubit.dart';
 
 enum CurrentTabScreen { featured, games, settings }
 
-class HomeState extends Equatable {
+final class HomeState extends Equatable {
   final CurrentTabScreen currentTabScreen;
 
   HomeState copyWith({

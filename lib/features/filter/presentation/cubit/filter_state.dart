@@ -1,6 +1,6 @@
 part of 'filter_cubit.dart';
 
-class FilterState extends Equatable {
+final class FilterState extends Equatable {
   const FilterState({
     this.ordering = GameOrdering.released,
     this.gamesPlatform = const Playstation5(),
@@ -36,4 +36,4 @@ class FilterState extends Equatable {
       [ordering, gamesPlatform, dateFrom, dateTo, searchTerm];
 }
 
-class FilterInitial extends FilterState {}
+final class FilterInitial extends FilterState {}

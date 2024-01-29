@@ -3,12 +3,12 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 
 class ErrorRetryWidget extends StatelessWidget {
   final VoidCallback onRetryClicked;
-  final String? text;
+  final String text;
   final EdgeInsetsGeometry? padding;
 
   const ErrorRetryWidget({
     Key? key,
-    this.text,
+    this.text = StringConstants.errorResults,
     this.padding,
     required this.onRetryClicked,
   }) : super(key: key);
@@ -22,7 +22,7 @@ class ErrorRetryWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            text ?? StringConstants.errorResults,
+            text,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),

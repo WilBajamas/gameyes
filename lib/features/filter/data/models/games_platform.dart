@@ -18,36 +18,36 @@ class GamesPlatform extends Equatable {
 
 class Playstation5 extends GamesPlatform {
   const Playstation5()
-      : super(id: 1, name: 'Playstation 5', slug: 'playstation5');
+      : super(id: 187, name: 'Playstation 5', slug: 'playstation5');
 }
 
 class Playstation4 extends GamesPlatform {
   const Playstation4()
-      : super(id: 2, name: 'Playstation 4', slug: 'playstation4');
+      : super(id: 18, name: 'Playstation 4', slug: 'playstation4');
 }
 
 class Pc extends GamesPlatform {
-  const Pc() : super(id: 3, name: 'PC', slug: 'pc');
+  const Pc() : super(id: 4, name: 'PC', slug: 'pc');
 }
 
 class XboxOne extends GamesPlatform {
-  const XboxOne() : super(id: 4, name: 'Xbox One', slug: 'xbox-one');
+  const XboxOne() : super(id: 1, name: 'Xbox One', slug: 'xbox-one');
 }
 
 class XboxSeriesSX extends GamesPlatform {
   const XboxSeriesSX()
-      : super(id: 5, name: 'Xbox Series S/X', slug: 'xbox-series-x');
+      : super(id: 186, name: 'Xbox Series S/X', slug: 'xbox-series-x');
 }
 
 class NintendoSwitch extends GamesPlatform {
   const NintendoSwitch()
-      : super(id: 6, name: 'Nintendo Switch', slug: 'nintendo-swtich');
+      : super(id: 7, name: 'Nintendo Switch', slug: 'nintendo-swtich');
 }
 
 class Wii extends GamesPlatform {
-  const Wii() : super(id: 7, name: 'Wii', slug: 'wii');
+  const Wii() : super(id: 11, name: 'Wii', slug: 'wii');
 }
 
 class WiiU extends GamesPlatform {
-  const WiiU() : super(id: 8, name: 'Wii U', slug: 'wii-u');
+  const WiiU() : super(id: 10, name: 'Wii U', slug: 'wii-u');
 }

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
@@ -15,28 +15,34 @@ class GamesDataSource {
   Future<Either<ErrorType, GamesResponse>> fetchGames({
     int page = 1,
     int pageSize = 10,
+    String? searchTerm,
     String dateFrom = '',
     String dateTo = '',
     String ordering = 'released',
     bool reverseOrder = false,
     List<int>? platforms,
   }) async {
-    final dateRange =
+    final dateRangeQuery =
         // ignore: lines_longer_than_80_chars
         '$dateFrom${dateFrom.isNotEmpty && dateTo.isNotEmpty ? ',' : ''}$dateTo';
+    final String? platformNumbersQuery = platforms?.join(',');
 
     try {
       final response = await _dioService.dio.get(
         ConfigConstants.gamesEndpoint,
         queryParameters: {
-          'dates': dateRange,
+          'dates': dateRangeQuery,
           'ordering': '${reverseOrder ? '-' : ''}$ordering',
           'page': page.toString(),
           'page_size': pageSize.toString(),
+          if (searchTerm != null) 'search': searchTerm,
+          if (platformNumbersQuery != null) 'platforms': platformNumbersQuery,
         },
       );
 
-      return Right(GamesResponse.fromJson(response.data));
+      return Right(
+        GamesResponse.fromJson(response.data).copyWith(currentPage: page),
+      );
     } on DioException catch (dioException) {
       final Map<String, dynamic>? errorResponse = dioException.response?.data;
 

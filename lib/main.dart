@@ -13,6 +13,8 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/cubit/home_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
 
@@ -46,6 +48,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => injection.getIt<FilterCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => injection.getIt<GamesBloc>(),
+          child: const GamesScreen(),
         ),
       ],
       child: MaterialApp(
