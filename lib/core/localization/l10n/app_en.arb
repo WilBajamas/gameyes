@@ -22,5 +22,7 @@
   "to": "To",
   "platforms": "Platforms",
   "ordering": "Ordering",
-  "featured_screen_title": "Check out our featured lists of games, from most anticipated to the latest releases."
+  "featured_screen_title": "Check out our featured lists of games, from most anticipated to the latest releases.",
+  "screenshots": "Screenshots",
+  "metacritic_score": "Metacritic score"
 }

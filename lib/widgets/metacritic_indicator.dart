@@ -4,8 +4,10 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class MetacriticIndicator extends StatelessWidget {
   final int? score;
+  final double size;
 
-  const MetacriticIndicator({Key? key, this.score}) : super(key: key);
+  const MetacriticIndicator({Key? key, this.score, this.size = 40})
+      : super(key: key);
 
   Color _criticColor() {
     if (score! <= 33) {
@@ -28,8 +30,8 @@ class MetacriticIndicator extends StatelessWidget {
         shape: BoxShape.circle,
         color: context.themeData.scaffoldBackgroundColor,
       ),
-      height: 40,
-      width: 40,
+      height: size,
+      width: size,
       child: Center(
         child: Text(
           score != null ? score.toString() : StringConstants.na,

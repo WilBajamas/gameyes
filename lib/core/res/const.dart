@@ -50,4 +50,5 @@ class RouteConstants {
   static const featured = '/featured';
   static const games = '/games';
   static const onboarding = '/onboarding';
+  static const gameDetail = '/game_detail';
 }

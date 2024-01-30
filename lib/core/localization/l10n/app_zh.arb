@@ -22,5 +22,7 @@
   "to": "到",
   "platforms": "主机选择",
   "ordering": "排序",
-  "featured_screen_title": "游戏天地，等你探索"
+  "featured_screen_title": "游戏天地，等你探索",
+  "screenshots": "截图",
+  "metacritic_score": "综合评分"
 }

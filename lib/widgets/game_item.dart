@@ -9,6 +9,7 @@ class GameItem extends StatelessWidget {
   final String? name;
   final String? date;
   final int? score;
+  final VoidCallback? onClick;
 
   const GameItem({
     Key? key,
@@ -16,6 +17,7 @@ class GameItem extends StatelessWidget {
     required this.name,
     required this.date,
     this.score,
+    this.onClick,
   }) : super(key: key);
 
   @override
@@ -23,79 +25,82 @@ class GameItem extends StatelessWidget {
     final itemWidth = context.screenWidth / 2.2;
 
     return Card(
-      child: SizedBox(
-        width: itemWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                AspectRatio(
-                  aspectRatio: 4 / 4.8,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                    child: imageUrl != null
+      child: InkWell(
+        onTap: onClick,
+        child: SizedBox(
+          width: itemWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 4 / 4.8,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                      child: imageUrl != null
 
-                        //** Image */
-                        ? CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: imageUrl!,
-                            placeholder: (context, url) => const Center(
-                              child: SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: CircularProgressIndicator(),
+                          //** Image */
+                          ? CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl: imageUrl!,
+                              placeholder: (context, url) => const Center(
+                                child: SizedBox(
+                                  width: 40,
+                                  height: 40,
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(child: Icon(Icons.error)),
+                            )
+                          : Center(
+                              child: Icon(
+                                Icons.error,
+                                color: context.themeData.colorScheme.primary,
+                                size: 40,
                               ),
                             ),
-                            errorWidget: (context, url, error) =>
-                                const Center(child: Icon(Icons.error)),
-                          )
-                        : Center(
-                            child: Icon(
-                              Icons.error,
-                              color: context.themeData.colorScheme.primary,
-                              size: 40,
-                            ),
-                          ),
+                    ),
                   ),
-                ),
 
-                //** Score */
-                Positioned(
-                  bottom: 8,
-                  right: 8,
-                  child: MetacriticIndicator(
-                    score: score,
+                  //** Score */
+                  Positioned(
+                    bottom: 8,
+                    right: 8,
+                    child: MetacriticIndicator(
+                      score: score,
+                    ),
                   ),
+                ],
+              ),
+
+              const SizedBox(height: 4),
+
+              //** Name */
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  name ?? StringConstants.emptyStringPlaceholder,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.themeData.textTheme.displaySmall,
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 4),
-
-            //** Name */
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                name ?? StringConstants.emptyStringPlaceholder,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: context.themeData.textTheme.displaySmall,
               ),
-            ),
-            const SizedBox(height: 4),
+              const SizedBox(height: 4),
 
-            //** Date */
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                date.formatDate(),
+              //** Date */
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  date.formatDate(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
