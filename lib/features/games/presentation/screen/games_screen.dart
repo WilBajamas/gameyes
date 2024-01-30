@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/widget/filter_bottom_sheet.dart';
@@ -68,7 +67,6 @@ class _GamesScreenState extends State<GamesScreen> {
         child: NestedScrollView(
           headerSliverBuilder: (context, _) => [
             SliverAppBar(
-              backgroundColor: context.themeData.colorScheme.primary,
               actions: [
                 IconButton(
                   onPressed: () => showModalBottomSheet(
@@ -103,7 +101,7 @@ class _GamesScreenState extends State<GamesScreen> {
                     if (state.games.isEmpty) {
                       return Center(
                         child: ErrorRetryWidget(
-                          text: StringConstants.noResultsFound,
+                          text: context.localisations.no_results_found,
                           onRetryClicked: () => _fetchGames(),
                         ),
                       );

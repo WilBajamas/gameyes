@@ -20,8 +20,8 @@ class GameItemGridLoadingShimmer extends StatelessWidget {
         itemCount: 4,
         itemBuilder: (_, i) => const GameItem(
           imageUrl: null,
-          name: StringConstants.noResultsFound,
-          date: StringConstants.noResultsFound,
+          name: StringConstants.emptyStringPlaceholder,
+          date: StringConstants.emptyStringPlaceholder,
         ),
       ),
     );

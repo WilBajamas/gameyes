@@ -38,37 +38,10 @@ class StorageConstants {
 }
 
 class StringConstants {
-  static const onboardingDescriptionOne =
-      'Stay informed of new game releases and news.';
-  static const onboardingDescriptionTwo =
-      'Find more information about your favourite games.';
-  static const onboardingDescriptionThree =
-      'Make a savelist of anticipated upcoming games.';
   static const emptyStringPlaceholder = '-';
   static const na = 'NA';
-  static const next = 'Next';
-  static const skip = 'Skip';
-  static const featured = 'Featured';
-  static const games = 'Games';
-  static const settings = 'Settings';
-  static const mostAnticipated = 'Most Anticipated';
-  static const bestMetacritic = 'Best Metacritic';
-  static const latestReleases = 'Latest Releases';
   static const connectionTimeout = 'Connection timeout';
-  static const noResultsFound = 'No results found';
-  static const errorResults = 'Error retrieving results';
-  static const retry = 'Retry';
-  static const save = 'Save';
-  static const searchGames = 'Search games';
-  static const dateRange = 'Date range';
-  static const from = 'From';
-  static const to = 'To';
-  static const platforms = 'Platforms';
-  static const ordering = 'Ordering';
   static const sharedPrefTypeError = 'Unsupported type for shared preferences';
-  static const featuredScreenTitle =
-      // ignore: lines_longer_than_80_chars
-      'Check out our featured lists of games, from most anticipated to the latest releases.';
 }
 
 class RouteConstants {

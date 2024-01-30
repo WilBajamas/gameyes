@@ -27,40 +27,44 @@ ThemeData buildDarkTheme() {
   final textTheme = GoogleFonts.openSansTextTheme(baseTheme.textTheme).copyWith(
     titleLarge: GoogleFonts.chakraPetch(
       fontWeight: FontWeight.w600,
-      color: kDarkColorScheme.background,
+      color: kDarkColorScheme.onBackground,
       textStyle: baseTheme.textTheme.titleLarge,
     ),
     titleMedium: GoogleFonts.chakraPetch(
       fontSize: 18,
       fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.background,
+      color: kDarkColorScheme.onBackground,
       textStyle: baseTheme.textTheme.titleLarge,
     ),
     bodyLarge: GoogleFonts.openSans(
       fontSize: 16,
       fontWeight: FontWeight.w600,
+      color: kDarkColorScheme.onBackground,
       textStyle: baseTheme.textTheme.bodyLarge,
     ),
     displaySmall: GoogleFonts.openSans(
       fontSize: 18,
       fontWeight: FontWeight.w600,
+      color: kDarkColorScheme.onBackground,
       textStyle: baseTheme.textTheme.displaySmall,
     ),
     displayMedium: GoogleFonts.chakraPetch(
       fontSize: 20,
       fontWeight: FontWeight.w800,
+      color: kDarkColorScheme.onBackground,
       textStyle: baseTheme.textTheme.displayMedium,
     ),
     displayLarge: GoogleFonts.chakraPetch(
       fontSize: 22,
       fontWeight: FontWeight.w800,
+      color: kDarkColorScheme.onBackground,
       textStyle: baseTheme.textTheme.displayLarge,
     ),
   );
 
   final navigationBarTheme = NavigationBarThemeData(
     labelTextStyle: MaterialStateProperty.all(
-      const TextStyle(fontSize: 14),
+      TextStyle(fontSize: 14, color: kDarkColorScheme.onBackground),
     ),
     backgroundColor: kDarkColorScheme.primaryContainer,
     indicatorColor: kDarkColorScheme.onBackground,
@@ -95,7 +99,9 @@ ThemeData buildDarkTheme() {
     selectedColor: kDarkColorScheme.primary,
     backgroundColor: kDarkColorScheme.background,
     labelStyle: TextStyle(color: kDarkColorScheme.background),
-    shape: StadiumBorder(side: const BorderSide().copyWith(color: Colors.red)),
+    shape: StadiumBorder(
+      side: const BorderSide().copyWith(color: kDarkColorScheme.primary),
+    ),
   );
 
   final inputDecorationTheme = InputDecorationTheme(
@@ -109,6 +115,11 @@ ThemeData buildDarkTheme() {
     ),
   );
 
+  final appBarTheme = const AppBarTheme().copyWith(
+    backgroundColor: kDarkColorScheme.primaryContainer,
+    foregroundColor: kDarkColorScheme.onPrimaryContainer,
+  );
+
   return baseTheme.copyWith(
     filledButtonTheme: filledButtonTheme,
     textTheme: textTheme,
@@ -118,5 +129,7 @@ ThemeData buildDarkTheme() {
     iconButtonTheme: iconButtonTheme,
     chipTheme: chipTheme,
     inputDecorationTheme: inputDecorationTheme,
+    scaffoldBackgroundColor: kDarkColorScheme.background,
+    appBarTheme: appBarTheme,
   );
 }

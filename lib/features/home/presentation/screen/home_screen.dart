@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/navigation_destination.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,18 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() => tabIndex = index);
         },
         selectedIndex: tabIndex,
-        destinations: const [
+        destinations: [
           CustomNavigationDestination(
             iconData: Icons.newspaper,
-            label: StringConstants.featured,
+            label: context.localisations.featured,
           ),
           CustomNavigationDestination(
             iconData: Icons.gamepad,
-            label: StringConstants.games,
+            label: context.localisations.games,
           ),
           CustomNavigationDestination(
             iconData: Icons.menu,
-            label: StringConstants.settings,
+            label: context.localisations.settings,
           ),
         ],
       ),

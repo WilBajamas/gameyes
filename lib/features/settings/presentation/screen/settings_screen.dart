@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -8,7 +8,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: const Center(child: Text(StringConstants.settings)),
+        child: Center(child: Text(context.localisations.settings)),
       ),
     );
   }

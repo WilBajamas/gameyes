@@ -17,7 +17,7 @@ class CustomNavigationDestination extends StatelessWidget {
       icon: Icon(iconData, color: Colors.grey[100]),
       selectedIcon: Icon(
         iconData,
-        color: context.themeData.colorScheme.primary,
+        color: context.themeData.colorScheme.primaryContainer,
       ),
       label: label,
     );
