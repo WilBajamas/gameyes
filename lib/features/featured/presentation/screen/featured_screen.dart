@@ -52,7 +52,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
-                          StringConstants.featuredScreenTitle,
+                          context.localisations.featured_screen_title,
                           style: context.themeData.textTheme.displayLarge!
                               .merge(const TextStyle(color: Colors.white)),
                         ),

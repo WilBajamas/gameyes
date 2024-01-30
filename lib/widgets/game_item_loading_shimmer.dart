@@ -16,8 +16,8 @@ class GameItemLoadingShimmer extends StatelessWidget {
           padding: EdgeInsets.only(left: 8),
           child: GameItem(
             imageUrl: null,
-            name: StringConstants.noResultsFound,
-            date: StringConstants.noResultsFound,
+            name: StringConstants.emptyStringPlaceholder,
+            date: StringConstants.emptyStringPlaceholder,
           ),
         ),
       ),

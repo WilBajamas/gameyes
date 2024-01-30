@@ -91,7 +91,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     style: TextButton.styleFrom(
                       textStyle: context.themeData.textTheme.titleMedium,
                     ),
-                    child: const Text(StringConstants.save),
+                    child: Text(context.localisations.save),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -99,7 +99,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //** Search */
                 DefaultBorderTextField(
                   context: context,
-                  title: StringConstants.searchGames,
+                  title: context.localisations.search_games,
                   textEditingController: _searchTextController,
                   prefixIcon: const Icon(Icons.search),
                 ),
@@ -107,7 +107,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
                 //** Date range */
                 Text(
-                  StringConstants.dateRange,
+                  context.localisations.date_range,
                   style: context.themeData.textTheme.displaySmall,
                 ),
                 const SizedBox(height: 12),
@@ -119,7 +119,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         context: context,
                         textEditingController: _dateFromController,
                         inputType: TextInputType.number,
-                        title: StringConstants.from,
+                        title: context.localisations.from,
                         readOnly: true,
                         onClicked: () async {
                           final selectedDate = await _selectDate(
@@ -140,7 +140,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         context: context,
                         textEditingController: _dateToController,
                         inputType: TextInputType.number,
-                        title: StringConstants.to,
+                        title: context.localisations.to,
                         readOnly: true,
                         onClicked: () async {
                           final selectedDate = await _selectDate(
@@ -161,7 +161,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
                 //** Game platform selection */
                 TypeValuesSelection<GamesPlatform>(
-                  title: StringConstants.platforms,
+                  title: context.localisations.platforms,
                   typeList: const <GamesPlatform>[
                     Playstation5(),
                     Playstation4(),
@@ -182,7 +182,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
                 //** Ordering */
                 TypeValuesSelection(
-                  title: StringConstants.ordering,
+                  title: context.localisations.ordering,
                   typeList: GameOrdering.values,
                   typeSelection: state.ordering,
                   onTypeSelected: (orderingSelected) => _filterCubit

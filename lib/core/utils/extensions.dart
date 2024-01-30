@@ -4,11 +4,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 extension ContextExtensions on BuildContext {
   ThemeData get themeData => Theme.of(this);
+  AppLocalizations get localisations => AppLocalizations.of(this)!;
   double get screenHeight => MediaQuery.of(this).size.height;
   double get screenWidth => MediaQuery.of(this).size.width;
 }

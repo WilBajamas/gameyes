@@ -15,17 +15,14 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final descriptions = const [
-    StringConstants.onboardingDescriptionOne,
-    StringConstants.onboardingDescriptionTwo,
-    StringConstants.onboardingDescriptionThree,
-  ];
-
-  final animations = const [
-    AssetConstants.onboardingAnimation1,
-    AssetConstants.onboardingAnimation2,
-    AssetConstants.onboardingAnimation3,
-  ];
+  Map<String, String> get titleAndAnimations => {
+        context.localisations.onboarding_description_one:
+            AssetConstants.onboardingAnimation1,
+        context.localisations.onboarding_description_two:
+            AssetConstants.onboardingAnimation2,
+        context.localisations.onboarding_description_three:
+            AssetConstants.onboardingAnimation3,
+      };
 
   final _pageController = PageController();
 
@@ -58,7 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: TextButton(
                   onPressed: () => skipClicked(),
                   child: Text(
-                    StringConstants.skip,
+                    context.localisations.skip,
                     style: context.themeData.textTheme.bodyLarge,
                   ),
                 ),
@@ -68,19 +65,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (index) => setState(
-                  () => _isLastPage = descriptions.length - 1 == index,
+                  () => _isLastPage = titleAndAnimations.length - 1 == index,
                 ),
-                itemCount: descriptions.length,
+                itemCount: titleAndAnimations.length,
                 itemBuilder: (context, index) => PageViewItem(
-                  description: descriptions[index],
-                  animationPath: animations[index],
+                  description: titleAndAnimations.entries.toList()[index].key,
+                  animationPath:
+                      titleAndAnimations.entries.toList()[index].value,
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: DefaultFilledButtonFullWidth(
-                _isLastPage ? StringConstants.skip : StringConstants.next,
+                _isLastPage
+                    ? context.localisations.skip
+                    : context.localisations.next,
                 () => nextButtonClick(),
               ),
             ),

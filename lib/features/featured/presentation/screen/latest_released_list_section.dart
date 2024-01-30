@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/latest_releases_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
@@ -20,7 +19,7 @@ class LatestReleasedListSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 12),
             child: Text(
-              StringConstants.latestReleases,
+              context.localisations.latest_releases,
               style: context.themeData.textTheme.displayMedium,
             ),
           ),
@@ -52,7 +51,7 @@ class LatestReleasedListSection extends StatelessWidget {
                         onRetryClicked: () => context
                             .read<LatestReleasesCubit>()
                             .fetchLatestReleases(),
-                        text: StringConstants.noResultsFound,
+                        text: context.localisations.no_results_found,
                       ),
                     );
 

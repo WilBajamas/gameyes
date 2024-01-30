@@ -26,7 +26,7 @@ class MetacriticIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: borderColor, width: 2),
         shape: BoxShape.circle,
-        color: Colors.white,
+        color: context.themeData.scaffoldBackgroundColor,
       ),
       height: 40,
       width: 40,

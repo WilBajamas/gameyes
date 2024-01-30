@@ -104,6 +104,11 @@ ThemeData buildTheme() {
     ),
   );
 
+  final appBarTheme = const AppBarTheme().copyWith(
+    backgroundColor: kColorScheme.primary,
+    foregroundColor: kColorScheme.primaryContainer,
+  );
+
   return baseTheme.copyWith(
     filledButtonTheme: filledButtonTheme,
     textTheme: textTheme,
@@ -113,5 +118,6 @@ ThemeData buildTheme() {
     iconButtonTheme: iconButtonTheme,
     chipTheme: chipTheme,
     inputDecorationTheme: inputDecorationTheme,
+    appBarTheme: appBarTheme,
   );
 }
