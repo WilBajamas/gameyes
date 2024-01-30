@@ -43,10 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
             iconData: Icons.gamepad,
             label: context.localisations.games,
           ),
-          CustomNavigationDestination(
-            iconData: Icons.menu,
-            label: context.localisations.settings,
-          ),
+          // ! To be added later
+          // CustomNavigationDestination(
+          //   iconData: Icons.menu,
+          //   label: context.localisations.settings,
+          // ),
         ],
       ),
       body: widget.navigationShell,
