@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/page_view_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -28,12 +31,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   bool _isLastPage = false;
 
-  void nextButtonClick() => !_isLastPage
-      ? _pageController.nextPage(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeIn,
-        )
-      : null;
+  void skipClicked() {
+    getIt<SharedPreference>().writeValue(StorageConstants.firstUseKey, true);
+    context.go(RouteConstants.featured);
+  }
+
+  void nextButtonClick() {
+    !_isLastPage
+        ? _pageController.nextPage(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeIn,
+          )
+        : skipClicked();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: TextButton(
-                  onPressed: () {
-                    // TODO: To Home screen
-                  },
+                  onPressed: () => skipClicked(),
                   child: Text(
                     StringConstants.skip,
                     style: context.themeData.textTheme.bodyLarge,
