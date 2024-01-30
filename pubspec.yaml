@@ -22,6 +22,9 @@ dependencies:
   # Routes
   go_router: ^13.1.0
 
+  # Shared pref
+  shared_preferences: ^2.2.2
+
   # Bloc
   flutter_bloc: ^8.1.1
 

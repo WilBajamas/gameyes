@@ -33,6 +33,10 @@ class AssetConstants {
   static const onboardingAnimation3 = 'onboarding_anim_3.json';
 }
 
+class StorageConstants {
+  static const firstUseKey = 'first_use';
+}
+
 class StringConstants {
   static const onboardingDescriptionOne =
       'Stay informed of new game releases and news.';
@@ -61,6 +65,7 @@ class StringConstants {
   static const to = 'To';
   static const platforms = 'Platforms';
   static const ordering = 'Ordering';
+  static const sharedPrefTypeError = 'Unsupported type for shared preferences';
   static const featuredScreenTitle =
       // ignore: lines_longer_than_80_chars
       'Check out our featured lists of games, from most anticipated to the latest releases.';
@@ -71,4 +76,5 @@ class RouteConstants {
   static const home = '/home';
   static const featured = '/featured';
   static const games = '/games';
+  static const onboarding = '/onboarding';
 }

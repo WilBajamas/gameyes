@@ -12,6 +12,8 @@ import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_
     as _i4;
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart'
     as _i5;
+import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart'
+    as _i15;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repository/featured_repository_impl.dart'
     as _i7;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repository/featured_repository.dart'
@@ -56,6 +58,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i11.GamesRepository>(() => _i12.GamesRepositoryImpl());
     gh.factory<_i13.LatestReleasesCubit>(() => _i13.LatestReleasesCubit());
     gh.factory<_i14.MostAnticipatedCubit>(() => _i14.MostAnticipatedCubit());
+    gh.factory<_i15.SharedPreference>(() => _i15.SharedPreference());
     return this;
   }
 }
