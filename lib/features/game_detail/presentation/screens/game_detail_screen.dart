@@ -56,7 +56,10 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
                   return ListView(
                     padding: const EdgeInsets.only(bottom: 16),
                     children: [
-                      DetailTopHeader(state: state),
+                      DetailTopHeader(
+                        state: state,
+                        id: widget.gameId,
+                      ),
                       const SizedBox(height: 20),
                       DetailMidSection(state: state),
                       const SizedBox(height: 20),
@@ -81,8 +84,11 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
 
 class DetailTopHeader extends StatelessWidget {
   final GameDetailState state;
+  final int? id;
 
-  const DetailTopHeader({Key? key, required this.state}) : super(key: key);
+  // ignore: lines_longer_than_80_chars
+  const DetailTopHeader({Key? key, required this.state, this.id})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
