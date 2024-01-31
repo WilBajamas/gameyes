@@ -10,19 +10,6 @@ part 'filter_state.dart';
 class FilterCubit extends Cubit<FilterState> {
   FilterCubit() : super(FilterInitial());
 
-  // void setInitialFilterValue(JobFilterValue? filterValue) {
-  //   emit(
-  //     state.copyWith(
-  //       searchTerm: filterValue?.searchTerm,
-  //       dateFrom: filterValue?.minSalary,
-  //       dateTo: filterValue?.maxSalary,
-  //       jobType: filterValue?.jobTypeSelected,
-  //       contractType: filterValue?.contractTypeSelected,
-  //       experienceType: filterValue?.experienceTypeSelected,
-  //     ),
-  //   );
-  // }
-
   void changeSelectionValue({
     GamesPlatform? platform,
     GameOrdering? ordering,
