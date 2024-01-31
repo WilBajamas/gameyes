@@ -44,8 +44,7 @@ void main() {
           .thenAnswer((_) async => Right(mockScreenshotResponse));
     },
     build: () => gameScreenshotCubit,
-    act: (cubit) async =>
-        gameScreenshotCubit.fetchGameScreenshots(slug: 'slug'),
+    act: (cubit) async => cubit.fetchGameScreenshots(slug: 'slug'),
     expect: () => [
       const GameScreenshotState(status: ScreenshotsStatus.loading),
       GameScreenshotState(
@@ -64,8 +63,7 @@ void main() {
           .thenAnswer((_) async => Left(mockResponseError));
     },
     build: () => gameScreenshotCubit,
-    act: (cubit) async =>
-        gameScreenshotCubit.fetchGameScreenshots(slug: 'slug'),
+    act: (cubit) async => cubit.fetchGameScreenshots(slug: 'slug'),
     expect: () => [
       const GameScreenshotState(status: ScreenshotsStatus.loading),
       GameScreenshotState(
