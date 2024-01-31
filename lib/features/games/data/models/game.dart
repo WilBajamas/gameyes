@@ -5,6 +5,9 @@ part 'game.g.dart';
 
 @JsonSerializable()
 final class Game extends Equatable {
+  final int? id;
+  final String? slug;
+
   final String? name;
 
   final String? released;
@@ -15,6 +18,8 @@ final class Game extends Equatable {
   final int? metacritic;
 
   const Game(
+    this.id,
+    this.slug,
     this.name,
     this.released,
     this.backgroundImage,
@@ -25,5 +30,5 @@ final class Game extends Equatable {
   Map<String, dynamic> toJson() => _$GameToJson(this);
 
   @override
-  List<Object?> get props => [name, released, backgroundImage, metacritic];
+  List<Object?> get props => [id, name, released, backgroundImage, metacritic];
 }

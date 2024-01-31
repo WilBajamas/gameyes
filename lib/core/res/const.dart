@@ -17,9 +17,11 @@ enum GameOrdering {
 class ConfigConstants {
   static const baseUrl = 'https://api.rawg.io/api/';
   static const gamesEndpoint = 'games';
+  static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';
   static const enviedFilePath =
       '../gaming_library_assessment_flutter/secret.env';
+  // static const gameDetailHeroTag = 'game_detail_hero';
 }
 
 class PathConstants {
@@ -50,4 +52,5 @@ class RouteConstants {
   static const featured = '/featured';
   static const games = '/games';
   static const onboarding = '/onboarding';
+  static const gameDetail = '/game_detail';
 }

@@ -37,10 +37,11 @@ class LatestReleasedListSection extends StatelessWidget {
                       itemBuilder: (context, index) => Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: GameItem(
-                          imageUrl: results![index].backgroundImage,
-                          name: results[index].name,
-                          date: results[index].released,
-                          score: results[index].metacritic,
+                          game: results![index],
+                          // imageUrl: results![index].backgroundImage,
+                          // name: results[index].name,
+                          // date: results[index].released,
+                          // score: results[index].metacritic,
                         ),
                       ),
                     );

@@ -1,6 +1,7 @@
 //** Hardcoding game platforms for simplicity */
 import 'package:equatable/equatable.dart';
 
+// ** Locally used entity //
 class GamesPlatform extends Equatable {
   final int id;
   final String name;

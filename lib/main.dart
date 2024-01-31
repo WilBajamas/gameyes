@@ -13,6 +13,9 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_screenshot_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 
@@ -46,6 +49,14 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => injection.getIt<GamesBloc>(),
           child: const GamesScreen(),
+        ),
+        BlocProvider(
+          create: (context) => injection.getIt<GameDetailCubit>(),
+          child: const GameDetailScreen(),
+        ),
+        BlocProvider(
+          create: (context) => injection.getIt<GameScreenshotCubit>(),
+          child: const GameDetailScreen(),
         ),
       ],
       child: MaterialApp.router(

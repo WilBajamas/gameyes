@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -18,11 +17,7 @@ class GameItemGridLoadingShimmer extends StatelessWidget {
           crossAxisSpacing: 8,
         ),
         itemCount: 4,
-        itemBuilder: (_, i) => const GameItem(
-          imageUrl: null,
-          name: StringConstants.emptyStringPlaceholder,
-          date: StringConstants.emptyStringPlaceholder,
-        ),
+        itemBuilder: (_, i) => const GameItem(),
       ),
     );
   }
