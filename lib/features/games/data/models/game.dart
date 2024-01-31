@@ -6,6 +6,7 @@ part 'game.g.dart';
 @JsonSerializable()
 final class Game extends Equatable {
   final int? id;
+  final String? slug;
 
   final String? name;
 
@@ -18,6 +19,7 @@ final class Game extends Equatable {
 
   const Game(
     this.id,
+    this.slug,
     this.name,
     this.released,
     this.backgroundImage,

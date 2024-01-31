@@ -3,15 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_screenshot_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_section_point.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_screenshot.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 
-class GameDetailScreen extends StatelessWidget {
+class GameDetailScreen extends StatefulWidget {
   final int? gameId;
+  final String? slug;
 
-  const GameDetailScreen({Key? key, this.gameId}) : super(key: key);
+  const GameDetailScreen({Key? key, this.gameId, this.slug}) : super(key: key);
+
+  @override
+  State<GameDetailScreen> createState() => _GameDetailScreenState();
+}
+
+class _GameDetailScreenState extends State<GameDetailScreen> {
+  @override
+  void initState() {
+    context.read<GameDetailCubit>().fetchGameDetail(id: widget.gameId!);
+    context
+        .read<GameScreenshotCubit>()
+        .fetchGameScreenshots(slug: widget.slug!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +45,10 @@ class GameDetailScreen extends StatelessWidget {
                 case GameDetailStatus.failed:
                   return Center(
                     child: ErrorRetryWidget(
-                      onRetryClicked: () => gameId != null
+                      onRetryClicked: () => widget.gameId != null
                           ? context
                               .read<GameDetailCubit>()
-                              .fetchGameDetail(id: gameId!)
+                              .fetchGameDetail(id: widget.gameId!)
                           : null,
                     ),
                   );
@@ -51,7 +67,7 @@ class GameDetailScreen extends StatelessWidget {
                           style: context.themeData.textTheme.displayMedium,
                         ),
                       ),
-                      DetailScreenshotsSection(state: state),
+                      DetailScreenshotsSection(slug: widget.slug),
                     ],
                   );
               }
@@ -132,7 +148,7 @@ class DetailTopHeader extends StatelessWidget {
                             // ** Release date //
                             Text(
                               // ignore: lines_longer_than_80_chars
-                              '${context.localisations.release_date}: ${state.response!.released.formatDate()}',
+                              '${context.localisations.release_date}: ${state.response!.released.stringToDateString()}',
                               style: context.themeData.textTheme.bodyLarge!
                                   .merge(const TextStyle(color: Colors.white)),
                             ),
@@ -233,22 +249,54 @@ class DetailMidSection extends StatelessWidget {
 }
 
 class DetailScreenshotsSection extends StatelessWidget {
-  final GameDetailState state;
+  final String? slug;
 
-  const DetailScreenshotsSection({Key? key, required this.state})
+  const DetailScreenshotsSection({Key? key, required this.slug})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: context.screenHeight / 3,
-      child: ListView.builder(
-        padding: const EdgeInsets.only(left: 12),
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => const Padding(
-          padding: EdgeInsets.only(right: 12),
-          child: GameScreenshot(imageUrl: ''),
-        ),
+      child: BlocBuilder<GameScreenshotCubit, GameScreenshotState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case ScreenshotsStatus.loading:
+              return const Center(child: CircularProgressIndicator());
+            case ScreenshotsStatus.failure:
+              return Center(
+                child: ErrorRetryWidget(
+                  onRetryClicked: () => context
+                      .read<GameScreenshotCubit>()
+                      .fetchGameScreenshots(slug: slug!),
+                ),
+              );
+            case ScreenshotsStatus.success:
+              if (state.response?.results != null &&
+                  state.response!.results.isNotEmpty) {
+                return ListView.builder(
+                  padding: const EdgeInsets.only(left: 12),
+                  itemCount: state.response!.results.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: GameScreenshot(
+                      imageUrl: state.response?.results[index].image,
+                    ),
+                  ),
+                );
+              } else {
+                return Center(
+                  child: ErrorRetryWidget(
+                    text: context.localisations.no_results_found,
+                    onRetryClicked: () => context
+                        .read<GameScreenshotCubit>()
+                        .fetchGameScreenshots(slug: slug!),
+                  ),
+                );
+              }
+          }
+        },
       ),
     );
   }

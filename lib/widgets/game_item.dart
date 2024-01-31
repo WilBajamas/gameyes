@@ -2,23 +2,29 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/data/models/game_detail_route_param.dart';
+import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
+import 'package:go_router/go_router.dart';
 
 class GameItem extends StatelessWidget {
-  final String? imageUrl;
-  final String? name;
-  final String? date;
-  final int? score;
-  final VoidCallback? onClick;
+  final Game? game;
 
   const GameItem({
     Key? key,
-    required this.imageUrl,
-    required this.name,
-    required this.date,
-    this.score,
-    this.onClick,
+    this.game,
   }) : super(key: key);
+
+  void onClickGameItem(
+    BuildContext context,
+  ) {
+    if (game?.id != null && game?.slug != null) {
+      context.push(
+        RouteConstants.gameDetail,
+        extra: GameDetailRouteParam(game?.id, game?.slug),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,9 @@ class GameItem extends StatelessWidget {
 
     return Card(
       child: InkWell(
-        onTap: onClick,
+        onTap: () => onClickGameItem(
+          context,
+        ),
         child: SizedBox(
           width: itemWidth,
           child: Column(
@@ -41,12 +49,12 @@ class GameItem extends StatelessWidget {
                         topLeft: Radius.circular(8),
                         topRight: Radius.circular(8),
                       ),
-                      child: imageUrl != null
+                      child: game?.backgroundImage != null
 
                           //** Image */
                           ? CachedNetworkImage(
                               fit: BoxFit.cover,
-                              imageUrl: imageUrl!,
+                              imageUrl: game!.backgroundImage!,
                               placeholder: (context, url) => const Center(
                                 child: SizedBox(
                                   width: 40,
@@ -72,7 +80,7 @@ class GameItem extends StatelessWidget {
                     bottom: 8,
                     right: 8,
                     child: MetacriticIndicator(
-                      score: score,
+                      score: game?.metacritic,
                     ),
                   ),
                 ],
@@ -84,7 +92,7 @@ class GameItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  name ?? StringConstants.emptyStringPlaceholder,
+                  game?.name ?? StringConstants.emptyStringPlaceholder,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.themeData.textTheme.displaySmall,
@@ -96,7 +104,8 @@ class GameItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  date.formatDate(),
+                  game?.released.stringToDateString() ??
+                      StringConstants.emptyStringPlaceholder,
                   style: context.themeData.textTheme.bodySmall,
                 ),
               ),

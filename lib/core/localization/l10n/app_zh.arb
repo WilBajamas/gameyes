@@ -25,8 +25,8 @@
   "featured_screen_title": "游戏天地，等你探索",
   "screenshots": "截图",
   "metacritic_score": "综合评分",
-  "release_date": "Release date",
-  "publishers": "Publishers",
-  "genre": "Genre",
-  "developers": "Developers"
+  "release_date": "上线日期",
+  "publishers": "出版商",
+  "genre": "风格",
+  "developers": "游戏开发者"
 }

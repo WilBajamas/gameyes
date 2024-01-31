@@ -13,7 +13,7 @@ import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart'
-    as _i19;
+    as _i23;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repository/featured_repository_impl.dart'
     as _i7;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repository/featured_repository.dart'
@@ -21,27 +21,35 @@ import 'package:gaming_library_assessment_flutter/features/featured/domain/repos
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/best_metacritic_cubit.dart'
     as _i3;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/latest_releases_cubit.dart'
-    as _i17;
+    as _i21;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart'
-    as _i18;
+    as _i22;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart'
     as _i8;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart'
     as _i10;
+import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_screenshots_datasource.dart'
+    as _i14;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/repository/game_detail_repository_impl.dart'
     as _i12;
-import 'package:gaming_library_assessment_flutter/features/game_detail/domain/game_detail_repository.dart'
+import 'package:gaming_library_assessment_flutter/features/game_detail/data/repository/game_screenshots_repository_impl.dart'
+    as _i16;
+import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_detail_repository.dart'
     as _i11;
+import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_screenshots_repository.dart'
+    as _i15;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart'
     as _i9;
-import 'package:gaming_library_assessment_flutter/features/games/data/datasource/games_datasource.dart'
-    as _i14;
-import 'package:gaming_library_assessment_flutter/features/games/data/repository/games_repository_impl.dart'
-    as _i16;
-import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart'
-    as _i15;
-import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart'
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_screenshot_cubit.dart'
     as _i13;
+import 'package:gaming_library_assessment_flutter/features/games/data/datasource/games_datasource.dart'
+    as _i18;
+import 'package:gaming_library_assessment_flutter/features/games/data/repository/games_repository_impl.dart'
+    as _i20;
+import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart'
+    as _i19;
+import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart'
+    as _i17;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
@@ -65,12 +73,17 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i10.GameDetailDatasource>(() => _i10.GameDetailDatasource());
     gh.factory<_i11.GameDetailRepository>(
         () => _i12.GameDetailRepositoryImpl());
-    gh.factory<_i13.GamesBloc>(() => _i13.GamesBloc());
-    gh.factory<_i14.GamesDataSource>(() => _i14.GamesDataSource());
-    gh.factory<_i15.GamesRepository>(() => _i16.GamesRepositoryImpl());
-    gh.factory<_i17.LatestReleasesCubit>(() => _i17.LatestReleasesCubit());
-    gh.factory<_i18.MostAnticipatedCubit>(() => _i18.MostAnticipatedCubit());
-    gh.factory<_i19.SharedPreference>(() => _i19.SharedPreference());
+    gh.factory<_i13.GameScreenshotCubit>(() => _i13.GameScreenshotCubit());
+    gh.factory<_i14.GameScreenshotsDatasource>(
+        () => _i14.GameScreenshotsDatasource());
+    gh.factory<_i15.GameScreenshotsRepository>(
+        () => _i16.GameScreenshotsRepositoryImpl());
+    gh.factory<_i17.GamesBloc>(() => _i17.GamesBloc());
+    gh.factory<_i18.GamesDataSource>(() => _i18.GamesDataSource());
+    gh.factory<_i19.GamesRepository>(() => _i20.GamesRepositoryImpl());
+    gh.factory<_i21.LatestReleasesCubit>(() => _i21.LatestReleasesCubit());
+    gh.factory<_i22.MostAnticipatedCubit>(() => _i22.MostAnticipatedCubit());
+    gh.factory<_i23.SharedPreference>(() => _i23.SharedPreference());
     return this;
   }
 }

@@ -11,6 +11,8 @@ part 'game_detail_response.g.dart';
 final class GameDetailResponse extends Equatable {
   final String? name;
 
+  final String? slug;
+
   final int? metacritic;
 
   final String? released;
@@ -40,6 +42,7 @@ final class GameDetailResponse extends Equatable {
 
   const GameDetailResponse(
     this.name,
+    this.slug,
     this.metacritic,
     this.released,
     this.backgroundImage,
@@ -59,6 +62,7 @@ final class GameDetailResponse extends Equatable {
   @override
   List<Object?> get props => [
         name,
+        slug,
         metacritic,
         released,
         backgroundImage,

@@ -11,7 +11,7 @@ extension ContextExtensions on BuildContext {
 }
 
 extension DateFormatters on String? {
-  String formatDate() {
+  String stringToDateString() {
     try {
       if (this != null) {
         final dateTime = DateFormat('yyyy-MM-dd').parse(this!);
