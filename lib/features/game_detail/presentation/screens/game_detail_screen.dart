@@ -1,5 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_section_point.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_screenshot.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
@@ -7,7 +11,7 @@ import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.d
 class GameDetailScreen extends StatelessWidget {
   final int? gameId;
 
-  const GameDetailScreen({Key? key, required this.gameId}) : super(key: key);
+  const GameDetailScreen({Key? key, this.gameId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +21,41 @@ class GameDetailScreen extends StatelessWidget {
           headerSliverBuilder: (context, _) => [
             const SliverAppBar(),
           ],
-          body: ListView(
-            padding: const EdgeInsets.only(bottom: 16),
-            children: [
-              const DetailTopHeader(),
-              const SizedBox(height: 20),
-              const DetailMidSection(),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, bottom: 12),
-                child: Text(
-                  context.localisations.screenshots,
-                  style: context.themeData.textTheme.displayMedium,
-                ),
-              ),
-              const DetailScreenshotsSection(),
-            ],
+          body: BlocBuilder<GameDetailCubit, GameDetailState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case GameDetailStatus.loading:
+                  return const Center(child: CircularProgressIndicator());
+                case GameDetailStatus.failed:
+                  return Center(
+                    child: ErrorRetryWidget(
+                      onRetryClicked: () => gameId != null
+                          ? context
+                              .read<GameDetailCubit>()
+                              .fetchGameDetail(id: gameId!)
+                          : null,
+                    ),
+                  );
+                case GameDetailStatus.success:
+                  return ListView(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    children: [
+                      DetailTopHeader(state: state),
+                      const SizedBox(height: 20),
+                      DetailMidSection(state: state),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, bottom: 12),
+                        child: Text(
+                          context.localisations.screenshots,
+                          style: context.themeData.textTheme.displayMedium,
+                        ),
+                      ),
+                      DetailScreenshotsSection(state: state),
+                    ],
+                  );
+              }
+            },
           ),
         ),
       ),
@@ -41,7 +64,9 @@ class GameDetailScreen extends StatelessWidget {
 }
 
 class DetailTopHeader extends StatelessWidget {
-  const DetailTopHeader({Key? key}) : super(key: key);
+  final GameDetailState state;
+
+  const DetailTopHeader({Key? key, required this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +74,22 @@ class DetailTopHeader extends StatelessWidget {
       height: context.screenHeight * 0.6,
       child: Stack(
         children: [
+          // ** Background image //
           SizedBox(
             height: context.screenHeight,
-            child: Image.asset(
-              'assets/images/featured_title_img.jpeg',
-              fit: BoxFit.cover,
-            ),
+            child: state.response?.backgroundImageAdditional != null
+                ? Image.network(
+                    state.response!.backgroundImageAdditional!,
+                    fit: BoxFit.cover,
+                  )
+                : null,
           ),
+
           Container(
             color: Colors.black.withOpacity(0.7), // 70% opacity
           ),
+
+          // ** Content //
           Container(
             padding: const EdgeInsets.all(16),
             width: context.screenWidth,
@@ -70,37 +101,47 @@ class DetailTopHeader extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // ** Image //
                       Expanded(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: AspectRatio(
                             aspectRatio: 2 / 3,
-                            child: Container(
-                              color: Colors.white,
+                            child: CachedNetworkImage(
+                              imageUrl: state.response?.backgroundImage ?? '-',
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(width: 16),
+
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // ** Name //
                             Text(
-                              'Testing name',
+                              state.response!.name!,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                               style: context.themeData.textTheme.displayMedium!
                                   .merge(const TextStyle(color: Colors.white)),
                             ),
                             const SizedBox(height: 8),
+                            // ** Release date //
                             Text(
-                              'Testing release date',
+                              // ignore: lines_longer_than_80_chars
+                              '${context.localisations.release_date}: ${state.response!.released.formatDate()}',
                               style: context.themeData.textTheme.bodyLarge!
                                   .merge(const TextStyle(color: Colors.white)),
                             ),
                             const SizedBox(height: 16),
+                            // ** Metacritic score //
                             Row(
                               children: [
-                                const MetacriticIndicator(
+                                MetacriticIndicator(
+                                  score: state.response?.metacritic,
                                   size: 60,
                                 ),
                                 const SizedBox(
@@ -121,10 +162,14 @@ class DetailTopHeader extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
+                // ** Description //
                 Expanded(
                   child: Text(
-                    'Test description',
-                    style: context.themeData.textTheme.bodyLarge,
+                    state.response!.description!,
+                    overflow: TextOverflow.fade,
+                    softWrap: true,
+                    style: context.themeData.textTheme.bodySmall!
+                        .merge(const TextStyle(color: Colors.white)),
                   ),
                 ),
               ],
@@ -137,35 +182,61 @@ class DetailTopHeader extends StatelessWidget {
 }
 
 class DetailMidSection extends StatelessWidget {
-  const DetailMidSection({Key? key}) : super(key: key);
+  final GameDetailState state;
+
+  const DetailMidSection({Key? key, required this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GameDetailSectionPoint(title: 'Test', value: 'test value'),
-            GameDetailSectionPoint(title: 'Test', value: 'test value'),
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GameDetailSectionPoint(title: 'Test', value: 'test value'),
-            GameDetailSectionPoint(title: 'Test', value: 'test value'),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GameDetailSectionPoint(
+                  title: context.localisations.genre,
+                  value: state.response!.genreListString,
+                ),
+                const SizedBox(height: 12),
+                GameDetailSectionPoint(
+                  title: context.localisations.publishers,
+                  value: state.response!.publisherListString,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GameDetailSectionPoint(
+                  title: context.localisations.developers,
+                  value: state.response!.developerListString,
+                ),
+                const SizedBox(height: 12),
+                GameDetailSectionPoint(
+                  title: context.localisations.platforms,
+                  value: state.response!.platformListString,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class DetailScreenshotsSection extends StatelessWidget {
-  const DetailScreenshotsSection({Key? key}) : super(key: key);
+  final GameDetailState state;
+
+  const DetailScreenshotsSection({Key? key, required this.state})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -97,6 +97,7 @@ class GameItem extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
                   date.formatDate(),
+                  style: context.themeData.textTheme.bodySmall,
                 ),
               ),
             ],

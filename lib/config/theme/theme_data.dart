@@ -20,6 +20,15 @@ ThemeData buildTheme() {
       fontWeight: FontWeight.w800,
       textStyle: baseTheme.textTheme.titleLarge,
     ),
+    bodySmall: GoogleFonts.openSans(
+      fontSize: 14,
+      textStyle: baseTheme.textTheme.bodySmall,
+    ),
+    bodyMedium: GoogleFonts.openSans(
+      fontSize: 16,
+      fontWeight: FontWeight.w800,
+      textStyle: baseTheme.textTheme.bodyMedium,
+    ),
     bodyLarge: GoogleFonts.openSans(
       fontSize: 16,
       fontWeight: FontWeight.w600,

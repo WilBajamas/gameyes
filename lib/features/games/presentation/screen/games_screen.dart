@@ -4,6 +4,7 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/widget/filter_bottom_sheet.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
@@ -119,10 +120,18 @@ class _GamesScreenState extends State<GamesScreen> {
                       ),
                       itemBuilder: (BuildContext context, int index) {
                         return GameItem(
-                          onClick: () => context.push(
-                            RouteConstants.gameDetail,
-                            extra: state.games[index].id,
-                          ),
+                          onClick: () {
+                            final gameId = state.games[index].id;
+
+                            context.push(
+                              RouteConstants.gameDetail,
+                              extra: gameId,
+                            );
+
+                            context
+                                .read<GameDetailCubit>()
+                                .fetchGameDetail(id: gameId!);
+                          },
                           imageUrl: state.games[index].backgroundImage,
                           name: state.games[index].name,
                           date: state.games[index].released,

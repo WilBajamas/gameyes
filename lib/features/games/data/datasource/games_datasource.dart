@@ -5,12 +5,11 @@ import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
-    as injection;
+import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 
 @injectable
 class GamesDataSource {
-  final _dioService = injection.getIt<DioService>();
+  final _dioService = getIt<DioService>();
 
   Future<Either<ErrorType, GamesResponse>> fetchGames({
     int page = 1,

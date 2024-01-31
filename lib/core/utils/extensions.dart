@@ -1,7 +1,3 @@
-/* This file is only for general extension functions.
-  If you have specific functions you wish to extend for architecture components
-  - specify them within their own folders */
-
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
