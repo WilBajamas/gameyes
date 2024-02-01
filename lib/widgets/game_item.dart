@@ -76,13 +76,14 @@ class GameItem extends StatelessWidget {
                   ),
 
                   //** Score */
-                  Positioned(
-                    bottom: 8,
-                    right: 8,
-                    child: MetacriticIndicator(
-                      score: game?.metacritic,
+                  if (game?.metacritic != null)
+                    Positioned(
+                      bottom: 8,
+                      right: 8,
+                      child: MetacriticIndicator(
+                        score: game?.metacritic,
+                      ),
                     ),
-                  ),
                 ],
               ),
 
