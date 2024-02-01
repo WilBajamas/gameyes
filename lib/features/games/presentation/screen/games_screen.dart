@@ -118,10 +118,6 @@ class _GamesScreenState extends State<GamesScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return GameItem(
                           game: state.games[index],
-                          // imageUrl: state.games[index].backgroundImage,
-                          // name: state.games[index].name,
-                          // date: state.games[index].released,
-                          // score: state.games[index].metacritic,
                         );
                       },
                       itemCount: state.games.length,

@@ -21,7 +21,6 @@ class ConfigConstants {
   static const apiKey = 'API_KEY';
   static const enviedFilePath =
       '../gaming_library_assessment_flutter/secret.env';
-  // static const gameDetailHeroTag = 'game_detail_hero';
 }
 
 class PathConstants {

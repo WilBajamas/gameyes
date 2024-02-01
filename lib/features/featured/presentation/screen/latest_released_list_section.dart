@@ -12,7 +12,7 @@ class LatestReleasedListSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: context.screenHeight / 2,
+      height: context.screenWidth * 0.9,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,10 +38,6 @@ class LatestReleasedListSection extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8),
                         child: GameItem(
                           game: results![index],
-                          // imageUrl: results![index].backgroundImage,
-                          // name: results[index].name,
-                          // date: results[index].released,
-                          // score: results[index].metacritic,
                         ),
                       ),
                     );

@@ -53,6 +53,9 @@ dependencies:
   # Lottie
   lottie: ^3.0.0
 
+  # Text scaler
+  auto_size_text: ^3.0.0
+
   # Shimmer loading
   skeletonizer: ^1.0.1
 

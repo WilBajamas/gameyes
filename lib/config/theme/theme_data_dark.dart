@@ -122,7 +122,7 @@ ThemeData buildDarkTheme() {
     labelStyle: const TextStyle(color: Colors.grey),
     suffixIconColor: Colors.grey,
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12), // Set desired radius
+      borderRadius: BorderRadius.circular(12),
     ),
   );
 
