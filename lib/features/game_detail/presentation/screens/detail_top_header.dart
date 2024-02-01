@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
@@ -76,7 +77,7 @@ class DetailTopHeader extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // ** Name //
-                            Text(
+                            AutoSizeText(
                               state.response!.name!,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
@@ -85,13 +86,15 @@ class DetailTopHeader extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             // ** Release date //
-                            Text(
+                            AutoSizeText(
                               '${context.localisations.release_date}:',
+                              maxLines: 1,
                               style: context.themeData.textTheme.titleMedium!
                                   .copyWith(color: Colors.white),
                             ),
-                            Text(
+                            AutoSizeText(
                               state.response!.released.stringToDateString(),
+                              maxLines: 2,
                               style: context.themeData.textTheme.bodyLarge!
                                   .copyWith(color: Colors.white),
                             ),
@@ -107,8 +110,9 @@ class DetailTopHeader extends StatelessWidget {
                                   width: 10,
                                 ),
                                 Expanded(
-                                  child: Text(
+                                  child: AutoSizeText(
                                     context.localisations.metacritic_score,
+                                    maxLines: 2,
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -123,10 +127,10 @@ class DetailTopHeader extends StatelessWidget {
                 const SizedBox(height: 12),
                 // ** Description //
                 Expanded(
-                  child: Text(
+                  child: AutoSizeText(
                     state.response!.description!,
                     overflow: TextOverflow.fade,
-                    softWrap: true,
+                    maxFontSize: 16,
                     style: context.themeData.textTheme.bodySmall!
                         .merge(const TextStyle(color: Colors.white)),
                   ),

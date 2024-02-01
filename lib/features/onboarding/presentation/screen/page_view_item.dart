@@ -19,14 +19,16 @@ class PageViewItem extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          SizedBox(
-            height: context.screenHeight * 0.5,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Lottie.asset(
-                  '${PathConstants.lottieAnimationAssetPath}$animationPath',
-                  fit: BoxFit.cover,
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 1 / 1,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Lottie.asset(
+                    '${PathConstants.lottieAnimationAssetPath}$animationPath',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

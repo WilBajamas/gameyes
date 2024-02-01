@@ -12,7 +12,7 @@ class LatestReleasedListSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: context.screenHeight / 2,
+      height: context.screenWidth * 0.9,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

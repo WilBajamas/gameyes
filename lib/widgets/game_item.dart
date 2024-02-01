@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
@@ -90,26 +91,30 @@ class GameItem extends StatelessWidget {
               const SizedBox(height: 4),
 
               //** Name */
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(
-                  game?.name ?? StringConstants.emptyStringPlaceholder,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.themeData.textTheme.displaySmall,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: AutoSizeText(
+                    game?.name ?? StringConstants.emptyStringPlaceholder,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.themeData.textTheme.displaySmall,
+                  ),
                 ),
               ),
-              const SizedBox(height: 4),
 
               //** Date */
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(
+                child: AutoSizeText(
                   game?.released.stringToDateString() ??
                       StringConstants.emptyStringPlaceholder,
+                  maxLines: 1,
                   style: context.themeData.textTheme.bodyLarge,
                 ),
               ),
+
+              const SizedBox(height: 8),
             ],
           ),
         ),

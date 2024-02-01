@@ -67,7 +67,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: context.screenHeight * 0.8,
+      height: context.screenHeight * 0.7,
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: BlocBuilder<FilterCubit, FilterState>(
