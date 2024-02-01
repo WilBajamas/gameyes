@@ -36,6 +36,17 @@ ThemeData buildDarkTheme() {
       color: kDarkColorScheme.onBackground,
       textStyle: baseTheme.textTheme.titleLarge,
     ),
+    bodySmall: GoogleFonts.openSans(
+      fontSize: 14,
+      color: kDarkColorScheme.onBackground,
+      textStyle: baseTheme.textTheme.bodySmall,
+    ),
+    bodyMedium: GoogleFonts.openSans(
+      fontSize: 16,
+      fontWeight: FontWeight.w800,
+      color: kDarkColorScheme.onBackground,
+      textStyle: baseTheme.textTheme.bodyMedium,
+    ),
     bodyLarge: GoogleFonts.openSans(
       fontSize: 16,
       fontWeight: FontWeight.w600,

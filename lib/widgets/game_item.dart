@@ -106,7 +106,7 @@ class GameItem extends StatelessWidget {
                 child: Text(
                   game?.released.stringToDateString() ??
                       StringConstants.emptyStringPlaceholder,
-                  style: context.themeData.textTheme.bodySmall,
+                  style: context.themeData.textTheme.bodyLarge,
                 ),
               ),
             ],
