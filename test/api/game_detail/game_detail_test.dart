@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
-import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 import '../../mocks/game_detail_response_mock.dart';
-import '../../mocks/game_response_mock.dart';
 
 void main() {
   late DioAdapter dioAdapter;
