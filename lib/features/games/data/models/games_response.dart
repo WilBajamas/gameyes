@@ -34,5 +34,5 @@ final class GamesResponse extends Equatable {
   Map<String, dynamic> toJson() => _$GamesResponseToJson(this);
 
   @override
-  List<Object?> get props => [count, next, results];
+  List<Object?> get props => [count, currentPage, next, results];
 }

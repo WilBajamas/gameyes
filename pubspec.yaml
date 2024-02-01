@@ -65,8 +65,9 @@ dependencies:
   # Envied - Privatise file
   envied: ^0.5.3
 
-  # Mockito
+  # Mocking
   mockito: ^5.4.4
+  http_mock_adapter: ^0.6.1
 
 dev_dependencies:
   flutter_test:
