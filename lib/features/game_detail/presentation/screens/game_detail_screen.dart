@@ -62,12 +62,12 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
                       ),
                       const SizedBox(height: 20),
                       DetailMidSection(state: state),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 30),
                       Padding(
                         padding: const EdgeInsets.only(left: 16, bottom: 12),
                         child: Text(
                           context.localisations.screenshots,
-                          style: context.themeData.textTheme.displayMedium,
+                          style: context.themeData.textTheme.displayLarge,
                         ),
                       ),
                       DetailScreenshotsSection(slug: widget.slug),
@@ -131,6 +131,17 @@ class DetailTopHeader extends StatelessWidget {
                             aspectRatio: 2 / 3,
                             child: CachedNetworkImage(
                               imageUrl: state.response?.backgroundImage ?? '-',
+                              errorWidget: (context, _, __) => Container(
+                                color: Colors.white,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.error,
+                                    size: 40,
+                                    color:
+                                        context.themeData.colorScheme.primary,
+                                  ),
+                                ),
+                              ),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -153,10 +164,14 @@ class DetailTopHeader extends StatelessWidget {
                             const SizedBox(height: 8),
                             // ** Release date //
                             Text(
-                              // ignore: lines_longer_than_80_chars
-                              '${context.localisations.release_date}: ${state.response!.released.stringToDateString()}',
+                              '${context.localisations.release_date}:',
+                              style: context.themeData.textTheme.titleMedium!
+                                  .copyWith(color: Colors.white),
+                            ),
+                            Text(
+                              state.response!.released.stringToDateString(),
                               style: context.themeData.textTheme.bodyLarge!
-                                  .merge(const TextStyle(color: Colors.white)),
+                                  .copyWith(color: Colors.white),
                             ),
                             const SizedBox(height: 16),
                             // ** Metacritic score //
