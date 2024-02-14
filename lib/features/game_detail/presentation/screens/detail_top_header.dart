@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
@@ -48,24 +49,28 @@ class DetailTopHeader extends StatelessWidget {
                     children: [
                       // ** Image //
                       Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: AspectRatio(
-                            aspectRatio: 2 / 3,
-                            child: CachedNetworkImage(
-                              imageUrl: state.response?.backgroundImage ?? '-',
-                              errorWidget: (context, _, __) => Container(
-                                color: Colors.white,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.error,
-                                    size: 40,
-                                    color:
-                                        context.themeData.colorScheme.primary,
+                        child: Hero(
+                          tag: '${ConfigConstants.heroTag}/$id',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: AspectRatio(
+                              aspectRatio: 2 / 3,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    state.response?.backgroundImage ?? '-',
+                                errorWidget: (context, _, __) => Container(
+                                  color: Colors.white,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.error,
+                                      size: 40,
+                                      color:
+                                          context.themeData.colorScheme.primary,
+                                    ),
                                   ),
                                 ),
+                                fit: BoxFit.cover,
                               ),
-                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

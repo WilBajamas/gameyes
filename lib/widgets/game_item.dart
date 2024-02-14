@@ -41,51 +41,54 @@ class GameItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 4 / 4.8,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                      ),
-                      child: game?.backgroundImage != null
+              Hero(
+                tag: '${ConfigConstants.heroTag}/${game?.id}',
+                child: Stack(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 4 / 4.8,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                        ),
+                        child: game?.backgroundImage != null
 
-                          //** Image */
-                          ? CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: game!.backgroundImage!,
-                              placeholder: (context, url) => const Center(
-                                child: SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: CircularProgressIndicator(),
+                            //** Image */
+                            ? CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: game!.backgroundImage!,
+                                placeholder: (context, url) => const Center(
+                                  child: SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Center(child: Icon(Icons.error)),
+                              )
+                            : Center(
+                                child: Icon(
+                                  Icons.error,
+                                  color: context.themeData.colorScheme.primary,
+                                  size: 40,
                                 ),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  const Center(child: Icon(Icons.error)),
-                            )
-                          : Center(
-                              child: Icon(
-                                Icons.error,
-                                color: context.themeData.colorScheme.primary,
-                                size: 40,
-                              ),
-                            ),
-                    ),
-                  ),
-
-                  //** Score */
-                  if (game?.metacritic != null)
-                    Positioned(
-                      bottom: 8,
-                      right: 8,
-                      child: MetacriticIndicator(
-                        score: game?.metacritic,
                       ),
                     ),
-                ],
+
+                    //** Score */
+                    if (game?.metacritic != null)
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: MetacriticIndicator(
+                          score: game?.metacritic,
+                        ),
+                      ),
+                  ],
+                ),
               ),
 
               const SizedBox(height: 4),

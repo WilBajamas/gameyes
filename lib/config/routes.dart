@@ -11,6 +11,8 @@ import 'package:gaming_library_assessment_flutter/features/onboarding/presentati
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+// ! Issue with Hero not working
+// final _heroController = HeroController();
 
 final goRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -38,6 +40,7 @@ final goRouter = GoRouter(
       },
       branches: [
         StatefulShellBranch(
+          // observers: [_heroController],
           routes: [
             GoRoute(
               path: RouteConstants.featured,
@@ -46,6 +49,7 @@ final goRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
+          // observers: [_heroController],
           routes: [
             GoRoute(
               path: RouteConstants.games,
