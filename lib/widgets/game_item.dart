@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/data/models/game_detail_route_param.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 import 'package:go_router/go_router.dart';
@@ -19,10 +18,10 @@ class GameItem extends StatelessWidget {
   void onClickGameItem(
     BuildContext context,
   ) {
-    if (game?.id != null && game?.slug != null) {
+    if (game != null) {
       context.push(
         RouteConstants.gameDetail,
-        extra: GameDetailRouteParam(game?.id, game?.slug),
+        extra: game,
       );
     }
   }
@@ -41,21 +40,21 @@ class GameItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Hero(
-                tag: '${ConfigConstants.heroTag}/${game?.id}',
-                child: Stack(
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 4 / 4.8,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                        ),
-                        child: game?.backgroundImage != null
+              Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 4 / 4.8,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                      child: game?.backgroundImage != null
 
-                            //** Image */
-                            ? CachedNetworkImage(
+                          //** Image */
+                          ? Hero(
+                              tag: '${ConfigConstants.heroTag}/${game?.id}',
+                              child: CachedNetworkImage(
                                 fit: BoxFit.cover,
                                 imageUrl: game!.backgroundImage!,
                                 placeholder: (context, url) => const Center(
@@ -67,28 +66,28 @@ class GameItem extends StatelessWidget {
                                 ),
                                 errorWidget: (context, url, error) =>
                                     const Center(child: Icon(Icons.error)),
-                              )
-                            : Center(
-                                child: Icon(
-                                  Icons.error,
-                                  color: context.themeData.colorScheme.primary,
-                                  size: 40,
-                                ),
                               ),
+                            )
+                          : Center(
+                              child: Icon(
+                                Icons.error,
+                                color: context.themeData.colorScheme.primary,
+                                size: 40,
+                              ),
+                            ),
+                    ),
+                  ),
+
+                  //** Score */
+                  if (game?.metacritic != null)
+                    Positioned(
+                      bottom: 8,
+                      right: 8,
+                      child: MetacriticIndicator(
+                        score: game?.metacritic,
                       ),
                     ),
-
-                    //** Score */
-                    if (game?.metacritic != null)
-                      Positioned(
-                        bottom: 8,
-                        right: 8,
-                        child: MetacriticIndicator(
-                          score: game?.metacritic,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               ),
 
               const SizedBox(height: 4),

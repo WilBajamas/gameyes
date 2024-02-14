@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
-import 'package:gaming_library_assessment_flutter/data/models/game_detail_route_param.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-// ! Issue with Hero not working
-// final _heroController = HeroController();
 
 final goRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -40,7 +38,6 @@ final goRouter = GoRouter(
       },
       branches: [
         StatefulShellBranch(
-          // observers: [_heroController],
           routes: [
             GoRoute(
               path: RouteConstants.featured,
@@ -49,7 +46,6 @@ final goRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          // observers: [_heroController],
           routes: [
             GoRoute(
               path: RouteConstants.games,
@@ -62,12 +58,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: RouteConstants.gameDetail,
       builder: (context, state) {
-        final extras = state.extra as GameDetailRouteParam;
-
-        return GameDetailScreen(
-          gameId: extras.id,
-          slug: extras.slug,
-        );
+        return GameDetailScreen(game: state.extra as Game);
       },
     ),
   ],

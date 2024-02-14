@@ -22,7 +22,6 @@ class ConfigConstants {
   static const heroTag = 'hero_tag';
   static const enviedFilePath =
       '../gaming_library_assessment_flutter/secret.env';
-  
 }
 
 class PathConstants {
