@@ -14,6 +14,8 @@ class GameDetailCubit extends Cubit<GameDetailState> {
 
   GameDetailCubit() : super(const GameDetailState());
 
+  void get resetContent => emit(const GameDetailState());
+
   Future<void> fetchGameDetail({required int id}) async {
     emit(state.copyWith(status: GameDetailStatus.loading));
 
@@ -27,4 +29,10 @@ class GameDetailCubit extends Cubit<GameDetailState> {
       ),
     );
   }
+
+  void get expandContent => emit(
+        state.copyWith(
+          contentExpanded: !state.contentExpanded,
+        ),
+      );
 }

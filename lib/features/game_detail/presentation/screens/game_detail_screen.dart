@@ -20,6 +20,7 @@ class GameDetailScreen extends StatefulWidget {
 class _GameDetailScreenState extends State<GameDetailScreen> {
   @override
   void initState() {
+    context.read<GameDetailCubit>().resetContent;
     context.read<GameDetailCubit>().fetchGameDetail(id: widget.game!.id!);
     context
         .read<GameScreenshotCubit>()
@@ -35,24 +36,28 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
           headerSliverBuilder: (context, _) => [
             const SliverAppBar(),
           ],
-          body: ListView(
-            padding: const EdgeInsets.only(bottom: 16),
+          body: Stack(
             children: [
-              DetailTopHeader(
-                gameId: widget.game!.id,
-                image: widget.game!.backgroundImage,
+              ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(bottom: 16),
+                children: [
+                  DetailTopHeader(
+                    gameId: widget.game!.id,
+                    image: widget.game!.backgroundImage,
+                  ),
+                  DetailMidSection(gameId: widget.game!.id),
+                  const SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, bottom: 12),
+                    child: Text(
+                      context.localisations.screenshots,
+                      style: context.themeData.textTheme.displayLarge,
+                    ),
+                  ),
+                  DetailScreenshotsSection(slug: widget.game!.slug),
+                ],
               ),
-              const SizedBox(height: 20),
-              DetailMidSection(gameId: widget.game!.id),
-              const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, bottom: 12),
-                child: Text(
-                  context.localisations.screenshots,
-                  style: context.themeData.textTheme.displayLarge,
-                ),
-              ),
-              DetailScreenshotsSection(slug: widget.game!.slug),
             ],
           ),
         ),

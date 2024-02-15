@@ -55,6 +55,7 @@ dependencies:
 
   # Text scaler
   auto_size_text: ^3.0.0
+  readmore: ^2.2.0
 
   # Shimmer loading
   skeletonizer: ^1.0.1

@@ -8,7 +8,6 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_top_content_shimmer.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class DetailTopHeader extends StatelessWidget {
   final int? gameId;
@@ -20,7 +19,6 @@ class DetailTopHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: context.screenHeight * 0.6,
       child: BlocBuilder<GameDetailCubit, GameDetailState>(
         builder: (context, state) {
           if (state.status == GameDetailStatus.failed) {
@@ -37,22 +35,9 @@ class DetailTopHeader extends StatelessWidget {
 
           return Stack(
             children: [
-              // ** Background image //
-              SizedBox(
-                height: context.screenHeight,
-                child: state.response?.backgroundImageAdditional != null
-                    ? CachedNetworkImage(
-                        imageUrl: state.response!.backgroundImageAdditional!,
-                        fit: BoxFit.cover,
-                      )
-                    : null,
+              DetailBackground(
+                backgroundImage: state.response?.backgroundImageAdditional,
               ),
-
-              Container(
-                color: Colors.black.withOpacity(0.7), // 70% opacity
-              ),
-
-              // ** Content //
               Container(
                 padding: const EdgeInsets.all(16),
                 width: context.screenWidth,
@@ -65,94 +50,13 @@ class DetailTopHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // ** Image //
-                          Expanded(
-                            child: Hero(
-                              tag: '${ConfigConstants.heroTag}/$gameId',
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: AspectRatio(
-                                  aspectRatio: 2 / 3,
-                                  child: CachedNetworkImage(
-                                    imageUrl: image ?? '-',
-                                    errorWidget: (context, _, __) => Container(
-                                      color: Colors.white,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.error,
-                                          size: 40,
-                                          color: context
-                                              .themeData.colorScheme.primary,
-                                        ),
-                                      ),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          DetailImage(gameId: gameId, image: image),
                           const SizedBox(width: 16),
 
+                          // ** Details //
                           if (state.status == GameDetailStatus.success)
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // ** Name //
-                                  AutoSizeText(
-                                    state.response!.name!,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: context
-                                        .themeData.textTheme.displayMedium!
-                                        .merge(
-                                      const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // ** Release date //
-                                  AutoSizeText(
-                                    '${context.localisations.release_date}:',
-                                    maxLines: 1,
-                                    style: context
-                                        .themeData.textTheme.titleMedium!
-                                        .copyWith(color: Colors.white),
-                                  ),
-                                  AutoSizeText(
-                                    state.response!.released
-                                        .stringToDateString(),
-                                    maxLines: 2,
-                                    style: context
-                                        .themeData.textTheme.bodyLarge!
-                                        .copyWith(color: Colors.white),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  // ** Metacritic score //
-                                  Row(
-                                    children: [
-                                      MetacriticIndicator(
-                                        score: state.response?.metacritic,
-                                        size: 60,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        child: AutoSizeText(
-                                          context
-                                              .localisations.metacritic_score,
-                                          maxLines: 2,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                            DetailContent(
+                              state: state,
                             ),
 
                           if (state.status == GameDetailStatus.loading)
@@ -161,24 +65,6 @@ class DetailTopHeader extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    // ** Description //
-                    if (state.status == GameDetailStatus.success)
-                      Expanded(
-                        child: AutoSizeText(
-                          state.response!.description!,
-                          overflow: TextOverflow.fade,
-                          maxFontSize: 16,
-                          style: context.themeData.textTheme.bodySmall!
-                              .merge(const TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                    if (state.status == GameDetailStatus.loading)
-                      Skeletonizer(
-                        child: Text(
-                          StringConstants.connectionTimeout,
-                          style: context.themeData.textTheme.bodySmall!,
-                        ),
-                      ),
                   ],
                 ),
               ),
@@ -186,6 +72,161 @@ class DetailTopHeader extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class DetailContent extends StatelessWidget {
+  final GameDetailState state;
+
+  const DetailContent({super.key, required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ** Name //
+          AutoSizeText(
+            state.response!.name!,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: context.themeData.textTheme.displayMedium!.merge(
+              const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // ** Release date //
+          AutoSizeText(
+            '${context.localisations.release_date}:',
+            maxLines: 1,
+            style: context.themeData.textTheme.titleMedium!
+                .copyWith(color: Colors.white),
+          ),
+          AutoSizeText(
+            state.response!.released.stringToDateString(),
+            maxLines: 2,
+            style: context.themeData.textTheme.bodyLarge!
+                .copyWith(color: Colors.white),
+          ),
+          const SizedBox(height: 16),
+          // ** Metacritic score //
+          Row(
+            children: [
+              MetacriticIndicator(
+                score: state.response?.metacritic,
+                size: 60,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: AutoSizeText(
+                  context.localisations.metacritic_score,
+                  maxLines: 2,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DetailImage extends StatelessWidget {
+  const DetailImage({
+    super.key,
+    required this.gameId,
+    required this.image,
+  });
+
+  final int? gameId;
+  final String? image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Hero(
+        tag: '${ConfigConstants.heroTag}/$gameId',
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: AspectRatio(
+            aspectRatio: 2 / 3,
+            child: CachedNetworkImage(
+              imageUrl: image ?? '-',
+              errorWidget: (context, _, __) => Container(
+                color: Colors.white,
+                child: Center(
+                  child: Icon(
+                    Icons.error,
+                    size: 40,
+                    color: context.themeData.colorScheme.primary,
+                  ),
+                ),
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DetailBackground extends StatelessWidget {
+  final String? backgroundImage;
+
+  const DetailBackground({
+    super.key,
+    this.backgroundImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        SizedBox(
+          height: context.screenHeight * 0.3,
+          width: context.screenWidth,
+          child: backgroundImage != null
+              ? CachedNetworkImage(
+                  imageUrl: backgroundImage!,
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.black54,
+                          BlendMode.darken,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : null,
+        ),
+        Container(
+          height: context.screenHeight * 0.3,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.transparent, // Start with transparent
+                context.themeData.scaffoldBackgroundColor, // End with white
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
