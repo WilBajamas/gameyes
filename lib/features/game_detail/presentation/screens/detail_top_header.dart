@@ -193,7 +193,7 @@ class DetailBackground extends StatelessWidget {
     return Stack(
       children: [
         SizedBox(
-          height: context.screenHeight * 0.3,
+          height: context.screenHeight * 0.35,
           width: context.screenWidth,
           child: backgroundImage != null
               ? CachedNetworkImage(
@@ -214,7 +214,7 @@ class DetailBackground extends StatelessWidget {
               : null,
         ),
         Container(
-          height: context.screenHeight * 0.3,
+          height: context.screenHeight * 0.35,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
