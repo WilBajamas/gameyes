@@ -8,6 +8,7 @@ extension ContextExtensions on BuildContext {
   AppLocalizations get localisations => AppLocalizations.of(this)!;
   double get screenHeight => MediaQuery.of(this).size.height;
   double get screenWidth => MediaQuery.of(this).size.width;
+  double get bottomPadding => MediaQuery.of(this).padding.bottom;
 }
 
 extension DateFormatters on String? {

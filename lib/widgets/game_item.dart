@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/data/models/game_detail_route_param.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 import 'package:go_router/go_router.dart';
@@ -19,10 +18,10 @@ class GameItem extends StatelessWidget {
   void onClickGameItem(
     BuildContext context,
   ) {
-    if (game?.id != null && game?.slug != null) {
+    if (game != null) {
       context.push(
         RouteConstants.gameDetail,
-        extra: GameDetailRouteParam(game?.id, game?.slug),
+        extra: game,
       );
     }
   }
@@ -53,18 +52,21 @@ class GameItem extends StatelessWidget {
                       child: game?.backgroundImage != null
 
                           //** Image */
-                          ? CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: game!.backgroundImage!,
-                              placeholder: (context, url) => const Center(
-                                child: SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: CircularProgressIndicator(),
+                          ? Hero(
+                              tag: '${ConfigConstants.heroTag}/${game?.id}',
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: game!.backgroundImage!,
+                                placeholder: (context, url) => const Center(
+                                  child: SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: CircularProgressIndicator(),
+                                  ),
                                 ),
+                                errorWidget: (context, url, error) =>
+                                    const Center(child: Icon(Icons.error)),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  const Center(child: Icon(Icons.error)),
                             )
                           : Center(
                               child: Icon(

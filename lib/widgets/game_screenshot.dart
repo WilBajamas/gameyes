@@ -4,24 +4,38 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class GameScreenshot extends StatelessWidget {
   final String? imageUrl;
+  final VoidCallback? onImageTap;
+  final EdgeInsets padding;
+  final double borderRadius;
 
-  const GameScreenshot({Key? key, required this.imageUrl}) : super(key: key);
+  const GameScreenshot({
+    Key? key,
+    required this.imageUrl,
+    this.onImageTap,
+    this.padding = EdgeInsets.zero,
+    this.borderRadius = 10,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: context.screenWidth / 3,
-      child: AspectRatio(
-        aspectRatio: 3 / 2,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: imageUrl != null
-              ? CachedNetworkImage(
-                  imageUrl: imageUrl!,
-                  fit: BoxFit.cover,
-                )
-              : const Center(child: Icon(Icons.error)),
-        ),
+      width: context.screenWidth,
+      child: Padding(
+        padding: padding,
+        child: imageUrl != null
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(borderRadius),
+                child: imageUrl != null
+                    ? InkWell(
+                        onTap: onImageTap,
+                        child: CachedNetworkImage(
+                          imageUrl: imageUrl!,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : const Center(child: Icon(Icons.error)),
+              )
+            : const Center(child: Icon(Icons.error)),
       ),
     );
   }

@@ -19,6 +19,7 @@ class ConfigConstants {
   static const gamesEndpoint = 'games';
   static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';
+  static const heroTag = 'hero_tag';
   static const enviedFilePath =
       '../gaming_library_assessment_flutter/secret.env';
 }
@@ -50,6 +51,7 @@ class RouteConstants {
   static const home = '/home';
   static const featured = '/featured';
   static const games = '/games';
+  static const imagePageView = 'image_page_view';
   static const onboarding = '/onboarding';
   static const gameDetail = '/game_detail';
 }

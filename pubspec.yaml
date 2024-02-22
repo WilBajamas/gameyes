@@ -55,9 +55,13 @@ dependencies:
 
   # Text scaler
   auto_size_text: ^3.0.0
+  readmore: ^2.2.0
 
   # Shimmer loading
   skeletonizer: ^1.0.1
+
+  # Page list snap
+  scroll_snap_list: ^0.9.1
 
   # Network image
   cached_network_image: ^3.3.1

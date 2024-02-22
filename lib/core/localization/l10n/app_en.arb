@@ -28,5 +28,8 @@
   "release_date": "Release date",
   "publishers": "Publishers",
   "genre": "Genre",
-  "developers": "Developers"
+  "developers": "Developers",
+  "about": "About",
+  "read_more": "Read more",
+  "read_less": "Read less"
 }

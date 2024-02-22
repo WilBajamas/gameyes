@@ -8,6 +8,9 @@ part 'screenshot_response.g.dart';
 final class ScreenshotResponse extends Equatable {
   final List<Screenshot> results;
 
+  List<String?> get imageUrls =>
+      results.map((element) => element.image).toList();
+
   factory ScreenshotResponse.fromJson(Map<String, dynamic> json) =>
       _$ScreenshotResponseFromJson(json);
 
