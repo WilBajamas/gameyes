@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 
 class ScrolledNavigationBar extends StatefulWidget {
@@ -40,7 +41,8 @@ class _ScrolledNavigationBarState extends State<ScrolledNavigationBar> {
   @override
   Widget build(BuildContext context) => AnimatedContainer(
         duration: widget.duration,
-        height: _isVisible ? 100 : 0,
+        height:
+            _isVisible ? 80 + context.bottomPadding : 0,
         child: Wrap(children: [widget.child]),
       );
 }
