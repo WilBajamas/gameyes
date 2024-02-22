@@ -4,6 +4,7 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/image_page_view.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
@@ -60,6 +61,17 @@ final goRouter = GoRouter(
       builder: (context, state) {
         return GameDetailScreen(game: state.extra as Game);
       },
+      routes: [
+        GoRoute(
+          name: RouteConstants.imagePageView,
+          path: RouteConstants.imagePageView,
+          builder: (context, state) {
+            return ImagePageView(
+              pageViewInfo: state.extra as (List<String?>, int),
+            );
+          },
+        ),
+      ],
     ),
   ],
 );
