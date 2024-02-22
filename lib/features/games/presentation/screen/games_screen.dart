@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/widget/filter_bottom_sheet.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
@@ -17,6 +19,7 @@ class GamesScreen extends StatefulWidget {
 
 class _GamesScreenState extends State<GamesScreen> {
   final _scrollController = ScrollController();
+  final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
 
   @override
   void initState() {
@@ -48,6 +51,9 @@ class _GamesScreenState extends State<GamesScreen> {
   }
 
   void _onScroll() {
+    _scrollChangeNotifier.isScrolled =
+        _scrollController.position.userScrollDirection;
+
     if (_isBottom) {
       _fetchGames(resetPage: false);
     }
