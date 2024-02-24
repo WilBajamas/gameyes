@@ -11,6 +11,7 @@ import 'package:gaming_library_assessment_flutter/features/games/presentation/sc
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/news/presentation/screen/news_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/settings/presentation/screen/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -69,6 +70,14 @@ final goRouter = GoRouter(
             GoRoute(
               path: RouteConstants.news,
               builder: (context, state) => const NewsScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: RouteConstants.settings,
+              builder: (context, state) => const SettingsScreen(),
             ),
           ],
         ),

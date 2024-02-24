@@ -53,6 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
               iconData: Icons.newspaper,
               label: context.localisations.news,
             ),
+            CustomNavigationDestination(
+              iconData: Icons.settings,
+              label: context.localisations.settings,
+            ),
           ],
         ),
       ),

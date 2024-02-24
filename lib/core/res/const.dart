@@ -65,4 +65,5 @@ class RouteConstants {
   static const gameDetail = '/game_detail';
   static const browse = '/browse';
   static const news = '/news';
+  static const settings = '/settings';
 }
