@@ -10,6 +10,8 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/latest_released_list_section.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/most_anticipated_list_section.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
+import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({Key? key}) : super(key: key);
@@ -53,34 +55,40 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
           controller: _controller,
           physics: const BouncingScrollPhysics(),
           slivers: [
-            SliverAppBar(
-              stretchTriggerOffset: 300.0,
-              expandedHeight: context.screenHeight / 3,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  children: [
-                    Image.asset(
-                      '${PathConstants.imagePath}featured_title_img.jpeg',
-                      width: context.screenWidth,
-                      height: context.screenHeight,
-                      fit: BoxFit.cover,
-                    ),
-                    Container(
-                      color: Colors.black.withOpacity(0.7), // 70% opacity
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          context.localisations.featured_screen_title,
-                          style: context.themeData.textTheme.displayLarge!
-                              .merge(const TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                    ),
-                  ],
+            DefaultSliverAppBar(
+              title: context.localisations.featured,
+              subtitle: context.localisations.featured_subtitle,
+            ),
+
+            FilterlistAppBar(
+              selected: (selectedTag) {},
+              filterList: [
+                (
+                  TagConstants.newAndTrending,
+                  context.localisations.new_and_trending,
+                  Icons.trending_up
                 ),
-              ),
+                (
+                  TagConstants.newReleases,
+                  context.localisations.new_releases_30_days,
+                  Icons.new_releases
+                ),
+                (
+                  TagConstants.bestOfTheYear,
+                  context.localisations.best_of_the_year,
+                  Icons.reviews,
+                ),
+                (
+                  TagConstants.popularLastYear,
+                  context.localisations.popular_last_year,
+                  Icons.fast_rewind,
+                ),
+                (
+                  TagConstants.allTimeTop100,
+                  context.localisations.all_time_top_100,
+                  Icons.thumb_up_sharp,
+                ),
+              ],
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
             //** Most anticipated - 1 year ago to now*/

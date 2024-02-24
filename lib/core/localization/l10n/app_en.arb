@@ -31,5 +31,11 @@
   "developers": "Developers",
   "about": "About",
   "read_more": "Read more",
-  "read_less": "Read less"
+  "read_less": "Read less",
+  "featured_subtitle": "Everything in one glance",
+  "new_and_trending": "New & Trending",
+  "best_of_the_year": "New releases 30 days ago",
+  "new_releases_30_days": "New releases last 30 days",
+  "popular_last_year": "Popular last year",
+  "all_time_top_100": "All time top 100"
 }

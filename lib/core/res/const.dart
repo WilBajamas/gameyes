@@ -14,6 +14,14 @@ enum GameOrdering {
   metacritic,
 }
 
+class TagConstants {
+  static const newAndTrending = 'NEW_AND_TRENDING';
+  static const newReleases = 'NEW_RELEASES';
+  static const bestOfTheYear = 'BEST_OF_THE_YEAR';
+  static const popularLastYear = 'POPULAR_LAST_YEAR';
+  static const allTimeTop100 = 'ALL_TIME_TOP_100';
+}
+
 class ConfigConstants {
   static const baseUrl = 'https://api.rawg.io/api/';
   static const gamesEndpoint = 'games';
