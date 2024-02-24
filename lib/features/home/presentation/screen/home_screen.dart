@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIndex: tabIndex,
           destinations: [
             CustomNavigationDestination(
-              iconData: Icons.newspaper,
+              iconData: Icons.featured_play_list,
               label: context.localisations.featured,
             ),
             CustomNavigationDestination(
@@ -48,6 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
             CustomNavigationDestination(
               iconData: Icons.search,
               label: context.localisations.browse,
+            ),
+            CustomNavigationDestination(
+              iconData: Icons.newspaper,
+              label: context.localisations.news,
             ),
           ],
         ),
