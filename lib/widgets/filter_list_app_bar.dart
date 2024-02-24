@@ -90,6 +90,8 @@ class _SelectionChip extends StatelessWidget {
         ? context.themeData.scaffoldBackgroundColor
         : context.themeData.colorScheme.primary;
 
+    final selectedFontWeight = isSelected ? FontWeight.bold : FontWeight.normal;
+
     return ChoiceChip.elevated(
       label: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -97,9 +99,8 @@ class _SelectionChip extends StatelessWidget {
         children: [
           Text(
             title,
-            style: context.themeData.textTheme.bodySmall!.copyWith(
-              color: selectedColor,
-            ),
+            style: context.themeData.textTheme.bodySmall!
+                .copyWith(color: selectedColor, fontWeight: selectedFontWeight),
           ),
           const SizedBox(width: 8),
           if (icon != null)
@@ -113,7 +114,7 @@ class _SelectionChip extends StatelessWidget {
       selected: isSelected,
       onSelected: (_) => onSelect(tag),
       shape: const StadiumBorder(side: BorderSide(color: Colors.transparent)),
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.themeData.colorScheme.secondaryContainer,
       selectedColor: context.themeData.colorScheme.primary,
       showCheckmark: false,
     );

@@ -15,6 +15,7 @@ enum GameOrdering {
 }
 
 class TagConstants {
+  // Featured
   static const newAndTrending = 'NEW_AND_TRENDING';
   static const newReleases = 'NEW_RELEASES';
   static const bestOfTheYear = 'BEST_OF_THE_YEAR';
@@ -62,4 +63,5 @@ class RouteConstants {
   static const imagePageView = 'image_page_view';
   static const onboarding = '/onboarding';
   static const gameDetail = '/game_detail';
+  static const browse = '/browse';
 }

@@ -5,14 +5,14 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class DefaultSliverAppBar extends StatelessWidget {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final (Widget actionOne, VoidCallback actionPressed)? actionOne;
   final (Widget actionTwo, VoidCallback actionPressed)? actionTwo;
 
   const DefaultSliverAppBar({
     Key? key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     this.actionOne,
     this.actionTwo,
   }) : super(key: key);
@@ -34,17 +34,18 @@ class DefaultSliverAppBar extends StatelessWidget {
           children: [
             AutoSizeText(
               title,
-              style: context.themeData.textTheme.displayMedium!
+              style: context.themeData.textTheme.displayLarge!
                   .copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(
               height: 4,
             ),
-            AutoSizeText(
-              subtitle,
-              style: context.themeData.textTheme.bodySmall!
-                  .copyWith(color: ColorPalette.textGrey),
-            ),
+            if (subtitle case final subtitle?)
+              AutoSizeText(
+                subtitle,
+                style: context.themeData.textTheme.bodySmall!
+                    .copyWith(color: ColorPalette.textGrey),
+              ),
           ],
         ),
       ),
