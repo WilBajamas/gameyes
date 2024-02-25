@@ -46,12 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
               label: context.localisations.games,
             ),
             CustomNavigationDestination(
-              iconData: Icons.search,
-              label: context.localisations.browse,
-            ),
-            CustomNavigationDestination(
               iconData: Icons.newspaper,
               label: context.localisations.news,
+            ),
+            CustomNavigationDestination(
+              iconData: Icons.search,
+              label: context.localisations.browse,
             ),
             CustomNavigationDestination(
               iconData: Icons.settings,

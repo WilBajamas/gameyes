@@ -60,16 +60,16 @@ final goRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouteConstants.browse,
-              builder: (context, state) => const BrowseScreen(),
+              path: RouteConstants.news,
+              builder: (context, state) => const NewsScreen(),
             ),
           ],
         ),
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouteConstants.news,
-              builder: (context, state) => const NewsScreen(),
+              path: RouteConstants.browse,
+              builder: (context, state) => const BrowseScreen(),
             ),
           ],
         ),
