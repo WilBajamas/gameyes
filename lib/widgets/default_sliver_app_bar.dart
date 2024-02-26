@@ -20,6 +20,7 @@ class DefaultSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      toolbarHeight: kToolbarHeight + 12,
       backgroundColor: context.themeData.scaffoldBackgroundColor,
       actions: [
         if (actionOne?.$1 != null)
@@ -28,7 +29,7 @@ class DefaultSliverAppBar extends StatelessWidget {
           InkWell(onTap: actionTwo!.$2, child: actionTwo!.$1),
       ],
       flexibleSpace: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

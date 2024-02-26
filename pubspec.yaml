@@ -52,6 +52,8 @@ dependencies:
 
   # Lottie
   lottie: ^3.0.0
+  # Flutter animation
+  flutter_animate: ^4.5.0
 
   # Text scaler
   auto_size_text: ^3.0.0
