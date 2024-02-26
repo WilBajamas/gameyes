@@ -52,6 +52,8 @@ dependencies:
 
   # Lottie
   lottie: ^3.0.0
+  # Flutter animation
+  flutter_animate: ^4.5.0
 
   # Text scaler
   auto_size_text: ^3.0.0
@@ -60,8 +62,8 @@ dependencies:
   # Shimmer loading
   skeletonizer: ^1.0.1
 
-  # Page list snap
   scroll_snap_list: ^0.9.1
+  scrollable_positioned_list: ^0.3.8
 
   # Network image
   cached_network_image: ^3.3.1

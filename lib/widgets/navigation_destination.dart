@@ -14,10 +14,10 @@ class CustomNavigationDestination extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationDestination(
-      icon: Icon(iconData, color: Colors.grey[100]),
+      icon: Icon(iconData, color: context.themeData.colorScheme.primary),
       selectedIcon: Icon(
         iconData,
-        color: context.themeData.colorScheme.primary,
+        color: Colors.grey[100],
       ),
       label: label,
     );

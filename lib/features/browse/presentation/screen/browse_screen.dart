@@ -4,14 +4,14 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class BrowseScreen extends StatefulWidget {
+  const BrowseScreen({Key? key}) : super(key: key);
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<BrowseScreen> createState() => _BrowseScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _BrowseScreenState extends State<BrowseScreen> {
   final _controller = ScrollController();
   final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
 
@@ -43,11 +43,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           physics: const BouncingScrollPhysics(),
           slivers: [
             DefaultSliverAppBar(
-              title: context.localisations.settings,
+              title: context.localisations.browse,
             ),
             SliverToBoxAdapter(
               child: Container(
-                child: const Center(child: Text('Settings')),
+                child: const Center(child: Text('Browse')),
               ),
             ),
           ],

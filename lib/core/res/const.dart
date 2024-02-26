@@ -14,6 +14,15 @@ enum GameOrdering {
   metacritic,
 }
 
+class TagConstants {
+  // Featured
+  static const newAndTrending = 'NEW_AND_TRENDING';
+  static const newReleases = 'NEW_RELEASES';
+  static const bestOfTheYear = 'BEST_OF_THE_YEAR';
+  static const popularLastYear = 'POPULAR_LAST_YEAR';
+  static const allTimeTop100 = 'ALL_TIME_TOP_100';
+}
+
 class ConfigConstants {
   static const baseUrl = 'https://api.rawg.io/api/';
   static const gamesEndpoint = 'games';
@@ -33,6 +42,7 @@ class AssetConstants {
   static const onboardingAnimation1 = 'onboarding_anim_1.json';
   static const onboardingAnimation2 = 'onboarding_anim_2.json';
   static const onboardingAnimation3 = 'onboarding_anim_3.json';
+  static const error404 = 'error_404.png';
 }
 
 class StorageConstants {
@@ -54,4 +64,7 @@ class RouteConstants {
   static const imagePageView = 'image_page_view';
   static const onboarding = '/onboarding';
   static const gameDetail = '/game_detail';
+  static const browse = '/browse';
+  static const news = '/news';
+  static const settings = '/settings';
 }

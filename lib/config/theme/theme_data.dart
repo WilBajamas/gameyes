@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final kColorScheme = ColorScheme.fromSeed(seedColor: ColorPalette.primaryBlue);
+final kColorScheme = ColorScheme.fromSeed(
+  seedColor: ColorPalette.primaryBlue,
+  primary: ColorPalette.primaryBlue,
+);
 
 ThemeData buildTheme() {
   //** Base theme*/
@@ -18,7 +21,12 @@ ThemeData buildTheme() {
     titleMedium: GoogleFonts.chakraPetch(
       fontSize: 18,
       fontWeight: FontWeight.w800,
-      textStyle: baseTheme.textTheme.titleLarge,
+      textStyle: baseTheme.textTheme.titleMedium,
+    ),
+    titleSmall: GoogleFonts.chakraPetch(
+      fontSize: 14,
+      fontWeight: FontWeight.w800,
+      textStyle: baseTheme.textTheme.titleSmall,
     ),
     bodySmall: GoogleFonts.openSans(
       fontSize: 14,
@@ -77,10 +85,11 @@ ThemeData buildTheme() {
 
   final navigationBarTheme = NavigationBarThemeData(
     labelTextStyle: MaterialStateProperty.all(
-      TextStyle(color: Colors.grey[100], fontSize: 14),
+      TextStyle(color: kColorScheme.primary, fontSize: 14),
     ),
-    backgroundColor: kColorScheme.primary,
-    indicatorColor: Colors.grey[100],
+    backgroundColor: Colors.white,
+    indicatorColor: kColorScheme.primary,
+    surfaceTintColor: Colors.white,
   );
 
   const iconTheme = IconThemeData(
@@ -128,5 +137,6 @@ ThemeData buildTheme() {
     chipTheme: chipTheme,
     inputDecorationTheme: inputDecorationTheme,
     appBarTheme: appBarTheme,
+    scaffoldBackgroundColor: Colors.grey[150],
   );
 }

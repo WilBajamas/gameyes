@@ -31,5 +31,13 @@
   "developers": "游戏开发者",
   "about": "关于",
   "read_more": "阅读全文",
-  "read_less": "收起"
+  "read_less": "收起",
+  "featured_subtitle": "Everything in one glance",
+  "new_and_trending": "New & Trending",
+  "best_of_the_year": "New releases 30 days ago",
+  "new_releases_30_days": "New releases last 30 days",
+  "popular_last_year": "Popular last year",
+  "all_time_top_100": "All time top 100",
+  "browse": "Browse",
+  "news": "News"
 }
