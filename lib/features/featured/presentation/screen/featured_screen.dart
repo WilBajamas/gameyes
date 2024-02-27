@@ -1,13 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/best_metacritic_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/best_metacritic_list_section.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
+import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
@@ -22,9 +25,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
 
   @override
   void initState() {
-    // context.read<MostAnticipatedCubit>().fetchMostAnticipated();
     context.read<BestMetacriticCubit>().fetchBestMetacritic();
-    // context.read<LatestReleasesCubit>().fetchLatestReleases();
 
     _controller.addListener(_onScroll);
 
@@ -43,7 +44,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
     _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
   }
 
-  void _fetchGames({bool resetPage = true}) {
+  void _fetchGames() {
     // final filterState = context.read<FilterCubit>().state;
     // context.read<GamesBloc>().add(
     //       GamesFetched(
@@ -91,8 +92,10 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
       body: SafeArea(
         child: BlocBuilder<BestMetacriticCubit, BestMetacriticState>(
           builder: (context, state) {
-            return NestedScrollView(
-              headerSliverBuilder: (context, _) => [
+            return CustomScrollView(
+              controller: _controller,
+              physics: const BouncingScrollPhysics(),
+              slivers: [
                 DefaultSliverAppBar(
                   title: context.localisations.featured,
                   subtitle: context.localisations.featured_subtitle,
@@ -101,15 +104,50 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                   selected: (selectedTag) {},
                   filterList: featuredFilters(context),
                 ),
+                if (state.status == BestMetacriticStatus.success)
+                  CupertinoSliverRefreshControl(
+                    onRefresh: () async => _fetchGames(),
+                  ),
+                if (state.status == BestMetacriticStatus.success)
+                  SliverGrid.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.6,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                    ),
+                    itemCount: state.games!.results!.length,
+                    itemBuilder: (context, index) => GameItem(
+                      game: state.games!.results![index],
+                    ),
+                  ),
+                if (state.status == BestMetacriticStatus.failed)
+                  SliverFillRemaining(
+                    child: Center(
+                      child: ErrorRetryWidget(
+                        onRetryClicked: () => context
+                            .read<BestMetacriticCubit>()
+                            .fetchBestMetacritic(),
+                      ),
+                    ),
+                  ),
+                if (state.status == BestMetacriticStatus.empty)
+                  SliverFillRemaining(
+                    child: Center(
+                      child: ErrorRetryWidget(
+                        text: context.localisations.no_results_found,
+                        onRetryClicked: () => context
+                            .read<BestMetacriticCubit>()
+                            .fetchBestMetacritic(),
+                      ),
+                    ),
+                  ),
+                if (state.status == BestMetacriticStatus.loading)
+                  const SliverFillRemaining(
+                    child: GameItemGridLoadingShimmer(),
+                  ),
               ],
-              body: RefreshIndicator(
-                onRefresh: () async {
-                  _fetchGames();
-                },
-                child: BestMetacriticListSection(
-                  controller: _controller,
-                ),
-              ),
             );
           },
         ),
