@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class PlatformRowList extends StatelessWidget {
-  PlatformRowList({Key? key}) : super(key: key);
+  PlatformRowList({super.key});
 
 // ! Pass real platforms
   final assetlist = [

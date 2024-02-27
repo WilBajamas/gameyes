@@ -10,12 +10,12 @@ class DefaultSliverAppBar extends StatelessWidget {
   final (Widget actionTwo, VoidCallback actionPressed)? actionTwo;
 
   const DefaultSliverAppBar({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     this.actionOne,
     this.actionTwo,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

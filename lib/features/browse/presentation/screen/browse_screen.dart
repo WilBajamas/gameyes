@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 
 class BrowseScreen extends StatefulWidget {
-  const BrowseScreen({Key? key}) : super(key: key);
+  const BrowseScreen({super.key});
 
   @override
   State<BrowseScreen> createState() => _BrowseScreenState();

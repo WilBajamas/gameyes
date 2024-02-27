@@ -13,8 +13,7 @@ class DetailTopHeader extends StatelessWidget {
   final int? gameId;
   final String? image;
 
-  const DetailTopHeader({Key? key, required this.gameId, this.image})
-      : super(key: key);
+  const DetailTopHeader({super.key, required this.gameId, this.image});
 
   @override
   Widget build(BuildContext context) {

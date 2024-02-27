@@ -7,10 +7,10 @@ class FilterlistAppBar extends StatefulWidget {
   final Function(String) selected;
 
   const FilterlistAppBar({
-    Key? key,
+    super.key,
     required this.filterList,
     required this.selected,
-  }) : super(key: key);
+  });
 
   @override
   State<FilterlistAppBar> createState() => _FilterlistAppBarState();
@@ -76,13 +76,12 @@ class _SelectionChip extends StatelessWidget {
   final Function(String) onSelect;
 
   const _SelectionChip({
-    Key? key,
     this.icon,
     required this.title,
     required this.tag,
     required this.onSelect,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

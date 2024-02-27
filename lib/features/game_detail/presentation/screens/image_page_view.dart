@@ -6,7 +6,7 @@ import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class ImagePageView extends StatelessWidget {
   final (List<String?> images, int indexTapped) pageViewInfo;
-  const ImagePageView({Key? key, required this.pageViewInfo}) : super(key: key);
+  const ImagePageView({super.key, required this.pageViewInfo});
 
   @override
   Widget build(BuildContext context) {

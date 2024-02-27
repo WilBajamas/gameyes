@@ -7,7 +7,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_loading_shimmer.dart';
 
 class BestMetacriticListSection extends StatelessWidget {
-  const BestMetacriticListSection({Key? key}) : super(key: key);
+  const BestMetacriticListSection({super.key});
 
   @override
   Widget build(BuildContext context) {

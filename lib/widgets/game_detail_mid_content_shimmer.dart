@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_detail_section_po
 import 'package:skeletonizer/skeletonizer.dart';
 
 class GameDetailMidContentShimmer extends StatelessWidget {
-  const GameDetailMidContentShimmer({Key? key}) : super(key: key);
+  const GameDetailMidContentShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

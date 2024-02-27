@@ -6,8 +6,7 @@ class MetacriticIndicator extends StatelessWidget {
   final int? score;
   final double size;
 
-  const MetacriticIndicator({Key? key, this.score, this.size = 40})
-      : super(key: key);
+  const MetacriticIndicator({super.key, this.score, this.size = 40});
 
   Color _criticColor() {
     if (score! <= 33) {

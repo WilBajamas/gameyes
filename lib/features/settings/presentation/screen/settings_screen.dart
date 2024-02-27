@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();

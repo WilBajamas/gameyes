@@ -3,7 +3,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class GameItemGridLoadingShimmer extends StatelessWidget {
-  const GameItemGridLoadingShimmer({Key? key}) : super(key: key);
+  const GameItemGridLoadingShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

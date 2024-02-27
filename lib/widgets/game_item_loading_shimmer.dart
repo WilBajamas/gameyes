@@ -3,7 +3,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class GameItemLoadingShimmer extends StatelessWidget {
-  const GameItemLoadingShimmer({Key? key}) : super(key: key);
+  const GameItemLoadingShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

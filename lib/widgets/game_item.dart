@@ -13,10 +13,10 @@ class GameItem extends StatelessWidget {
   final bool showReleaseDate;
 
   const GameItem({
-    Key? key,
+    super.key,
     this.game,
     this.showReleaseDate = false,
-  }) : super(key: key);
+  });
 
   void onClickGameItem(
     BuildContext context,
@@ -96,7 +96,7 @@ class GameItem extends StatelessWidget {
 class _TopStack extends StatelessWidget {
   final Game? game;
 
-  const _TopStack({Key? key, this.game}) : super(key: key);
+  const _TopStack({this.game});
 
   @override
   Widget build(BuildContext context) {

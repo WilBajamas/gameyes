@@ -7,11 +7,11 @@ class ErrorRetryWidget extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   const ErrorRetryWidget({
-    Key? key,
+    super.key,
     this.text,
     this.padding,
     required this.onRetryClicked,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

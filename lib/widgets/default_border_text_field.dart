@@ -28,8 +28,8 @@ class DefaultBorderTextField extends StatelessWidget {
     this.hint,
     this.readOnly = false,
     this.onClicked,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

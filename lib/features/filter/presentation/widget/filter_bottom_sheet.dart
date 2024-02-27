@@ -11,9 +11,9 @@ class FilterBottomSheet extends StatefulWidget {
   final VoidCallback onSaveClick;
 
   const FilterBottomSheet({
-    Key? key,
+    super.key,
     required this.onSaveClick,
-  }) : super(key: key);
+  });
 
   @override
   State<FilterBottomSheet> createState() => _FilterBottomSheetState();

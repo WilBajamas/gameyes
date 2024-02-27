@@ -10,8 +10,8 @@ class TypeValuesSelection<T> extends StatelessWidget {
     required this.typeSelection,
     required this.typeList,
     required this.onTypeSelected,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final T? typeSelection;
   final List<T> typeList;

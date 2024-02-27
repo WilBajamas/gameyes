@@ -7,7 +7,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_loading_shimmer.dart';
 
 class LatestReleasedListSection extends StatelessWidget {
-  const LatestReleasedListSection({Key? key}) : super(key: key);
+  const LatestReleasedListSection({super.key});
 
   @override
   Widget build(BuildContext context) {

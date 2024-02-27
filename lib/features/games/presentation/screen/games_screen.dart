@@ -11,7 +11,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 
 class GamesScreen extends StatefulWidget {
-  const GamesScreen({Key? key}) : super(key: key);
+  const GamesScreen({super.key});
 
   @override
   State<GamesScreen> createState() => _GamesScreenState();

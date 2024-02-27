@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.d
 import 'package:skeletonizer/skeletonizer.dart';
 
 class GameDetailTopContentShimmer extends StatelessWidget {
-  const GameDetailTopContentShimmer({Key? key}) : super(key: key);
+  const GameDetailTopContentShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

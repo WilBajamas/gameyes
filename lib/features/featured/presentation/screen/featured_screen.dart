@@ -14,7 +14,7 @@ import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar
 import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
 
 class FeaturedScreen extends StatefulWidget {
-  const FeaturedScreen({Key? key}) : super(key: key);
+  const FeaturedScreen({super.key});
 
   @override
   State<FeaturedScreen> createState() => _FeaturedScreenState();
