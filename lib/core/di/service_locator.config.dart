@@ -68,7 +68,7 @@ extension GetItInjectableX on _i1.GetIt {
     );
     gh.factory<_i3.BestMetacriticCubit>(() => _i3.BestMetacriticCubit());
     gh.factory<_i4.DefaultDioInterceptor>(() => _i4.DefaultDioInterceptor());
-    gh.factory<_i5.DioService>(() => _i5.DioService());
+    gh.singleton<_i5.DioService>(_i5.DioService());
     gh.factory<_i6.FeaturedRepository>(() => _i7.FeaturedRepositoryImpl());
     gh.factory<_i8.FilterCubit>(() => _i8.FilterCubit());
     gh.factory<_i9.GameDetailCubit>(() => _i9.GameDetailCubit());
