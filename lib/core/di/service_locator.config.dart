@@ -13,17 +13,13 @@ import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart'
-    as _i24;
+    as _i22;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repository/featured_repository_impl.dart'
     as _i7;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repository/featured_repository.dart'
     as _i6;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/best_metacritic_cubit.dart'
     as _i3;
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/latest_releases_cubit.dart'
-    as _i21;
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart'
-    as _i22;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart'
     as _i8;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart'
@@ -51,7 +47,7 @@ import 'package:gaming_library_assessment_flutter/features/games/domain/games_re
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart'
     as _i17;
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart'
-    as _i23;
+    as _i21;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
@@ -83,10 +79,8 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i17.GamesBloc>(() => _i17.GamesBloc());
     gh.factory<_i18.GamesDataSource>(() => _i18.GamesDataSource());
     gh.factory<_i19.GamesRepository>(() => _i20.GamesRepositoryImpl());
-    gh.factory<_i21.LatestReleasesCubit>(() => _i21.LatestReleasesCubit());
-    gh.factory<_i22.MostAnticipatedCubit>(() => _i22.MostAnticipatedCubit());
-    gh.singleton<_i23.ScrollNotifier>(_i23.ScrollNotifier());
-    gh.factory<_i24.SharedPreference>(() => _i24.SharedPreference());
+    gh.singleton<_i21.ScrollNotifier>(_i21.ScrollNotifier());
+    gh.factory<_i22.SharedPreference>(() => _i22.SharedPreference());
     return this;
   }
 }
