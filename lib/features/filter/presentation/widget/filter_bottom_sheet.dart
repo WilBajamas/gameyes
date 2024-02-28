@@ -80,7 +80,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 //** Save button */

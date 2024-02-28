@@ -94,7 +94,6 @@ class _SelectionChip extends StatelessWidget {
     return ChoiceChip.elevated(
       label: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             title,

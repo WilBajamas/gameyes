@@ -72,7 +72,7 @@ void main() {
       ),
     ),
     expect: () => [
-      const GamesState(status: GamesStatus.initial),
+      const GamesState(),
       GamesState(
         status: GamesStatus.success,
         response: mockGamesResponse,
@@ -173,7 +173,7 @@ void main() {
       ),
     ),
     expect: () => [
-      const GamesState(status: GamesStatus.initial),
+      const GamesState(),
       const GamesState(status: GamesStatus.failure),
     ],
   );

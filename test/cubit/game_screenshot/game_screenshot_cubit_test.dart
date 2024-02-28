@@ -46,11 +46,10 @@ void main() {
     build: () => gameScreenshotCubit,
     act: (cubit) async => cubit.fetchGameScreenshots(slug: 'slug'),
     expect: () => [
-      const GameScreenshotState(status: ScreenshotsStatus.loading),
+      const GameScreenshotState(),
       GameScreenshotState(
         status: ScreenshotsStatus.success,
         response: mockScreenshotResponse,
-        error: null,
       ),
     ],
   );
@@ -65,11 +64,10 @@ void main() {
     build: () => gameScreenshotCubit,
     act: (cubit) async => cubit.fetchGameScreenshots(slug: 'slug'),
     expect: () => [
-      const GameScreenshotState(status: ScreenshotsStatus.loading),
+      const GameScreenshotState(),
       GameScreenshotState(
         status: ScreenshotsStatus.failure,
         error: mockResponseError,
-        response: null,
       ),
     ],
   );

@@ -18,7 +18,6 @@ class ErrorRetryWidget extends StatelessWidget {
     return Container(
       padding: padding,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(

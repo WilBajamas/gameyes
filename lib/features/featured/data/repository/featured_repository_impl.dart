@@ -16,8 +16,6 @@ class FeaturedRepositoryImpl implements FeaturedRepository {
   @override
   Future<Either<ErrorType, GamesResponse>> fetchBestMetacritic() {
     return _gamesDatasource.fetchGames(
-      pageSize: 10,
-      page: 1,
       ordering: GameOrdering.metacritic.name,
       reverseOrder: true,
     );
@@ -26,8 +24,6 @@ class FeaturedRepositoryImpl implements FeaturedRepository {
   @override
   Future<Either<ErrorType, GamesResponse>> fetchLatestReleases() async =>
       _gamesDatasource.fetchGames(
-        pageSize: 10,
-        page: 1,
         ordering: GameOrdering.released.name,
         dateFrom: DateTime.now().getFormattedDateMonthsAgo(monthsAgo: 1),
         dateTo: DateTime.now().getFormattedDateMonthsAgo(),
@@ -37,8 +33,6 @@ class FeaturedRepositoryImpl implements FeaturedRepository {
   @override
   Future<Either<ErrorType, GamesResponse>> fetchMostAnticipated() =>
       _gamesDatasource.fetchGames(
-        pageSize: 10,
-        page: 1,
         dateFrom: DateTime.now().getFormattedDateYearsRange(),
         dateTo:
             DateTime.now().getFormattedDateYearsRange(years: 1, after: true),

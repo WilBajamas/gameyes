@@ -40,7 +40,6 @@ class TypeValuesSelection<T> extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Wrap(
-          direction: Axis.horizontal,
           spacing: 5,
           children: typeList.map(
             (type) {

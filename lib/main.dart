@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
         onGenerateTitle: (context) => context.localisations.app_title,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        themeMode: ThemeMode.system,
         theme: buildTheme(),
         darkTheme: buildDarkTheme(),
         routerConfig: goRouter,

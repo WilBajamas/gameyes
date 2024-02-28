@@ -45,10 +45,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             DefaultSliverAppBar(
               title: context.localisations.settings,
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                child: const Center(child: Text('Settings')),
-              ),
+            const SliverToBoxAdapter(
+              child: Center(child: Text('Settings')),
             ),
           ],
         ),

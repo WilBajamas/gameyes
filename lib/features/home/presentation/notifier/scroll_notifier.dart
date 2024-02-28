@@ -14,7 +14,7 @@ class ScrollNotifier extends ChangeNotifier {
       case ScrollDirection.reverse:
         scrolledForward = false;
         break;
-      default:
+      case ScrollDirection.idle:
         break;
     }
 

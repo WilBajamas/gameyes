@@ -45,10 +45,8 @@ class _NewsScreenState extends State<NewsScreen> {
             DefaultSliverAppBar(
               title: context.localisations.news,
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                child: const Center(child: Text('News')),
-              ),
+            const SliverToBoxAdapter(
+              child: Center(child: Text('News')),
             ),
           ],
         ),

@@ -45,10 +45,8 @@ class _BrowseScreenState extends State<BrowseScreen> {
             DefaultSliverAppBar(
               title: context.localisations.browse,
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                child: const Center(child: Text('Browse')),
-              ),
+            const SliverToBoxAdapter(
+              child: Center(child: Text('Browse')),
             ),
           ],
         ),
