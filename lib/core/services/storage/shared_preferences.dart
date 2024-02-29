@@ -2,7 +2,7 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@injectable
+@singleton
 class SharedPreference {
   Future<SharedPreferences> _getSharedPrefs() async {
     return await SharedPreferences.getInstance();

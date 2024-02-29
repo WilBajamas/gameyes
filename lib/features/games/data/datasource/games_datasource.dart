@@ -36,6 +36,9 @@ class GamesDataSource {
           'page_size': pageSize.toString(),
           if (searchTerm != null) 'search': searchTerm,
           if (platformNumbersQuery != null) 'platforms': platformNumbersQuery,
+          'exclude_additions': true,
+          'exclude_parents': true,
+          'exclude_game_series': true,
         },
       );
 
