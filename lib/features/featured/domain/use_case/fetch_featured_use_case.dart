@@ -1,0 +1,71 @@
+import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/domain/repository/featured_repository.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
+import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
+import 'package:injectable/injectable.dart';
+
+@injectable
+class FetchFeaturedUseCase {
+  final FeaturedRepository _repository = getIt<FeaturedRepository>();
+
+  Future<void> call({
+    required int page,
+    required FeaturedTag tag,
+    required Function(GamesResponse) onSuccess,
+    required Function(ErrorType) onFailure,
+    List<GamesPlatform>? platforms,
+  }) async {
+    final feature = _getFeaturedValues(tag);
+
+    final dateFromString = feature.$2.getFormattedStringFromDateTime() ?? '';
+    final dateToString = feature.$3?.getFormattedStringFromDateTime() ?? '';
+
+    final dateRangeQuery =
+        // ignore: lines_longer_than_80_chars
+        '$dateFromString${dateFromString.isNotEmpty && dateToString.isNotEmpty ? ',' : ''}$dateToString';
+
+    final gameOrderingQuery =
+        feature.$1.map((ordering) => '-${ordering.name}').join(',');
+    final gamePlatformsQuery =
+        platforms?.map((platform) => platform.id).join(',');
+
+    final response = await _repository.fetchGames(
+      page: page,
+      dateRange: dateRangeQuery,
+      orderings: gameOrderingQuery,
+      platforms: gamePlatformsQuery,
+    );
+
+    response.fold(onFailure, onSuccess);
+  }
+}
+
+(List<GameOrdering>, DateTime?, DateTime?) _getFeaturedValues(
+  FeaturedTag tag,
+) =>
+    switch (tag) {
+      FeaturedTag.newAndTrending => (
+          [
+            GameOrdering.added,
+            GameOrdering.rating,
+            GameOrdering.metacritic,
+          ],
+          DateTime(DateTime.now().year),
+          DateTime.now().getDateTimeLater(yearsLater: 1)
+        ),
+      FeaturedTag.newReleases => (
+          [GameOrdering.released],
+          DateTime.now().getDateTimeBefore(yearsLater: 1),
+          DateTime.now()
+        ),
+      FeaturedTag.bestOfTheYear => (
+          [GameOrdering.added],
+          DateTime(DateTime.now().year),
+          DateTime(DateTime.now().year, 12, 31)
+        ),
+      FeaturedTag.bestMetacritic => ([GameOrdering.metacritic], null, null),
+      FeaturedTag.allTimeTop100 => ([GameOrdering.added], null, null),
+    };

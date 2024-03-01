@@ -8,6 +8,7 @@ class FeaturedState extends Equatable {
   final GamesResponse? response;
   final List<Game> games;
   final ErrorType? error;
+  final ErrorType? nextPageError;
 
   const FeaturedState({
     this.tag = FeaturedTag.newAndTrending,
@@ -15,6 +16,7 @@ class FeaturedState extends Equatable {
     this.response,
     this.games = const <Game>[],
     this.error,
+    this.nextPageError,
   });
 
   FeaturedState copyWith({
@@ -23,6 +25,8 @@ class FeaturedState extends Equatable {
     GamesResponse? response,
     List<Game>? games,
     ErrorType? error,
+    ErrorType? nextPageError,
+    int? currentPage,
   }) =>
       FeaturedState(
         tag: tag ?? this.tag,
@@ -30,8 +34,10 @@ class FeaturedState extends Equatable {
         response: response ?? this.response,
         games: games ?? this.games,
         error: error ?? this.error,
+        nextPageError: nextPageError ?? this.nextPageError,
       );
 
   @override
-  List<Object?> get props => [tag, status, response, games, error];
+  List<Object?> get props =>
+      [tag, status, response, games, error, nextPageError];
 }

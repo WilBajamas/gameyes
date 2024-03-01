@@ -19,7 +19,7 @@ enum FeaturedTag {
   newReleases,
   bestOfTheYear,
   bestMetacritic,
-  allTimeTop100,
+  allTimeTop100
 }
 
 class ConfigConstants {

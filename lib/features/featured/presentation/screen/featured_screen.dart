@@ -42,14 +42,24 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
 
   void _onScroll() {
     _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
+
+    if (_isBottom) {
+      context.read<FeaturedBloc>().add(const FeaturedNextPage());
+    }
   }
 
-  void _fetchGames({FeaturedTag tag = FeaturedTag.bestOfTheYear}) {
+  void _fetchGames({FeaturedTag tag = FeaturedTag.newAndTrending}) {
     context.read<FeaturedBloc>().add(FeaturedFetched(tag: tag));
   }
 
-  List<(FeaturedTag, String, IconData)> featuredFilters(BuildContext context) =>
-      [
+  bool get _isBottom {
+    if (!_controller.hasClients) return false;
+    final maxScroll = _controller.position.maxScrollExtent;
+    final currentScroll = _controller.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  List<(FeaturedTag, String, IconData)> get featuredFilters => [
         (
           FeaturedTag.newAndTrending,
           context.localisations.new_and_trending,
@@ -93,7 +103,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                 ),
                 FilterlistAppBar(
                   selected: (selectedTag) => _fetchGames(tag: selectedTag),
-                  filterList: featuredFilters(context),
+                  filterList: featuredFilters,
                 ),
                 if (state.status == FeaturedStatus.success)
                   CupertinoSliverRefreshControl(

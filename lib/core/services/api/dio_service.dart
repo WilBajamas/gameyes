@@ -16,7 +16,7 @@ class DioService {
       getIt<DefaultDioInterceptor>();
 
   DioService() {
-    var options = BaseOptions(
+    final options = BaseOptions(
       baseUrl: ConfigConstants.baseUrl,
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
