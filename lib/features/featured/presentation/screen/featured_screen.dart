@@ -135,8 +135,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                   const SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                        vertical: 14,
                       ),
                       child: Center(
                         child: CircularProgressIndicator(),
@@ -145,8 +144,14 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                   ),
                 if (state.nextPageStatus == FeaturedNextPageStatus.failed)
                   SliverToBoxAdapter(
-                    child: ErrorRetryWidget(
-                      onRetryClicked: () => _fetchNextPage(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 14,
+                      ),
+                      child: ErrorRetryWidget(
+                        onRetryClicked: () => _fetchNextPage(),
+                      ),
                     ),
                   ),
                 if (state.status == FeaturedStatus.failed)
