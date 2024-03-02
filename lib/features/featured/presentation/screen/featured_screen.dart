@@ -106,7 +106,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                   title: context.localisations.featured,
                   subtitle: context.localisations.featured_subtitle,
                 ),
-                FilterlistAppBar(
+                FilterlistAppBar<FeaturedTag>(
                   selected: (selectedTag) => _fetchGames(tag: selectedTag),
                   filterList: featuredFilters,
                 ),

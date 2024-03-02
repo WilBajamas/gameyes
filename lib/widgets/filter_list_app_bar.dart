@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class FilterlistAppBar extends StatefulWidget {
-  final List<(FeaturedTag, String, IconData?)> filterList;
-  final Function(FeaturedTag) selected;
+class FilterlistAppBar<T> extends StatefulWidget {
+  final List<(T, String, IconData?)> filterList;
+  final Function(T) selected;
 
   const FilterlistAppBar({
     super.key,
@@ -17,12 +16,12 @@ class FilterlistAppBar extends StatefulWidget {
   State<FilterlistAppBar> createState() => _FilterlistAppBarState();
 }
 
-class _FilterlistAppBarState extends State<FilterlistAppBar> {
-  FeaturedTag? _selectedTag;
+class _FilterlistAppBarState<T> extends State<FilterlistAppBar> {
+  T? _selectedTag;
   final _itemScrollController = ItemScrollController();
   final _scrollOffsetController = ScrollOffsetController();
 
-  void _onItemClicked(int index, FeaturedTag tagSelected) {
+  void _onItemClicked(int index, T tagSelected) {
     setState(() => _selectedTag = tagSelected);
     widget.selected(tagSelected);
     _itemScrollController.scrollTo(
@@ -70,12 +69,12 @@ class _FilterlistAppBarState extends State<FilterlistAppBar> {
   }
 }
 
-class _SelectionChip extends StatelessWidget {
-  final FeaturedTag tag;
+class _SelectionChip<T> extends StatelessWidget {
+  final T tag;
   final bool isSelected;
   final String title;
   final IconData? icon;
-  final Function(FeaturedTag) onSelect;
+  final Function(T) onSelect;
 
   const _SelectionChip({
     this.icon,
