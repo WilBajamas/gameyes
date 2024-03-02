@@ -58,16 +58,24 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
       return;
     }
 
+    emit(state.copyWith(nextPageStatus: FeaturedNextPageStatus.loading));
+
     await _fetchFeaturedUsecase(
       page: state.response!.currentPage! + 1,
       tag: state.tag,
       onSuccess: (response) => emit(
         state.copyWith(
+          nextPageStatus: FeaturedNextPageStatus.initial,
           response: response,
           games: List.of(state.games)..addAll(response.results!),
         ),
       ),
-      onFailure: (error) => emit(state.copyWith(nextPageError: error)),
+      onFailure: (error) => emit(
+        state.copyWith(
+          nextPageError: error,
+          nextPageStatus: FeaturedNextPageStatus.failed,
+        ),
+      ),
     );
   }
 }

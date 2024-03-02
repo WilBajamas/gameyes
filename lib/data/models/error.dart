@@ -10,16 +10,12 @@ sealed class ErrorType {
     String? error,
     int? statusCode,
   }) {
-    switch (exception.type) {
-      case DioExceptionType.connectionTimeout:
-        return ConnectionTimeoutError();
-      case DioExceptionType.receiveTimeout:
-        return ReceiveTimeoutError();
-      case DioExceptionType.sendTimeout:
-        return SendTimeoutError();
-      default:
-        return ResponseError(message: message, statusCode: statusCode);
-    }
+    return switch (exception.type) {
+      DioExceptionType.connectionTimeout => ConnectionTimeoutError(),
+      DioExceptionType.receiveTimeout => ReceiveTimeoutError(),
+      DioExceptionType.sendTimeout => SendTimeoutError(),
+      _ => ResponseError(message: message, statusCode: statusCode)
+    };
   }
 }
 

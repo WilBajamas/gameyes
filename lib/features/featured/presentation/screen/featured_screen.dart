@@ -23,11 +23,13 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
   final _controller = ScrollController();
   final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
 
+  late final FeaturedBloc _featuredBloc;
+
   @override
   void initState() {
-    _fetchGames();
-
+    _featuredBloc = context.read<FeaturedBloc>();
     _controller.addListener(_onScroll);
+    _fetchGames();
 
     super.initState();
   }
@@ -43,13 +45,16 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
   void _onScroll() {
     _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
 
-    if (_isBottom) {
-      context.read<FeaturedBloc>().add(const FeaturedNextPage());
+    if (_isBottom &&
+        _featuredBloc.state.nextPageStatus != FeaturedNextPageStatus.failed) {
+      _fetchNextPage();
     }
   }
 
+  void _fetchNextPage() => _featuredBloc.add(const FeaturedNextPage());
+
   void _fetchGames({FeaturedTag tag = FeaturedTag.newAndTrending}) {
-    context.read<FeaturedBloc>().add(FeaturedFetched(tag: tag));
+    _featuredBloc.add(FeaturedFetched(tag: tag));
   }
 
   bool get _isBottom {
@@ -126,10 +131,32 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                       ),
                     ),
                   ),
+                if (state.nextPageStatus == FeaturedNextPageStatus.loading)
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                if (state.nextPageStatus == FeaturedNextPageStatus.failed)
+                  SliverToBoxAdapter(
+                    child: ErrorRetryWidget(
+                      onRetryClicked: () => _fetchNextPage(),
+                    ),
+                  ),
                 if (state.status == FeaturedStatus.failed)
                   SliverFillRemaining(
                     child: Center(
-                      child: ErrorRetryWidget(onRetryClicked: () {}),
+                      child: ErrorRetryWidget(
+                        onRetryClicked: () {
+                          _fetchGames();
+                        },
+                      ),
                     ),
                   ),
                 if (state.status == FeaturedStatus.empty)
@@ -137,7 +164,9 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                     child: Center(
                       child: ErrorRetryWidget(
                         text: context.localisations.no_results_found,
-                        onRetryClicked: () {},
+                        onRetryClicked: () {
+                          _fetchGames();
+                        },
                       ),
                     ),
                   ),
