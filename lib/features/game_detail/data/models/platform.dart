@@ -12,10 +12,15 @@ final class Platform extends Equatable {
 
   const Platform(this.id, this.name);
 
-  GamePlatfom get value {
-    return GamePlatfom.values
-        .where((p) => p.ids.contains(id))
-        .firstWhere((_) => true);
+  GamePlatfom? get value {
+    final platformsContainsId =
+        GamePlatfom.values.where((p) => p.ids.contains(id)).toList();
+
+    if (platformsContainsId.isNotEmpty) {
+      return platformsContainsId.firstWhere((_) => true);
+    }
+
+    return null;
   }
 
   factory Platform.fromJson(Map<String, dynamic> json) =>

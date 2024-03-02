@@ -23,8 +23,13 @@ final class Game extends Equatable {
 
   List<GamePlatfom>? get platformValues {
     if (platforms case final platforms?) {
-      final List<GamePlatfom> values =
-          platforms.map((p) => p.platform!.value).toList();
+      final List<GamePlatfom> values = [];
+
+      for (var p in platforms) {
+        if (p.platform?.value case final value?) values.add(value);
+      }
+
+      if (values.isEmpty) return null;
 
       return values.toSet().toList();
     }

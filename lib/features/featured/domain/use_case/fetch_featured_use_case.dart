@@ -58,7 +58,7 @@ class FetchFeaturedUseCase {
         ),
       FeaturedTag.newReleases => (
           [GameOrdering.released],
-          DateTime.now().getDateTimeBefore(yearsLater: 1),
+          DateTime.now().getDateTimeBefore(daysBefore: 30),
           DateTime.now()
         ),
       FeaturedTag.bestOfTheYear => (
