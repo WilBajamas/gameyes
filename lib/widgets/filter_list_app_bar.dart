@@ -14,10 +14,10 @@ class FilterlistAppBar<T> extends StatefulWidget {
   });
 
   @override
-  State<FilterlistAppBar> createState() => _FilterlistAppBarState();
+  State<FilterlistAppBar<T>> createState() => _FilterlistAppBarState<T>();
 }
 
-class _FilterlistAppBarState<T> extends State<FilterlistAppBar> {
+class _FilterlistAppBarState<T> extends State<FilterlistAppBar<T>> {
   T? _selectedTag;
   final _itemScrollController = ItemScrollController();
   final _scrollOffsetController = ScrollOffsetController();
@@ -56,7 +56,7 @@ class _FilterlistAppBarState<T> extends State<FilterlistAppBar> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: _SelectionChip(
+            child: _SelectionChip<T>(
               onSelect: (tagSelected) => _onItemClicked(index, tagSelected),
               isSelected: isItemSelected(index),
               title: widget.filterList[index].$2,
