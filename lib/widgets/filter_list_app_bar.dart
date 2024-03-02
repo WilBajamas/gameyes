@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+//! Must specify type for [T]
 class FilterlistAppBar<T> extends StatefulWidget {
   final List<(T, String, IconData?)> filterList;
   final Function(T) selected;
