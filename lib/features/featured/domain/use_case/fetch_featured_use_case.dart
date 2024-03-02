@@ -16,7 +16,7 @@ class FetchFeaturedUseCase {
     required FeaturedTag tag,
     required Function(GamesResponse) onSuccess,
     required Function(ErrorType) onFailure,
-    List<GamesPlatform>? platforms,
+    List<GamePlatform>? platforms,
   }) async {
     final feature = _getFeaturedValues(tag);
 

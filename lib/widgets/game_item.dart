@@ -48,10 +48,17 @@ class GameItem extends StatelessWidget {
               const SizedBox(height: 4),
 
               //** Platforms */
-              if (!showReleaseDate)
+              if (!showReleaseDate &&
+                  game?.platformValues != null &&
+                  game!.platformValues!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: SizedBox(height: 16, child: PlatformRowList()),
+                  child: SizedBox(
+                    height: 16,
+                    child: PlatformRowList(
+                      platforms: game!.platformValues!,
+                    ),
+                  ),
                 ),
 
               const SizedBox(height: 4),

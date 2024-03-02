@@ -13,6 +13,9 @@ Game _$GameFromJson(Map<String, dynamic> json) => Game(
       json['released'] as String?,
       json['background_image'] as String?,
       json['metacritic'] as int?,
+      (json['platforms'] as List<dynamic>?)
+          ?.map((e) => PlatformItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
@@ -22,4 +25,5 @@ Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
       'released': instance.released,
       'background_image': instance.backgroundImage,
       'metacritic': instance.metacritic,
+      'platforms': instance.platforms,
     };

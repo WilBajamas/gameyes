@@ -21,9 +21,18 @@ class GamesRepositoryImpl implements GamesRepository {
     DateTime? dateFrom,
     DateTime? dateTo,
     required GameOrdering ordering,
-    required List<GamesPlatform> platforms,
+    required List<GamePlatform> platforms,
   }) {
-    final platformNumbers = platforms.map((e) => e.id).toList();
+    List<int> platformNumbers = platforms.map((p) => p.id).toList();
+
+    //! Use [GamePlatfom] (rename)
+    // if (platforms.isNotEmpty) {
+    //   for (var platform in platforms) {
+    //     platformNumbers.addAll(platform.ids);
+    //   }
+    // }
+
+    // platformNumbers = null;
 
     return _gamesDatasource.fetchGames(
       page: page,

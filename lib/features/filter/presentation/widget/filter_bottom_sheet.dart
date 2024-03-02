@@ -159,9 +159,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 const SizedBox(height: 18),
 
                 //** Game platform selection */
-                TypeValuesSelection<GamesPlatform>(
+                TypeValuesSelection<GamePlatform>(
                   title: context.localisations.platforms,
-                  typeList: const <GamesPlatform>[
+                  typeList: const <GamePlatform>[
                     Playstation5(),
                     Playstation4(),
                     Pc(),

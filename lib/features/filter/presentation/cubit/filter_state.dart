@@ -10,14 +10,14 @@ final class FilterState extends Equatable {
   });
 
   final GameOrdering ordering;
-  final GamesPlatform gamesPlatform;
+  final GamePlatform gamesPlatform;
   final DateTime? dateFrom;
   final DateTime? dateTo;
   final String? searchTerm;
 
   FilterState copyWith({
     GameOrdering? gameOrdering,
-    GamesPlatform? gamesPlatform,
+    GamePlatform? gamesPlatform,
     DateTime? dateFrom,
     DateTime? dateTo,
     String? searchTerm,
