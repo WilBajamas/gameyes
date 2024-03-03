@@ -9,12 +9,12 @@ class GameScreenshot extends StatelessWidget {
   final double borderRadius;
 
   const GameScreenshot({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.onImageTap,
     this.padding = EdgeInsets.zero,
     this.borderRadius = 10,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

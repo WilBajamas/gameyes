@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 
 class BrowseScreen extends StatefulWidget {
-  const BrowseScreen({Key? key}) : super(key: key);
+  const BrowseScreen({super.key});
 
   @override
   State<BrowseScreen> createState() => _BrowseScreenState();
@@ -45,10 +45,8 @@ class _BrowseScreenState extends State<BrowseScreen> {
             DefaultSliverAppBar(
               title: context.localisations.browse,
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                child: const Center(child: Text('Browse')),
-              ),
+            const SliverToBoxAdapter(
+              child: Center(child: Text('Browse')),
             ),
           ],
         ),

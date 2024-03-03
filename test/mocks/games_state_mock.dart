@@ -8,8 +8,4 @@ GamesState get mockExistingGamesState => GamesState(
       games: mockGamesResponse.results!,
     );
 
-GamesState get mockInitialGamesState => const GamesState(
-      status: GamesStatus.initial,
-      response: null,
-      games: [],
-    );
+GamesState get mockInitialGamesState => const GamesState();

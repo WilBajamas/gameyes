@@ -10,8 +10,8 @@ class TypeValuesSelection<T> extends StatelessWidget {
     required this.typeSelection,
     required this.typeList,
     required this.onTypeSelected,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final T? typeSelection;
   final List<T> typeList;
@@ -20,7 +20,7 @@ class TypeValuesSelection<T> extends StatelessWidget {
   final Function(T type) onTypeSelected;
 
   String getTypeNames(T type) {
-    if (type is GamesPlatform) {
+    if (type is GamePlatform) {
       return type.name; // Access properties of GamesPlatform
     } else if (type is GameOrdering) {
       return type.name.toUpperCase(); // Handle other types differently
@@ -40,7 +40,6 @@ class TypeValuesSelection<T> extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Wrap(
-          direction: Axis.horizontal,
           spacing: 5,
           children: typeList.map(
             (type) {

@@ -11,9 +11,9 @@ class FilterBottomSheet extends StatefulWidget {
   final VoidCallback onSaveClick;
 
   const FilterBottomSheet({
-    Key? key,
+    super.key,
     required this.onSaveClick,
-  }) : super(key: key);
+  });
 
   @override
   State<FilterBottomSheet> createState() => _FilterBottomSheetState();
@@ -80,7 +80,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 //** Save button */
@@ -160,9 +159,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 const SizedBox(height: 18),
 
                 //** Game platform selection */
-                TypeValuesSelection<GamesPlatform>(
+                TypeValuesSelection<GamePlatform>(
                   title: context.localisations.platforms,
-                  typeList: const <GamesPlatform>[
+                  typeList: const <GamePlatform>[
                     Playstation5(),
                     Playstation4(),
                     Pc(),

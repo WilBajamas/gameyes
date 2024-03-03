@@ -5,13 +5,12 @@ class DefaultFilledButtonFullWidth extends FilledButton {
     String text,
     Function()? onPressed, {
     double height = 48,
-    Key? key,
+    super.key,
   }) : super(
           onPressed: onPressed,
           child: Text(text),
           style: FilledButton.styleFrom(
             minimumSize: Size.fromHeight(height),
           ),
-          key: key,
         );
 }

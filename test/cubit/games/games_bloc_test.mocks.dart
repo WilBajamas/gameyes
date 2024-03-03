@@ -55,7 +55,7 @@ class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
     DateTime? dateFrom,
     DateTime? dateTo,
     required _i7.GameOrdering? ordering,
-    required List<_i8.GamesPlatform>? platforms,
+    required List<_i8.GamePlatform>? platforms,
   }) =>
       (super.noSuchMethod(
         Invocation.method(

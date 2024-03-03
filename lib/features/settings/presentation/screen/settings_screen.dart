@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -45,10 +45,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             DefaultSliverAppBar(
               title: context.localisations.settings,
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                child: const Center(child: Text('Settings')),
-              ),
+            const SliverToBoxAdapter(
+              child: Center(child: Text('Settings')),
             ),
           ],
         ),

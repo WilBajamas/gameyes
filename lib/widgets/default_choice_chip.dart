@@ -10,8 +10,8 @@ class DefaultChoiceChip extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.onSelected,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

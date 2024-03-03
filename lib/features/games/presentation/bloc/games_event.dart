@@ -12,7 +12,7 @@ final class GamesFetched extends GamesEvent {
   final String? searchTerm;
   final DateTime? dateFrom;
   final DateTime? dateTo;
-  final List<GamesPlatform> platforms;
+  final List<GamePlatform> platforms;
   final GameOrdering ordering;
 
   const GamesFetched({

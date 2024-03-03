@@ -2,27 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class FilterlistAppBar extends StatefulWidget {
-  final List<(String, String, IconData?)> filterList;
-  final Function(String) selected;
+//! Must specify type for [T]
+class FilterlistAppBar<T> extends StatefulWidget {
+  final List<(T, String, IconData?)> filterList;
+  final Function(T) selected;
 
   const FilterlistAppBar({
-    Key? key,
+    super.key,
     required this.filterList,
     required this.selected,
-  }) : super(key: key);
+  });
 
   @override
-  State<FilterlistAppBar> createState() => _FilterlistAppBarState();
+  State<FilterlistAppBar<T>> createState() => _FilterlistAppBarState<T>();
 }
 
-class _FilterlistAppBarState extends State<FilterlistAppBar> {
-  String? _selectedTag;
+class _FilterlistAppBarState<T> extends State<FilterlistAppBar<T>> {
+  T? _selectedTag;
   final _itemScrollController = ItemScrollController();
   final _scrollOffsetController = ScrollOffsetController();
 
-  void _onItemClicked(int index, String tagSelected) {
+  void _onItemClicked(int index, T tagSelected) {
     setState(() => _selectedTag = tagSelected);
+    widget.selected(tagSelected);
     _itemScrollController.scrollTo(
       alignment: 0.1,
       index: index,
@@ -54,7 +56,7 @@ class _FilterlistAppBarState extends State<FilterlistAppBar> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: _SelectionChip(
+            child: _SelectionChip<T>(
               onSelect: (tagSelected) => _onItemClicked(index, tagSelected),
               isSelected: isItemSelected(index),
               title: widget.filterList[index].$2,
@@ -68,21 +70,20 @@ class _FilterlistAppBarState extends State<FilterlistAppBar> {
   }
 }
 
-class _SelectionChip extends StatelessWidget {
-  final String tag;
+class _SelectionChip<T> extends StatelessWidget {
+  final T tag;
   final bool isSelected;
   final String title;
   final IconData? icon;
-  final Function(String) onSelect;
+  final Function(T) onSelect;
 
   const _SelectionChip({
-    Key? key,
     this.icon,
     required this.title,
     required this.tag,
     required this.onSelect,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +96,6 @@ class _SelectionChip extends StatelessWidget {
     return ChoiceChip.elevated(
       label: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             title,

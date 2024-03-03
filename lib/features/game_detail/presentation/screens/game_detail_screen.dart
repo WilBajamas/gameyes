@@ -11,7 +11,7 @@ import 'package:gaming_library_assessment_flutter/features/games/data/models/gam
 class GameDetailScreen extends StatefulWidget {
   final Game? game;
 
-  const GameDetailScreen({Key? key, this.game}) : super(key: key);
+  const GameDetailScreen({super.key, this.game});
 
   @override
   State<GameDetailScreen> createState() => _GameDetailScreenState();

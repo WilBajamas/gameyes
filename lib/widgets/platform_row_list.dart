@@ -1,45 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 
 class PlatformRowList extends StatelessWidget {
-  PlatformRowList({Key? key}) : super(key: key);
+  final List<GamePlatfom> platforms;
 
-// ! Pass real platforms
-  final assetlist = [
-    'icon_android.png',
-    'icon_apple.png',
-    'icon_atari.png',
-    'icon_linux.png',
-    'icon_nintendo.png',
-    'icon_playstation.png',
-    'icon_sega.png',
-    'icon_web.png',
-    'icon_wii.png',
-    'icon_windows.png',
-    'icon_xbox.png',
-  ];
+  const PlatformRowList({super.key, required this.platforms});
+
+  (int, int) get _itemCountAndRemaining {
+    final remaining = platforms.length - 4;
+
+    final indexCount = remaining <= 0 ? platforms.length : 5;
+
+    return (indexCount, remaining);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
-      itemCount: 5,
+      itemCount: _itemCountAndRemaining.$1,
       physics: const NeverScrollableScrollPhysics(),
       separatorBuilder: (_, index) => const SizedBox(
         width: 2,
       ),
       itemBuilder: (context, index) {
-        final remainingItemsCount = assetlist.length - 4;
+        final remainingItemsCount = platforms.length - 4;
 
         return index == 4 && remainingItemsCount > 0
             ? Text(
-                '+$remainingItemsCount',
+                '+${_itemCountAndRemaining.$2}',
                 style: const TextStyle(
                   fontSize: 12,
                 ),
               )
             : Image.asset(
-                'assets/images/${assetlist[index]}',
+                'assets/images/${platforms[index].assetName}',
                 color: context.themeData.colorScheme.onBackground,
               );
       },

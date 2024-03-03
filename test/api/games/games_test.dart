@@ -16,7 +16,6 @@ void main() {
 
     dioAdapter = DioAdapter(
       dio: dio,
-      matcher: const FullHttpRequestMatcher(),
     );
   });
 

@@ -11,7 +11,7 @@ class FilterCubit extends Cubit<FilterState> {
   FilterCubit() : super(FilterInitial());
 
   void changeSelectionValue({
-    GamesPlatform? platform,
+    GamePlatform? platform,
     GameOrdering? ordering,
     String? searchTerm,
     DateTime? dateFrom,

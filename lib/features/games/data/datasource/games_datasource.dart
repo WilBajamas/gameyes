@@ -36,11 +36,49 @@ class GamesDataSource {
           'page_size': pageSize.toString(),
           if (searchTerm != null) 'search': searchTerm,
           if (platformNumbersQuery != null) 'platforms': platformNumbersQuery,
+          'exclude_additions': true,
+          'exclude_parents': true,
+          'exclude_game_series': true,
         },
       );
 
       return Right(
         GamesResponse.fromJson(response.data).copyWith(currentPage: page),
+      );
+    } on DioException catch (dioException) {
+      final Map<String, dynamic>? errorResponse = dioException.response?.data;
+
+      return Left(
+        ErrorType.errorType(
+          exception: dioException,
+          message: errorResponse?['message'],
+          error: errorResponse?['error'],
+          statusCode: dioException.response?.statusCode,
+        ),
+      );
+    }
+  }
+
+  Future<Either<ErrorType, GamesResponse>> fetchDatasourceGames({
+    int page = 1,
+    int pageSize = 20,
+    String? searchTerm,
+    String? dateRange,
+    String? orderings,
+    String? platforms,
+  }) async {
+    try {
+      final response = await _dioService.retrofitService.fetchGames(
+        page,
+        pageSize,
+        dateRange,
+        orderings,
+        searchTerm,
+        platforms,
+      );
+
+      return Right(
+        response.copyWith(currentPage: page),
       );
     } on DioException catch (dioException) {
       final Map<String, dynamic>? errorResponse = dioException.response?.data;

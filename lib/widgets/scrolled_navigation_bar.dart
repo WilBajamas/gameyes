@@ -9,10 +9,10 @@ class ScrolledNavigationBar extends StatefulWidget {
   final Duration duration;
 
   const ScrolledNavigationBar({
-    Key? key,
+    super.key,
     required this.child,
     this.duration = const Duration(milliseconds: 200),
-  }) : super(key: key);
+  });
 
   @override
   State createState() => _ScrolledNavigationBarState();

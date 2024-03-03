@@ -13,7 +13,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 class DetailMidSection extends StatelessWidget {
   final int? gameId;
 
-  const DetailMidSection({Key? key, required this.gameId}) : super(key: key);
+  const DetailMidSection({super.key, required this.gameId});
 
   @override
   Widget build(BuildContext context) {

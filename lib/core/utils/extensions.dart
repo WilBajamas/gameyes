@@ -62,4 +62,12 @@ extension DateTimeExtension on DateTime {
   }) {
     return DateTime(year + yearsLater, month + monthsLater, day + daysLater);
   }
+
+  DateTime getDateTimeBefore({
+    int yearsBefore = 0,
+    int monthsBefore = 0,
+    int daysBefore = 0,
+  }) {
+    return DateTime(year - yearsBefore, month - monthsBefore, day - daysBefore);
+  }
 }

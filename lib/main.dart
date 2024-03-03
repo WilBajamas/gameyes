@@ -8,9 +8,8 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/best_metacritic_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/latest_releases_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/most_anticipated_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
@@ -32,19 +31,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => injection.getIt<MostAnticipatedCubit>(),
-          child: const FeaturedScreen(),
-        ),
-        BlocProvider(
-          create: (context) => injection.getIt<BestMetacriticCubit>(),
-          child: const FeaturedScreen(),
-        ),
-        BlocProvider(
-          create: (context) => injection.getIt<LatestReleasesCubit>(),
+          create: (context) => injection.getIt<FeaturedBloc>(),
           child: const FeaturedScreen(),
         ),
         BlocProvider(
           create: (context) => injection.getIt<FilterCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => injection.getIt<FeaturedFilterCubit>(),
         ),
         BlocProvider(
           create: (context) => injection.getIt<GamesBloc>(),
@@ -63,7 +57,6 @@ class MyApp extends StatelessWidget {
         onGenerateTitle: (context) => context.localisations.app_title,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        themeMode: ThemeMode.system,
         theme: buildTheme(),
         darkTheme: buildDarkTheme(),
         routerConfig: goRouter,

@@ -11,8 +11,7 @@ import 'package:scroll_snap_list/scroll_snap_list.dart';
 class DetailScreenshotsSection extends StatelessWidget {
   final String? slug;
 
-  const DetailScreenshotsSection({Key? key, required this.slug})
-      : super(key: key);
+  const DetailScreenshotsSection({super.key, required this.slug});
 
   @override
   Widget build(BuildContext context) {

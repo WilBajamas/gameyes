@@ -11,6 +11,6 @@ abstract class GamesRepository {
     DateTime? dateFrom,
     DateTime? dateTo,
     required GameOrdering ordering,
-    required List<GamesPlatform> platforms,
+    required List<GamePlatform> platforms,
   });
 }

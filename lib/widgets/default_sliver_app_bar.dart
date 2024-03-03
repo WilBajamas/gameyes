@@ -6,16 +6,16 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 class DefaultSliverAppBar extends StatelessWidget {
   final String title;
   final String? subtitle;
-  final (Widget actionOne, VoidCallback actionPressed)? actionOne;
-  final (Widget actionTwo, VoidCallback actionPressed)? actionTwo;
+  final (Widget actionOne, VoidCallback? actionPressed)? actionOne;
+  final (Widget actionTwo, VoidCallback? actionPressed)? actionTwo;
 
   const DefaultSliverAppBar({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     this.actionOne,
     this.actionTwo,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
