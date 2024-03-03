@@ -5,6 +5,8 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_filter_bottom_sheet.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
@@ -53,8 +55,12 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
 
   void _fetchNextPage() => _featuredBloc.add(const FeaturedNextPage());
 
-  void _fetchGames({FeaturedTag tag = FeaturedTag.newAndTrending}) {
-    _featuredBloc.add(FeaturedFetched(tag: tag));
+  void _fetchGames({
+    FeaturedTag tag = FeaturedTag.newAndTrending,
+  }) {
+    final platforms =
+        context.read<FeaturedFilterCubit>().state.platformsSelected;
+    _featuredBloc.add(FeaturedFetched(tag: tag, platforms: platforms));
   }
 
   bool get _isBottom {
@@ -105,6 +111,24 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                 DefaultSliverAppBar(
                   title: context.localisations.featured,
                   subtitle: context.localisations.featured_subtitle,
+                  actionOne: (
+                    IconButton(
+                      onPressed: () => showModalBottomSheet(
+                        context: context,
+                        builder: (context) => FeaturedFilterBottomSheet(
+                          onSaveClick: () => _fetchGames(
+                            tag: context.read<FeaturedBloc>().state.tag,
+                          ),
+                        ),
+                        isScrollControlled: true,
+                      ),
+                      icon: Icon(
+                        Icons.filter_list,
+                        color: context.themeData.colorScheme.onBackground,
+                      ),
+                    ),
+                    null
+                  ),
                 ),
                 FilterlistAppBar<FeaturedTag>(
                   selected: (selectedTag) => _fetchGames(tag: selectedTag),

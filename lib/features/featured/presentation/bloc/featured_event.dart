@@ -6,7 +6,7 @@ sealed class FeaturedEvent extends Equatable {
 
 final class FeaturedFetched extends FeaturedEvent {
   final FeaturedTag tag;
-  final List<GamePlatform>? platforms;
+  final Set<GamePlatfom>? platforms;
 
   const FeaturedFetched({
     required this.tag,
@@ -16,6 +16,7 @@ final class FeaturedFetched extends FeaturedEvent {
   @override
   List<Object?> get props => [
         tag,
+        platforms,
       ];
 }
 

@@ -1,9 +1,10 @@
 //** Hardcoding game platforms for simplicity */
 import 'package:equatable/equatable.dart';
+import 'package:gaming_library_assessment_flutter/core/interface/selection.dart';
 
 // ** Locally used entity //
 
-enum GamePlatfom {
+enum GamePlatfom implements EnumSelection {
   playstation(
     ids: [187, 18, 16, 15, 27, 17, 19],
     name: 'Playstation',
@@ -54,6 +55,9 @@ enum GamePlatfom {
     required this.name,
     required this.assetName,
   });
+
+  @override
+  String get valueName => name;
 }
 
 class GamePlatform extends Equatable {

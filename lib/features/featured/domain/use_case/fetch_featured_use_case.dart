@@ -16,7 +16,7 @@ class FetchFeaturedUseCase {
     required FeaturedTag tag,
     required Function(GamesResponse) onSuccess,
     required Function(ErrorType) onFailure,
-    List<GamePlatform>? platforms,
+    Set<GamePlatfom>? platforms,
   }) async {
     final feature = _getFeaturedValues(tag);
 
@@ -29,14 +29,22 @@ class FetchFeaturedUseCase {
 
     final gameOrderingQuery =
         feature.$1.map((ordering) => '-${ordering.name}').join(',');
-    final gamePlatformsQuery =
-        platforms?.map((platform) => platform.id).join(',');
+
+    String gamePlatformQuery = '';
+
+    if (platforms case final platforms?) {
+      Set<int> allPlatformIds =
+          platforms.fold<Set<int>>({}, (acc, p) => acc..addAll(p.ids));
+
+      gamePlatformQuery =
+          allPlatformIds.isEmpty ? '' : allPlatformIds.join(',');
+    }
 
     final response = await _repository.fetchGames(
       page: page,
       dateRange: dateRangeQuery,
       orderings: gameOrderingQuery,
-      platforms: gamePlatformsQuery,
+      platforms: gamePlatformQuery.isNotEmpty ? gamePlatformQuery : null,
     );
 
     response.fold(onFailure, onSuccess);
