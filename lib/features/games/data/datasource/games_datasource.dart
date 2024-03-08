@@ -1,63 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 
 @injectable
 class GamesDataSource {
   final _dioService = getIt<DioService>();
-
-  Future<Either<ErrorType, GamesResponse>> fetchGames({
-    int page = 1,
-    int pageSize = 10,
-    String? searchTerm,
-    String dateFrom = '',
-    String dateTo = '',
-    String ordering = 'released',
-    bool reverseOrder = false,
-    List<int>? platforms,
-  }) async {
-    final dateRangeQuery =
-        // ignore: lines_longer_than_80_chars
-        '$dateFrom${dateFrom.isNotEmpty && dateTo.isNotEmpty ? ',' : ''}$dateTo';
-    final String? platformNumbersQuery = platforms?.join(',');
-
-    try {
-      final response = await _dioService.dio.get(
-        ConfigConstants.gamesEndpoint,
-        queryParameters: {
-          'dates': dateRangeQuery,
-          'ordering': '${reverseOrder ? '-' : ''}$ordering',
-          'page': page.toString(),
-          'page_size': pageSize.toString(),
-          if (searchTerm != null) 'search': searchTerm,
-          if (platformNumbersQuery != null) 'platforms': platformNumbersQuery,
-          'exclude_additions': true,
-          'exclude_parents': true,
-          'exclude_game_series': true,
-        },
-      );
-
-      return Right(
-        GamesResponse.fromJson(response.data).copyWith(currentPage: page),
-      );
-    } on DioException catch (dioException) {
-      final Map<String, dynamic>? errorResponse = dioException.response?.data;
-
-      return Left(
-        ErrorType.errorType(
-          exception: dioException,
-          message: errorResponse?['message'],
-          error: errorResponse?['error'],
-          statusCode: dioException.response?.statusCode,
-        ),
-      );
-    }
-  }
 
   Future<Either<ErrorType, GamesResponse>> fetchDatasourceGames({
     int page = 1,
@@ -66,6 +17,7 @@ class GamesDataSource {
     String? dateRange,
     String? orderings,
     String? platforms,
+    String? genres,
   }) async {
     try {
       final response = await _dioService.retrofitService.fetchGames(
@@ -75,6 +27,7 @@ class GamesDataSource {
         orderings,
         searchTerm,
         platforms,
+        genres,
       );
 
       return Right(

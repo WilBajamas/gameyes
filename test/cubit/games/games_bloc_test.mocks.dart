@@ -6,11 +6,8 @@
 import 'dart:async' as _i4;
 
 import 'package:dartz/dartz.dart' as _i2;
-import 'package:gaming_library_assessment_flutter/core/res/const.dart' as _i7;
 import 'package:gaming_library_assessment_flutter/data/models/error.dart'
     as _i5;
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart'
-    as _i8;
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart'
     as _i6;
 import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart'
@@ -52,10 +49,10 @@ class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
   _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>> fetchGames({
     int? page,
     String? searchTerm,
-    DateTime? dateFrom,
-    DateTime? dateTo,
-    required _i7.GameOrdering? ordering,
-    required List<_i8.GamePlatform>? platforms,
+    String? dateRange,
+    String? platforms,
+    String? genres,
+    String? ordering,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -64,10 +61,10 @@ class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
           {
             #page: page,
             #searchTerm: searchTerm,
-            #dateFrom: dateFrom,
-            #dateTo: dateTo,
-            #ordering: ordering,
+            #dateRange: dateRange,
             #platforms: platforms,
+            #genres: genres,
+            #ordering: ordering,
           },
         ),
         returnValue:
@@ -80,10 +77,10 @@ class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
             {
               #page: page,
               #searchTerm: searchTerm,
-              #dateFrom: dateFrom,
-              #dateTo: dateTo,
-              #ordering: ordering,
+              #dateRange: dateRange,
               #platforms: platforms,
+              #genres: genres,
+              #ordering: ordering,
             },
           ),
         )),

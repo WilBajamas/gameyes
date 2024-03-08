@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:injectable/injectable.dart';
 
 part 'featured_filter_state.dart';
@@ -9,9 +9,9 @@ part 'featured_filter_state.dart';
 class FeaturedFilterCubit extends Cubit<FeaturedFilterState> {
   FeaturedFilterCubit() : super(const FeaturedFilterState());
 
-  void selectPlatform(GamePlatfom platform) {
+  void selectPlatform(GamePlatform platform) {
     final currentSelectionState =
-        Set<GamePlatfom>.from(state.platformsSelected);
+        Set<GamePlatform>.from(state.platformsSelected);
 
     if (currentSelectionState.contains(platform)) {
       currentSelectionState.remove(platform);

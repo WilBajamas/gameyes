@@ -4,12 +4,14 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
-import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart';
 import 'package:injectable/injectable.dart';
 
 part 'games_event.dart';
@@ -17,57 +19,73 @@ part 'games_state.dart';
 
 @injectable
 class GamesBloc extends Bloc<GamesEvent, GamesState> {
-  final _gamesRepository = injection.getIt<GamesRepository>();
+  final _fetchGamesUsecase = injection.getIt<FetchGamesUseCase>();
 
   GamesBloc() : super(const GamesState()) {
-    on<GamesFetched>(_onGamesFetched, transformer: droppable());
+    on<GamesFetched>(_onFetchGames, transformer: droppable());
+    on<GamesNextPage>(_onFetchNextPage, transformer: droppable());
   }
 
-  Future<void> _onGamesFetched(
+  Future<void> _onFetchGames(
     GamesFetched event,
     Emitter<GamesState> emit,
   ) async {
-
-    // Reset state because filter changed
-    if (event.resetPage) {
-      emit(const GamesState());
-    } else if (state.response?.next == null) {
-      // Next page not available
-      return;
-    }
-
-    // Increment page based on current page (returned from response)
-    final nextPage = state.status == GamesStatus.initial
-        ? 1
-        : state.response!.currentPage! + 1;
-
-    final games = await _gamesRepository.fetchGames(
-      page: nextPage,
+    emit(
+      const GamesState(
+        status: GamesStatus.loading,
+      ),
+    );
+    await _fetchGamesUsecase(
+      page: 1,
       searchTerm: event.searchTerm,
       dateFrom: event.dateFrom,
       dateTo: event.dateTo,
-      ordering: event.ordering,
       platforms: event.platforms,
+      genres: event.genres,
+      ordering: event.ordering,
+      onFailure: (error) =>
+          emit(state.copyWith(status: GamesStatus.failed, error: error)),
+      onSuccess: (response) => emit(
+        state.copyWith(
+          status: GamesStatus.success,
+          response: response,
+          games: response.results,
+        ),
+      ),
     );
+  }
 
-    games.fold(
-      (error) {
-        emit(state.copyWith(status: GamesStatus.failure));
-      },
-      (response) {
-        emit(
-          response.results!.isEmpty
-              ? state.copyWith(
-                  response: response,
-                  status: GamesStatus.success,
-                )
-              : state.copyWith(
-                  status: GamesStatus.success,
-                  games: List.of(state.games)..addAll(response.results!),
-                  response: response,
-                ),
-        );
-      },
+  Future<void> _onFetchNextPage(
+    GamesNextPage event,
+    Emitter<GamesState> emit,
+  ) async {
+    if (state.response?.next == null || state.response?.currentPage == null) {
+      return;
+    }
+
+    emit(state.copyWith(nextPageStatus: GamesNextPageStatus.loading));
+
+    await _fetchGamesUsecase(
+      page: state.response!.currentPage! + 1,
+      searchTerm: event.searchTerm,
+      dateFrom: event.dateFrom,
+      dateTo: event.dateTo,
+      platforms: event.platforms,
+      genres: event.genres,
+      ordering: event.ordering,
+      onSuccess: (response) => emit(
+        state.copyWith(
+          nextPageStatus: GamesNextPageStatus.initial,
+          response: response,
+          games: List.of(state.games)..addAll(response.results!),
+        ),
+      ),
+      onFailure: (error) => emit(
+        state.copyWith(
+          nextPageError: error,
+          nextPageStatus: GamesNextPageStatus.failed,
+        ),
+      ),
     );
   }
 }

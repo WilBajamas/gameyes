@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/platform_item.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -21,9 +21,9 @@ final class Game extends Equatable {
 
   final List<PlatformItem>? platforms;
 
-  List<GamePlatfom>? get platformValues {
+  List<GamePlatform>? get platformValues {
     if (platforms case final platforms?) {
-      final List<GamePlatfom> values = [];
+      final List<GamePlatform> values = [];
 
       for (var p in platforms) {
         if (p.platform?.value case final value?) values.add(value);

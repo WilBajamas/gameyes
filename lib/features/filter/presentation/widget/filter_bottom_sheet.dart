@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
+import 'package:gaming_library_assessment_flutter/widgets/multi_type_values_selection.dart';
 import 'package:gaming_library_assessment_flutter/widgets/type_values_selection.dart';
 
 class FilterBottomSheet extends StatefulWidget {
@@ -101,6 +103,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   title: context.localisations.search_games,
                   textEditingController: _searchTextController,
                   prefixIcon: const Icon(Icons.search),
+                  onChanged: (value) =>
+                      context.read<FilterCubit>().updateSearchTerm(value),
                 ),
                 const SizedBox(height: 12),
 
@@ -158,27 +162,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
                 const SizedBox(height: 18),
 
-                //** Game platform selection */
-                TypeValuesSelection<GamePlatform>(
-                  title: context.localisations.platforms,
-                  typeList: const <GamePlatform>[
-                    Playstation5(),
-                    Playstation4(),
-                    Pc(),
-                    XboxOne(),
-                    XboxSeriesSX(),
-                    Wii(),
-                    WiiU(),
-                  ],
-                  typeSelection: state.gamesPlatform,
-                  onTypeSelected: (platformSelected) =>
-                      _filterCubit.changeSelectionValue(
-                    platform: platformSelected,
-                  ),
-                ),
-
-                const SizedBox(height: 12),
-
                 //** Ordering */
                 TypeValuesSelection(
                   title: context.localisations.ordering,
@@ -186,6 +169,28 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   typeSelection: state.ordering,
                   onTypeSelected: (orderingSelected) => _filterCubit
                       .changeSelectionValue(ordering: orderingSelected),
+                ),
+
+                const SizedBox(height: 12),
+
+                //** Game platform selection */
+                MultiTypeValuesSelection<GamePlatform>(
+                  selectedItems: state.platforms,
+                  title: context.localisations.platforms,
+                  onSelect: (platform) =>
+                      context.read<FilterCubit>().selectPlatform(platform),
+                  selections: GamePlatform.values.toSet(),
+                ),
+
+                const SizedBox(height: 12),
+
+                // ** Genres */
+                MultiTypeValuesSelection<GameGenre>(
+                  selectedItems: state.genres,
+                  title: context.localisations.genre,
+                  onSelect: (genre) =>
+                      context.read<FilterCubit>().selectGenre(genre),
+                  selections: GameGenre.values.toSet(),
                 ),
               ],
             );

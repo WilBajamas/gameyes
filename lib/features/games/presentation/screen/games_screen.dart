@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
@@ -6,6 +7,7 @@ import 'package:gaming_library_assessment_flutter/features/filter/presentation/c
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/widget/filter_bottom_sheet.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
@@ -36,16 +38,32 @@ class _GamesScreenState extends State<GamesScreen> {
     super.dispose();
   }
 
-  void _fetchGames({bool resetPage = true}) {
+  void _fetchGames() {
     final filterState = context.read<FilterCubit>().state;
     context.read<GamesBloc>().add(
           GamesFetched(
-            resetPage: resetPage,
             searchTerm: filterState.searchTerm,
             dateFrom: filterState.dateFrom,
             dateTo: filterState.dateTo,
-            platforms: [filterState.gamesPlatform],
+            platforms: filterState.platforms,
             ordering: filterState.ordering,
+            genres: filterState.genres,
+            ascending: filterState.ascending,
+          ),
+        );
+  }
+
+  void _fetchNextPage() {
+    final filterState = context.read<FilterCubit>().state;
+    context.read<GamesBloc>().add(
+          GamesNextPage(
+            searchTerm: filterState.searchTerm,
+            dateFrom: filterState.dateFrom,
+            dateTo: filterState.dateTo,
+            platforms: filterState.platforms,
+            ordering: filterState.ordering,
+            genres: filterState.genres,
+            ascending: filterState.ascending,
           ),
         );
   }
@@ -54,8 +72,10 @@ class _GamesScreenState extends State<GamesScreen> {
     _scrollChangeNotifier.isScrolled =
         _scrollController.position.userScrollDirection;
 
-    if (_isBottom) {
-      _fetchGames(resetPage: false);
+    if (_isBottom &&
+        context.read<GamesBloc>().state.nextPageStatus !=
+            GamesNextPageStatus.failed) {
+      _fetchNextPage();
     }
   }
 
@@ -70,50 +90,39 @@ class _GamesScreenState extends State<GamesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder: (context, _) => [
-            SliverAppBar(
-              actions: [
-                IconButton(
-                  onPressed: () => showModalBottomSheet(
-                    context: context,
-                    builder: (context) => FilterBottomSheet(
-                      onSaveClick: () => _fetchGames(),
+        child: BlocBuilder<GamesBloc, GamesState>(
+          builder: (context, state) {
+            return CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                DefaultSliverAppBar(
+                  title: context.localisations.games,
+                  subtitle: context.localisations.games_screen_subtitle,
+                  actionOne: (
+                    IconButton(
+                      onPressed: () => showModalBottomSheet(
+                        context: context,
+                        builder: (context) =>
+                            FilterBottomSheet(onSaveClick: _fetchGames),
+                        isScrollControlled: true,
+                        showDragHandle: true,
+                      ),
+                      icon: Icon(
+                        Icons.filter_list,
+                        color: context.themeData.colorScheme.onBackground,
+                      ),
                     ),
-                    isScrollControlled: true,
-                    showDragHandle: true,
-                  ),
-                  icon: const Icon(
-                    Icons.filter_list,
+                    null
                   ),
                 ),
-              ],
-            ),
-          ],
-          body: RefreshIndicator(
-            onRefresh: () async {
-              _fetchGames();
-            },
-            child: BlocBuilder<GamesBloc, GamesState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case GamesStatus.failure:
-                    return Center(
-                      child: ErrorRetryWidget(
-                        onRetryClicked: () => _fetchGames(),
-                      ),
-                    );
-                  case GamesStatus.success:
-                    if (state.games.isEmpty) {
-                      return Center(
-                        child: ErrorRetryWidget(
-                          text: context.localisations.no_results_found,
-                          onRetryClicked: () => _fetchGames(),
-                        ),
-                      );
-                    }
-                    return GridView.builder(
-                      padding: const EdgeInsets.all(8),
+                if (state.status == GamesStatus.success)
+                  CupertinoSliverRefreshControl(
+                    onRefresh: () async => _fetchGames(),
+                  ),
+                if (state.status == GamesStatus.success)
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    sliver: SliverGrid.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -121,20 +130,63 @@ class _GamesScreenState extends State<GamesScreen> {
                         mainAxisSpacing: 8,
                         crossAxisSpacing: 8,
                       ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return GameItem(
-                          game: state.games[index],
-                        );
-                      },
                       itemCount: state.games.length,
-                      controller: _scrollController,
-                    );
-                  case GamesStatus.initial:
-                    return const GameItemGridLoadingShimmer();
-                }
-              },
-            ),
-          ),
+                      itemBuilder: (context, index) => GameItem(
+                        game: state.games[index],
+                      ),
+                    ),
+                  ),
+                if (state.nextPageStatus == GamesNextPageStatus.loading)
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 14,
+                      ),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                if (state.nextPageStatus == GamesNextPageStatus.failed)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 14,
+                      ),
+                      child: ErrorRetryWidget(
+                        onRetryClicked: _fetchNextPage,
+                      ),
+                    ),
+                  ),
+                if (state.status == GamesStatus.failed)
+                  SliverFillRemaining(
+                    child: Center(
+                      child: ErrorRetryWidget(
+                        onRetryClicked: () {
+                          _fetchGames();
+                        },
+                      ),
+                    ),
+                  ),
+                if (state.status == GamesStatus.empty)
+                  SliverFillRemaining(
+                    child: Center(
+                      child: ErrorRetryWidget(
+                        text: context.localisations.no_results_found,
+                        onRetryClicked: () {
+                          _fetchGames();
+                        },
+                      ),
+                    ),
+                  ),
+                if (state.status == GamesStatus.loading)
+                  const SliverFillRemaining(
+                    child: GameItemGridLoadingShimmer(),
+                  ),
+              ],
+            );
+          },
         ),
       ),
     );
