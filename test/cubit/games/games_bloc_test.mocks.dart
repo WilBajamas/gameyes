@@ -6,12 +6,20 @@
 import 'dart:async' as _i4;
 
 import 'package:dartz/dartz.dart' as _i2;
+import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart'
+    as _i9;
+import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart'
+    as _i10;
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
+    as _i8;
 import 'package:gaming_library_assessment_flutter/data/models/error.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart'
     as _i6;
 import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart'
     as _i3;
+import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart'
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -85,4 +93,47 @@ class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>);
+}
+
+/// A class which mocks [FetchGamesUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFetchGamesUseCase extends _i1.Mock implements _i7.FetchGamesUseCase {
+  MockFetchGamesUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<void> call({
+    required int? page,
+    String? searchTerm,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    Set<_i8.GamePlatform>? platforms,
+    Set<_i9.GameGenre>? genres,
+    _i10.GameOrdering? ordering,
+    bool? ascending = false,
+    required dynamic Function(_i6.GamesResponse)? onSuccess,
+    required dynamic Function(_i5.ErrorType)? onFailure,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+          {
+            #page: page,
+            #searchTerm: searchTerm,
+            #dateFrom: dateFrom,
+            #dateTo: dateTo,
+            #platforms: platforms,
+            #genres: genres,
+            #ordering: ordering,
+            #ascending: ascending,
+            #onSuccess: onSuccess,
+            #onFailure: onFailure,
+          },
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

@@ -35,6 +35,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         status: GamesStatus.loading,
       ),
     );
+    
     await _fetchGamesUsecase(
       page: 1,
       searchTerm: event.searchTerm,
