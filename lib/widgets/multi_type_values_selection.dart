@@ -7,14 +7,14 @@ class MultiTypeValuesSelection<T extends EnumSelection>
     extends StatelessWidget {
   final Set<T> selectedItems;
   final Set<T> selections;
-  final Function(T) selected;
+  final Function(T) onSelect;
   final String title;
 
   const MultiTypeValuesSelection({
     super.key,
     required this.selectedItems,
     required this.title,
-    required this.selected,
+    required this.onSelect,
     required this.selections,
   });
 
@@ -35,7 +35,7 @@ class MultiTypeValuesSelection<T extends EnumSelection>
               return DefaultChoiceChip(
                 label: type.valueName,
                 isSelected: selectedItems.contains(type),
-                onSelected: () => selected(type),
+                onSelected: () => onSelect(type),
               );
             },
           ).toList(),

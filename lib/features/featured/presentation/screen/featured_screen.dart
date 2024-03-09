@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
@@ -25,11 +25,8 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
   final _controller = ScrollController();
   final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
 
-  late final FeaturedBloc _featuredBloc;
-
   @override
   void initState() {
-    _featuredBloc = context.read<FeaturedBloc>();
     _controller.addListener(_onScroll);
     _fetchGames();
 
@@ -48,19 +45,23 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
     _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
 
     if (_isBottom &&
-        _featuredBloc.state.nextPageStatus != FeaturedNextPageStatus.failed) {
+        context.read<FeaturedBloc>().state.nextPageStatus !=
+            FeaturedNextPageStatus.failed) {
       _fetchNextPage();
     }
   }
 
-  void _fetchNextPage() => _featuredBloc.add(const FeaturedNextPage());
+  void _fetchNextPage() =>
+      context.read<FeaturedBloc>().add(const FeaturedNextPage());
 
   void _fetchGames({
     FeaturedTag tag = FeaturedTag.newAndTrending,
   }) {
     final platforms =
         context.read<FeaturedFilterCubit>().state.platformsSelected;
-    _featuredBloc.add(FeaturedFetched(tag: tag, platforms: platforms));
+    context
+        .read<FeaturedBloc>()
+        .add(FeaturedFetched(tag: tag, platforms: platforms));
   }
 
   bool get _isBottom {

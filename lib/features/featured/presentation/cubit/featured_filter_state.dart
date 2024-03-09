@@ -1,12 +1,12 @@
 part of 'featured_filter_cubit.dart';
 
 class FeaturedFilterState extends Equatable {
-  final Set<GamePlatfom> platformsSelected;
+  final Set<GamePlatform> platformsSelected;
 
   const FeaturedFilterState({this.platformsSelected = const {}});
 
   FeaturedFilterState copyWith(
-    Set<GamePlatfom> platformsSelected,
+    Set<GamePlatform> platformsSelected,
   ) {
     return FeaturedFilterState(platformsSelected: platformsSelected);
   }

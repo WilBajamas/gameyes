@@ -1,9 +1,10 @@
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repository/featured_repository.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,7 +17,7 @@ class FetchFeaturedUseCase {
     required FeaturedTag tag,
     required Function(GamesResponse) onSuccess,
     required Function(ErrorType) onFailure,
-    Set<GamePlatfom>? platforms,
+    Set<GamePlatform>? platforms,
   }) async {
     final feature = _getFeaturedValues(tag);
 
@@ -30,21 +31,21 @@ class FetchFeaturedUseCase {
     final gameOrderingQuery =
         feature.$1.map((ordering) => '-${ordering.name}').join(',');
 
-    String gamePlatformQuery = '';
+    String getGamePlatformQuery() {
+      if (platforms == null || platforms.isEmpty) return '';
 
-    if (platforms case final platforms?) {
       Set<int> allPlatformIds =
           platforms.fold<Set<int>>({}, (acc, p) => acc..addAll(p.ids));
 
-      gamePlatformQuery =
-          allPlatformIds.isEmpty ? '' : allPlatformIds.join(',');
+      return allPlatformIds.join(',');
     }
 
     final response = await _repository.fetchGames(
       page: page,
       dateRange: dateRangeQuery,
       orderings: gameOrderingQuery,
-      platforms: gamePlatformQuery.isNotEmpty ? gamePlatformQuery : null,
+      platforms:
+          getGamePlatformQuery().isNotEmpty ? getGamePlatformQuery() : null,
     );
 
     response.fold(onFailure, onSuccess);

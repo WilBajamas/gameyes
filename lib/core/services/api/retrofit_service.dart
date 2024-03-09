@@ -25,5 +25,6 @@ abstract class RetrofitService {
     @Query('ordering') String? ordering,
     @Query('search') String? search,
     @Query('platforms') String? platforms,
+    @Query('genres') String? genres,
   );
 }

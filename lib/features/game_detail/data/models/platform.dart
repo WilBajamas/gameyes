@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'platform.g.dart';
@@ -12,9 +12,9 @@ final class Platform extends Equatable {
 
   const Platform(this.id, this.name);
 
-  GamePlatfom? get value {
+  GamePlatform? get value {
     final platformsContainsId =
-        GamePlatfom.values.where((p) => p.ids.contains(id)).toList();
+        GamePlatform.values.where((p) => p.ids.contains(id)).toList();
 
     if (platformsContainsId.isNotEmpty) {
       return platformsContainsId.firstWhere((_) => true);

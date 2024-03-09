@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 import 'package:gaming_library_assessment_flutter/widgets/multi_type_values_selection.dart';
 
 class FeaturedFilterBottomSheet extends StatelessWidget {
@@ -44,13 +44,13 @@ class FeaturedFilterBottomSheet extends StatelessWidget {
             //** Game platform selection */
             BlocBuilder<FeaturedFilterCubit, FeaturedFilterState>(
               builder: (context, state) {
-                return MultiTypeValuesSelection(
+                return MultiTypeValuesSelection<GamePlatform>(
                   selectedItems: state.platformsSelected,
                   title: context.localisations.platforms,
-                  selected: (platform) => context
+                  onSelect: (platform) => context
                       .read<FeaturedFilterCubit>()
                       .selectPlatform(platform),
-                  selections: GamePlatfom.values.toSet(),
+                  selections: GamePlatform.values.toSet(),
                 );
               },
             ),

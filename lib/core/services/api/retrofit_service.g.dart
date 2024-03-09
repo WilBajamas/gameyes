@@ -55,6 +55,7 @@ class _RetrofitService implements RetrofitService {
     String? ordering,
     String? search,
     String? platforms,
+    String? genres,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -64,6 +65,7 @@ class _RetrofitService implements RetrofitService {
       r'ordering': ordering,
       r'search': search,
       r'platforms': platforms,
+      r'genres': genres,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

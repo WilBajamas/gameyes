@@ -1,27 +1,3 @@
-enum TextInputValidatorType {
-  nonEmpty,
-  email,
-  lessCharacters,
-}
-
-enum GameOrdering {
-  name,
-  released,
-  added,
-  created,
-  updated,
-  rating,
-  metacritic,
-}
-
-enum FeaturedTag {
-  newAndTrending,
-  newReleases,
-  bestOfTheYear,
-  bestMetacritic,
-  allTimeTop100
-}
-
 class ConfigConstants {
   static const baseUrl = 'https://api.rawg.io/api/';
   static const gamesEndpoint = 'games';

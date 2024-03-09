@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 
 class PlatformRowList extends StatelessWidget {
-  final List<GamePlatfom> platforms;
+  final List<GamePlatform> platforms;
 
   const PlatformRowList({super.key, required this.platforms});
 

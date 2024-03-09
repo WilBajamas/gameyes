@@ -14,6 +14,7 @@ class DefaultBorderTextField extends StatelessWidget {
   final String? hint;
   final bool readOnly;
   final VoidCallback? onClicked;
+  final Function(String)? onChanged;
 
   const DefaultBorderTextField({
     required this.context,
@@ -28,6 +29,7 @@ class DefaultBorderTextField extends StatelessWidget {
     this.hint,
     this.readOnly = false,
     this.onClicked,
+    this.onChanged,
     super.key,
   });
 
@@ -54,6 +56,7 @@ class DefaultBorderTextField extends StatelessWidget {
         ),
         labelText: title,
       ),
+      onChanged: onChanged,
       onTap: onClicked,
     );
   }
