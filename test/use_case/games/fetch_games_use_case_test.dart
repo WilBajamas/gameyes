@@ -40,19 +40,11 @@ void main() {
       ),
     ).thenAnswer((_) async => Right(mockGamesResponse));
 
-    bool isSuccess = false;
-
-    await fetchGamesUsecase.call(
+    final result = await fetchGamesUsecase.call(
       page: 1,
-      onFailure: (e) {
-        isSuccess = false;
-      },
-      onSuccess: (r) {
-        isSuccess = true;
-      },
     );
 
-    expect(isSuccess, isTrue);
+    expect(result, Right(mockGamesResponse));
     verify(
       gamesRepository.fetchGames(
         page: 1,
@@ -74,19 +66,11 @@ void main() {
       ),
     ).thenAnswer((_) async => Left(mockResponseError));
 
-    bool isFailed = false;
-
-    await fetchGamesUsecase.call(
+    final result = await fetchGamesUsecase.call(
       page: 1,
-      onFailure: (e) {
-        isFailed = true;
-      },
-      onSuccess: (r) {
-        isFailed = true;
-      },
     );
 
-    expect(isFailed, isTrue);
+    expect(result, Left(mockResponseError));
     verify(
       gamesRepository.fetchGames(
         page: 1,

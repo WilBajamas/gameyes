@@ -92,7 +92,7 @@ dev_dependencies:
   build_runner: ^2.3.3
 
   # Testing
-  bloc_test: ^9.1.5
+  bloc_test: ^9.1.6
 
   # Envied generator
   envied_generator: ^0.5.3

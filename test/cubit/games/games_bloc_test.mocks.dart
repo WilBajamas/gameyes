@@ -7,19 +7,17 @@ import 'dart:async' as _i4;
 
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart'
-    as _i9;
-import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart'
-    as _i10;
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
     as _i8;
+import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart'
+    as _i9;
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
+    as _i7;
 import 'package:gaming_library_assessment_flutter/data/models/error.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart'
     as _i6;
-import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart'
-    as _i3;
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart'
-    as _i7;
+    as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -45,76 +43,24 @@ class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
         );
 }
 
-/// A class which mocks [GamesRepository].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
-  MockGamesRepository() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>> fetchGames({
-    int? page,
-    String? searchTerm,
-    String? dateRange,
-    String? platforms,
-    String? genres,
-    String? ordering,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #fetchGames,
-          [],
-          {
-            #page: page,
-            #searchTerm: searchTerm,
-            #dateRange: dateRange,
-            #platforms: platforms,
-            #genres: genres,
-            #ordering: ordering,
-          },
-        ),
-        returnValue:
-            _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>.value(
-                _FakeEither_0<_i5.ErrorType, _i6.GamesResponse>(
-          this,
-          Invocation.method(
-            #fetchGames,
-            [],
-            {
-              #page: page,
-              #searchTerm: searchTerm,
-              #dateRange: dateRange,
-              #platforms: platforms,
-              #genres: genres,
-              #ordering: ordering,
-            },
-          ),
-        )),
-      ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>);
-}
-
 /// A class which mocks [FetchGamesUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFetchGamesUseCase extends _i1.Mock implements _i7.FetchGamesUseCase {
+class MockFetchGamesUseCase extends _i1.Mock implements _i3.FetchGamesUseCase {
   MockFetchGamesUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<void> call({
+  _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>> call({
     required int? page,
     String? searchTerm,
     DateTime? dateFrom,
     DateTime? dateTo,
-    Set<_i8.GamePlatform>? platforms,
-    Set<_i9.GameGenre>? genres,
-    _i10.GameOrdering? ordering,
+    Set<_i7.GamePlatform>? platforms,
+    Set<_i8.GameGenre>? genres,
+    _i9.GameOrdering? ordering,
     bool? ascending = false,
-    required dynamic Function(_i6.GamesResponse)? onSuccess,
-    required dynamic Function(_i5.ErrorType)? onFailure,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -129,11 +75,26 @@ class MockFetchGamesUseCase extends _i1.Mock implements _i7.FetchGamesUseCase {
             #genres: genres,
             #ordering: ordering,
             #ascending: ascending,
-            #onSuccess: onSuccess,
-            #onFailure: onFailure,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue:
+            _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>.value(
+                _FakeEither_0<_i5.ErrorType, _i6.GamesResponse>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+            {
+              #page: page,
+              #searchTerm: searchTerm,
+              #dateFrom: dateFrom,
+              #dateTo: dateTo,
+              #platforms: platforms,
+              #genres: genres,
+              #ordering: ordering,
+              #ascending: ascending,
+            },
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>);
 }

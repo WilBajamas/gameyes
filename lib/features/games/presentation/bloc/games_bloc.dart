@@ -35,8 +35,8 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         status: GamesStatus.loading,
       ),
     );
-    
-    await _fetchGamesUsecase(
+
+    final result = await _fetchGamesUsecase(
       page: 1,
       searchTerm: event.searchTerm,
       dateFrom: event.dateFrom,
@@ -44,9 +44,13 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       platforms: event.platforms,
       genres: event.genres,
       ordering: event.ordering,
-      onFailure: (error) =>
-          emit(state.copyWith(status: GamesStatus.failed, error: error)),
-      onSuccess: (response) => emit(
+    );
+
+    result.fold(
+      (error) => emit(
+        state.copyWith(status: GamesStatus.failed, error: error),
+      ),
+      (response) => emit(
         state.copyWith(
           status: GamesStatus.success,
           response: response,
@@ -66,7 +70,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
 
     emit(state.copyWith(nextPageStatus: GamesNextPageStatus.loading));
 
-    await _fetchGamesUsecase(
+    final result = await _fetchGamesUsecase(
       page: state.response!.currentPage! + 1,
       searchTerm: event.searchTerm,
       dateFrom: event.dateFrom,
@@ -74,17 +78,20 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       platforms: event.platforms,
       genres: event.genres,
       ordering: event.ordering,
-      onSuccess: (response) => emit(
+    );
+
+    result.fold(
+      (error) => emit(
+        state.copyWith(
+          nextPageError: error,
+          nextPageStatus: GamesNextPageStatus.failed,
+        ),
+      ),
+      (response) => emit(
         state.copyWith(
           nextPageStatus: GamesNextPageStatus.initial,
           response: response,
           games: List.of(state.games)..addAll(response.results!),
-        ),
-      ),
-      onFailure: (error) => emit(
-        state.copyWith(
-          nextPageError: error,
-          nextPageStatus: GamesNextPageStatus.failed,
         ),
       ),
     );

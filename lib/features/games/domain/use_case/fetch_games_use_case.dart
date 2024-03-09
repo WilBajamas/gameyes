@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
@@ -12,7 +13,7 @@ import 'package:injectable/injectable.dart';
 class FetchGamesUseCase {
   final _repository = getIt<GamesRepository>();
 
-  Future<void> call({
+  Future<Either<ErrorType, GamesResponse>> call({
     required int page,
     String? searchTerm,
     DateTime? dateFrom,
@@ -21,8 +22,6 @@ class FetchGamesUseCase {
     Set<GameGenre>? genres,
     GameOrdering? ordering,
     bool ascending = false,
-    required Function(GamesResponse) onSuccess,
-    required Function(ErrorType) onFailure,
   }) async {
     final dateFromString = dateFrom.getFormattedStringFromDateTime() ?? '';
     final dateToString = dateTo.getFormattedStringFromDateTime() ?? '';
@@ -42,7 +41,7 @@ class FetchGamesUseCase {
       return allPlatformIds.join(',');
     }
 
-    final response = await _repository.fetchGames(
+    return await _repository.fetchGames(
       page: page,
       searchTerm: searchTerm,
       dateRange: dateRangeQuery,
@@ -50,7 +49,5 @@ class FetchGamesUseCase {
       platforms:
           getGamePlatformQuery().isNotEmpty ? getGamePlatformQuery() : null,
     );
-
-    response.fold(onFailure, onSuccess);
   }
 }
