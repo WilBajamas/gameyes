@@ -17,7 +17,9 @@ class GameItemGridLoadingShimmer extends StatelessWidget {
           crossAxisSpacing: 8,
         ),
         itemCount: 4,
-        itemBuilder: (_, i) => const GameItem(),
+        itemBuilder: (_, i) => const GameItem(
+          fromScreen: '',
+        ),
       ),
     );
   }

@@ -6,36 +6,26 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
-import 'package:go_router/go_router.dart';
 
 class GameItem extends StatelessWidget {
   final Game? game;
   final bool showReleaseDate;
+  final VoidCallback? onItemClick;
+  final String fromScreen;
 
   const GameItem({
     super.key,
     this.game,
     this.showReleaseDate = false,
+    this.onItemClick,
+    required this.fromScreen,
   });
-
-  void onClickGameItem(
-    BuildContext context,
-  ) {
-    if (game case final game?) {
-      context.push(
-        RouteConstants.gameDetail,
-        extra: game,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () => onClickGameItem(
-          context,
-        ),
+        onTap: onItemClick,
         child: SizedBox(
           width: context.screenWidth / 2.2,
           child: Column(
@@ -43,6 +33,7 @@ class GameItem extends StatelessWidget {
             children: [
               _TopStack(
                 game: game,
+                fromScreen: fromScreen,
               ),
 
               const SizedBox(height: 4),
@@ -102,8 +93,12 @@ class GameItem extends StatelessWidget {
 
 class _TopStack extends StatelessWidget {
   final Game? game;
+  final String fromScreen;
 
-  const _TopStack({this.game});
+  const _TopStack({
+    this.game,
+    required this.fromScreen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +115,7 @@ class _TopStack extends StatelessWidget {
 
                 //** Image */
                 ? Hero(
-                    tag: '${ConfigConstants.heroTag}/${game?.id}',
+                    tag: '${ConfigConstants.heroTag}/${game?.id}/$fromScreen',
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
                       imageUrl: game!.backgroundImage!,

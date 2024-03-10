@@ -86,7 +86,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: RouteConstants.gameDetail,
       builder: (context, state) {
-        return GameDetailScreen(game: state.extra as Game);
+        return GameDetailScreen(gameExtra: state.extra as (Game, String));
       },
       routes: [
         GoRoute(

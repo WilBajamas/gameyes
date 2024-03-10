@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/widget/filter_bottom_sheet.dart';
@@ -11,6 +12,7 @@ import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
+import 'package:go_router/go_router.dart';
 
 class GamesScreen extends StatefulWidget {
   const GamesScreen({super.key});
@@ -132,7 +134,16 @@ class _GamesScreenState extends State<GamesScreen> {
                       ),
                       itemCount: state.games.length,
                       itemBuilder: (context, index) => GameItem(
+                        fromScreen: RouteConstants.games,
                         game: state.games[index],
+                        onItemClick: () {
+                          final extra =
+                              (state.games[index], RouteConstants.games);
+                          context.push(
+                            RouteConstants.gameDetail,
+                            extra: extra,
+                          );
+                        },
                       ),
                     ),
                   ),

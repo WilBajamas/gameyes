@@ -11,9 +11,15 @@ import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.d
 
 class DetailTopHeader extends StatelessWidget {
   final int? gameId;
+  final String fromScreen;
   final String? image;
 
-  const DetailTopHeader({super.key, required this.gameId, this.image});
+  const DetailTopHeader({
+    super.key,
+    required this.gameId,
+    required this.fromScreen,
+    this.image,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,11 @@ class DetailTopHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // ** Image //
-                          DetailImage(gameId: gameId, image: image),
+                          DetailImage(
+                            gameId: gameId,
+                            image: image,
+                            fromScreen: fromScreen,
+                          ),
                           const SizedBox(width: 16),
 
                           // ** Details //
@@ -144,16 +154,18 @@ class DetailImage extends StatelessWidget {
     super.key,
     required this.gameId,
     required this.image,
+    required this.fromScreen,
   });
 
   final int? gameId;
   final String? image;
+  final String fromScreen;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Hero(
-        tag: '${ConfigConstants.heroTag}/$gameId',
+        tag: '${ConfigConstants.heroTag}/$gameId/$fromScreen',
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: AspectRatio(

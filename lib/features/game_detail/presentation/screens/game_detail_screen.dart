@@ -9,9 +9,9 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 
 class GameDetailScreen extends StatefulWidget {
-  final Game? game;
+  final (Game, String)? gameExtra;
 
-  const GameDetailScreen({super.key, this.game});
+  const GameDetailScreen({super.key, this.gameExtra});
 
   @override
   State<GameDetailScreen> createState() => _GameDetailScreenState();
@@ -21,10 +21,12 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
   @override
   void initState() {
     context.read<GameDetailCubit>().resetContent;
-    context.read<GameDetailCubit>().fetchGameDetail(id: widget.game!.id!);
+    context
+        .read<GameDetailCubit>()
+        .fetchGameDetail(id: widget.gameExtra!.$1.id!);
     context
         .read<GameScreenshotCubit>()
-        .fetchGameScreenshots(slug: widget.game!.slug!);
+        .fetchGameScreenshots(slug: widget.gameExtra!.$1.slug!);
     super.initState();
   }
 
@@ -43,10 +45,11 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
                 padding: const EdgeInsets.only(bottom: 16),
                 children: [
                   DetailTopHeader(
-                    gameId: widget.game!.id,
-                    image: widget.game!.backgroundImage,
+                    gameId: widget.gameExtra!.$1.id,
+                    image: widget.gameExtra!.$1.backgroundImage,
+                    fromScreen: widget.gameExtra!.$2,
                   ),
-                  DetailMidSection(gameId: widget.game!.id),
+                  DetailMidSection(gameId: widget.gameExtra!.$1.id),
                   const SizedBox(height: 30),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, bottom: 12),
@@ -55,7 +58,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
                       style: context.themeData.textTheme.displayLarge,
                     ),
                   ),
-                  DetailScreenshotsSection(slug: widget.game!.slug),
+                  DetailScreenshotsSection(slug: widget.gameExtra!.$1.slug),
                 ],
               ),
             ],
