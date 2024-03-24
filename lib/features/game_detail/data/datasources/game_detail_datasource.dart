@@ -4,7 +4,7 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/data/mode
 import 'package:injectable/injectable.dart';
 
 @injectable
-class GameDetailDatasource {
+class GameDetailRemoteDatasource {
   final _dioService = getIt<DioService>();
 
   Future<GameDetailResponse> fetchGameDetail({

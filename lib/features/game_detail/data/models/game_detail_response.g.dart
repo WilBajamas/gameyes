@@ -8,6 +8,7 @@ part of 'game_detail_response.dart';
 
 GameDetailResponse _$GameDetailResponseFromJson(Map<String, dynamic> json) =>
     GameDetailResponse(
+      json['id'] as int?,
       json['name'] as String?,
       json['slug'] as String?,
       json['metacritic'] as int?,
@@ -31,6 +32,7 @@ GameDetailResponse _$GameDetailResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$GameDetailResponseToJson(GameDetailResponse instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'slug': instance.slug,
       'metacritic': instance.metacritic,

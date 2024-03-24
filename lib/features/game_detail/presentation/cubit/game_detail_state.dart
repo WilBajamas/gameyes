@@ -7,12 +7,14 @@ final class GameDetailState extends Equatable {
   final GameDetailResponse? response;
   final ErrorType? error;
   final bool contentExpanded;
+  final SavedGame? savedGame;
 
   const GameDetailState({
     this.status,
     this.response,
     this.error,
     this.contentExpanded = false,
+    this.savedGame,
   });
 
   GameDetailState copyWith({
@@ -20,14 +22,17 @@ final class GameDetailState extends Equatable {
     GameDetailResponse? response,
     ErrorType? error,
     bool? contentExpanded,
+    SavedGame? savedGame,
   }) =>
       GameDetailState(
         status: status ?? this.status,
         error: error ?? this.error,
         response: response ?? this.response,
         contentExpanded: contentExpanded ?? this.contentExpanded,
+        savedGame: savedGame,
       );
 
   @override
-  List<Object?> get props => [response, error, status, contentExpanded];
+  List<Object?> get props =>
+      [response, error, status, contentExpanded, savedGame];
 }

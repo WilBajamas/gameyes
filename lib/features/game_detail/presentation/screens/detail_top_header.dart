@@ -44,7 +44,7 @@ class DetailTopHeader extends StatelessWidget {
                 backgroundImage: state.response?.backgroundImageAdditional,
               ),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(16, kToolbarHeight, 16, 16),
                 width: context.screenWidth,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +204,7 @@ class DetailBackground extends StatelessWidget {
     return Stack(
       children: [
         SizedBox(
-          height: context.screenHeight * 0.35,
+          height: (context.screenHeight * 0.35) + kToolbarHeight * 2,
           width: context.screenWidth,
           child: backgroundImage != null
               ? CachedNetworkImage(
@@ -225,7 +225,7 @@ class DetailBackground extends StatelessWidget {
               : null,
         ),
         Container(
-          height: context.screenHeight * 0.35,
+          height: (context.screenHeight * 0.35) + kToolbarHeight * 2,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

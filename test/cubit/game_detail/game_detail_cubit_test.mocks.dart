@@ -12,6 +12,8 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/data/mode
     as _i6;
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_detail_repository.dart'
     as _i3;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -66,4 +68,38 @@ class MockGameDetailRepository extends _i1.Mock
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.GameDetailResponse>>);
+
+  @override
+  _i4.Future<void> saveGame({required _i7.SavedGame? game}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #saveGame,
+          [],
+          {#game: game},
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> unsaveGame({required int? id}) => (super.noSuchMethod(
+        Invocation.method(
+          #unsaveGame,
+          [],
+          {#id: id},
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<_i7.SavedGame?> getSavedGame({required int? id}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSavedGame,
+          [],
+          {#id: id},
+        ),
+        returnValue: _i4.Future<_i7.SavedGame?>.value(),
+      ) as _i4.Future<_i7.SavedGame?>);
 }

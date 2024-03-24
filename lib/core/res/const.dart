@@ -43,3 +43,8 @@ class RouteConstants {
   static const news = '/news';
   static const settings = '/settings';
 }
+
+class HiveConstants {
+  static const String specializationsBox = 'specialization_box';
+  static const String initializationLog = 'HiveLocalStorageService Initialized';
+}

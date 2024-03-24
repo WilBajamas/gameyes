@@ -7,6 +7,7 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_screenshot_section.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_top_header.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 
 class GameDetailScreen extends StatefulWidget {
   final (Game, String)? gameExtra;
@@ -20,15 +21,17 @@ class GameDetailScreen extends StatefulWidget {
 class _GameDetailScreenState extends State<GameDetailScreen> {
   @override
   void initState() {
-    context.read<GameDetailCubit>().resetContent;
-    context
-        .read<GameDetailCubit>()
-        .fetchGameDetail(id: widget.gameExtra!.$1.id!);
+    final gameDetailCubit = context.read<GameDetailCubit>();
+    gameDetailCubit.resetContent;
+    gameDetailCubit.fetchGameDetail(id: widget.gameExtra!.$1.id!);
     context
         .read<GameScreenshotCubit>()
         .fetchGameScreenshots(slug: widget.gameExtra!.$1.slug!);
     super.initState();
   }
+
+  void onSaveButtonClick() =>
+      context.read<GameDetailCubit>().saveButtonClicked();
 
   @override
   Widget build(BuildContext context) {
@@ -36,31 +39,49 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
       body: SafeArea(
         child: NestedScrollView(
           headerSliverBuilder: (context, _) => [
-            const SliverAppBar(),
-          ],
-          body: Stack(
-            children: [
-              ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(bottom: 16),
-                children: [
-                  DetailTopHeader(
-                    gameId: widget.gameExtra!.$1.id,
-                    image: widget.gameExtra!.$1.backgroundImage,
-                    fromScreen: widget.gameExtra!.$2,
-                  ),
-                  DetailMidSection(gameId: widget.gameExtra!.$1.id),
-                  const SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, bottom: 12),
-                    child: Text(
-                      context.localisations.screenshots,
-                      style: context.themeData.textTheme.displayLarge,
-                    ),
-                  ),
-                  DetailScreenshotsSection(slug: widget.gameExtra!.$1.slug),
-                ],
+            SliverAppBar(
+              backgroundColor: Colors.transparent,
+              expandedHeight:
+                  (context.screenHeight * 0.35) + kToolbarHeight * 2,
+              actions: [
+                BlocSelector<GameDetailCubit, GameDetailState, SavedGame?>(
+                  selector: (state) => state.savedGame,
+                  builder: (context, state) {
+                    return IconButton(
+                      onPressed: onSaveButtonClick,
+                      icon: state == null
+                          ? const Icon(Icons.star_border)
+                          : const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                    );
+                  },
+                ),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: DetailTopHeader(
+                  gameId: widget.gameExtra!.$1.id,
+                  image: widget.gameExtra!.$1.backgroundImage,
+                  fromScreen: widget.gameExtra!.$2,
+                ),
               ),
+            ),
+          ],
+          body: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.only(bottom: 16),
+            children: [
+              DetailMidSection(gameId: widget.gameExtra!.$1.id),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 12),
+                child: Text(
+                  context.localisations.screenshots,
+                  style: context.themeData.textTheme.displayLarge,
+                ),
+              ),
+              DetailScreenshotsSection(slug: widget.gameExtra!.$1.slug),
             ],
           ),
         ),
