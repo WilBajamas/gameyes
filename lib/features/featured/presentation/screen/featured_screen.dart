@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
@@ -13,6 +14,7 @@ import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dar
 import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
+import 'package:go_router/go_router.dart';
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
@@ -152,7 +154,16 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                       ),
                       itemCount: state.games.length,
                       itemBuilder: (context, index) => GameItem(
+                        fromScreen: RouteConstants.featured,
                         game: state.games[index],
+                        onItemClick: () {
+                          final extra =
+                              (state.games[index], RouteConstants.featured);
+                          context.push(
+                            RouteConstants.gameDetail,
+                            extra: extra,
+                          );
+                        },
                       ),
                     ),
                   ),

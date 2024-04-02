@@ -13,7 +13,7 @@ class GameItemLoadingShimmer extends StatelessWidget {
         itemCount: 3,
         itemBuilder: (_, i) => const Padding(
           padding: EdgeInsets.only(left: 8),
-          child: GameItem(),
+          child: GameItem(fromScreen: '',),
         ),
       ),
     );

@@ -9,7 +9,7 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/news/presentation/screen/news_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/settings/presentation/screen/settings_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -86,7 +86,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: RouteConstants.gameDetail,
       builder: (context, state) {
-        return GameDetailScreen(game: state.extra as Game);
+        return GameDetailScreen(gameExtra: state.extra as (Game, String));
       },
       routes: [
         GoRoute(

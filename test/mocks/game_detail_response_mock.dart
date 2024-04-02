@@ -6,6 +6,7 @@ import 'platform_item_mock.dart';
 import 'publisher_mock.dart';
 
 GameDetailResponse get mockGameDetailResponse => GameDetailResponse(
+      1,
       'test name',
       'test-slug',
       31,

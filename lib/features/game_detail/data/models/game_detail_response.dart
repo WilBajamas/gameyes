@@ -9,6 +9,8 @@ part 'game_detail_response.g.dart';
 
 @JsonSerializable()
 final class GameDetailResponse extends Equatable {
+  final int? id;
+
   final String? name;
 
   final String? slug;
@@ -41,6 +43,7 @@ final class GameDetailResponse extends Equatable {
       platforms?.map((e) => e.platform?.name).join(', ');
 
   const GameDetailResponse(
+    this.id,
     this.name,
     this.slug,
     this.metacritic,

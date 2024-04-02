@@ -94,43 +94,49 @@ class DetailPointsSection extends StatelessWidget {
       return const GameDetailMidContentShimmer();
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(
-          child: Column(
+    return IntrinsicHeight(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GameDetailSectionPoint(
-                title: context.localisations.genre,
-                value: state.response!.genreListString,
+              Expanded(
+                child: GameDetailSectionPoint(
+                  title: context.localisations.genre,
+                  value: state.response!.genreListString,
+                ),
               ),
               const SizedBox(height: 12),
-              GameDetailSectionPoint(
-                title: context.localisations.publishers,
-                value: state.response!.publisherListString,
+              Expanded(
+                child: GameDetailSectionPoint(
+                  title: context.localisations.publishers,
+                  value: state.response!.publisherListString,
+                ),
               ),
             ],
           ),
-        ),
-        Expanded(
-          child: Column(
+          const SizedBox(height: 12),
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GameDetailSectionPoint(
-                title: context.localisations.developers,
-                value: state.response!.developerListString,
+              Expanded(
+                child: GameDetailSectionPoint(
+                  title: context.localisations.developers,
+                  value: state.response!.developerListString,
+                ),
               ),
               const SizedBox(height: 12),
-              GameDetailSectionPoint(
-                title: context.localisations.platforms,
-                value: state.response!.platformListString,
+              Expanded(
+                child: GameDetailSectionPoint(
+                  title: context.localisations.platforms,
+                  value: state.response!.platformListString,
+                ),
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
