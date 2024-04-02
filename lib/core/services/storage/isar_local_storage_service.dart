@@ -27,8 +27,6 @@ class IsarLocalStorageService implements ILocalStorage {
   // Removes everything from database - good for a "clear all" function in app
   void clearDb() async {
     final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.writeTxn(() async => isar.clear());
-    });
+    await isar.writeTxn(() async => isar.clear());
   }
 }

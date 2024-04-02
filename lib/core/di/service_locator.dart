@@ -8,5 +8,5 @@ final getIt = GetIt.instance;
 @InjectableInit()
 void configureDependencies() {
   getIt.init();
-  IsarLocalStorageService().openDb();
+  IsarLocalStorageService();
 }

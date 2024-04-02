@@ -17,9 +17,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
 
   Future<List<SavedGame?>> getSavedGames({required int? gameId}) async {
     final isar = await db;
-    // if (gameId == null) {
     return await isar.savedGames.filter().gameIdIsNotNull().findAll();
-    // }
   }
 
   Future<SavedGame?> getGame(int gameId) async {
