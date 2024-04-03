@@ -41,5 +41,9 @@
   "all_time_top_100": "All time top 100",
   "browse": "Browse",
   "news": "News",
-  "games_screen_subtitle": "Search for your favourite games here"
+  "games_screen_subtitle": "Search for your favourite games here",
+  "search_saved_games": "Search saved games",
+  "remove": "Remove",
+  "details": "Details",
+  "tasks_completed": "Tasks Completed"
 }

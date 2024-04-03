@@ -9,7 +9,6 @@ import 'package:gaming_library_assessment_flutter/features/games/data/models/gam
 import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart';
 import 'package:injectable/injectable.dart';
 
-// TODO: Should be reusable for featured
 @injectable
 class FetchGamesUseCase {
   final _repository = getIt<GamesRepository>();

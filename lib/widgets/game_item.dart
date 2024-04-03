@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
 
@@ -116,18 +116,8 @@ class _TopStack extends StatelessWidget {
                 //** Image */
                 ? Hero(
                     tag: '${ConfigConstants.heroTag}/${game?.id}/$fromScreen',
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
+                    child: DefaultCachedNetworkImage(
                       imageUrl: game!.backgroundImage!,
-                      placeholder: (context, url) => const Center(
-                        child: SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Center(child: Icon(Icons.error)),
                     ),
                   )
                 : Center(
