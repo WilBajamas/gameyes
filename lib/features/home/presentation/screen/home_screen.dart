@@ -46,8 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
               label: context.localisations.games,
             ),
             CustomNavigationDestination(
-              iconData: Icons.newspaper,
-              label: context.localisations.news,
+              iconData: Icons.format_list_numbered_rtl_rounded,
+              label: context.localisations.tracker,
             ),
             CustomNavigationDestination(
               iconData: Icons.search,

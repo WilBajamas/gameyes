@@ -45,5 +45,6 @@
   "search_saved_games": "Search saved games",
   "remove": "Remove",
   "details": "Details",
-  "tasks_completed": "Tasks Completed"
+  "tasks_completed": "Tasks Completed",
+  "tracker": "Tracker"
 }
