@@ -20,6 +20,8 @@ class SavedGame {
 
   String? playTime;
 
+  bool completed = false;
+
   @enumerated
   List<GamePlatform>? platforms;
 

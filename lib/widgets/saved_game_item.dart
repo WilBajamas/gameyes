@@ -24,6 +24,7 @@ class SavedGameItem extends StatelessWidget {
               Expanded(
                 child: _ImageView(
                   imageUrl: savedGame.imageUrl,
+                  completed: savedGame.completed,
                 ),
               ),
               Expanded(
@@ -111,20 +112,34 @@ class _SlidableView extends StatelessWidget {
 
 class _ImageView extends StatelessWidget {
   final String? imageUrl;
-  const _ImageView({required this.imageUrl});
+  final bool completed;
+  const _ImageView({required this.imageUrl, required this.completed});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.infinity,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(8),
-          bottomLeft: Radius.circular(8),
-        ),
-        child: DefaultCachedNetworkImage(
-          imageUrl: imageUrl,
-        ),
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(8),
+        bottomLeft: Radius.circular(8),
+      ),
+      child: Stack(
+        children: [
+          SizedBox(
+            height: double.infinity,
+            child: DefaultCachedNetworkImage(
+              imageUrl: imageUrl,
+            ),
+          ),
+          if (completed) Container(color: Colors.black.withOpacity(0.5)),
+          if (completed)
+            const Center(
+              child: Icon(
+                Icons.check_circle_outline,
+                size: 40,
+                color: Colors.green,
+              ),
+            ),
+        ],
       ),
     );
   }

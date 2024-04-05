@@ -17,39 +17,44 @@ const SavedGameSchema = CollectionSchema(
   name: r'SavedGame',
   id: -7719033278776789884,
   properties: {
-    r'dateSaved': PropertySchema(
+    r'completed': PropertySchema(
       id: 0,
+      name: r'completed',
+      type: IsarType.bool,
+    ),
+    r'dateSaved': PropertySchema(
+      id: 1,
       name: r'dateSaved',
       type: IsarType.dateTime,
     ),
     r'gameId': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'gameId',
       type: IsarType.long,
     ),
     r'gameSlug': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'gameSlug',
       type: IsarType.string,
     ),
     r'imageUrl': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'imageUrl',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'platforms': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'platforms',
       type: IsarType.byteList,
       enumMap: _SavedGameplatformsEnumValueMap,
     ),
     r'playTime': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'playTime',
       type: IsarType.string,
     )
@@ -120,14 +125,15 @@ void _savedGameSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.dateSaved);
-  writer.writeLong(offsets[1], object.gameId);
-  writer.writeString(offsets[2], object.gameSlug);
-  writer.writeString(offsets[3], object.imageUrl);
-  writer.writeString(offsets[4], object.name);
+  writer.writeBool(offsets[0], object.completed);
+  writer.writeDateTime(offsets[1], object.dateSaved);
+  writer.writeLong(offsets[2], object.gameId);
+  writer.writeString(offsets[3], object.gameSlug);
+  writer.writeString(offsets[4], object.imageUrl);
+  writer.writeString(offsets[5], object.name);
   writer.writeByteList(
-      offsets[5], object.platforms?.map((e) => e.index).toList());
-  writer.writeString(offsets[6], object.playTime);
+      offsets[6], object.platforms?.map((e) => e.index).toList());
+  writer.writeString(offsets[7], object.playTime);
 }
 
 SavedGame _savedGameDeserialize(
@@ -137,18 +143,19 @@ SavedGame _savedGameDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SavedGame();
-  object.dateSaved = reader.readDateTimeOrNull(offsets[0]);
-  object.gameId = reader.readLongOrNull(offsets[1]);
-  object.gameSlug = reader.readStringOrNull(offsets[2]);
+  object.completed = reader.readBool(offsets[0]);
+  object.dateSaved = reader.readDateTimeOrNull(offsets[1]);
+  object.gameId = reader.readLongOrNull(offsets[2]);
+  object.gameSlug = reader.readStringOrNull(offsets[3]);
   object.id = id;
-  object.imageUrl = reader.readStringOrNull(offsets[3]);
-  object.name = reader.readStringOrNull(offsets[4]);
+  object.imageUrl = reader.readStringOrNull(offsets[4]);
+  object.name = reader.readStringOrNull(offsets[5]);
   object.platforms = reader
-      .readByteList(offsets[5])
+      .readByteList(offsets[6])
       ?.map(
           (e) => _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
       .toList();
-  object.playTime = reader.readStringOrNull(offsets[6]);
+  object.playTime = reader.readStringOrNull(offsets[7]);
   return object;
 }
 
@@ -160,22 +167,24 @@ P _savedGameDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 1:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
       return (reader
           .readByteList(offset)
           ?.map((e) =>
               _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
           .toList()) as P;
-    case 6:
+    case 7:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -296,6 +305,16 @@ extension SavedGameQueryWhere
 
 extension SavedGameQueryFilter
     on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> completedEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'completed',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> dateSavedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1309,6 +1328,18 @@ extension SavedGameQueryLinks
 }
 
 extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completed', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByDateSaved() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateSaved', Sort.asc);
@@ -1384,6 +1415,18 @@ extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
 
 extension SavedGameQuerySortThenBy
     on QueryBuilder<SavedGame, SavedGame, QSortThenBy> {
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completed', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByDateSaved() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateSaved', Sort.asc);
@@ -1471,6 +1514,12 @@ extension SavedGameQuerySortThenBy
 
 extension SavedGameQueryWhereDistinct
     on QueryBuilder<SavedGame, SavedGame, QDistinct> {
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'completed');
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByDateSaved() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'dateSaved');
@@ -1523,6 +1572,12 @@ extension SavedGameQueryProperty
   QueryBuilder<SavedGame, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SavedGame, bool, QQueryOperations> completedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'completed');
     });
   }
 
