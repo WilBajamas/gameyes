@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -14,6 +16,7 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   final _controller = ScrollController();
   final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
+  final _trackerRepository = getIt<TrackerRepository>();
 
   @override
   void initState() {
@@ -27,6 +30,7 @@ class _NewsScreenState extends State<NewsScreen> {
     _controller
       ..removeListener(_onScroll)
       ..dispose();
+
     super.dispose();
   }
 
@@ -67,9 +71,27 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              sliver: SliverList.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) => const SavedGameItem(),
+              sliver: StreamBuilder<List<SavedGame>>(
+                stream: _trackerRepository.savedGamesStream(),
+                builder: (context, snapshot) {
+                  final list = snapshot.data;
+
+                  switch (list) {
+                    case List<SavedGame>? list
+                        when list != null && list.isNotEmpty:
+                      return SliverList.builder(
+                        itemCount: list.length,
+                        itemBuilder: (context, index) =>
+                            SavedGameItem(savedGame: list[index]),
+                      );
+
+                    default:
+                      // Empty or null saved games
+                      return const SliverToBoxAdapter(
+                        child: Center(child: Text('No items saved')),
+                      );
+                  }
+                },
               ),
             ),
           ],

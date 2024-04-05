@@ -15,4 +15,9 @@ class GameLocalDatasource {
 
   Future<SavedGame?> getSavedGame({required int id}) =>
       _gameLocalStorage.getGame(id);
+
+  Future<List<SavedGame?>> getSavedGames() => _gameLocalStorage.getSavedGames();
+
+  Stream<List<SavedGame>> listenToSavedGames() =>
+      _gameLocalStorage.listenToSavedGames();
 }

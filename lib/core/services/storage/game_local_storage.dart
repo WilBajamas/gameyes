@@ -12,10 +12,10 @@ class GameLocalStorageService extends IsarLocalStorageService {
 
   Stream<List<SavedGame>> listenToSavedGames() async* {
     final isar = await db;
-    yield* isar.savedGames.where().watch();
+    yield* isar.savedGames.where().watch(fireImmediately: true);
   }
 
-  Future<List<SavedGame?>> getSavedGames({required int? gameId}) async {
+  Future<List<SavedGame?>> getSavedGames() async {
     final isar = await db;
     return await isar.savedGames.filter().gameIdIsNotNull().findAll();
   }

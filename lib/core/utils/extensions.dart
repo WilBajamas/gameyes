@@ -34,6 +34,15 @@ extension DateTimeNullableExtension on DateTime? {
 
     return null;
   }
+
+  String? getFormattedStringFromDateTimeSlash() {
+    const String format = 'd/M/yyyy';
+    if (this != null) {
+      return DateFormat(format).format(this!);
+    }
+
+    return null;
+  }
 }
 
 // ** Non null (Date time)

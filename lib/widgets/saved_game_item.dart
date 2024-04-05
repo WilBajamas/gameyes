@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
 
 class SavedGameItem extends StatelessWidget {
-  // final SavedGame savedGame;
+  final SavedGame savedGame;
 
-  const SavedGameItem({super.key});
+  const SavedGameItem({required this.savedGame, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return Card(
       child: AspectRatio(
         aspectRatio: 2 / 1,
         child: _SlidableView(
@@ -22,8 +23,7 @@ class SavedGameItem extends StatelessWidget {
               //* Image
               Expanded(
                 child: _ImageView(
-                  imageUrl:
-                      'https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg',
+                  imageUrl: savedGame.imageUrl,
                 ),
               ),
               Expanded(
@@ -33,30 +33,30 @@ class SavedGameItem extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             //* Name & Date
                             _NameDateRow(
-                              name: 'Grand Theft Auto V',
-                              date: '3/4/2024',
+                              name: savedGame.name,
+                              date: savedGame.dateSaved,
                             ),
 
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
 
                             //* Task info
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: _TaskColumn(
-                                totalTasks: 10,
-                                tasksCompleted: 10,
+                                totalTasks: null,
+                                tasksCompleted: null,
                               ),
                             ),
 
                             //* Platforms & Playtime
-                            _PlatformPlaytimeRow(
-                              playtime: '100h',
+                            const _PlatformPlaytimeRow(
+                              playtime: null,
                               platforms: [GamePlatform.pc],
                             ),
                           ],
@@ -132,31 +132,30 @@ class _ImageView extends StatelessWidget {
 
 class _NameDateRow extends StatelessWidget {
   final String? name;
-  final String? date;
+  final DateTime? date;
   const _NameDateRow({required this.name, required this.date});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //* Name
-        Expanded(
-          child: AutoSizeText(
-            name ?? '-',
-            maxFontSize: 20,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: context.themeData.textTheme.displayMedium,
-          ),
+        AutoSizeText(
+          name ?? '-',
+          maxFontSize: 20,
+          minFontSize: 14,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: context.themeData.textTheme.displayMedium,
         ),
 
-        const SizedBox(width: 10),
+        const SizedBox(height: 4),
 
         //* Date added
         Text(
-          date ?? '-',
+          'Date added: ${date.getFormattedStringFromDateTimeSlash() ?? '-'}',
           style: context.themeData.textTheme.bodySmall,
         ),
       ],
@@ -165,8 +164,8 @@ class _NameDateRow extends StatelessWidget {
 }
 
 class _TaskColumn extends StatelessWidget {
-  final int totalTasks;
-  final int tasksCompleted;
+  final int? totalTasks;
+  final int? tasksCompleted;
 
   const _TaskColumn({
     required this.totalTasks,
@@ -184,7 +183,7 @@ class _TaskColumn extends StatelessWidget {
           style: context.themeData.textTheme.bodySmall,
         ),
         Text(
-          '$tasksCompleted/$totalTasks',
+          '${tasksCompleted ?? '0'}/${totalTasks ?? '0'}',
           style: context.themeData.textTheme.displayMedium,
         ),
       ],
@@ -193,7 +192,7 @@ class _TaskColumn extends StatelessWidget {
 }
 
 class _PlatformPlaytimeRow extends StatelessWidget {
-  final String playtime;
+  final String? playtime;
   final List<GamePlatform> platforms;
 
   const _PlatformPlaytimeRow({required this.playtime, required this.platforms});
@@ -211,7 +210,7 @@ class _PlatformPlaytimeRow extends StatelessWidget {
           ),
         ),
         Text(
-          playtime,
+          playtime ?? '-',
           style: context.themeData.textTheme.displayMedium,
         ),
       ],
