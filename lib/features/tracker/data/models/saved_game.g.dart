@@ -17,24 +17,40 @@ const SavedGameSchema = CollectionSchema(
   name: r'SavedGame',
   id: -7719033278776789884,
   properties: {
-    r'gameId': PropertySchema(
+    r'dateSaved': PropertySchema(
       id: 0,
+      name: r'dateSaved',
+      type: IsarType.dateTime,
+    ),
+    r'gameId': PropertySchema(
+      id: 1,
       name: r'gameId',
       type: IsarType.long,
     ),
     r'gameSlug': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'gameSlug',
       type: IsarType.string,
     ),
     r'imageUrl': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'imageUrl',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'name',
+      type: IsarType.string,
+    ),
+    r'platforms': PropertySchema(
+      id: 5,
+      name: r'platforms',
+      type: IsarType.byteList,
+      enumMap: _SavedGameplatformsEnumValueMap,
+    ),
+    r'playTime': PropertySchema(
+      id: 6,
+      name: r'playTime',
       type: IsarType.string,
     )
   },
@@ -44,7 +60,14 @@ const SavedGameSchema = CollectionSchema(
   deserializeProp: _savedGameDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'groupTasks': LinkSchema(
+      id: -2269878731325204049,
+      name: r'groupTasks',
+      target: r'GroupTask',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _savedGameGetId,
   getLinks: _savedGameGetLinks,
@@ -76,6 +99,18 @@ int _savedGameEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.platforms;
+    if (value != null) {
+      bytesCount += 3 + value.length;
+    }
+  }
+  {
+    final value = object.playTime;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -85,10 +120,14 @@ void _savedGameSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.gameId);
-  writer.writeString(offsets[1], object.gameSlug);
-  writer.writeString(offsets[2], object.imageUrl);
-  writer.writeString(offsets[3], object.name);
+  writer.writeDateTime(offsets[0], object.dateSaved);
+  writer.writeLong(offsets[1], object.gameId);
+  writer.writeString(offsets[2], object.gameSlug);
+  writer.writeString(offsets[3], object.imageUrl);
+  writer.writeString(offsets[4], object.name);
+  writer.writeByteList(
+      offsets[5], object.platforms?.map((e) => e.index).toList());
+  writer.writeString(offsets[6], object.playTime);
 }
 
 SavedGame _savedGameDeserialize(
@@ -98,11 +137,18 @@ SavedGame _savedGameDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SavedGame();
-  object.gameId = reader.readLongOrNull(offsets[0]);
-  object.gameSlug = reader.readStringOrNull(offsets[1]);
+  object.dateSaved = reader.readDateTimeOrNull(offsets[0]);
+  object.gameId = reader.readLongOrNull(offsets[1]);
+  object.gameSlug = reader.readStringOrNull(offsets[2]);
   object.id = id;
-  object.imageUrl = reader.readStringOrNull(offsets[2]);
-  object.name = reader.readStringOrNull(offsets[3]);
+  object.imageUrl = reader.readStringOrNull(offsets[3]);
+  object.name = reader.readStringOrNull(offsets[4]);
+  object.platforms = reader
+      .readByteList(offsets[5])
+      ?.map(
+          (e) => _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
+      .toList();
+  object.playTime = reader.readStringOrNull(offsets[6]);
   return object;
 }
 
@@ -114,28 +160,61 @@ P _savedGameDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    case 4:
+      return (reader.readStringOrNull(offset)) as P;
+    case 5:
+      return (reader
+          .readByteList(offset)
+          ?.map((e) =>
+              _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
+          .toList()) as P;
+    case 6:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
+const _SavedGameplatformsEnumValueMap = {
+  'playstation': 0,
+  'xbox': 1,
+  'android': 2,
+  'ios': 3,
+  'pc': 4,
+  'nintendo': 5,
+  'wii': 6,
+  'linux': 7,
+};
+const _SavedGameplatformsValueEnumMap = {
+  0: GamePlatform.playstation,
+  1: GamePlatform.xbox,
+  2: GamePlatform.android,
+  3: GamePlatform.ios,
+  4: GamePlatform.pc,
+  5: GamePlatform.nintendo,
+  6: GamePlatform.wii,
+  7: GamePlatform.linux,
+};
+
 Id _savedGameGetId(SavedGame object) {
   return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _savedGameGetLinks(SavedGame object) {
-  return [];
+  return [object.groupTasks];
 }
 
 void _savedGameAttach(IsarCollection<dynamic> col, Id id, SavedGame object) {
   object.id = id;
+  object.groupTasks
+      .attach(col, col.isar.collection<GroupTask>(), r'groupTasks', id);
 }
 
 extension SavedGameQueryWhereSort
@@ -217,6 +296,77 @@ extension SavedGameQueryWhere
 
 extension SavedGameQueryFilter
     on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> dateSavedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'dateSaved',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      dateSavedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'dateSaved',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> dateSavedEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dateSaved',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      dateSavedGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'dateSaved',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> dateSavedLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'dateSaved',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> dateSavedBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'dateSaved',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> gameIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -780,15 +930,397 @@ extension SavedGameQueryFilter
       ));
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> platformsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'platforms',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'platforms',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsElementEqualTo(GamePlatform value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'platforms',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsElementGreaterThan(
+    GamePlatform value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'platforms',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsElementLessThan(
+    GamePlatform value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'platforms',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsElementBetween(
+    GamePlatform lower,
+    GamePlatform upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'platforms',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'platforms',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> platformsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'platforms',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'platforms',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'platforms',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'platforms',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      platformsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'platforms',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'playTime',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      playTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'playTime',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'playTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'playTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'playTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'playTime',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'playTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'playTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'playTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'playTime',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'playTime',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      playTimeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'playTime',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension SavedGameQueryObject
     on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {}
 
 extension SavedGameQueryLinks
-    on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {}
+    on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> groupTasks(
+      FilterQuery<GroupTask> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'groupTasks');
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      groupTasksLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'groupTasks', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      groupTasksIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'groupTasks', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      groupTasksIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'groupTasks', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      groupTasksLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'groupTasks', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      groupTasksLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'groupTasks', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      groupTasksLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'groupTasks', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByDateSaved() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateSaved', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByDateSavedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateSaved', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.asc);
@@ -836,10 +1368,34 @@ extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByPlayTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByPlayTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playTime', Sort.desc);
+    });
+  }
 }
 
 extension SavedGameQuerySortThenBy
     on QueryBuilder<SavedGame, SavedGame, QSortThenBy> {
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByDateSaved() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateSaved', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByDateSavedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateSaved', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.asc);
@@ -899,10 +1455,28 @@ extension SavedGameQuerySortThenBy
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByPlayTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByPlayTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'playTime', Sort.desc);
+    });
+  }
 }
 
 extension SavedGameQueryWhereDistinct
     on QueryBuilder<SavedGame, SavedGame, QDistinct> {
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByDateSaved() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'dateSaved');
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'gameId');
@@ -929,6 +1503,19 @@ extension SavedGameQueryWhereDistinct
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByPlatforms() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'platforms');
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByPlayTime(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'playTime', caseSensitive: caseSensitive);
+    });
+  }
 }
 
 extension SavedGameQueryProperty
@@ -936,6 +1523,12 @@ extension SavedGameQueryProperty
   QueryBuilder<SavedGame, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SavedGame, DateTime?, QQueryOperations> dateSavedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'dateSaved');
     });
   }
 
@@ -960,6 +1553,19 @@ extension SavedGameQueryProperty
   QueryBuilder<SavedGame, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<SavedGame, List<GamePlatform>?, QQueryOperations>
+      platformsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'platforms');
+    });
+  }
+
+  QueryBuilder<SavedGame, String?, QQueryOperations> playTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'playTime');
     });
   }
 }

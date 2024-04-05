@@ -43,6 +43,7 @@ class _NewsScreenState extends State<NewsScreen> {
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
+              floating: true,
               toolbarHeight: kToolbarHeight + 10,
               backgroundColor: Colors.transparent,
               flexibleSpace: FlexibleSpaceBar(
