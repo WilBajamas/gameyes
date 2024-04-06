@@ -5,4 +5,6 @@ abstract interface class TrackerRepository {
   Future<List<SavedGame?>> getSavedGames();
 
   Stream<List<SavedGame>> savedGamesStream(SavedGameFilterTag tag);
+
+  Future<void> removeSavedGame(int id);
 }

@@ -8,6 +8,7 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_alert_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +43,27 @@ class _TrackerScreenState extends State<TrackerScreen> {
 
   void _onScroll() {
     _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
+  }
+
+  void toItemDetail(int gameId, String? imageUrl) {
+    final extra = (gameId, RouteConstants.tracker, imageUrl);
+
+    context.push(
+      RouteConstants.gameDetail,
+      extra: extra,
+    );
+  }
+
+  void removeSavedGame(int savedGameId) {
+    showDialog(
+      context: context,
+      builder: (context) => DefaultAlertDialog(
+        title: context.localisations.delete_saved_game,
+        description: context.localisations.delete_saved_game_description,
+        onPositivePressed: () =>
+            _trackerRepository.removeSavedGame(savedGameId),
+      ),
+    );
   }
 
   List<(SavedGameFilterTag, String, IconData?)> get trackerFilters => [
@@ -120,15 +142,8 @@ class _TrackerScreenState extends State<TrackerScreen> {
                             itemCount: list.length,
                             itemBuilder: (context, index) => SavedGameItem(
                               savedGame: list[index],
-                              onItemClick: (gameId, imageUrl) {
-                                final extra =
-                                    (gameId, RouteConstants.tracker, imageUrl);
-
-                                context.push(
-                                  RouteConstants.gameDetail,
-                                  extra: extra,
-                                );
-                              },
+                              onRemoveClick: removeSavedGame,
+                              onDetailClick: toItemDetail,
                             ),
                           );
 

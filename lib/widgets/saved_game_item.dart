@@ -9,11 +9,13 @@ import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart
 
 class SavedGameItem extends StatelessWidget {
   final SavedGame savedGame;
-  final Function(int gameId, String? backgroundImage) onItemClick;
+  final Function(int gameId, String? backgroundImage) onDetailClick;
+  final Function(int savedGameId) onRemoveClick;
 
   const SavedGameItem({
     required this.savedGame,
-    required this.onItemClick,
+    required this.onDetailClick,
+    required this.onRemoveClick,
     super.key,
   });
 
@@ -23,9 +25,9 @@ class SavedGameItem extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 2 / 1,
         child: _SlidableView(
-          onRemoveClick: () {},
+          onRemoveClick: () => onRemoveClick(savedGame.id),
           onDetailClick: () =>
-              onItemClick(savedGame.gameId!, savedGame.imageUrl),
+              onDetailClick(savedGame.gameId!, savedGame.imageUrl),
           child: Row(
             children: [
               //* Image
