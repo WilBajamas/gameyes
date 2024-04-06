@@ -51,5 +51,7 @@
   "name": "Name",
   "playtime": "Playtime",
   "date": "Date",
-  "date_added": "Date added"
+  "date_added": "Date added",
+  "no_games_saved": "No games saved",
+  "no_games_saved_description": "Bookmark some games from the games or featured sections."
 }

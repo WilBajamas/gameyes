@@ -134,8 +134,22 @@ class _TrackerScreenState extends State<TrackerScreen> {
 
                         default:
                           // Empty or null saved games
-                          return const SliverToBoxAdapter(
-                            child: Center(child: Text('No items saved')),
+                          return SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 40,
+                                horizontal: 16,
+                              ),
+                              child: Center(
+                                heightFactor: 1,
+                                child: Text(
+                                  // ignore: lines_longer_than_80_chars
+                                  '${context.localisations.no_games_saved} \n${context.localisations.no_games_saved_description}',
+                                  textAlign: TextAlign.center,
+                                  style: context.themeData.textTheme.bodySmall,
+                                ),
+                              ),
+                            ),
                           );
                       }
                     },
