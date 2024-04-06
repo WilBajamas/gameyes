@@ -1,4 +1,5 @@
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:injectable/injectable.dart';
@@ -18,6 +19,6 @@ class GameLocalDatasource {
 
   Future<List<SavedGame?>> getSavedGames() => _gameLocalStorage.getSavedGames();
 
-  Stream<List<SavedGame>> listenToSavedGames() =>
-      _gameLocalStorage.listenToSavedGames();
+  Stream<List<SavedGame>> listenToSavedGames(SavedGameFilterTag tag) =>
+      _gameLocalStorage.listenToSavedGames(tag);
 }

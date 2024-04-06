@@ -22,39 +22,44 @@ const SavedGameSchema = CollectionSchema(
       name: r'completed',
       type: IsarType.bool,
     ),
-    r'dateSaved': PropertySchema(
+    r'dateModified': PropertySchema(
       id: 1,
+      name: r'dateModified',
+      type: IsarType.dateTime,
+    ),
+    r'dateSaved': PropertySchema(
+      id: 2,
       name: r'dateSaved',
       type: IsarType.dateTime,
     ),
     r'gameId': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'gameId',
       type: IsarType.long,
     ),
     r'gameSlug': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'gameSlug',
       type: IsarType.string,
     ),
     r'imageUrl': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'imageUrl',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'name',
       type: IsarType.string,
     ),
     r'platforms': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'platforms',
       type: IsarType.byteList,
       enumMap: _SavedGameplatformsEnumValueMap,
     ),
     r'playTime': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'playTime',
       type: IsarType.string,
     )
@@ -64,7 +69,60 @@ const SavedGameSchema = CollectionSchema(
   deserialize: _savedGameDeserialize,
   deserializeProp: _savedGameDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'dateSaved': IndexSchema(
+      id: 6319705626594882365,
+      name: r'dateSaved',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'dateSaved',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'playTime': IndexSchema(
+      id: 5830077701730375397,
+      name: r'playTime',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'playTime',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'dateModified': IndexSchema(
+      id: 7664096291674774918,
+      name: r'dateModified',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'dateModified',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {
     r'groupTasks': LinkSchema(
       id: -2269878731325204049,
@@ -126,14 +184,15 @@ void _savedGameSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.completed);
-  writer.writeDateTime(offsets[1], object.dateSaved);
-  writer.writeLong(offsets[2], object.gameId);
-  writer.writeString(offsets[3], object.gameSlug);
-  writer.writeString(offsets[4], object.imageUrl);
-  writer.writeString(offsets[5], object.name);
+  writer.writeDateTime(offsets[1], object.dateModified);
+  writer.writeDateTime(offsets[2], object.dateSaved);
+  writer.writeLong(offsets[3], object.gameId);
+  writer.writeString(offsets[4], object.gameSlug);
+  writer.writeString(offsets[5], object.imageUrl);
+  writer.writeString(offsets[6], object.name);
   writer.writeByteList(
-      offsets[6], object.platforms?.map((e) => e.index).toList());
-  writer.writeString(offsets[7], object.playTime);
+      offsets[7], object.platforms?.map((e) => e.index).toList());
+  writer.writeString(offsets[8], object.playTime);
 }
 
 SavedGame _savedGameDeserialize(
@@ -144,18 +203,19 @@ SavedGame _savedGameDeserialize(
 ) {
   final object = SavedGame();
   object.completed = reader.readBool(offsets[0]);
-  object.dateSaved = reader.readDateTimeOrNull(offsets[1]);
-  object.gameId = reader.readLongOrNull(offsets[2]);
-  object.gameSlug = reader.readStringOrNull(offsets[3]);
+  object.dateModified = reader.readDateTimeOrNull(offsets[1]);
+  object.dateSaved = reader.readDateTimeOrNull(offsets[2]);
+  object.gameId = reader.readLongOrNull(offsets[3]);
+  object.gameSlug = reader.readStringOrNull(offsets[4]);
   object.id = id;
-  object.imageUrl = reader.readStringOrNull(offsets[4]);
-  object.name = reader.readStringOrNull(offsets[5]);
+  object.imageUrl = reader.readStringOrNull(offsets[5]);
+  object.name = reader.readStringOrNull(offsets[6]);
   object.platforms = reader
-      .readByteList(offsets[6])
+      .readByteList(offsets[7])
       ?.map(
           (e) => _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
       .toList();
-  object.playTime = reader.readStringOrNull(offsets[7]);
+  object.playTime = reader.readStringOrNull(offsets[8]);
   return object;
 }
 
@@ -171,20 +231,22 @@ P _savedGameDeserializeProp<P>(
     case 1:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 2:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
       return (reader
           .readByteList(offset)
           ?.map((e) =>
               _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
           .toList()) as P;
-    case 7:
+    case 8:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -231,6 +293,38 @@ extension SavedGameQueryWhereSort
   QueryBuilder<SavedGame, SavedGame, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhere> anyName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'name'),
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhere> anyDateSaved() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'dateSaved'),
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhere> anyPlayTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'playTime'),
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhere> anyDateModified() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'dateModified'),
+      );
     });
   }
 }
@@ -301,6 +395,539 @@ extension SavedGameQueryWhere
       ));
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'name',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameEqualTo(
+      String? name) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [name],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameNotEqualTo(
+      String? name) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameGreaterThan(
+    String? name, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'name',
+        lower: [name],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameLessThan(
+    String? name, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'name',
+        lower: [],
+        upper: [name],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameBetween(
+    String? lowerName,
+    String? upperName, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'name',
+        lower: [lowerName],
+        includeLower: includeLower,
+        upper: [upperName],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameStartsWith(
+      String NamePrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'name',
+        lower: [NamePrefix],
+        upper: ['$NamePrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'name',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'name',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'name',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'name',
+              upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateSavedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'dateSaved',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateSavedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateSaved',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateSavedEqualTo(
+      DateTime? dateSaved) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'dateSaved',
+        value: [dateSaved],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateSavedNotEqualTo(
+      DateTime? dateSaved) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateSaved',
+              lower: [],
+              upper: [dateSaved],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateSaved',
+              lower: [dateSaved],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateSaved',
+              lower: [dateSaved],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateSaved',
+              lower: [],
+              upper: [dateSaved],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateSavedGreaterThan(
+    DateTime? dateSaved, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateSaved',
+        lower: [dateSaved],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateSavedLessThan(
+    DateTime? dateSaved, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateSaved',
+        lower: [],
+        upper: [dateSaved],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateSavedBetween(
+    DateTime? lowerDateSaved,
+    DateTime? upperDateSaved, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateSaved',
+        lower: [lowerDateSaved],
+        includeLower: includeLower,
+        upper: [upperDateSaved],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'playTime',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playTime',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeEqualTo(
+      String? playTime) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'playTime',
+        value: [playTime],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeNotEqualTo(
+      String? playTime) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playTime',
+              lower: [],
+              upper: [playTime],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playTime',
+              lower: [playTime],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playTime',
+              lower: [playTime],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'playTime',
+              lower: [],
+              upper: [playTime],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeGreaterThan(
+    String? playTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playTime',
+        lower: [playTime],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeLessThan(
+    String? playTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playTime',
+        lower: [],
+        upper: [playTime],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeBetween(
+    String? lowerPlayTime,
+    String? upperPlayTime, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playTime',
+        lower: [lowerPlayTime],
+        includeLower: includeLower,
+        upper: [upperPlayTime],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeStartsWith(
+      String PlayTimePrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'playTime',
+        lower: [PlayTimePrefix],
+        upper: ['$PlayTimePrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'playTime',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'playTime',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'playTime',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'playTime',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'playTime',
+              upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateModifiedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'dateModified',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause>
+      dateModifiedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateModified',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateModifiedEqualTo(
+      DateTime? dateModified) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'dateModified',
+        value: [dateModified],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateModifiedNotEqualTo(
+      DateTime? dateModified) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateModified',
+              lower: [],
+              upper: [dateModified],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateModified',
+              lower: [dateModified],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateModified',
+              lower: [dateModified],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'dateModified',
+              lower: [],
+              upper: [dateModified],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateModifiedGreaterThan(
+    DateTime? dateModified, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateModified',
+        lower: [dateModified],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateModifiedLessThan(
+    DateTime? dateModified, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateModified',
+        lower: [],
+        upper: [dateModified],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> dateModifiedBetween(
+    DateTime? lowerDateModified,
+    DateTime? upperDateModified, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'dateModified',
+        lower: [lowerDateModified],
+        includeLower: includeLower,
+        upper: [upperDateModified],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension SavedGameQueryFilter
@@ -311,6 +938,79 @@ extension SavedGameQueryFilter
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'completed',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      dateModifiedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'dateModified',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      dateModifiedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'dateModified',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> dateModifiedEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dateModified',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      dateModifiedGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'dateModified',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      dateModifiedLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'dateModified',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> dateModifiedBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'dateModified',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1340,6 +2040,18 @@ extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByDateModified() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateModified', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByDateModifiedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateModified', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByDateSaved() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateSaved', Sort.asc);
@@ -1424,6 +2136,18 @@ extension SavedGameQuerySortThenBy
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByDateModified() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateModified', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByDateModifiedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateModified', Sort.desc);
     });
   }
 
@@ -1520,6 +2244,12 @@ extension SavedGameQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByDateModified() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'dateModified');
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByDateSaved() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'dateSaved');
@@ -1578,6 +2308,12 @@ extension SavedGameQueryProperty
   QueryBuilder<SavedGame, bool, QQueryOperations> completedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'completed');
+    });
+  }
+
+  QueryBuilder<SavedGame, DateTime?, QQueryOperations> dateModifiedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'dateModified');
     });
   }
 

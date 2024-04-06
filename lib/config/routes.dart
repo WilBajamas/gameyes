@@ -61,7 +61,7 @@ final goRouter = GoRouter(
           routes: [
             GoRoute(
               path: RouteConstants.news,
-              builder: (context, state) => const NewsScreen(),
+              builder: (context, state) => const TrackerScreen(),
             ),
           ],
         ),

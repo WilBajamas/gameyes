@@ -8,6 +8,7 @@ part 'saved_game.g.dart';
 class SavedGame {
   Id id = Isar.autoIncrement;
 
+  @Index(caseSensitive: false, type: IndexType.value)
   String? name;
 
   String? imageUrl;
@@ -16,8 +17,10 @@ class SavedGame {
 
   String? gameSlug;
 
+  @Index()
   DateTime? dateSaved;
 
+  @Index(type: IndexType.value)
   String? playTime;
 
   bool completed = false;
@@ -26,4 +29,7 @@ class SavedGame {
   List<GamePlatform>? platforms;
 
   final groupTasks = IsarLinks<GroupTask>();
+
+  @Index()
+  DateTime? dateModified;
 }

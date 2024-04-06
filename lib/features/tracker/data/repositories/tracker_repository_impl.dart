@@ -1,4 +1,5 @@
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart';
@@ -13,6 +14,6 @@ class TrackerRepositoryImpl implements TrackerRepository {
       _gameLocalDatasource.getSavedGames();
 
   @override
-  Stream<List<SavedGame>> savedGamesStream() =>
-      _gameLocalDatasource.listenToSavedGames();
+  Stream<List<SavedGame>> savedGamesStream(SavedGameFilterTag tag) =>
+      _gameLocalDatasource.listenToSavedGames(tag);
 }

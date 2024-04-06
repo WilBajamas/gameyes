@@ -50,5 +50,6 @@
   "recently_changed": "Recently changed",
   "name": "Name",
   "playtime": "Playtime",
-  "date": "Date"
+  "date": "Date",
+  "date_added": "Date added"
 }
