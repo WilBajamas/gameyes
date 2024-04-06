@@ -102,7 +102,7 @@ class _SelectionChip<T> extends StatelessWidget {
             style: context.themeData.textTheme.bodySmall!
                 .copyWith(color: selectedColor, fontWeight: selectedFontWeight),
           ),
-          const SizedBox(width: 8),
+          if (icon != null) const SizedBox(width: 8),
           if (icon != null)
             Icon(
               icon,

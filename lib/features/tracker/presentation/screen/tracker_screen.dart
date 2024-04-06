@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart';
+import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -38,6 +40,34 @@ class _NewsScreenState extends State<NewsScreen> {
     _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
   }
 
+  List<(SavedGameFilterTag, String, IconData?)> get trackerFilters => [
+        (
+          SavedGameFilterTag.recentlyChanged,
+          context.localisations.recently_changed,
+          null,
+        ),
+        (
+          SavedGameFilterTag.name,
+          context.localisations.name,
+          null,
+        ),
+        (
+          SavedGameFilterTag.playtime,
+          context.localisations.playtime,
+          null,
+        ),
+        (
+          SavedGameFilterTag.date,
+          context.localisations.date,
+          null,
+        ),
+        (
+          SavedGameFilterTag.platform,
+          context.localisations.platforms,
+          null,
+        ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +79,8 @@ class _NewsScreenState extends State<NewsScreen> {
             SliverAppBar(
               floating: true,
               toolbarHeight: kToolbarHeight + 10,
-              backgroundColor: Colors.transparent,
+              backgroundColor: context.themeData.scaffoldBackgroundColor,
+              surfaceTintColor: context.themeData.scaffoldBackgroundColor,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -68,6 +99,10 @@ class _NewsScreenState extends State<NewsScreen> {
                   ),
                 ),
               ),
+            ),
+            FilterlistAppBar<SavedGameFilterTag>(
+              selected: (selectedTag) {},
+              filterList: trackerFilters,
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
