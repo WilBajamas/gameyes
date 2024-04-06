@@ -9,9 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class DetailScreenshotsSection extends StatelessWidget {
-  final String? slug;
+  final int? id;
 
-  const DetailScreenshotsSection({super.key, required this.slug});
+  const DetailScreenshotsSection({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class DetailScreenshotsSection extends StatelessWidget {
                 child: ErrorRetryWidget(
                   onRetryClicked: () => context
                       .read<GameScreenshotCubit>()
-                      .fetchGameScreenshots(slug: slug!),
+                      .fetchGameScreenshots(id: id!),
                 ),
               );
             case ScreenshotsStatus.success:
@@ -57,7 +57,7 @@ class DetailScreenshotsSection extends StatelessWidget {
                     text: context.localisations.no_results_found,
                     onRetryClicked: () => context
                         .read<GameScreenshotCubit>()
-                        .fetchGameScreenshots(slug: slug!),
+                        .fetchGameScreenshots(id: id!),
                   ),
                 );
               }

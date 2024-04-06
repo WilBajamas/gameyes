@@ -9,8 +9,13 @@ import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart
 
 class SavedGameItem extends StatelessWidget {
   final SavedGame savedGame;
+  final Function(int gameId, String? backgroundImage) onItemClick;
 
-  const SavedGameItem({required this.savedGame, super.key});
+  const SavedGameItem({
+    required this.savedGame,
+    required this.onItemClick,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +23,9 @@ class SavedGameItem extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 2 / 1,
         child: _SlidableView(
+          onRemoveClick: () {},
+          onDetailClick: () =>
+              onItemClick(savedGame.gameId!, savedGame.imageUrl),
           child: Row(
             children: [
               //* Image
@@ -77,8 +85,14 @@ class SavedGameItem extends StatelessWidget {
 
 class _SlidableView extends StatelessWidget {
   final Widget child;
+  final VoidCallback onRemoveClick;
+  final VoidCallback onDetailClick;
 
-  const _SlidableView({required this.child});
+  const _SlidableView({
+    required this.child,
+    required this.onRemoveClick,
+    required this.onDetailClick,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +102,7 @@ class _SlidableView extends StatelessWidget {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) => onRemoveClick(),
             foregroundColor: context.themeData.colorScheme.primary,
             icon: Icons.delete,
             label: context.localisations.remove,
@@ -98,7 +112,7 @@ class _SlidableView extends StatelessWidget {
               topRight: Radius.circular(8),
               bottomRight: Radius.circular(8),
             ),
-            onPressed: (context) {},
+            onPressed: (context) => onDetailClick(),
             foregroundColor: context.themeData.colorScheme.primary,
             icon: Icons.details,
             label: context.localisations.details,

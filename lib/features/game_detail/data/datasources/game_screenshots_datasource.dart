@@ -12,11 +12,11 @@ class GameScreenshotsDatasource {
   final _dioService = getIt<DioService>();
 
   Future<Either<ErrorType, ScreenshotResponse>> fetchGameScreenshots({
-    required String slug,
+    required int id,
   }) async {
     try {
       final response = await _dioService.dio.get(
-        '${ConfigConstants.gamesEndpoint}/$slug/${ConfigConstants.screenshotsEndpoint}',
+        '${ConfigConstants.gamesEndpoint}/$id/${ConfigConstants.screenshotsEndpoint}',
       );
 
       return Right(

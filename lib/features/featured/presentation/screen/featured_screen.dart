@@ -157,8 +157,11 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                         fromScreen: RouteConstants.featured,
                         game: state.games[index],
                         onItemClick: () {
-                          final extra =
-                              (state.games[index], RouteConstants.featured);
+                          final extra = (
+                            state.games[index].id!,
+                            RouteConstants.featured,
+                            state.games[index].backgroundImage
+                          );
                           context.push(
                             RouteConstants.gameDetail,
                             extra: extra,

@@ -137,8 +137,11 @@ class _GamesScreenState extends State<GamesScreen> {
                         fromScreen: RouteConstants.games,
                         game: state.games[index],
                         onItemClick: () {
-                          final extra =
-                              (state.games[index], RouteConstants.games);
+                          final extra = (
+                            state.games[index].id!,
+                            RouteConstants.games,
+                            state.games[index].backgroundImage
+                          );
                           context.push(
                             RouteConstants.gameDetail,
                             extra: extra,

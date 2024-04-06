@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
@@ -9,6 +10,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/domain/reposi
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
+import 'package:go_router/go_router.dart';
 
 class TrackerScreen extends StatefulWidget {
   const TrackerScreen({super.key});
@@ -116,8 +118,18 @@ class _TrackerScreenState extends State<TrackerScreen> {
                             when list != null && list.isNotEmpty:
                           return SliverList.builder(
                             itemCount: list.length,
-                            itemBuilder: (context, index) =>
-                                SavedGameItem(savedGame: list[index]),
+                            itemBuilder: (context, index) => SavedGameItem(
+                              savedGame: list[index],
+                              onItemClick: (gameId, imageUrl) {
+                                final extra =
+                                    (gameId, RouteConstants.tracker, imageUrl);
+
+                                context.push(
+                                  RouteConstants.gameDetail,
+                                  extra: extra,
+                                );
+                              },
+                            ),
                           );
 
                         default:

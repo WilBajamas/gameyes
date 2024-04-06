@@ -12,7 +12,7 @@ class GameScreenshotsRepositoryImpl implements GameScreenshotsRepository {
 
   @override
   Future<Either<ErrorType, ScreenshotResponse>> fetchGameScreenshots({
-    required String slug,
+    required int id,
   }) =>
-      _gameScreenshotsDatasource.fetchGameScreenshots(slug: slug);
+      _gameScreenshotsDatasource.fetchGameScreenshots(id: id);
 }
