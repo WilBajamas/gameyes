@@ -49,12 +49,12 @@ class MockGameScreenshotsRepository extends _i1.Mock
   @override
   _i4.Future<
       _i2.Either<_i5.ErrorType, _i6.ScreenshotResponse>> fetchGameScreenshots(
-          {required String? slug}) =>
+          {required int? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #fetchGameScreenshots,
           [],
-          {#slug: slug},
+          {#id: id},
         ),
         returnValue:
             _i4.Future<_i2.Either<_i5.ErrorType, _i6.ScreenshotResponse>>.value(
@@ -63,7 +63,7 @@ class MockGameScreenshotsRepository extends _i1.Mock
           Invocation.method(
             #fetchGameScreenshots,
             [],
-            {#slug: slug},
+            {#id: id},
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.ScreenshotResponse>>);

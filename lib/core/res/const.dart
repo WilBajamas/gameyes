@@ -36,6 +36,7 @@ class RouteConstants {
   static const home = '/home';
   static const featured = '/featured';
   static const games = '/games';
+  static const tracker = '/tracker';
   static const imagePageView = 'image_page_view';
   static const onboarding = '/onboarding';
   static const gameDetail = '/game_detail';

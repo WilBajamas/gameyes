@@ -40,11 +40,11 @@ void main() {
     // ignore: lines_longer_than_80_chars
     'emits GameScreenshotState with loading then GameScreenshotState with success when fetchGameScreenshots is called',
     setUp: () {
-      when(gameScreenshotRepository.fetchGameScreenshots(slug: 'slug'))
+      when(gameScreenshotRepository.fetchGameScreenshots(id: 1))
           .thenAnswer((_) async => Right(mockScreenshotResponse));
     },
     build: () => gameScreenshotCubit,
-    act: (cubit) async => cubit.fetchGameScreenshots(slug: 'slug'),
+    act: (cubit) async => cubit.fetchGameScreenshots(id: 1),
     expect: () => [
       const GameScreenshotState(),
       GameScreenshotState(
@@ -58,11 +58,11 @@ void main() {
     // ignore: lines_longer_than_80_chars
     'emits GameScreenshotState with loading then GameScreenshotState with failed when fetchGameScreenshots is called',
     setUp: () {
-      when(gameScreenshotRepository.fetchGameScreenshots(slug: 'slug'))
+      when(gameScreenshotRepository.fetchGameScreenshots(id: 1))
           .thenAnswer((_) async => Left(mockResponseError));
     },
     build: () => gameScreenshotCubit,
-    act: (cubit) async => cubit.fetchGameScreenshots(slug: 'slug'),
+    act: (cubit) async => cubit.fetchGameScreenshots(id: 1),
     expect: () => [
       const GameScreenshotState(),
       GameScreenshotState(

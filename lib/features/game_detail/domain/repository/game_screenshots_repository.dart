@@ -4,6 +4,6 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/data/mode
 
 abstract class GameScreenshotsRepository {
   Future<Either<ErrorType, ScreenshotResponse>> fetchGameScreenshots({
-    required String slug,
+    required int id,
   });
 }

@@ -6,11 +6,11 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_mid_section.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_screenshot_section.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_top_header.dart';
-import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
+
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 
 class GameDetailScreen extends StatefulWidget {
-  final (Game, String)? gameExtra;
+  final (int, String, String?)? gameExtra;
 
   const GameDetailScreen({super.key, this.gameExtra});
 
@@ -23,10 +23,10 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
   void initState() {
     final gameDetailCubit = context.read<GameDetailCubit>();
     gameDetailCubit.resetContent;
-    gameDetailCubit.fetchGameDetail(id: widget.gameExtra!.$1.id!);
+    gameDetailCubit.fetchGameDetail(id: widget.gameExtra!.$1);
     context
         .read<GameScreenshotCubit>()
-        .fetchGameScreenshots(slug: widget.gameExtra!.$1.slug!);
+        .fetchGameScreenshots(id: widget.gameExtra!.$1);
     super.initState();
   }
 
@@ -61,8 +61,8 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: DetailTopHeader(
-                  gameId: widget.gameExtra!.$1.id,
-                  image: widget.gameExtra!.$1.backgroundImage,
+                  gameId: widget.gameExtra!.$1,
+                  image: widget.gameExtra!.$3,
                   fromScreen: widget.gameExtra!.$2,
                 ),
               ),
@@ -72,7 +72,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
             shrinkWrap: true,
             padding: const EdgeInsets.only(bottom: 16),
             children: [
-              DetailMidSection(gameId: widget.gameExtra!.$1.id),
+              DetailMidSection(gameId: widget.gameExtra!.$1),
               const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 12),
@@ -81,7 +81,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
                   style: context.themeData.textTheme.displayLarge,
                 ),
               ),
-              DetailScreenshotsSection(slug: widget.gameExtra!.$1.slug),
+              DetailScreenshotsSection(id: widget.gameExtra!.$1),
             ],
           ),
         ),

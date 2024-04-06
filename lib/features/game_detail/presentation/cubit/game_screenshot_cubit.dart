@@ -14,11 +14,11 @@ class GameScreenshotCubit extends Cubit<GameScreenshotState> {
 
   GameScreenshotCubit() : super(const GameScreenshotState());
 
-  Future<void> fetchGameScreenshots({required String slug}) async {
+  Future<void> fetchGameScreenshots({required int id}) async {
     emit(state.copyWith(status: ScreenshotsStatus.loading));
 
     final response =
-        await _gameScreenshotsRepository.fetchGameScreenshots(slug: slug);
+        await _gameScreenshotsRepository.fetchGameScreenshots(id: id);
 
     response.fold(
       (error) => emit(

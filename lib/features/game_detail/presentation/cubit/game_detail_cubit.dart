@@ -62,7 +62,8 @@ class GameDetailCubit extends Cubit<GameDetailState> {
       ..gameId = state.response?.id
       ..gameSlug = state.response?.slug
       ..name = state.response?.name
-      ..imageUrl = state.response?.backgroundImage;
+      ..imageUrl = state.response?.backgroundImage
+      ..dateSaved = DateTime.now();
 
     _gameDetailRepository
         .saveGame(game: gameToSave)
