@@ -32,4 +32,15 @@ class SavedGame {
 
   @Index()
   DateTime? dateModified;
+
+  SavedGame({
+    this.name,
+    this.imageUrl,
+    this.gameId,
+    this.gameSlug,
+    this.dateSaved,
+    this.dateModified,
+    this.playTime,
+    this.platforms,
+  });
 }
