@@ -201,21 +201,22 @@ SavedGame _savedGameDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = SavedGame();
+  final object = SavedGame(
+    dateModified: reader.readDateTimeOrNull(offsets[1]),
+    dateSaved: reader.readDateTimeOrNull(offsets[2]),
+    gameId: reader.readLongOrNull(offsets[3]),
+    gameSlug: reader.readStringOrNull(offsets[4]),
+    imageUrl: reader.readStringOrNull(offsets[5]),
+    name: reader.readStringOrNull(offsets[6]),
+    platforms: reader
+        .readByteList(offsets[7])
+        ?.map((e) =>
+            _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
+        .toList(),
+    playTime: reader.readStringOrNull(offsets[8]),
+  );
   object.completed = reader.readBool(offsets[0]);
-  object.dateModified = reader.readDateTimeOrNull(offsets[1]);
-  object.dateSaved = reader.readDateTimeOrNull(offsets[2]);
-  object.gameId = reader.readLongOrNull(offsets[3]);
-  object.gameSlug = reader.readStringOrNull(offsets[4]);
   object.id = id;
-  object.imageUrl = reader.readStringOrNull(offsets[5]);
-  object.name = reader.readStringOrNull(offsets[6]);
-  object.platforms = reader
-      .readByteList(offsets[7])
-      ?.map(
-          (e) => _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
-      .toList();
-  object.playTime = reader.readStringOrNull(offsets[8]);
   return object;
 }
 

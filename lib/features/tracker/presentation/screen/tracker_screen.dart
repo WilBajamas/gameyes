@@ -9,7 +9,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/s
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_alert_dialog.dart';
-import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_filter_list_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
 import 'package:go_router/go_router.dart';
 
@@ -121,10 +121,10 @@ class _TrackerScreenState extends State<TrackerScreen> {
                 ),
               ),
             ),
-            FilterlistAppBar<SavedGameFilterTag>(
+            DefaultFilterListAppBar<SavedGameFilterTag>(
+              filterList: trackerFilters,
               selected: (selectedTag) =>
                   context.read<TrackerCubit>().setTag(selectedTag),
-              filterList: trackerFilters,
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
