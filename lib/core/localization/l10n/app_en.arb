@@ -57,5 +57,11 @@
   "delete_saved_game": "Delete saved game",
   "delete_saved_game_description": "Are you sure you want to remove your saved game? All your notes and progress will be lost.",
   "ok": "Ok",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "completed": "Completed",
+  "onHold": "On Hold",
+  "rageQuit": "Rage Quit",
+  "toBuy": "To Buy",
+  "inProgress": "In Progress"
+
 }

@@ -140,10 +140,18 @@ class _TrackerScreenState extends State<TrackerScreen> {
                             when list != null && list.isNotEmpty:
                           return SliverList.builder(
                             itemCount: list.length,
-                            itemBuilder: (context, index) => SavedGameItem(
-                              savedGame: list[index],
-                              onRemoveClick: removeSavedGame,
-                              onDetailClick: toItemDetail,
+                            itemBuilder: (context, index) => InkWell(
+                              onTap: () {
+                                context.pushNamed(
+                                  RouteConstants.trackerDetail,
+                                  extra: list[index],
+                                );
+                              },
+                              child: SavedGameItem(
+                                savedGame: list[index],
+                                onRemoveClick: removeSavedGame,
+                                onDetailClick: toItemDetail,
+                              ),
                             ),
                           );
 
