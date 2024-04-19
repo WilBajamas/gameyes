@@ -28,6 +28,10 @@ ThemeData buildTheme() {
       fontWeight: FontWeight.w800,
       textStyle: baseTheme.textTheme.titleSmall,
     ),
+    labelSmall: GoogleFonts.openSans(
+      fontSize: 12,
+      textStyle: baseTheme.textTheme.labelSmall,
+    ),
     bodySmall: GoogleFonts.openSans(
       fontSize: 14,
       textStyle: baseTheme.textTheme.bodySmall,

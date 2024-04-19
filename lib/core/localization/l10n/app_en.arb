@@ -62,6 +62,13 @@
   "onHold": "On Hold",
   "rageQuit": "Rage Quit",
   "toBuy": "To Buy",
-  "inProgress": "In Progress"
-
+  "inProgress": "In Progress",
+  "last_updated": "Last Updated",
+  "select_platforms": "Select Platforms",
+  "tasks_in_progress": "Tasks in progress",
+  "task_screenshots": "Task screenshots",
+  "done": "Done",
+  "missed": "Missed",
+  "improve": "Improve",
+  "task_statuses": "Task Statuses"
 }
