@@ -11,7 +11,7 @@ class TrackerGameDetailSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 14),
       shrinkWrap: true,
       children: const [
         Padding(
@@ -189,7 +189,9 @@ class _TasksInProgress extends StatelessWidget {
               itemBuilder: (context, index) {
                 return const Padding(
                   padding: EdgeInsets.only(bottom: 12),
-                  child: TaskItem(),
+                  child: TaskItem(
+                    showGroupTask: true,
+                  ),
                 );
               },
             ),

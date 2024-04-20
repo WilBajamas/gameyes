@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_game_detail_section.dart';
-import 'package:gaming_library_assessment_flutter/widgets/status_tag.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_tasks_section.dart';
+import 'package:gaming_library_assessment_flutter/widgets/saved_game_status_tag.dart';
 
 class TrackerGameDetailScreen extends StatelessWidget {
   final SavedGame game;
@@ -59,9 +60,7 @@ class TrackerGameDetailScreen extends StatelessWidget {
             body: const TabBarView(
               children: [
                 TrackerGameDetailSection(),
-                Center(
-                  child: Text('Tasks'),
-                ),
+                TrackerTasksSection(),
               ],
             ),
           ),
@@ -126,7 +125,7 @@ class _HeaderBackground extends StatelessWidget {
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () {},
-                      child: const StatusTag(
+                      child: const SavedGameStatusTag(
                         status: Status.notStarted,
                       ),
                     ),

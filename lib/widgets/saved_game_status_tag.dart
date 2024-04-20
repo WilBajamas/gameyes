@@ -15,9 +15,9 @@ enum Status {
   const Status(this.color);
 }
 
-class StatusTag extends StatelessWidget {
+class SavedGameStatusTag extends StatelessWidget {
   final Status status;
-  const StatusTag({required this.status, super.key});
+  const SavedGameStatusTag({required this.status, super.key});
 
   @override
   Widget build(BuildContext context) {
