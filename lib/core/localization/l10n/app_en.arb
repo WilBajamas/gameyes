@@ -70,5 +70,7 @@
   "done": "Done",
   "missed": "Missed",
   "improve": "Improve",
-  "task_statuses": "Task Statuses"
+  "task_statuses": "Task Statuses",
+  "date_started": "Date started",
+  "not_started": "Not started"
 }

@@ -6,6 +6,7 @@ enum Status {
   completed(Colors.green),
   onHold(Colors.deepOrange),
   toBuy(Colors.blue),
+  notStarted(Colors.blueAccent),
   ragedQuit(Colors.red),
   inProgress(Colors.yellow);
 
@@ -26,6 +27,7 @@ class StatusTag extends StatelessWidget {
           Status.toBuy => context.localisations.toBuy,
           Status.ragedQuit => context.localisations.rageQuit,
           Status.inProgress => context.localisations.inProgress,
+          Status.notStarted => context.localisations.not_started,
         };
 
     return Container(

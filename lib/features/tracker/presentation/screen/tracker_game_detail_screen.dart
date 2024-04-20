@@ -14,12 +14,14 @@ class TrackerGameDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         body: SafeArea(
           child: NestedScrollView(
             headerSliverBuilder: (context, _) => [
               SliverAppBar(
+                title: Text(game.name!),
+                centerTitle: false,
                 expandedHeight: context.screenHeight * 0.3,
                 backgroundColor: Colors.blueGrey[900],
                 actions: [
@@ -35,6 +37,7 @@ class TrackerGameDetailScreen extends StatelessWidget {
                   background: _HeaderBackground(
                     backgroundImage: game.imageUrl,
                     gameName: game.name,
+                    dateSaved: game.dateSaved,
                   ),
                 ),
                 bottom: const TabBar(
@@ -70,10 +73,12 @@ class TrackerGameDetailScreen extends StatelessWidget {
 class _HeaderBackground extends StatelessWidget {
   final String? backgroundImage;
   final String? gameName;
+  final DateTime? dateSaved;
 
   const _HeaderBackground({
     required this.backgroundImage,
     required this.gameName,
+    required this.dateSaved,
   });
 
   @override
@@ -100,52 +105,56 @@ class _HeaderBackground extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
+              const SizedBox(width: 12),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30, bottom: 20, top: 20),
-                  child: AutoSizeText(
-                    gameName!,
-                    maxLines: 2,
-                    minFontSize: 30,
-                    style: context.themeData.textTheme.displayLarge!.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          context.localisations.last_updated,
-                          style: context.themeData.textTheme.bodySmall!
-                              .copyWith(color: Colors.white),
-                        ),
-                        Text(
-                          '01/10/1995',
-                          style:
-                              context.themeData.textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      context.localisations.date_started,
+                      style: context.themeData.textTheme.bodySmall!
+                          .copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      dateSaved.getFormattedStringFromDateTimeSlash()!,
+                      style: context.themeData.textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () {},
                       child: const StatusTag(
-                        status: Status.inProgress,
+                        status: Status.notStarted,
                       ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AutoSizeText(
+                      context.localisations.tasks_completed,
+                      maxLines: 1,
+                      maxFontSize: 20,
+                      style: context.themeData.textTheme.displaySmall!.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '10/10',
+                      style: context.themeData.textTheme.displayLarge!.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
             ],
           ),
         ),
