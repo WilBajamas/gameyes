@@ -34,6 +34,7 @@ class TrackerGameDetailScreen extends StatelessWidget {
                 ],
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.none,
                   background: _HeaderBackground(
                     backgroundImage: game.imageUrl,
                     gameName: game.name,
