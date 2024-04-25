@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class DefaultBorderTextField extends StatelessWidget {
@@ -15,6 +16,8 @@ class DefaultBorderTextField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onClicked;
   final Function(String)? onChanged;
+  final int? maxLength;
+  final bool maxLengthEnforce;
 
   const DefaultBorderTextField({
     required this.context,
@@ -30,6 +33,8 @@ class DefaultBorderTextField extends StatelessWidget {
     this.readOnly = false,
     this.onClicked,
     this.onChanged,
+    this.maxLength,
+    this.maxLengthEnforce = false,
     super.key,
   });
 
@@ -40,6 +45,9 @@ class DefaultBorderTextField extends StatelessWidget {
       keyboardType: inputType,
       minLines: minLines,
       maxLines: maxLines,
+      maxLength: maxLength,
+      maxLengthEnforcement:
+          maxLengthEnforce ? MaxLengthEnforcement.enforced : null,
       readOnly: readOnly,
       style: const TextStyle().copyWith(
         color: context.themeData.colorScheme.onBackground,
@@ -49,6 +57,8 @@ class DefaultBorderTextField extends StatelessWidget {
         errorStyle: const TextStyle(color: Colors.red),
         hintText: hint ?? '',
         alignLabelWithHint: true,
+        hintStyle:
+            context.themeData.textTheme.bodySmall!.copyWith(color: Colors.grey),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         disabledBorder: OutlineInputBorder(

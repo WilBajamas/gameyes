@@ -72,5 +72,11 @@
   "improve": "Improve",
   "task_statuses": "Task Statuses",
   "date_started": "Date started",
-  "not_started": "Not started"
+  "not_started": "Not started",
+  "add_group_task": "Add Group Task",
+  "title": "Title",
+  "description": "Description",
+  "keep_it_short": "Keep it short",
+  "a_brief_description": "A breif description",
+  "add_task": "Add task"
 }

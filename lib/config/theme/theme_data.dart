@@ -86,6 +86,14 @@ ThemeData buildTheme() {
       textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
+  final outlinedButtonTheme = OutlinedButtonThemeData(
+    style: const ButtonStyle().copyWith(
+      textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
+      side: MaterialStateProperty.all(
+        BorderSide(color: kColorScheme.primary),
+      ),
+    ),
+  );
 
   final navigationBarTheme = NavigationBarThemeData(
     labelTextStyle: MaterialStateProperty.all(
@@ -136,6 +144,7 @@ ThemeData buildTheme() {
     textTheme: textTheme,
     navigationBarTheme: navigationBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
+    outlinedButtonTheme: outlinedButtonTheme,
     iconTheme: iconTheme,
     iconButtonTheme: iconButtonTheme,
     chipTheme: chipTheme,
