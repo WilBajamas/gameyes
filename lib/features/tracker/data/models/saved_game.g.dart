@@ -57,11 +57,6 @@ const SavedGameSchema = CollectionSchema(
       name: r'platforms',
       type: IsarType.byteList,
       enumMap: _SavedGameplatformsEnumValueMap,
-    ),
-    r'playTime': PropertySchema(
-      id: 8,
-      name: r'playTime',
-      type: IsarType.string,
     )
   },
   estimateSize: _savedGameEstimateSize,
@@ -93,19 +88,6 @@ const SavedGameSchema = CollectionSchema(
           name: r'dateSaved',
           type: IndexType.value,
           caseSensitive: false,
-        )
-      ],
-    ),
-    r'playTime': IndexSchema(
-      id: 5830077701730375397,
-      name: r'playTime',
-      unique: false,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'playTime',
-          type: IndexType.value,
-          caseSensitive: true,
         )
       ],
     ),
@@ -168,12 +150,6 @@ int _savedGameEstimateSize(
       bytesCount += 3 + value.length;
     }
   }
-  {
-    final value = object.playTime;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
   return bytesCount;
 }
 
@@ -192,7 +168,6 @@ void _savedGameSerialize(
   writer.writeString(offsets[6], object.name);
   writer.writeByteList(
       offsets[7], object.platforms?.map((e) => e.index).toList());
-  writer.writeString(offsets[8], object.playTime);
 }
 
 SavedGame _savedGameDeserialize(
@@ -213,7 +188,6 @@ SavedGame _savedGameDeserialize(
         ?.map((e) =>
             _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
         .toList(),
-    playTime: reader.readStringOrNull(offsets[8]),
   );
   object.completed = reader.readBool(offsets[0]);
   object.id = id;
@@ -247,8 +221,6 @@ P _savedGameDeserializeProp<P>(
           ?.map((e) =>
               _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
           .toList()) as P;
-    case 8:
-      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -309,14 +281,6 @@ extension SavedGameQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'dateSaved'),
-      );
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhere> anyPlayTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'playTime'),
       );
     });
   }
@@ -660,162 +624,6 @@ extension SavedGameQueryWhere
         upper: [upperDateSaved],
         includeUpper: includeUpper,
       ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'playTime',
-        value: [null],
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playTime',
-        lower: [null],
-        includeLower: false,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeEqualTo(
-      String? playTime) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'playTime',
-        value: [playTime],
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeNotEqualTo(
-      String? playTime) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'playTime',
-              lower: [],
-              upper: [playTime],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'playTime',
-              lower: [playTime],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'playTime',
-              lower: [playTime],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'playTime',
-              lower: [],
-              upper: [playTime],
-              includeUpper: false,
-            ));
-      }
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeGreaterThan(
-    String? playTime, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playTime',
-        lower: [playTime],
-        includeLower: include,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeLessThan(
-    String? playTime, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playTime',
-        lower: [],
-        upper: [playTime],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeBetween(
-    String? lowerPlayTime,
-    String? upperPlayTime, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playTime',
-        lower: [lowerPlayTime],
-        includeLower: includeLower,
-        upper: [upperPlayTime],
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeStartsWith(
-      String PlayTimePrefix) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'playTime',
-        lower: [PlayTimePrefix],
-        upper: ['$PlayTimePrefix\u{FFFFF}'],
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'playTime',
-        value: [''],
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterWhereClause> playTimeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.lessThan(
-              indexName: r'playTime',
-              upper: [''],
-            ))
-            .addWhereClause(IndexWhereClause.greaterThan(
-              indexName: r'playTime',
-              lower: [''],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.greaterThan(
-              indexName: r'playTime',
-              lower: [''],
-            ))
-            .addWhereClause(IndexWhereClause.lessThan(
-              indexName: r'playTime',
-              upper: [''],
-            ));
-      }
     });
   }
 
@@ -1811,154 +1619,6 @@ extension SavedGameQueryFilter
       );
     });
   }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'playTime',
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
-      playTimeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'playTime',
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'playTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'playTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'playTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'playTime',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'playTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'playTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'playTime',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'playTime',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> playTimeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'playTime',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
-      playTimeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'playTime',
-        value: '',
-      ));
-    });
-  }
 }
 
 extension SavedGameQueryObject
@@ -2112,18 +1772,6 @@ extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByPlayTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'playTime', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByPlayTimeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'playTime', Sort.desc);
-    });
-  }
 }
 
 extension SavedGameQuerySortThenBy
@@ -2223,18 +1871,6 @@ extension SavedGameQuerySortThenBy
       return query.addSortBy(r'name', Sort.desc);
     });
   }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByPlayTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'playTime', Sort.asc);
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByPlayTimeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'playTime', Sort.desc);
-    });
-  }
 }
 
 extension SavedGameQueryWhereDistinct
@@ -2287,13 +1923,6 @@ extension SavedGameQueryWhereDistinct
   QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByPlatforms() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'platforms');
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByPlayTime(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'playTime', caseSensitive: caseSensitive);
     });
   }
 }
@@ -2352,12 +1981,6 @@ extension SavedGameQueryProperty
       platformsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'platforms');
-    });
-  }
-
-  QueryBuilder<SavedGame, String?, QQueryOperations> playTimeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'playTime');
     });
   }
 }

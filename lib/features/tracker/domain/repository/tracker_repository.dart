@@ -4,7 +4,12 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/s
 abstract interface class TrackerRepository {
   Future<List<SavedGame?>> getSavedGames();
 
-  Stream<List<SavedGame>> savedGamesStream(SavedGameFilterTag tag);
+  Stream<List<SavedGame>> savedGamesStream(
+    SavedGameFilterTag tag,
+    String? searchTerm,
+  );
+
+  Stream<List<SavedGame>> searchGamesStream(String term);
 
   Future<void> removeSavedGame(int id);
 }

@@ -49,12 +49,16 @@ void main() {
 
   test('listenToSavedGames emits recently changed games', () async {
     when(
-      gamesLocalDataSource
-          .listenToSavedGames(SavedGameFilterTag.recentlyChanged),
+      gamesLocalDataSource.listenToSavedGames(
+        SavedGameFilterTag.recentlyChanged,
+        null,
+      ),
     ).thenAnswer((_) => Stream.value(mockSavedGameList));
 
-    final stream =
-        trackerRepository.savedGamesStream(SavedGameFilterTag.recentlyChanged);
+    final stream = trackerRepository.savedGamesStream(
+      SavedGameFilterTag.recentlyChanged,
+      null,
+    );
 
     final events = await stream.toList();
 
@@ -64,12 +68,16 @@ void main() {
 
   test('listenToSavedGames emits empty list for no games', () async {
     when(
-      gamesLocalDataSource
-          .listenToSavedGames(SavedGameFilterTag.recentlyChanged),
+      gamesLocalDataSource.listenToSavedGames(
+        SavedGameFilterTag.recentlyChanged,
+        null,
+      ),
     ).thenAnswer((_) => const Stream.empty());
 
-    final stream =
-        trackerRepository.savedGamesStream(SavedGameFilterTag.recentlyChanged);
+    final stream = trackerRepository.savedGamesStream(
+      SavedGameFilterTag.recentlyChanged,
+      null,
+    );
 
     final events = await stream.toList();
 

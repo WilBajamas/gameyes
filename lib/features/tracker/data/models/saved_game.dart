@@ -20,9 +20,6 @@ class SavedGame {
   @Index()
   DateTime? dateSaved;
 
-  @Index(type: IndexType.value)
-  String? playTime;
-
   bool completed = false;
 
   @enumerated
@@ -40,7 +37,6 @@ class SavedGame {
     this.gameSlug,
     this.dateSaved,
     this.dateModified,
-    this.playTime,
     this.platforms,
   });
 }

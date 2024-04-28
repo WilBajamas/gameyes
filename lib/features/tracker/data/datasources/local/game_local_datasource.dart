@@ -19,6 +19,12 @@ class GameLocalDatasource {
 
   Future<List<SavedGame?>> getSavedGames() => _gameLocalStorage.getSavedGames();
 
-  Stream<List<SavedGame>> listenToSavedGames(SavedGameFilterTag tag) =>
-      _gameLocalStorage.listenToSavedGames(tag);
+  Stream<List<SavedGame>> listenToSavedGames(
+    SavedGameFilterTag tag,
+    String? searchTerm,
+  ) =>
+      _gameLocalStorage.listenToSavedGames(tag, searchTerm);
+
+  Stream<List<SavedGame>> listenToSearchSavedGames(String term) =>
+      _gameLocalStorage.listenToSearchSavedGames(term);
 }

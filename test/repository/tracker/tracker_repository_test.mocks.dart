@@ -80,11 +80,26 @@ class MockGameLocalDatasource extends _i1.Mock
 
   @override
   _i3.Stream<List<_i4.SavedGame>> listenToSavedGames(
-          _i5.SavedGameFilterTag? tag) =>
+    _i5.SavedGameFilterTag? tag,
+    String? searchTerm,
+  ) =>
       (super.noSuchMethod(
         Invocation.method(
           #listenToSavedGames,
-          [tag],
+          [
+            tag,
+            searchTerm,
+          ],
+        ),
+        returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
+      ) as _i3.Stream<List<_i4.SavedGame>>);
+
+  @override
+  _i3.Stream<List<_i4.SavedGame>> listenToSearchSavedGames(String? term) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #listenToSearchSavedGames,
+          [term],
         ),
         returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
       ) as _i3.Stream<List<_i4.SavedGame>>);

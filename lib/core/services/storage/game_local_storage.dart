@@ -13,26 +13,38 @@ class GameLocalStorageService extends IsarLocalStorageService {
     return await isar.writeTxn(() async => isar.savedGames.put(game));
   }
 
-  Stream<List<SavedGame>> listenToSavedGames(SavedGameFilterTag tag) async* {
+  Stream<List<SavedGame>> listenToSavedGames(
+    SavedGameFilterTag tag,
+    String? searchTerm,
+  ) async* {
     final isar = await db;
     final query = isar.savedGames.where(sort: Sort.desc);
-    
+    QueryBuilder<SavedGame, SavedGame, QAfterWhere>? tagQuery;
+
     switch (tag) {
       case SavedGameFilterTag.recentlyChanged:
-        yield* query.anyDateModified().watch(fireImmediately: true);
-
+        tagQuery = query.anyDateModified();
       case SavedGameFilterTag.name:
-        yield* isar.savedGames.where().anyName().watch(fireImmediately: true);
+        tagQuery = query.anyName();
 
       case SavedGameFilterTag.date:
-        yield* query.anyDateSaved().watch(fireImmediately: true);
-
-      case SavedGameFilterTag.playtime:
-        yield* query.anyPlayTime().watch(fireImmediately: true);
-
-      case SavedGameFilterTag.platform:
-        yield* isar.savedGames.where().watch(fireImmediately: true);
+        tagQuery = query.anyDateSaved();
     }
+
+    if (searchTerm case final term?) {
+      yield* tagQuery
+          .filter()
+          .nameContains(term, caseSensitive: false)
+          .watch(fireImmediately: true);
+    } else {
+      yield* tagQuery.watch(fireImmediately: true);
+    }
+  }
+
+  Stream<List<SavedGame>> listenToSearchSavedGames(String term) async* {
+    final isar = await db;
+    final query = isar.savedGames.filter().nameContains(term);
+    yield* query.watch();
   }
 
   Future<List<SavedGame?>> getSavedGames() async {
