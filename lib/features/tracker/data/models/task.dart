@@ -17,6 +17,10 @@ class Task {
 
   String? timeToComplete;
 
+  bool? pinned;
+
+  int? currentStep;
+
   @Backlink(to: 'tasks')
   final groupTask = IsarLink<GroupTask>();
 }

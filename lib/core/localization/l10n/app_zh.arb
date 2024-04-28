@@ -78,5 +78,7 @@
   "description": "Description",
   "keep_it_short": "Keep it short",
   "a_brief_description": "A breif description",
-  "add_task": "Add task"
+  "add_task": "Add task",
+  "tasks_pinned": "Tasks pinned",
+  "back": "Back"
 }

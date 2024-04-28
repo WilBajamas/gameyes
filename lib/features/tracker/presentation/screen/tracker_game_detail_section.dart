@@ -26,7 +26,7 @@ class TrackerGameDetailSection extends StatelessWidget {
         SizedBox(height: 8),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12),
-          child: _TasksInProgress(),
+          child: _TasksPinned(),
         ),
         SizedBox(height: 8),
       ],
@@ -166,8 +166,8 @@ class _PlatformSelector extends StatelessWidget {
   }
 }
 
-class _TasksInProgress extends StatelessWidget {
-  const _TasksInProgress();
+class _TasksPinned extends StatelessWidget {
+  const _TasksPinned();
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +178,7 @@ class _TasksInProgress extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              context.localisations.tasks_in_progress,
+              context.localisations.tasks_pinned,
               style: context.themeData.textTheme.titleMedium,
             ),
             const SizedBox(height: 8),

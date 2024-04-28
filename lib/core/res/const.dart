@@ -38,6 +38,7 @@ class RouteConstants {
   static const games = '/games';
   static const tracker = '/tracker';
   static const trackerDetail = '/tracker_detail';
+  static const taskDetail = '/task_detail';
   static const imagePageView = 'image_page_view';
   static const onboarding = '/onboarding';
   static const gameDetail = '/game_detail';

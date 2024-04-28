@@ -23,6 +23,10 @@ ThemeData buildTheme() {
       fontWeight: FontWeight.w800,
       textStyle: baseTheme.textTheme.titleMedium,
     ),
+    headlineMedium: GoogleFonts.openSans(
+      fontSize: 20,
+      textStyle: baseTheme.textTheme.headlineMedium,
+    ),
     titleSmall: GoogleFonts.chakraPetch(
       fontSize: 14,
       fontWeight: FontWeight.w800,
