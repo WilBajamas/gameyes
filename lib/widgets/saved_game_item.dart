@@ -49,9 +49,13 @@ class SavedGameItem extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             //* Name & Date
-                            _NameDateRow(
-                              name: savedGame.name,
-                              date: savedGame.dateSaved,
+                            AutoSizeText(
+                              savedGame.name ?? '-',
+                              maxFontSize: 20,
+                              minFontSize: 14,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.themeData.textTheme.displayMedium,
                             ),
 
                             const SizedBox(height: 8),
@@ -66,9 +70,10 @@ class SavedGameItem extends StatelessWidget {
                             ),
 
                             //* Platforms & Playtime
-                            const _PlatformPlaytimeRow(
+                            _PlatformPlaytimeRow(
                               playtime: null,
-                              platforms: [GamePlatform.pc],
+                              platforms: const [GamePlatform.pc],
+                              date: savedGame.dateSaved,
                             ),
                           ],
                         ),
@@ -161,39 +166,6 @@ class _ImageView extends StatelessWidget {
   }
 }
 
-class _NameDateRow extends StatelessWidget {
-  final String? name;
-  final DateTime? date;
-  const _NameDateRow({required this.name, required this.date});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //* Name
-        AutoSizeText(
-          name ?? '-',
-          maxFontSize: 20,
-          minFontSize: 14,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: context.themeData.textTheme.displayMedium,
-        ),
-
-        const SizedBox(height: 4),
-
-        //* Date added
-        Text(
-          'Date added: ${date.getFormattedStringFromDateTimeSlash() ?? '-'}',
-          style: context.themeData.textTheme.bodySmall,
-        ),
-      ],
-    );
-  }
-}
-
 class _TaskColumn extends StatelessWidget {
   final int? totalTasks;
   final int? tasksCompleted;
@@ -224,13 +196,19 @@ class _TaskColumn extends StatelessWidget {
 
 class _PlatformPlaytimeRow extends StatelessWidget {
   final String? playtime;
+  final DateTime? date;
   final List<GamePlatform> platforms;
 
-  const _PlatformPlaytimeRow({required this.playtime, required this.platforms});
+  const _PlatformPlaytimeRow({
+    required this.playtime,
+    required this.platforms,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: SizedBox(
@@ -240,9 +218,19 @@ class _PlatformPlaytimeRow extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          playtime ?? '-',
-          style: context.themeData.textTheme.displayMedium,
+        //* Date added
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              'Date added',
+              style: context.themeData.textTheme.bodySmall,
+            ),
+            Text(
+              date.getFormattedStringFromDateTimeSlash() ?? '-',
+              style: context.themeData.textTheme.bodySmall,
+            ),
+          ],
         ),
       ],
     );

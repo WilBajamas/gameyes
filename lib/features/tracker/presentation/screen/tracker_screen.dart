@@ -78,11 +78,6 @@ class _TrackerScreenState extends State<TrackerScreen> {
           null,
         ),
         (
-          SavedGameFilterTag.playtime,
-          context.localisations.playtime,
-          null,
-        ),
-        (
           SavedGameFilterTag.date,
           context.localisations.date_added,
           null,
