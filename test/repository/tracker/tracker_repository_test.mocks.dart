@@ -5,6 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
+    as _i6;
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
@@ -103,4 +105,21 @@ class MockGameLocalDatasource extends _i1.Mock
         ),
         returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
       ) as _i3.Stream<List<_i4.SavedGame>>);
+
+  @override
+  _i3.Future<_i4.SavedGame?> setPlatform({
+    required _i6.GamePlatform? platform,
+    required int? gameId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setPlatform,
+          [],
+          {
+            #platform: platform,
+            #gameId: gameId,
+          },
+        ),
+        returnValue: _i3.Future<_i4.SavedGame?>.value(),
+      ) as _i3.Future<_i4.SavedGame?>);
 }

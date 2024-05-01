@@ -58,12 +58,18 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
     as _i26;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
     as _i16;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_detail_repository_impl.dart'
+    as _i31;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart'
+    as _i33;
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart'
     as _i30;
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart'
-    as _i29;
+    as _i32;
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart'
     as _i28;
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart'
+    as _i29;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
@@ -105,7 +111,10 @@ extension GetItInjectableX on _i1.GetIt {
     gh.singleton<_i26.ScrollNotifier>(() => _i26.ScrollNotifier());
     gh.singleton<_i27.SharedPreference>(() => _i27.SharedPreference());
     gh.factory<_i28.TrackerCubit>(() => _i28.TrackerCubit());
-    gh.factory<_i29.TrackerRepository>(() => _i30.TrackerRepositoryImpl());
+    gh.factory<_i29.TrackerDetailCubit>(() => _i29.TrackerDetailCubit());
+    gh.factory<_i30.TrackerDetailRepository>(
+        () => _i31.TrackerDetailRepositoryImpl());
+    gh.factory<_i32.TrackerRepository>(() => _i33.TrackerRepositoryImpl());
     return this;
   }
 }

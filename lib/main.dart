@@ -18,6 +18,7 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart';
 
 void main() {
@@ -56,6 +57,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => injection.getIt<TrackerCubit>(),
+          child: const TrackerScreen(),
+        ),
+        BlocProvider(
+          create: (context) => injection.getIt<TrackerDetailCubit>(),
           child: const TrackerScreen(),
         ),
       ],

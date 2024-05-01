@@ -1,4 +1,5 @@
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
@@ -27,4 +28,19 @@ class GameLocalDatasource {
 
   Stream<List<SavedGame>> listenToSearchSavedGames(String term) =>
       _gameLocalStorage.listenToSearchSavedGames(term);
+
+  Future<SavedGame?> setPlatform({
+    required GamePlatform platform,
+    required int gameId,
+  }) async {
+    final game = await _gameLocalStorage.getGame(gameId);
+    if (game != null) {
+      if (game.platforms != null && game.platforms!.contains(platform)) {
+        return _gameLocalStorage.removePlatform(platform, game);
+      } else {
+        return _gameLocalStorage.addPlatform(platform, game);
+      }
+    }
+    return null;
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/isar_local_storage_service.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
@@ -63,5 +64,28 @@ class GameLocalStorageService extends IsarLocalStorageService {
   Future<void> deleteGame(int id) async {
     final isar = await db;
     return await isar.writeTxn(() async => isar.savedGames.delete(id));
+  }
+
+  Future<SavedGame> addPlatform(
+    GamePlatform platform,
+    SavedGame game,
+  ) async {
+    final List<GamePlatform> platforms = game.platforms ?? [];
+
+    platforms.add(platform);
+    game.platforms = platforms;
+    await insertGame(game);
+
+    return game;
+  }
+
+  Future<SavedGame> removePlatform(
+    GamePlatform platform,
+    SavedGame game,
+  ) async {
+    game.platforms!.remove(platform);
+    await insertGame(game);
+
+    return game;
   }
 }

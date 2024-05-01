@@ -57,10 +57,10 @@ class TrackerGameDetailScreen extends StatelessWidget {
                 ),
               ),
             ],
-            body: const TabBarView(
+            body: TabBarView(
               children: [
-                TrackerGameDetailSection(),
-                TrackerTasksSection(),
+                TrackerGameDetailSection(game: game),
+                const TrackerTasksSection(),
               ],
             ),
           ),

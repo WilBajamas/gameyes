@@ -1,35 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/task_item.dart';
 
 class TrackerGameDetailSection extends StatelessWidget {
-  const TrackerGameDetailSection({super.key});
+  final SavedGame game;
+  const TrackerGameDetailSection({required this.game, super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 14),
       shrinkWrap: true,
-      children: const [
-        SizedBox(height: 8),
+      children: [
+        const SizedBox(height: 8),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: _PlatformSelector(),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: _PlatformSelector(
+            game: game,
+          ),
         ),
-        SizedBox(height: 8),
-        Padding(
+        const SizedBox(height: 8),
+        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 12),
           child: _TasksPinned(),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
       ],
     );
   }
 }
 
-class _PlatformSelector extends StatelessWidget {
-  const _PlatformSelector();
+class _PlatformSelector extends StatefulWidget {
+  final SavedGame game;
+  const _PlatformSelector({required this.game});
+
+  @override
+  State<_PlatformSelector> createState() => _PlatformSelectorState();
+}
+
+class _PlatformSelectorState extends State<_PlatformSelector> {
+  @override
+  void initState() {
+    context.read<TrackerDetailCubit>().setSavedGame(game: widget.game);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +70,36 @@ class _PlatformSelector extends StatelessWidget {
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.topLeft,
-              child: Wrap(
-                spacing: 8,
-                children: GamePlatform.values
-                    .map(
-                      (e) => ChoiceChip.elevated(
-                        label: Image.asset(
-                          'assets/images/${e.assetName}',
-                          height: 20,
-                        ),
-                        side: const BorderSide(color: Colors.transparent),
-                        selected: false,
-                        showCheckmark: false,
-                        disabledColor: Colors.white,
-                      ),
-                    )
-                    .toList(),
+              child: BlocSelector<TrackerDetailCubit, TrackerDetailState,
+                  SavedGame?>(
+                selector: (state) => state.game,
+                builder: (context, state) {
+                  return Wrap(
+                    spacing: 8,
+                    children: GamePlatform.values.map(
+                      (platform) {
+                        final selected =
+                            state!.platforms?.contains(platform) ?? false;
+                        return ChoiceChip.elevated(
+                          label: Image.asset(
+                            'assets/images/${platform.assetName}',
+                            height: 20,
+                            color: selected
+                                ? kColorScheme.background
+                                : kColorScheme.onBackground,
+                          ),
+                          side: const BorderSide(color: Colors.transparent),
+                          selected: selected,
+                          showCheckmark: false,
+                          disabledColor: Colors.white,
+                          onSelected: (selected) => context
+                              .read<TrackerDetailCubit>()
+                              .setPlatform(platform: platform),
+                        );
+                      },
+                    ).toList(),
+                  );
+                },
               ),
             ),
           ],
