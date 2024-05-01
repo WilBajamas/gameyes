@@ -4,13 +4,14 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class PlatformRowList extends StatelessWidget {
   final List<GamePlatform> platforms;
+  final int showMax;
 
-  const PlatformRowList({super.key, required this.platforms});
+  const PlatformRowList({super.key, required this.platforms, this.showMax = 4});
 
   (int, int) get _itemCountAndRemaining {
-    final remaining = platforms.length - 4;
+    final remaining = platforms.length - showMax;
 
-    final indexCount = remaining <= 0 ? platforms.length : 5;
+    final indexCount = remaining <= 0 ? platforms.length : showMax + 1;
 
     return (indexCount, remaining);
   }
@@ -25,9 +26,9 @@ class PlatformRowList extends StatelessWidget {
         width: 2,
       ),
       itemBuilder: (context, index) {
-        final remainingItemsCount = platforms.length - 4;
+        final remainingItemsCount = platforms.length - showMax;
 
-        return index == 4 && remainingItemsCount > 0
+        return index == showMax && remainingItemsCount > 0
             ? Text(
                 '+${_itemCountAndRemaining.$2}',
                 style: const TextStyle(

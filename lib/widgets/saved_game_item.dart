@@ -70,9 +70,9 @@ class SavedGameItem extends StatelessWidget {
                             ),
 
                             //* Platforms & Playtime
-                            _PlatformPlaytimeRow(
+                            _PlatformDayAddedRow(
                               playtime: null,
-                              platforms: const [GamePlatform.pc],
+                              platforms: savedGame.platforms,
                               date: savedGame.dateSaved,
                             ),
                           ],
@@ -194,12 +194,12 @@ class _TaskColumn extends StatelessWidget {
   }
 }
 
-class _PlatformPlaytimeRow extends StatelessWidget {
+class _PlatformDayAddedRow extends StatelessWidget {
   final String? playtime;
   final DateTime? date;
-  final List<GamePlatform> platforms;
+  final List<GamePlatform>? platforms;
 
-  const _PlatformPlaytimeRow({
+  const _PlatformDayAddedRow({
     required this.playtime,
     required this.platforms,
     required this.date,
@@ -213,9 +213,12 @@ class _PlatformPlaytimeRow extends StatelessWidget {
         Expanded(
           child: SizedBox(
             height: 20,
-            child: PlatformRowList(
-              platforms: platforms,
-            ),
+            child: platforms != null && platforms!.isNotEmpty
+                ? PlatformRowList(
+                    platforms: platforms!,
+                    showMax: 3,
+                  )
+                : null,
           ),
         ),
         //* Date added
