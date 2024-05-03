@@ -17,6 +17,19 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
   void setSavedGame({required SavedGame game}) =>
       emit(TrackerDetailState(game: game));
 
+  String getTasksCompletion() {
+    final completedTasks = state.game!.groupTasks
+        .where((gt) => gt.tasks.isNotEmpty)
+        .expand((gt) => gt.tasks)
+        .where((t) => t.completed == true)
+        .length;
+
+    final totalTasks =
+        state.game!.groupTasks.fold(0, (acc, gt) => acc + gt.tasks.length);
+
+    return totalTasks == 0 ? '-/-' : '$completedTasks/$totalTasks';
+  }
+
   void setPlatform({required GamePlatform platform}) async {
     final savedGame = await _trackerDetailRepository.setPlatform(
       platform: platform,

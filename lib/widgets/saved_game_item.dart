@@ -226,12 +226,12 @@ class _PlatformDayAddedRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              'Date added',
+              '${context.localisations.date_added}:',
               style: context.themeData.textTheme.bodySmall,
             ),
             Text(
               date.getFormattedStringFromDateTimeSlash() ?? '-',
-              style: context.themeData.textTheme.bodySmall,
+              style: context.themeData.textTheme.bodyMedium,
             ),
           ],
         ),

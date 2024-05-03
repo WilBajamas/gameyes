@@ -35,20 +35,9 @@ class TrackerGameDetailSection extends StatelessWidget {
   }
 }
 
-class _PlatformSelector extends StatefulWidget {
+class _PlatformSelector extends StatelessWidget {
   final SavedGame game;
   const _PlatformSelector({required this.game});
-
-  @override
-  State<_PlatformSelector> createState() => _PlatformSelectorState();
-}
-
-class _PlatformSelectorState extends State<_PlatformSelector> {
-  @override
-  void initState() {
-    context.read<TrackerDetailCubit>().setSavedGame(game: widget.game);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
