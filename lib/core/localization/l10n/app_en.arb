@@ -81,5 +81,9 @@
   "add_task": "Add task",
   "tasks_pinned": "Tasks pinned",
   "back": "Back",
-  "tasks": "Tasks"
+  "tasks": "Tasks",
+  "no_pinned_tasks_desc": "There are no pinned tasks",
+  "no_group_task_created": "No group task created",
+  "please_enter_value": "Please enter a value",
+  "group_task_created": "Group task created"
 }

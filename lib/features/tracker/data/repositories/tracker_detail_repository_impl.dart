@@ -18,4 +18,16 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
         platform: platform,
         gameId: gameId,
       );
+
+  @override
+  Future<SavedGame?> createGroupTask({
+    required String title,
+    required String description,
+    required int id,
+  }) =>
+      _gameLocalDatasource.createGroupTask(
+        title: title,
+        description: description,
+        id: id,
+      );
 }

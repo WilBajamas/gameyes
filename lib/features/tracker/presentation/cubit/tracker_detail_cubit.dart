@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -30,10 +31,33 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     return totalTasks == 0 ? '-/-' : '$completedTasks/$totalTasks';
   }
 
+  List<Task> getPinnedTasks() {
+    final tasks = state.game!.groupTasks
+        .where((gt) => gt.tasks.isNotEmpty)
+        .expand((gt) => gt.tasks)
+        .where((t) => t.pinned == true)
+        .toList();
+
+    return tasks;
+  }
+
   void setPlatform({required GamePlatform platform}) async {
     final savedGame = await _trackerDetailRepository.setPlatform(
       platform: platform,
       gameId: state.game!.gameId!,
+    );
+
+    emit(TrackerDetailState(game: savedGame));
+  }
+
+  void addGroupTask({
+    required String title,
+    required String description,
+  }) async {
+    final savedGame = await _trackerDetailRepository.createGroupTask(
+      title: title,
+      description: description,
+      id: state.game!.id,
     );
 
     emit(TrackerDetailState(game: savedGame));

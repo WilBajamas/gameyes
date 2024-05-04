@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/isar_local_storage_service.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
@@ -53,12 +54,17 @@ class GameLocalStorageService extends IsarLocalStorageService {
     return await isar.savedGames.filter().gameIdIsNotNull().findAll();
   }
 
-  Future<SavedGame?> getGame(int gameId) async {
+  Future<SavedGame?> getGameById(int gameId) async {
     final isar = await db;
     final existingGame =
         await isar.savedGames.filter().gameIdEqualTo(gameId).findFirst();
 
     return existingGame;
+  }
+
+  Future<SavedGame?> getSavedGame(int id) async {
+    final isar = await db;
+    return await isar.savedGames.get(id);
   }
 
   Future<void> deleteGame(int id) async {
@@ -87,5 +93,20 @@ class GameLocalStorageService extends IsarLocalStorageService {
     await insertGame(game);
 
     return game;
+  }
+
+  Future<void> createGroupTask(
+    GroupTask groupTaskToSave,
+    SavedGame game,
+  ) async {
+    final isar = await db;
+
+    await isar.writeTxn(() async {
+      await isar.groupTasks.put(groupTaskToSave);
+      game.groupTasks.add(groupTaskToSave);
+      game.groupTasks.save();
+    });
+
+    await insertGame(game);
   }
 }

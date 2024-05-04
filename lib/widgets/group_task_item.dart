@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/horizontal_separator.dart';
 import 'package:gaming_library_assessment_flutter/widgets/task_item.dart';
 
 class GroupTaskItem extends StatelessWidget {
-  final String groupTaskTitle;
+  final GroupTask groupTask;
 
-  const GroupTaskItem({required this.groupTaskTitle, super.key});
+  const GroupTaskItem({required this.groupTask, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +19,11 @@ class GroupTaskItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _TitleAndCheckbox(
-              groupTaskTitle: groupTaskTitle,
+              groupTaskTitle: groupTask.title ?? '-',
             ),
             const SizedBox(height: 4),
             Text(
-              'Description',
+              groupTask.description ?? '-',
               style: context.themeData.textTheme.bodySmall,
               maxLines: 3,
             ),
@@ -32,11 +33,14 @@ class GroupTaskItem extends StatelessWidget {
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 5,
+              itemCount: groupTask.tasks.length,
               itemBuilder: (context, index) {
-                return const Padding(
-                  padding: EdgeInsets.only(bottom: 12),
-                  child: TaskItem(),
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: TaskItem(
+                    task: groupTask.tasks.toList()[index],
+                    groupTaskTitle: groupTask.title,
+                  ),
                 );
               },
             ),

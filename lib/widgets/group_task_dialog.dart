@@ -7,8 +7,13 @@ import 'package:go_router/go_router.dart';
 
 class GroupTaskDialog extends StatefulWidget {
   final (String?, String?)? titleDescription;
+  final Function(String, String) onCreatedClicked;
 
-  const GroupTaskDialog({this.titleDescription, super.key});
+  const GroupTaskDialog({
+    required this.onCreatedClicked,
+    this.titleDescription,
+    super.key,
+  });
 
   @override
   State<GroupTaskDialog> createState() => _GroupTaskDialogState();
@@ -17,6 +22,8 @@ class GroupTaskDialog extends StatefulWidget {
 class _GroupTaskDialogState extends State<GroupTaskDialog> {
   final _titleTextController = TextEditingController();
   final _descriptionTextController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -38,61 +45,82 @@ class _GroupTaskDialogState extends State<GroupTaskDialog> {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.localisations.add_group_task,
-                  style: context.themeData.textTheme.displayMedium,
-                ),
-                IconButton(
-                  onPressed: () => context.pop(),
-                  icon: const Icon(Icons.cancel_outlined),
-                  color: kColorScheme.primary,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            DefaultBorderTextField(
-              textEditingController: _titleTextController,
-              context: context,
-              title: context.localisations.title,
-              minLines: 1,
-              maxLengthEnforce: true,
-              maxLength: 30,
-              hint: context.localisations.keep_it_short,
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            DefaultBorderTextField(
-              textEditingController: _descriptionTextController,
-              context: context,
-              title: context.localisations.description,
-              inputType: TextInputType.multiline,
-              maxLines: null,
-              minLines: 5,
-              maxLength: 100,
-              maxLengthEnforce: true,
-              hint: context.localisations.a_brief_description,
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            DefaultFilledButtonFullWidth(
-              context.localisations.save,
-              height: 40,
-              () {
-                context.pop();
-              },
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    context.localisations.add_group_task,
+                    style: context.themeData.textTheme.displayMedium,
+                  ),
+                  IconButton(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(Icons.cancel_outlined),
+                    color: kColorScheme.primary,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              DefaultBorderTextField(
+                textEditingController: _titleTextController,
+                context: context,
+                title: context.localisations.title,
+                minLines: 1,
+                isRequired: true,
+                maxLengthEnforce: true,
+                maxLength: 30,
+                hint: context.localisations.keep_it_short,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              DefaultBorderTextField(
+                textEditingController: _descriptionTextController,
+                context: context,
+                title: context.localisations.description,
+                inputType: TextInputType.multiline,
+                maxLines: null,
+                isRequired: true,
+                minLines: 5,
+                maxLength: 100,
+                maxLengthEnforce: true,
+                hint: context.localisations.a_brief_description,
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              DefaultFilledButtonFullWidth(
+                context.localisations.save,
+                height: 40,
+                () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: kColorScheme.primary,
+                        content: Text(
+                          context.localisations.group_task_created,
+                          style: context.themeData.textTheme.bodySmall!
+                              .copyWith(color: Colors.white),
+                        ),
+                      ),
+                    );
+                    widget.onCreatedClicked(
+                      _titleTextController.text,
+                      _descriptionTextController.text,
+                    );
+                    context.pop();
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

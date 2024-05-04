@@ -68,6 +68,14 @@ class DefaultBorderTextField extends StatelessWidget {
       ),
       onChanged: onChanged,
       onTap: onClicked,
+      validator: isRequired
+          ? (value) {
+              if (value == null || value.isEmpty) {
+                return context.localisations.please_enter_value;
+              }
+              return null;
+            }
+          : null,
     );
   }
 }

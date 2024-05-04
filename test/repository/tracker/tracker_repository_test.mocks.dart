@@ -122,4 +122,23 @@ class MockGameLocalDatasource extends _i1.Mock
         ),
         returnValue: _i3.Future<_i4.SavedGame?>.value(),
       ) as _i3.Future<_i4.SavedGame?>);
+
+  @override
+  _i3.Future<_i4.SavedGame?> createGroupTask({
+    required String? title,
+    required String? description,
+    required int? id,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createGroupTask,
+          [],
+          {
+            #title: title,
+            #description: description,
+            #id: id,
+          },
+        ),
+        returnValue: _i3.Future<_i4.SavedGame?>.value(),
+      ) as _i3.Future<_i4.SavedGame?>);
 }

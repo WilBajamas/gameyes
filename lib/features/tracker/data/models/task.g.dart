@@ -42,13 +42,19 @@ const TaskSchema = CollectionSchema(
       name: r'pinned',
       type: IsarType.bool,
     ),
-    r'timeToComplete': PropertySchema(
+    r'steps': PropertySchema(
       id: 5,
+      name: r'steps',
+      type: IsarType.objectList,
+      target: r'TaskStep',
+    ),
+    r'timeToComplete': PropertySchema(
+      id: 6,
       name: r'timeToComplete',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'title',
       type: IsarType.string,
     )
@@ -68,7 +74,7 @@ const TaskSchema = CollectionSchema(
       linkName: r'tasks',
     )
   },
-  embeddedSchemas: {},
+  embeddedSchemas: {r'TaskStep': TaskStepSchema},
   getId: _taskGetId,
   getLinks: _taskGetLinks,
   attach: _taskAttach,
@@ -85,6 +91,19 @@ int _taskEstimateSize(
     final value = object.description;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final list = object.steps;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[TaskStep]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += TaskStepSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
     }
   }
   {
@@ -113,8 +132,14 @@ void _taskSerialize(
   writer.writeString(offsets[2], object.description);
   writer.writeLong(offsets[3], object.gameId);
   writer.writeBool(offsets[4], object.pinned);
-  writer.writeString(offsets[5], object.timeToComplete);
-  writer.writeString(offsets[6], object.title);
+  writer.writeObjectList<TaskStep>(
+    offsets[5],
+    allOffsets,
+    TaskStepSchema.serialize,
+    object.steps,
+  );
+  writer.writeString(offsets[6], object.timeToComplete);
+  writer.writeString(offsets[7], object.title);
 }
 
 Task _taskDeserialize(
@@ -130,8 +155,14 @@ Task _taskDeserialize(
   object.gameId = reader.readLongOrNull(offsets[3]);
   object.id = id;
   object.pinned = reader.readBoolOrNull(offsets[4]);
-  object.timeToComplete = reader.readStringOrNull(offsets[5]);
-  object.title = reader.readStringOrNull(offsets[6]);
+  object.steps = reader.readObjectList<TaskStep>(
+    offsets[5],
+    TaskStepSchema.deserialize,
+    allOffsets,
+    TaskStep(),
+  );
+  object.timeToComplete = reader.readStringOrNull(offsets[6]);
+  object.title = reader.readStringOrNull(offsets[7]);
   return object;
 }
 
@@ -153,8 +184,15 @@ P _taskDeserializeProp<P>(
     case 4:
       return (reader.readBoolOrNull(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readObjectList<TaskStep>(
+        offset,
+        TaskStepSchema.deserialize,
+        allOffsets,
+        TaskStep(),
+      )) as P;
     case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -637,6 +675,106 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'steps',
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'steps',
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'steps',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'steps',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'steps',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'steps',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'steps',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'steps',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -928,7 +1066,14 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 }
 
-extension TaskQueryObject on QueryBuilder<Task, Task, QFilterCondition> {}
+extension TaskQueryObject on QueryBuilder<Task, Task, QFilterCondition> {
+  QueryBuilder<Task, Task, QAfterFilterCondition> stepsElement(
+      FilterQuery<TaskStep> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'steps');
+    });
+  }
+}
 
 extension TaskQueryLinks on QueryBuilder<Task, Task, QFilterCondition> {
   QueryBuilder<Task, Task, QAfterFilterCondition> groupTask(
@@ -1211,6 +1356,12 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
   QueryBuilder<Task, bool?, QQueryOperations> pinnedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinned');
+    });
+  }
+
+  QueryBuilder<Task, List<TaskStep>?, QQueryOperations> stepsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'steps');
     });
   }
 

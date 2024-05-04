@@ -6,4 +6,10 @@ abstract interface class TrackerDetailRepository {
     required GamePlatform platform,
     required int gameId,
   });
+
+  Future<SavedGame?> createGroupTask({
+    required String title,
+    required String description,
+    required int id,
+  });
 }

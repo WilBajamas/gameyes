@@ -106,28 +106,39 @@ class _TasksPinned extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.localisations.tasks_pinned,
-              style: context.themeData.textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return const Padding(
-                  padding: EdgeInsets.only(bottom: 12),
-                  child: TaskItem(
-                    showGroupTask: true,
+        child: BlocBuilder<TrackerDetailCubit, TrackerDetailState>(
+          builder: (context, state) {
+            final tasks = context.read<TrackerDetailCubit>().getPinnedTasks();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.localisations.tasks_pinned,
+                  style: context.themeData.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                if (tasks.isEmpty)
+                  Text(
+                    context.localisations.no_pinned_tasks_desc,
+                    style: context.themeData.textTheme.bodySmall,
                   ),
-                );
-              },
-            ),
-          ],
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: TaskItem(
+                        task: tasks[index],
+                        showGroupTask: true,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
