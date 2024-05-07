@@ -19,7 +19,7 @@ class GroupTaskItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _TitleAndCheckbox(
-              groupTaskTitle: groupTask.title ?? '-',
+              groupTask: groupTask,
             ),
             const SizedBox(height: 4),
             Text(
@@ -28,8 +28,8 @@ class GroupTaskItem extends StatelessWidget {
               maxLines: 3,
             ),
             const SizedBox(height: 12),
-            const HorizontalSeparator(),
-            const SizedBox(height: 12),
+            if (groupTask.tasks.isNotEmpty) const HorizontalSeparator(),
+            if (groupTask.tasks.isNotEmpty) const SizedBox(height: 12),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -52,9 +52,20 @@ class GroupTaskItem extends StatelessWidget {
 }
 
 class _TitleAndCheckbox extends StatelessWidget {
-  final String groupTaskTitle;
+  final GroupTask groupTask;
 
-  const _TitleAndCheckbox({required this.groupTaskTitle});
+  const _TitleAndCheckbox({required this.groupTask});
+
+  String _getTaskCompletion() {
+    final tasks = groupTask.tasks.toList();
+    final tasksCompleted = tasks.where((t) => t.completed == true);
+
+    if (tasks.isNotEmpty) {
+      return '$tasksCompleted/$tasksCompleted';
+    }
+
+    return '-/-';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +73,7 @@ class _TitleAndCheckbox extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            groupTaskTitle,
+            groupTask.title ?? '-',
             style: context.themeData.textTheme.titleMedium,
           ),
         ),
@@ -70,7 +81,7 @@ class _TitleAndCheckbox extends StatelessWidget {
           width: 8,
         ),
         Text(
-          '3/3',
+          _getTaskCompletion(),
           style: context.themeData.textTheme.titleMedium,
         ),
         const SizedBox(
