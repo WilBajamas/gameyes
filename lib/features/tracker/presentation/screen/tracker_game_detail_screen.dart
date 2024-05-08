@@ -23,6 +23,9 @@ class _TrackerGameDetailScreenState extends State<TrackerGameDetailScreen> {
   @override
   void initState() {
     context.read<TrackerDetailCubit>().setSavedGame(game: widget.game);
+    context
+        .read<TrackerDetailCubit>()
+        .listenToSavedGame(savedGameId: widget.game.id);
     super.initState();
   }
 
@@ -67,10 +70,10 @@ class _TrackerGameDetailScreenState extends State<TrackerGameDetailScreen> {
                 ),
               ),
             ],
-            body: TabBarView(
+            body: const TabBarView(
               children: [
-                TrackerGameDetailSection(game: widget.game),
-                const TrackerTasksSection(),
+                TrackerGameDetailSection(),
+                TrackerTasksSection(),
               ],
             ),
           ),

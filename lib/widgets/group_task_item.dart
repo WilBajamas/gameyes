@@ -67,6 +67,16 @@ class _TitleAndCheckbox extends StatelessWidget {
     return '-/-';
   }
 
+  void _onPopUpItemClicked(BuildContext context, String selection) {
+    if (selection == context.localisations.add_task) {
+
+    }
+
+    if (selection == context.localisations.remove) {
+      
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -87,12 +97,14 @@ class _TitleAndCheckbox extends StatelessWidget {
         const SizedBox(
           width: 8,
         ),
+        // ignore: lines_longer_than_80_chars
         DefaultPopUpButton(
           items: [
             context.localisations.add_task,
             context.localisations.remove,
           ],
-          onItemClicked: (String s) {},
+          onItemClicked: (String selection) =>
+              _onPopUpItemClicked(context, selection),
         ),
       ],
     );

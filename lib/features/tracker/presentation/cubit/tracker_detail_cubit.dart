@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
@@ -13,6 +15,7 @@ part 'tracker_detail_state.dart';
 class TrackerDetailCubit extends Cubit<TrackerDetailState> {
   final _trackerDetailRepository = getIt<TrackerDetailRepository>();
 
+  StreamSubscription? streamSubscription;
   TrackerDetailCubit() : super(const TrackerDetailState());
 
   void setSavedGame({required SavedGame game}) =>
@@ -42,12 +45,10 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
   }
 
   void setPlatform({required GamePlatform platform}) async {
-    final savedGame = await _trackerDetailRepository.setPlatform(
+    _trackerDetailRepository.setPlatform(
       platform: platform,
-      gameId: state.game!.gameId!,
+      savedGameId: state.game!.id,
     );
-
-    emit(TrackerDetailState(game: savedGame));
   }
 
   void addGroupTask({
@@ -61,5 +62,22 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     );
 
     emit(TrackerDetailState(game: savedGame));
+  }
+
+  void listenToSavedGame({required int savedGameId}) {
+    streamSubscription?.cancel();
+    final stream = _trackerDetailRepository
+        .savedGameDetailStream(savedGameId: savedGameId)
+        .listen((savedGame) => emit(TrackerDetailState(game: savedGame)));
+
+    streamSubscription = stream;
+  }
+
+  void removeGroupTask({required groupTaskId}) async {}
+
+  @override
+  Future<void> close() {
+    streamSubscription?.cancel();
+    return super.close();
   }
 }

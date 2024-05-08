@@ -30,19 +30,18 @@ class GameLocalDatasource {
   Stream<List<SavedGame>> listenToSearchSavedGames(String term) =>
       _gameLocalStorage.listenToSearchSavedGames(term);
 
-  Future<SavedGame?> setPlatform({
+  Future<void> setPlatform({
     required GamePlatform platform,
-    required int gameId,
+    required int savedGameId,
   }) async {
-    final game = await _gameLocalStorage.getGameById(gameId);
-    if (game != null) {
-      if (game.platforms != null && game.platforms!.contains(platform)) {
-        return _gameLocalStorage.removePlatform(platform, game);
+    final game = await _gameLocalStorage.getSavedGame(savedGameId);
+    if (game case final savedGame?) {
+      if (savedGame.platforms != null && game.platforms!.contains(platform)) {
+        _gameLocalStorage.removePlatform(platform, savedGame);
       } else {
-        return _gameLocalStorage.addPlatform(platform, game);
+        _gameLocalStorage.addPlatform(platform, savedGame);
       }
     }
-    return null;
   }
 
   Future<SavedGame?> createGroupTask({
@@ -63,4 +62,7 @@ class GameLocalDatasource {
 
     return null;
   }
+
+  Stream<SavedGame?> listenToSavedGame({required int savedGameId}) =>
+      _gameLocalStorage.listenToSavedGameDetail(savedGameId);
 }

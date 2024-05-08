@@ -10,13 +10,13 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   final _gameLocalDatasource = getIt<GameLocalDatasource>();
 
   @override
-  Future<SavedGame?> setPlatform({
+  Future<void> setPlatform({
     required GamePlatform platform,
-    required int gameId,
+    required int savedGameId,
   }) =>
       _gameLocalDatasource.setPlatform(
         platform: platform,
-        gameId: gameId,
+        savedGameId: savedGameId,
       );
 
   @override
@@ -30,4 +30,8 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
         description: description,
         id: id,
       );
+
+  @override
+  Stream<SavedGame?> savedGameDetailStream({required int savedGameId}) =>
+      _gameLocalDatasource.listenToSavedGame(savedGameId: savedGameId);
 }

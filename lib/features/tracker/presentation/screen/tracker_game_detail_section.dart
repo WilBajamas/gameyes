@@ -8,8 +8,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:gaming_library_assessment_flutter/widgets/task_item.dart';
 
 class TrackerGameDetailSection extends StatelessWidget {
-  final SavedGame game;
-  const TrackerGameDetailSection({required this.game, super.key});
+  const TrackerGameDetailSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +19,12 @@ class TrackerGameDetailSection extends StatelessWidget {
         const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: _PlatformSelector(
-            game: game,
+          child: BlocBuilder<TrackerDetailCubit, TrackerDetailState>(
+            builder: (context, state) {
+              return _PlatformSelector(
+                game: state.game!,
+              );
+            },
           ),
         ),
         const SizedBox(height: 8),

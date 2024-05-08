@@ -109,7 +109,7 @@ class MockGameLocalDatasource extends _i1.Mock
   @override
   _i3.Future<_i4.SavedGame?> setPlatform({
     required _i6.GamePlatform? platform,
-    required int? gameId,
+    required int? savedGameId,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -117,7 +117,7 @@ class MockGameLocalDatasource extends _i1.Mock
           [],
           {
             #platform: platform,
-            #gameId: gameId,
+            #gameId: savedGameId,
           },
         ),
         returnValue: _i3.Future<_i4.SavedGame?>.value(),
@@ -141,4 +141,15 @@ class MockGameLocalDatasource extends _i1.Mock
         ),
         returnValue: _i3.Future<_i4.SavedGame?>.value(),
       ) as _i3.Future<_i4.SavedGame?>);
+
+  @override
+  _i3.Stream<_i4.SavedGame?> listenToSavedGame({required int? savedGameId}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #listenToSavedGame,
+          [],
+          {#savedGameId: savedGameId},
+        ),
+        returnValue: _i3.Stream<_i4.SavedGame?>.empty(),
+      ) as _i3.Stream<_i4.SavedGame?>);
 }

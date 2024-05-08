@@ -49,6 +49,11 @@ class GameLocalStorageService extends IsarLocalStorageService {
     yield* query.watch();
   }
 
+  Stream<SavedGame?> listenToSavedGameDetail(int savedGameId) async* {
+    final isar = await db;
+    yield* isar.savedGames.watchObject(savedGameId, fireImmediately: true);
+  }
+
   Future<List<SavedGame?>> getSavedGames() async {
     final isar = await db;
     return await isar.savedGames.filter().gameIdIsNotNull().findAll();
@@ -72,7 +77,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
     return await isar.writeTxn(() async => isar.savedGames.delete(id));
   }
 
-  Future<SavedGame> addPlatform(
+  Future<void> addPlatform(
     GamePlatform platform,
     SavedGame game,
   ) async {
@@ -81,18 +86,14 @@ class GameLocalStorageService extends IsarLocalStorageService {
     platforms.add(platform);
     game.platforms = platforms;
     await insertGame(game);
-
-    return game;
   }
 
-  Future<SavedGame> removePlatform(
+  Future<void> removePlatform(
     GamePlatform platform,
     SavedGame game,
   ) async {
     game.platforms!.remove(platform);
     await insertGame(game);
-
-    return game;
   }
 
   Future<void> createGroupTask(
@@ -108,5 +109,13 @@ class GameLocalStorageService extends IsarLocalStorageService {
     });
 
     await insertGame(game);
+  }
+
+  Future<void> removeGroupTask(int groupTaskId) async {
+    final isar = await db;
+
+    await isar.writeTxn(() async {
+      isar.groupTasks.delete(groupTaskId);
+    });
   }
 }

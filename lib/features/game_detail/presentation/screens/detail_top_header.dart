@@ -231,8 +231,8 @@ class DetailBackground extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.transparent, // Start with transparent
-                context.themeData.scaffoldBackgroundColor, // End with white
+                Colors.transparent,
+                context.themeData.scaffoldBackgroundColor,
               ],
             ),
           ),

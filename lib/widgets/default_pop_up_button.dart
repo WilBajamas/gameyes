@@ -20,7 +20,6 @@ class DefaultPopUpButton<T> extends StatelessWidget {
         color: context.themeData.colorScheme.primary,
       ),
       itemBuilder: (BuildContext context) =>
-          // <PopupMenuEntry<T>>(),
           items
               .map(
                 (e) => PopupMenuItem<T>(
@@ -30,20 +29,6 @@ class DefaultPopUpButton<T> extends StatelessWidget {
                 ),
               )
               .toList(),
-      // <PopupMenuEntry<T>>[
-      //   const PopupMenuItem<T>(
-      //     value: T,
-      //     child: Text('Item 1'),
-      //   ),
-      //   const PopupMenuItem<T>(
-      //     value: SampleItem.itemTwo,
-      //     child: Text('Item 2'),
-      //   ),
-      //   const PopupMenuItem<SampleItem>(
-      //     value: SampleItem.itemThree,
-      //     child: Text('Item 3'),
-      //   ),
-      // ],
     );
   }
 }

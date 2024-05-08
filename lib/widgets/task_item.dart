@@ -62,7 +62,6 @@ class TaskItem extends StatelessWidget {
                   ),
                 ],
               ),
-              // if (task.steps != null || task.steps!.isNotEmpty)
               Row(
                 children: [
                   Container(
