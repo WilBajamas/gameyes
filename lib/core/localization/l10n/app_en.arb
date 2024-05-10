@@ -85,5 +85,6 @@
   "no_pinned_tasks_desc": "There are no pinned tasks",
   "no_group_task_created": "No group task created",
   "please_enter_value": "Please enter a value",
-  "group_task_created": "Group task created"
+  "group_task_created": "Group task created",
+  "only_10_group_tasks_allowed": "Only a maximum of 10 group tasks are allowed."
 }

@@ -13,6 +13,7 @@ class GroupTaskItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         child: Column(
@@ -68,13 +69,9 @@ class _TitleAndCheckbox extends StatelessWidget {
   }
 
   void _onPopUpItemClicked(BuildContext context, String selection) {
-    if (selection == context.localisations.add_task) {
+    if (selection == context.localisations.add_task) {}
 
-    }
-
-    if (selection == context.localisations.remove) {
-      
-    }
+    if (selection == context.localisations.remove) {}
   }
 
   @override
