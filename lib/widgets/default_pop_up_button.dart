@@ -14,21 +14,20 @@ class DefaultPopUpButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<T>(
-      onSelected: onItemClicked,
       icon: Icon(
         Icons.more_vert,
         color: context.themeData.colorScheme.primary,
       ),
-      itemBuilder: (BuildContext context) =>
-          items
-              .map(
-                (e) => PopupMenuItem<T>(
-                  child: Text(
-                    e.toString(),
-                  ),
-                ),
-              )
-              .toList(),
+      itemBuilder: (BuildContext context) => items
+          .map(
+            (e) => PopupMenuItem<T>(
+              child: Text(
+                e.toString(),
+              ),
+              onTap: () => onItemClicked(e),
+            ),
+          )
+          .toList(),
     );
   }
 }

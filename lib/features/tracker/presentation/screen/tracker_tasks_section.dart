@@ -19,26 +19,7 @@ class TrackerTasksSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 14),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.warning,
-                      color: kColorScheme.primary,
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: Text(
-                        context.localisations.only_10_group_tasks_allowed,
-                        style: context.themeData.textTheme.bodyLarge,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const _GroupTaskLimitWarning(),
               if (groups.isEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 14),
@@ -61,6 +42,34 @@ class TrackerTasksSection extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _GroupTaskLimitWarning extends StatelessWidget {
+  const _GroupTaskLimitWarning();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Row(
+        children: [
+          Icon(
+            Icons.warning,
+            color: kColorScheme.primary,
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: Text(
+              context.localisations.only_10_group_tasks_allowed,
+              style: context.themeData.textTheme.bodyLarge,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

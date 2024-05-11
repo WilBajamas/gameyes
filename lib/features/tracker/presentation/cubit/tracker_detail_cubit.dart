@@ -73,7 +73,11 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     streamSubscription = stream;
   }
 
-  void removeGroupTask({required groupTaskId}) async {}
+  void removeGroupTask({required groupTaskId}) async =>
+      await _trackerDetailRepository.removeGroupTask(
+        savedGameId: state.game!.id,
+        groupTaskId: groupTaskId,
+      );
 
   @override
   Future<void> close() {

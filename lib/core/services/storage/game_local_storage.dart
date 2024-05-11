@@ -77,6 +77,11 @@ class GameLocalStorageService extends IsarLocalStorageService {
     return await isar.writeTxn(() async => isar.savedGames.delete(id));
   }
 
+  Future<GroupTask?> getGroupTask(int id) async {
+    final isar = await db;
+    return await isar.writeTxn(() async => isar.groupTasks.get(id));
+  }
+
   Future<void> addPlatform(
     GamePlatform platform,
     SavedGame game,
@@ -111,11 +116,15 @@ class GameLocalStorageService extends IsarLocalStorageService {
     await insertGame(game);
   }
 
-  Future<void> removeGroupTask(int groupTaskId) async {
+  Future<void> removeGroupTask(int savedGameId, int groupTaskId) async {
     final isar = await db;
+    final savedGame = await getSavedGame(savedGameId);
+    savedGame!.groupTasks.removeWhere((element) => element.id == groupTaskId);
 
     await isar.writeTxn(() async {
-      isar.groupTasks.delete(groupTaskId);
+      savedGame.groupTasks.save();
     });
+
+    await insertGame(savedGame);
   }
 }

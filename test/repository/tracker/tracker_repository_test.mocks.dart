@@ -107,7 +107,7 @@ class MockGameLocalDatasource extends _i1.Mock
       ) as _i3.Stream<List<_i4.SavedGame>>);
 
   @override
-  _i3.Future<_i4.SavedGame?> setPlatform({
+  _i3.Future<void> setPlatform({
     required _i6.GamePlatform? platform,
     required int? savedGameId,
   }) =>
@@ -117,11 +117,12 @@ class MockGameLocalDatasource extends _i1.Mock
           [],
           {
             #platform: platform,
-            #gameId: savedGameId,
+            #savedGameId: savedGameId,
           },
         ),
-        returnValue: _i3.Future<_i4.SavedGame?>.value(),
-      ) as _i3.Future<_i4.SavedGame?>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   _i3.Future<_i4.SavedGame?> createGroupTask({
@@ -152,4 +153,22 @@ class MockGameLocalDatasource extends _i1.Mock
         ),
         returnValue: _i3.Stream<_i4.SavedGame?>.empty(),
       ) as _i3.Stream<_i4.SavedGame?>);
+
+  @override
+  _i3.Future<void> removeGroupTask({
+    required int? savedGameId,
+    required int? groupTaskId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #removeGroupTask,
+          [],
+          {
+            #savedGameId: savedGameId,
+            #groupTaskId: groupTaskId,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

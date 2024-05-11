@@ -65,4 +65,10 @@ class GameLocalDatasource {
 
   Stream<SavedGame?> listenToSavedGame({required int savedGameId}) =>
       _gameLocalStorage.listenToSavedGameDetail(savedGameId);
+
+  Future<void> removeGroupTask({
+    required int savedGameId,
+    required int groupTaskId,
+  }) async =>
+      _gameLocalStorage.removeGroupTask(savedGameId, groupTaskId);
 }

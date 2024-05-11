@@ -34,4 +34,14 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   @override
   Stream<SavedGame?> savedGameDetailStream({required int savedGameId}) =>
       _gameLocalDatasource.listenToSavedGame(savedGameId: savedGameId);
+
+  @override
+  Future<void> removeGroupTask({
+    required savedGameId,
+    required int groupTaskId,
+  }) =>
+      _gameLocalDatasource.removeGroupTask(
+        savedGameId: savedGameId,
+        groupTaskId: groupTaskId,
+      );
 }

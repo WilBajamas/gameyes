@@ -14,4 +14,9 @@ abstract interface class TrackerDetailRepository {
   });
 
   Stream<SavedGame?> savedGameDetailStream({required int savedGameId});
+
+  Future<void> removeGroupTask({
+    required int savedGameId,
+    required int groupTaskId,
+  });
 }
