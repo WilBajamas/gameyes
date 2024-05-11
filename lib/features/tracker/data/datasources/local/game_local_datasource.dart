@@ -77,6 +77,6 @@ class GameLocalDatasource {
       await _gameLocalStorage.createTaskInGroup(
         groupTaskId,
         savedGameId,
-        Task(),
+        Task()..title = 'New Task',
       );
 }

@@ -47,51 +47,8 @@ class TaskItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '-',
-                      // task.title ?? '-',
-                      style: context.themeData.textTheme.bodySmall,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Checkbox(
-                    value: true,
-                    onChanged: (isChecked) {},
-                    shape: const CircleBorder(),
-                  ),
-                ],
-              ),
-              if (taskStep() case final step?)
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: kColorScheme.primary,
-                      ),
-                      child: Center(
-                        child: Text(
-                          step.$1,
-                          style: context.themeData.textTheme.bodySmall!
-                              .copyWith(color: kColorScheme.background),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      step.$2,
-                      style: context.themeData.textTheme.bodySmall,
-                    ),
-                  ],
-                ),
+              _TaskContent(task: task),
+              if (taskStep() case final step?) _StepsRow(step: step),
               if (showGroupTask) const SizedBox(height: 8),
               if (showGroupTask && groupTaskTitle != null)
                 Text(
@@ -103,6 +60,76 @@ class TaskItem extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _TaskContent extends StatelessWidget {
+  const _TaskContent({
+    required this.task,
+  });
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            task.title ?? '-',
+            style: context.themeData.textTheme.bodyLarge,
+          ),
+        ),
+        const SizedBox(
+          width: 8,
+        ),
+        Transform.scale(
+          scale: 1.15,
+          child: Checkbox(
+            value: true,
+            onChanged: (isChecked) {},
+            shape: const CircleBorder(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StepsRow extends StatelessWidget {
+  const _StepsRow({
+    required this.step,
+  });
+
+  final (String, String) step;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: kColorScheme.primary,
+          ),
+          child: Center(
+            child: Text(
+              step.$1,
+              style: context.themeData.textTheme.bodySmall!
+                  .copyWith(color: kColorScheme.background),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 8,
+        ),
+        Text(
+          step.$2,
+          style: context.themeData.textTheme.bodySmall,
+        ),
+      ],
     );
   }
 }

@@ -64,7 +64,7 @@ class _TitleAndCheckbox extends StatelessWidget {
     final tasksCompleted = tasks.where((t) => t.completed == true);
 
     if (tasks.isNotEmpty) {
-      return '$tasksCompleted/$tasksCompleted';
+      return '${tasksCompleted.length}/${tasks.length}';
     }
 
     return '-/-';
