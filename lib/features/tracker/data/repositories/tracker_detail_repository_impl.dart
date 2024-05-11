@@ -20,7 +20,7 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
       );
 
   @override
-  Future<SavedGame?> createGroupTask({
+  Future<void> createGroupTask({
     required String title,
     required String description,
     required int id,
@@ -43,5 +43,15 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
       _gameLocalDatasource.removeGroupTask(
         savedGameId: savedGameId,
         groupTaskId: groupTaskId,
+      );
+
+  @override
+  Future<void> createTask({
+    required int savedGameId,
+    required int groupTaskId,
+  }) =>
+      _gameLocalDatasource.createTaskInGroup(
+        groupTaskId: groupTaskId,
+        savedGameId: savedGameId,
       );
 }

@@ -4,6 +4,7 @@ import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_t
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -44,7 +45,7 @@ class GameLocalDatasource {
     }
   }
 
-  Future<SavedGame?> createGroupTask({
+  Future<void> createGroupTask({
     required String title,
     required String description,
     required int id,
@@ -57,10 +58,7 @@ class GameLocalDatasource {
         ..description = description;
 
       await _gameLocalStorage.createGroupTask(groupTaskToSave, savedGame);
-      return await _gameLocalStorage.getSavedGame(id);
     }
-
-    return null;
   }
 
   Stream<SavedGame?> listenToSavedGame({required int savedGameId}) =>
@@ -69,6 +67,16 @@ class GameLocalDatasource {
   Future<void> removeGroupTask({
     required int savedGameId,
     required int groupTaskId,
-  }) async =>
+  }) =>
       _gameLocalStorage.removeGroupTask(savedGameId, groupTaskId);
+
+  Future<void> createTaskInGroup({
+    required int groupTaskId,
+    required int savedGameId,
+  }) async =>
+      await _gameLocalStorage.createTaskInGroup(
+        groupTaskId,
+        savedGameId,
+        Task(),
+      );
 }

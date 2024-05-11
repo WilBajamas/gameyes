@@ -71,7 +71,9 @@ class _TitleAndCheckbox extends StatelessWidget {
   }
 
   void _onPopUpItemClicked(BuildContext context, String selection) {
-    if (selection == context.localisations.add_task) {}
+    if (selection == context.localisations.add_task) {
+      context.read<TrackerDetailCubit>().createTask(groupTaskId: groupTask.id);
+    }
 
     if (selection == context.localisations.remove) {
       context
@@ -100,7 +102,6 @@ class _TitleAndCheckbox extends StatelessWidget {
         const SizedBox(
           width: 8,
         ),
-        // ignore: lines_longer_than_80_chars
         DefaultPopUpButton(
           items: [
             context.localisations.add_task,

@@ -7,7 +7,7 @@ abstract interface class TrackerDetailRepository {
     required int savedGameId,
   });
 
-  Future<SavedGame?> createGroupTask({
+  Future<void> createGroupTask({
     required String title,
     required String description,
     required int id,
@@ -16,6 +16,11 @@ abstract interface class TrackerDetailRepository {
   Stream<SavedGame?> savedGameDetailStream({required int savedGameId});
 
   Future<void> removeGroupTask({
+    required int savedGameId,
+    required int groupTaskId,
+  });
+
+  Future<void> createTask({
     required int savedGameId,
     required int groupTaskId,
   });

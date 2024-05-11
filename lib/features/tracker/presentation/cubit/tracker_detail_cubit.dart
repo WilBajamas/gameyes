@@ -55,13 +55,11 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     required String title,
     required String description,
   }) async {
-    final savedGame = await _trackerDetailRepository.createGroupTask(
+    await _trackerDetailRepository.createGroupTask(
       title: title,
       description: description,
       id: state.game!.id,
     );
-
-    emit(TrackerDetailState(game: savedGame));
   }
 
   void listenToSavedGame({required int savedGameId}) {
@@ -75,6 +73,12 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
 
   void removeGroupTask({required groupTaskId}) async =>
       await _trackerDetailRepository.removeGroupTask(
+        savedGameId: state.game!.id,
+        groupTaskId: groupTaskId,
+      );
+
+  void createTask({required groupTaskId}) async =>
+      await _trackerDetailRepository.createTask(
         savedGameId: state.game!.id,
         groupTaskId: groupTaskId,
       );

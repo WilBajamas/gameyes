@@ -3,7 +3,6 @@ import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:go_router/go_router.dart';
 
 class TaskItem extends StatelessWidget {
@@ -18,11 +17,16 @@ class TaskItem extends StatelessWidget {
     super.key,
   });
 
-  (String, String) taskStep(List<TaskStep> steps) {
-    final int stepNumber = steps.indexWhere((s) => s.isCurrent == true) + 1;
-    final String? stepTitle = steps.firstWhere((s) => s.isCurrent).title;
+  (String, String)? taskStep() {
+    final steps = task.steps;
+    if (steps case final steps?) {
+      final int stepNumber = steps.indexWhere((s) => s.isCurrent == true) + 1;
+      final String? stepTitle = steps.firstWhere((s) => s.isCurrent).title;
 
-    return (stepNumber.toString(), stepTitle ?? '-');
+      return (stepNumber.toString(), stepTitle ?? '-');
+    }
+
+    return null;
   }
 
   @override
@@ -62,33 +66,32 @@ class TaskItem extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: kColorScheme.primary,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '1',
-                        // taskStep(task.steps!).$1,
-                        style: context.themeData.textTheme.bodySmall!
-                            .copyWith(color: kColorScheme.background),
+              if (taskStep() case final step?)
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: kColorScheme.primary,
+                      ),
+                      child: Center(
+                        child: Text(
+                          step.$1,
+                          style: context.themeData.textTheme.bodySmall!
+                              .copyWith(color: kColorScheme.background),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    'task step',
-                    // taskStep(task.steps!).$2,
-                    style: context.themeData.textTheme.bodySmall,
-                  ),
-                ],
-              ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      step.$2,
+                      style: context.themeData.textTheme.bodySmall,
+                    ),
+                  ],
+                ),
               if (showGroupTask) const SizedBox(height: 8),
               if (showGroupTask && groupTaskTitle != null)
                 Text(
