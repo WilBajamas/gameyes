@@ -24,6 +24,8 @@ class Task {
 
   List<TaskStep>? steps;
 
+  bool setReminder = false;
+
   @Backlink(to: 'tasks')
   final groupTask = IsarLink<GroupTask>();
 }

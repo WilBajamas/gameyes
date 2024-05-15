@@ -2,6 +2,8 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -54,4 +56,31 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
         groupTaskId: groupTaskId,
         savedGameId: savedGameId,
       );
+
+  @override
+  Future<void> addStep({
+    required int taskId,
+    required int savedGameId,
+    required String title,
+    required String description,
+    required int stepNumber,
+    String? image,
+  }) {
+    final step = TaskStep()
+      ..title = title
+      ..description = description
+      ..image = image
+      ..isCurrent = stepNumber == 1
+      ..number = stepNumber;
+
+    return _gameLocalDatasource.addStep(
+      taskId: taskId,
+      savedGameId: savedGameId,
+      step: step,
+    );
+  }
+
+  @override
+  Stream<Task?> taskStream({required int taskId}) =>
+      _gameLocalDatasource.listenToTask(taskId: taskId);
 }

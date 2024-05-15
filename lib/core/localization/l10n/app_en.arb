@@ -86,5 +86,9 @@
   "no_group_task_created": "No group task created",
   "please_enter_value": "Please enter a value",
   "group_task_created": "Group task created",
-  "only_10_group_tasks_allowed": "Only a maximum of 10 group tasks are allowed."
+  "only_10_group_tasks_allowed": "Only a maximum of 10 group tasks are allowed.",
+  "set_title_here": "Set title here",
+  "reminder": "Reminder",
+  "add_step": "Add step",
+  "step_added": "Step has been added"
 }

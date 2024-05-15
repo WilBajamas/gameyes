@@ -6,6 +6,7 @@ import 'package:gaming_library_assessment_flutter/core/services/storage/isar_loc
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 
@@ -14,6 +15,11 @@ class GameLocalStorageService extends IsarLocalStorageService {
   Future<void> insertGame(SavedGame game) async {
     final isar = await db;
     return await isar.writeTxn(() async => isar.savedGames.put(game));
+  }
+
+  Future<void> insertTask(Task task) async {
+    final isar = await db;
+    return await isar.writeTxn(() async => isar.tasks.put(task));
   }
 
   Stream<List<SavedGame>> listenToSavedGames(
@@ -55,6 +61,11 @@ class GameLocalStorageService extends IsarLocalStorageService {
     yield* isar.savedGames.watchObject(savedGameId, fireImmediately: true);
   }
 
+  Stream<Task?> listenToTask(int taskId) async* {
+    final isar = await db;
+    yield* isar.tasks.watchObject(taskId, fireImmediately: true);
+  }
+
   Future<List<SavedGame?>> getSavedGames() async {
     final isar = await db;
     return await isar.savedGames.filter().gameIdIsNotNull().findAll();
@@ -81,6 +92,11 @@ class GameLocalStorageService extends IsarLocalStorageService {
   Future<GroupTask?> getGroupTask(int id) async {
     final isar = await db;
     return await isar.writeTxn(() async => isar.groupTasks.get(id));
+  }
+
+  Future<Task?> getTask(int id) async {
+    final isar = await db;
+    return await isar.writeTxn(() async => isar.tasks.get(id));
   }
 
   Future<void> addPlatform(
@@ -143,6 +159,19 @@ class GameLocalStorageService extends IsarLocalStorageService {
     });
     final savedGame = await getSavedGame(savedGameId);
 
+    await insertGame(savedGame!);
+  }
+
+  Future<void> addStep(int taskId, int savedGameId, TaskStep stepToAdd) async {
+    final task = await getTask(taskId);
+
+    final List<TaskStep> steps = task!.steps ?? [];
+    steps.add(stepToAdd);
+    task.steps = steps;
+
+    final savedGame = await getSavedGame(savedGameId);
+
+    await insertTask(task);
     await insertGame(savedGame!);
   }
 }

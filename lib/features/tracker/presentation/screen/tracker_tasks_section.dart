@@ -3,11 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
-import 'package:gaming_library_assessment_flutter/widgets/group_task_dialog.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
+import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/group_task_item.dart';
 
 class TrackerTasksSection extends StatelessWidget {
   const TrackerTasksSection({super.key});
+
+  void showAddGroupTaskDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AddContentDialog(
+        dialogTitleAndSnackBarTitle: (
+          context.localisations.add_group_task,
+          context.localisations.group_task_created
+        ),
+        onCreatedClicked: (title, description) => context
+            .read<TrackerDetailCubit>()
+            .addGroupTask(title: title, description: description),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +50,13 @@ class TrackerTasksSection extends StatelessWidget {
                 ),
               ),
               if (groups.isEmpty || groups.length < 10)
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 14),
-                  child: _TrackerAddGroupButton(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, bottom: 14),
+                  child: DefaultOutlinedButton(
+                    onPressed: () => showAddGroupTaskDialog(context),
+                    text: context.localisations.add_group_task,
+                    icon: Icons.add,
+                  ),
                 ),
             ],
           ),
@@ -74,35 +94,6 @@ class _GroupTaskLimitWarning extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _TrackerAddGroupButton extends StatelessWidget {
-  const _TrackerAddGroupButton();
-
-  void showAddGroupTaskDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => GroupTaskDialog(
-        onCreatedClicked: (title, description) => context
-            .read<TrackerDetailCubit>()
-            .addGroupTask(title: title, description: description),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: SizedBox(
-        width: double.infinity,
-        child: OutlinedButton(
-          onPressed: () => showAddGroupTaskDialog(context),
-          child: Text(context.localisations.add_group_task),
-        ),
       ),
     );
   }

@@ -1,10 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/task_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
 
-class TaskDetailScreen extends StatelessWidget {
-  const TaskDetailScreen({super.key});
+class TaskDetailScreen extends StatefulWidget {
+  final int? taskId;
+  final Task? task;
+
+  const TaskDetailScreen({this.taskId, this.task, super.key});
+
+  @override
+  State<TaskDetailScreen> createState() => _TaskDetailScreenState();
+}
+
+class _TaskDetailScreenState extends State<TaskDetailScreen> {
+  @override
+  void initState() {
+    context.read<TaskCubit>().setTask(task: widget.task!);
+    if (widget.taskId case final id?) {
+      context.read<TaskCubit>().listenToTask(taskId: id);
+    }
+    super.initState();
+  }
+
+  void showAddStepDialog(int? stepNumber) {
+    if (widget.taskId case final id?) {
+      showDialog(
+        context: context,
+        builder: (context) => AddContentDialog(
+          dialogTitleAndSnackBarTitle: (
+            context.localisations.add_step,
+            context.localisations.step_added
+          ),
+          onCreatedClicked: (title, description) =>
+              context.read<TrackerDetailCubit>().addStep(
+                    taskId: id,
+                    title: title,
+                    description: description,
+                    stepNumber: stepNumber ?? 1,
+                  ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,26 +62,33 @@ class TaskDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: Column(
-          children: [
-            _TaskTitle(),
-            SizedBox(height: 8),
-            _TaskDescription(),
-            SizedBox(height: 16),
-            _TaskReminder(),
-            SizedBox(height: 20),
-            _TaskSteps(
-              stepsList: [
-                ('Test', 'Test', 'featured_title_img.jpeg'),
-                ('Test', 'Test', 'featured_title_img.jpeg'),
-                ('Test', 'Test', 'featured_title_img.jpeg'),
-                ('Test', 'Test', 'featured_title_img.jpeg'),
-                ('Test', 'Test', 'featured_title_img.jpeg'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        child: BlocBuilder<TaskCubit, TaskState>(
+          builder: (context, state) {
+            final task = state.task!;
+
+            return Column(
+              children: [
+                _TaskTitle(task: task),
+                const SizedBox(height: 8),
+                _TaskDescription(task: task),
+                const SizedBox(height: 16),
+                _TaskReminder(task: task),
+                const SizedBox(height: 20),
+                if (task.steps != null && task.steps!.isNotEmpty)
+                  _TaskSteps(
+                    steps: task.steps!,
+                  ),
+                const SizedBox(height: 20),
+                DefaultOutlinedButton(
+                  onPressed: () => showAddStepDialog(task.steps?.length),
+                  text: context.localisations.add_step,
+                  icon: Icons.add,
+                ),
               ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -44,7 +96,8 @@ class TaskDetailScreen extends StatelessWidget {
 }
 
 class _TaskTitle extends StatefulWidget {
-  const _TaskTitle();
+  final Task? task;
+  const _TaskTitle({this.task});
 
   @override
   State<_TaskTitle> createState() => _TaskTitleState();
@@ -60,7 +113,8 @@ class _TaskTitleState extends State<_TaskTitle> {
         Expanded(
           child: !_isEditing
               ? Text(
-                  'Title here',
+                  widget.task?.title ??
+                      '(${context.localisations.set_title_here})',
                   style: context.themeData.textTheme.displayLarge,
                 )
               : DefaultBorderTextField(
@@ -86,7 +140,8 @@ class _TaskTitleState extends State<_TaskTitle> {
 }
 
 class _TaskDescription extends StatefulWidget {
-  const _TaskDescription();
+  final Task? task;
+  const _TaskDescription({this.task});
 
   @override
   State<_TaskDescription> createState() => _TaskDescriptionState();
@@ -102,7 +157,7 @@ class _TaskDescriptionState extends State<_TaskDescription> {
         Expanded(
           child: !_isEditing
               ? Text(
-                  'Description here',
+                  widget.task?.description ?? '-',
                   style: context.themeData.textTheme.bodySmall,
                 )
               : DefaultBorderTextField(
@@ -126,7 +181,8 @@ class _TaskDescriptionState extends State<_TaskDescription> {
 }
 
 class _TaskReminder extends StatelessWidget {
-  const _TaskReminder();
+  final Task? task;
+  const _TaskReminder({this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -137,10 +193,13 @@ class _TaskReminder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Reminder',
+              context.localisations.reminder,
               style: context.themeData.textTheme.headlineMedium,
             ),
-            Switch(value: true, onChanged: (isChanged) {}),
+            Switch(
+              value: task?.setReminder ?? false,
+              onChanged: (isChanged) {},
+            ),
           ],
         ),
         InkWell(
@@ -178,9 +237,9 @@ class _TaskReminder extends StatelessWidget {
 }
 
 class _TaskSteps extends StatefulWidget {
-  final List<(String title, String description, String? image)> stepsList;
+  final List<TaskStep> steps;
 
-  const _TaskSteps({required this.stepsList});
+  const _TaskSteps({required this.steps});
 
   @override
   State<_TaskSteps> createState() => _TaskStepsState();
@@ -201,19 +260,26 @@ class _TaskStepsState extends State<_TaskSteps> {
       },
       physics: const NeverScrollableScrollPhysics(),
       onStepTapped: (step) => setState(() => _currentStep = step),
-      steps: widget.stepsList.map((e) {
-        final (title, description, image) = e;
+      steps: widget.steps.map((e) {
         return Step(
-          title: Text(title, style: context.themeData.textTheme.titleMedium),
+          title: Text(
+            e.title ?? '-',
+            style: context.themeData.textTheme.titleMedium,
+          ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(description, style: context.themeData.textTheme.bodySmall),
-              const SizedBox(height: 8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.asset('assets/images/$image'),
+              Text(
+                e.description ?? '-',
+                textAlign: TextAlign.start,
+                style: context.themeData.textTheme.bodySmall,
               ),
+              const SizedBox(height: 8),
+              if (e.image != null && e.image!.isNotEmpty)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.asset('assets/images/${e.image}'),
+                ),
             ],
           ),
         );

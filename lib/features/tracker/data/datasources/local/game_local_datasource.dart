@@ -5,6 +5,7 @@ import 'package:gaming_library_assessment_flutter/core/services/storage/game_loc
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -64,6 +65,9 @@ class GameLocalDatasource {
   Stream<SavedGame?> listenToSavedGame({required int savedGameId}) =>
       _gameLocalStorage.listenToSavedGameDetail(savedGameId);
 
+  Stream<Task?> listenToTask({required int taskId}) =>
+      _gameLocalStorage.listenToTask(taskId);
+
   Future<void> removeGroupTask({
     required int savedGameId,
     required int groupTaskId,
@@ -79,4 +83,11 @@ class GameLocalDatasource {
         savedGameId,
         Task()..title = 'New Task',
       );
+
+  Future<void> addStep({
+    required int taskId,
+    required int savedGameId,
+    required TaskStep step,
+  }) async =>
+      _gameLocalStorage.addStep(taskId, savedGameId, step);
 }

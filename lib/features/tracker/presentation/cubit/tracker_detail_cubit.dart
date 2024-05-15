@@ -15,7 +15,8 @@ part 'tracker_detail_state.dart';
 class TrackerDetailCubit extends Cubit<TrackerDetailState> {
   final _trackerDetailRepository = getIt<TrackerDetailRepository>();
 
-  StreamSubscription? streamSubscription;
+  StreamSubscription? savedGameStreamSubscription;
+
   TrackerDetailCubit() : super(const TrackerDetailState());
 
   void setSavedGame({required SavedGame game}) =>
@@ -63,12 +64,12 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
   }
 
   void listenToSavedGame({required int savedGameId}) {
-    streamSubscription?.cancel();
+    savedGameStreamSubscription?.cancel();
     final stream = _trackerDetailRepository
         .savedGameDetailStream(savedGameId: savedGameId)
         .listen((savedGame) => emit(TrackerDetailState(game: savedGame)));
 
-    streamSubscription = stream;
+    savedGameStreamSubscription = stream;
   }
 
   void removeGroupTask({required groupTaskId}) async =>
@@ -83,9 +84,26 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
         groupTaskId: groupTaskId,
       );
 
+  void addStep({
+    required int taskId,
+    required String title,
+    required String description,
+    required int stepNumber,
+    String? image,
+  }) async {
+    await _trackerDetailRepository.addStep(
+      taskId: taskId,
+      savedGameId: state.game!.id,
+      title: title,
+      description: description,
+      stepNumber: stepNumber,
+      image: image,
+    );
+  }
+
   @override
   Future<void> close() {
-    streamSubscription?.cancel();
+    savedGameStreamSubscription?.cancel();
     return super.close();
   }
 }

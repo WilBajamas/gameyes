@@ -19,9 +19,10 @@ class TaskItem extends StatelessWidget {
 
   (String, String)? taskStep() {
     final steps = task.steps;
-    if (steps case final steps?) {
+    if (steps != null && steps.isNotEmpty) {
       final int stepNumber = steps.indexWhere((s) => s.isCurrent == true) + 1;
-      final String? stepTitle = steps.firstWhere((s) => s.isCurrent).title;
+      final String? stepTitle =
+          steps.where((s) => s.isCurrent).firstOrNull?.title;
 
       return (stepNumber.toString(), stepTitle ?? '-');
     }
@@ -35,7 +36,10 @@ class TaskItem extends StatelessWidget {
       customBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      onTap: () => context.pushNamed(RouteConstants.taskDetail),
+      onTap: () => context.pushNamed(
+        RouteConstants.taskDetail,
+        extra: (task.id, task),
+      ),
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),

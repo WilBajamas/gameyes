@@ -13,6 +13,10 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/datasour
     as _i2;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
     as _i4;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart'
+    as _i7;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart'
+    as _i8;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -125,7 +129,7 @@ class MockGameLocalDatasource extends _i1.Mock
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<_i4.SavedGame?> createGroupTask({
+  _i3.Future<void> createGroupTask({
     required String? title,
     required String? description,
     required int? id,
@@ -140,8 +144,9 @@ class MockGameLocalDatasource extends _i1.Mock
             #id: id,
           },
         ),
-        returnValue: _i3.Future<_i4.SavedGame?>.value(),
-      ) as _i3.Future<_i4.SavedGame?>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   _i3.Stream<_i4.SavedGame?> listenToSavedGame({required int? savedGameId}) =>
@@ -155,6 +160,17 @@ class MockGameLocalDatasource extends _i1.Mock
       ) as _i3.Stream<_i4.SavedGame?>);
 
   @override
+  _i3.Stream<_i7.Task?> listenToTask({required int? taskId}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #listenToTask,
+          [],
+          {#taskId: taskId},
+        ),
+        returnValue: _i3.Stream<_i7.Task?>.empty(),
+      ) as _i3.Stream<_i7.Task?>);
+
+  @override
   _i3.Future<void> removeGroupTask({
     required int? savedGameId,
     required int? groupTaskId,
@@ -166,6 +182,44 @@ class MockGameLocalDatasource extends _i1.Mock
           {
             #savedGameId: savedGameId,
             #groupTaskId: groupTaskId,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> createTaskInGroup({
+    required int? groupTaskId,
+    required int? savedGameId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createTaskInGroup,
+          [],
+          {
+            #groupTaskId: groupTaskId,
+            #savedGameId: savedGameId,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> addStep({
+    required int? taskId,
+    required int? savedGameId,
+    required _i8.TaskStep? step,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addStep,
+          [],
+          {
+            #taskId: taskId,
+            #savedGameId: savedGameId,
+            #step: step,
           },
         ),
         returnValue: _i3.Future<void>.value(),

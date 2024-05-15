@@ -5,21 +5,23 @@ import 'package:gaming_library_assessment_flutter/widgets/default_border_text_fi
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
 import 'package:go_router/go_router.dart';
 
-class GroupTaskDialog extends StatefulWidget {
+class AddContentDialog extends StatefulWidget {
   final (String?, String?)? titleDescription;
+  final (String, String) dialogTitleAndSnackBarTitle;
   final Function(String, String) onCreatedClicked;
 
-  const GroupTaskDialog({
+  const AddContentDialog({
     required this.onCreatedClicked,
+    required this.dialogTitleAndSnackBarTitle,
     this.titleDescription,
     super.key,
   });
 
   @override
-  State<GroupTaskDialog> createState() => _GroupTaskDialogState();
+  State<AddContentDialog> createState() => _AddContentDialogState();
 }
 
-class _GroupTaskDialogState extends State<GroupTaskDialog> {
+class _AddContentDialogState extends State<AddContentDialog> {
   final _titleTextController = TextEditingController();
   final _descriptionTextController = TextEditingController();
 
@@ -56,7 +58,7 @@ class _GroupTaskDialogState extends State<GroupTaskDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      context.localisations.add_group_task,
+                      widget.dialogTitleAndSnackBarTitle.$1,
                       style: context.themeData.textTheme.displayMedium,
                     ),
                     IconButton(
@@ -106,7 +108,7 @@ class _GroupTaskDialogState extends State<GroupTaskDialog> {
                         SnackBar(
                           backgroundColor: kColorScheme.primary,
                           content: Text(
-                            context.localisations.group_task_created,
+                            widget.dialogTitleAndSnackBarTitle.$2,
                             style: context.themeData.textTheme.bodySmall!
                                 .copyWith(color: Colors.white),
                           ),

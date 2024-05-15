@@ -42,19 +42,24 @@ const TaskSchema = CollectionSchema(
       name: r'pinned',
       type: IsarType.bool,
     ),
-    r'steps': PropertySchema(
+    r'setReminder': PropertySchema(
       id: 5,
+      name: r'setReminder',
+      type: IsarType.bool,
+    ),
+    r'steps': PropertySchema(
+      id: 6,
       name: r'steps',
       type: IsarType.objectList,
       target: r'TaskStep',
     ),
     r'timeToComplete': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'timeToComplete',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'title',
       type: IsarType.string,
     )
@@ -132,14 +137,15 @@ void _taskSerialize(
   writer.writeString(offsets[2], object.description);
   writer.writeLong(offsets[3], object.gameId);
   writer.writeBool(offsets[4], object.pinned);
+  writer.writeBool(offsets[5], object.setReminder);
   writer.writeObjectList<TaskStep>(
-    offsets[5],
+    offsets[6],
     allOffsets,
     TaskStepSchema.serialize,
     object.steps,
   );
-  writer.writeString(offsets[6], object.timeToComplete);
-  writer.writeString(offsets[7], object.title);
+  writer.writeString(offsets[7], object.timeToComplete);
+  writer.writeString(offsets[8], object.title);
 }
 
 Task _taskDeserialize(
@@ -155,14 +161,15 @@ Task _taskDeserialize(
   object.gameId = reader.readLongOrNull(offsets[3]);
   object.id = id;
   object.pinned = reader.readBoolOrNull(offsets[4]);
+  object.setReminder = reader.readBool(offsets[5]);
   object.steps = reader.readObjectList<TaskStep>(
-    offsets[5],
+    offsets[6],
     TaskStepSchema.deserialize,
     allOffsets,
     TaskStep(),
   );
-  object.timeToComplete = reader.readStringOrNull(offsets[6]);
-  object.title = reader.readStringOrNull(offsets[7]);
+  object.timeToComplete = reader.readStringOrNull(offsets[7]);
+  object.title = reader.readStringOrNull(offsets[8]);
   return object;
 }
 
@@ -184,15 +191,17 @@ P _taskDeserializeProp<P>(
     case 4:
       return (reader.readBoolOrNull(offset)) as P;
     case 5:
+      return (reader.readBool(offset)) as P;
+    case 6:
       return (reader.readObjectList<TaskStep>(
         offset,
         TaskStepSchema.deserialize,
         allOffsets,
         TaskStep(),
       )) as P;
-    case 6:
-      return (reader.readStringOrNull(offset)) as P;
     case 7:
+      return (reader.readStringOrNull(offset)) as P;
+    case 8:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -675,6 +684,16 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterFilterCondition> setReminderEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'setReminder',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1151,6 +1170,18 @@ extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> sortBySetReminder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'setReminder', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortBySetReminderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'setReminder', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> sortByTimeToComplete() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.asc);
@@ -1249,6 +1280,18 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> thenBySetReminder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'setReminder', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenBySetReminderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'setReminder', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> thenByTimeToComplete() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.asc);
@@ -1306,6 +1349,12 @@ extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
     });
   }
 
+  QueryBuilder<Task, Task, QDistinct> distinctBySetReminder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'setReminder');
+    });
+  }
+
   QueryBuilder<Task, Task, QDistinct> distinctByTimeToComplete(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1356,6 +1405,12 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
   QueryBuilder<Task, bool?, QQueryOperations> pinnedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinned');
+    });
+  }
+
+  QueryBuilder<Task, bool, QQueryOperations> setReminderProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'setReminder');
     });
   }
 
