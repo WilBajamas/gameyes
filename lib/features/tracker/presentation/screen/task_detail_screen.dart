@@ -5,10 +5,10 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/task_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final int? taskId;
@@ -40,7 +40,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             context.localisations.step_added
           ),
           onCreatedClicked: (title, description) =>
-              context.read<TrackerDetailCubit>().addStep(
+              context.read<TaskCubit>().addStep(
                     taskId: id,
                     title: title,
                     description: description,
@@ -78,7 +78,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 const SizedBox(height: 20),
                 if (task.steps != null && task.steps!.isNotEmpty)
                   _TaskSteps(
-                    steps: task.steps!,
+                    task: task,
                   ),
                 const SizedBox(height: 20),
                 DefaultOutlinedButton(
@@ -237,9 +237,9 @@ class _TaskReminder extends StatelessWidget {
 }
 
 class _TaskSteps extends StatefulWidget {
-  final List<TaskStep> steps;
+  final Task task;
 
-  const _TaskSteps({required this.steps});
+  const _TaskSteps({required this.task});
 
   @override
   State<_TaskSteps> createState() => _TaskStepsState();
@@ -248,31 +248,63 @@ class _TaskSteps extends StatefulWidget {
 class _TaskStepsState extends State<_TaskSteps> {
   int _currentStep = 0;
 
+  void _handleOptions(String option, TaskStep step) {
+    if (option == context.localisations.edit) {}
+
+    if (option == context.localisations.remove) {
+      context.read<TaskCubit>().removeStep(taskId: widget.task.id, step: step);
+    }
+  }
+
+  int _setCurrentStep() =>
+      (widget.task.steps != null && _currentStep < widget.task.steps!.length)
+          ? _currentStep
+          : (_currentStep = 0);
+
   @override
   Widget build(BuildContext context) {
+    final steps = widget.task.steps!;
+
     return Stepper(
+      key: Key(steps.length.toString()),
       connectorColor: MaterialStateProperty.all<Color>(
         kColorScheme.primary,
       ),
-      currentStep: _currentStep,
+      currentStep: _setCurrentStep(),
       controlsBuilder: (context, controller) {
         return Container();
       },
       physics: const NeverScrollableScrollPhysics(),
       onStepTapped: (step) => setState(() => _currentStep = step),
-      steps: widget.steps.map((e) {
+      steps: steps.map((e) {
         return Step(
-          title: Text(
-            e.title ?? '-',
-            style: context.themeData.textTheme.titleMedium,
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  e.title ?? '-',
+                  style: context.themeData.textTheme.titleMedium,
+                ),
+              ),
+              DefaultPopUpButton(
+                items: [
+                  context.localisations.edit,
+                  context.localisations.remove,
+                ],
+                onItemClicked: (String selection) =>
+                    _handleOptions(selection, e),
+              ),
+            ],
           ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                e.description ?? '-',
-                textAlign: TextAlign.start,
-                style: context.themeData.textTheme.bodySmall,
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  e.description ?? '-',
+                  style: context.themeData.textTheme.bodySmall,
+                ),
               ),
               const SizedBox(height: 8),
               if (e.image != null && e.image!.isNotEmpty)

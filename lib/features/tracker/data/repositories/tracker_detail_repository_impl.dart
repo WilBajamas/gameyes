@@ -60,7 +60,6 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   @override
   Future<void> addStep({
     required int taskId,
-    required int savedGameId,
     required String title,
     required String description,
     required int stepNumber,
@@ -75,10 +74,13 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
 
     return _gameLocalDatasource.addStep(
       taskId: taskId,
-      savedGameId: savedGameId,
       step: step,
     );
   }
+
+  @override
+  Future<void> removeStep({required int taskId, required TaskStep step}) =>
+      _gameLocalDatasource.removeStep(taskId: taskId, step: step);
 
   @override
   Stream<Task?> taskStream({required int taskId}) =>

@@ -8,6 +8,8 @@ part 'task.g.dart';
 class Task {
   Id id = Isar.autoIncrement;
 
+  int? savedGameId;
+
   int? gameId;
 
   String? title;

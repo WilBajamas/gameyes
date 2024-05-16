@@ -84,23 +84,6 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
         groupTaskId: groupTaskId,
       );
 
-  void addStep({
-    required int taskId,
-    required String title,
-    required String description,
-    required int stepNumber,
-    String? image,
-  }) async {
-    await _trackerDetailRepository.addStep(
-      taskId: taskId,
-      savedGameId: state.game!.id,
-      title: title,
-      description: description,
-      stepNumber: stepNumber,
-      image: image,
-    );
-  }
-
   @override
   Future<void> close() {
     savedGameStreamSubscription?.cancel();

@@ -45,6 +45,13 @@ const GroupTaskSchema = CollectionSchema(
       name: r'tasks',
       target: r'Task',
       single: false,
+    ),
+    r'savedGame': LinkSchema(
+      id: 3704353093703478434,
+      name: r'savedGame',
+      target: r'SavedGame',
+      single: true,
+      linkName: r'groupTasks',
     )
   },
   embeddedSchemas: {},
@@ -123,12 +130,14 @@ Id _groupTaskGetId(GroupTask object) {
 }
 
 List<IsarLinkBase<dynamic>> _groupTaskGetLinks(GroupTask object) {
-  return [object.tasks];
+  return [object.tasks, object.savedGame];
 }
 
 void _groupTaskAttach(IsarCollection<dynamic> col, Id id, GroupTask object) {
   object.id = id;
   object.tasks.attach(col, col.isar.collection<Task>(), r'tasks', id);
+  object.savedGame
+      .attach(col, col.isar.collection<SavedGame>(), r'savedGame', id);
 }
 
 extension GroupTaskQueryWhereSort
@@ -690,6 +699,19 @@ extension GroupTaskQueryLinks
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'tasks', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<GroupTask, GroupTask, QAfterFilterCondition> savedGame(
+      FilterQuery<SavedGame> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'savedGame');
+    });
+  }
+
+  QueryBuilder<GroupTask, GroupTask, QAfterFilterCondition> savedGameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'savedGame', 0, true, 0, true);
     });
   }
 }

@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -26,4 +27,23 @@ class TaskCubit extends Cubit<TaskState> {
 
     taskStreamSubscription = stream;
   }
+
+  void addStep({
+    required int taskId,
+    required String title,
+    required String description,
+    required int stepNumber,
+    String? image,
+  }) async {
+    await _trackerDetailRepository.addStep(
+      taskId: taskId,
+      title: title,
+      description: description,
+      stepNumber: stepNumber,
+      image: image,
+    );
+  }
+
+  void removeStep({required int taskId, required TaskStep step}) async =>
+      await _trackerDetailRepository.removeStep(taskId: taskId, step: step);
 }

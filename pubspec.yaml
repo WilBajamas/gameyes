@@ -57,6 +57,9 @@ dependencies:
   # Equate
   equatable: ^2.0.5
 
+  # UUID
+  uuid: ^4.4.0
+
   # Lottie
   lottie: ^3.0.0
   # Flutter animation

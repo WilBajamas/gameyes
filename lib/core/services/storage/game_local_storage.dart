@@ -162,12 +162,31 @@ class GameLocalStorageService extends IsarLocalStorageService {
     await insertGame(savedGame!);
   }
 
-  Future<void> addStep(int taskId, int savedGameId, TaskStep stepToAdd) async {
+  Future<void> addStep(int taskId, TaskStep stepToAdd) async {
     final task = await getTask(taskId);
+    final savedGameId = task!.groupTask.value!.savedGame.value!.id;
 
-    final List<TaskStep> steps = task!.steps ?? [];
+    final List<TaskStep> steps =
+        task.steps?.toList(growable: true) ?? List.empty(growable: true);
     steps.add(stepToAdd);
     task.steps = steps;
+
+    final savedGame = await getSavedGame(savedGameId);
+
+    await insertTask(task);
+    await insertGame(savedGame!);
+  }
+
+  Future<void> removeStep(
+    int taskId,
+    TaskStep stepToRemove,
+  ) async {
+    final task = await getTask(taskId);
+    final savedGameId = task!.groupTask.value!.savedGame.value!.id;
+
+    final currentSteps = task.steps!.toList(growable: true);
+    currentSteps.removeWhere((s) => s.id == stepToRemove.id);
+    task.steps = currentSteps;
 
     final savedGame = await getSavedGame(savedGameId);
 

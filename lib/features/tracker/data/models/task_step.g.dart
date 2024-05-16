@@ -18,23 +18,33 @@ const TaskStepSchema = Schema(
       name: r'description',
       type: IsarType.string,
     ),
-    r'image': PropertySchema(
+    r'id': PropertySchema(
       id: 1,
+      name: r'id',
+      type: IsarType.string,
+    ),
+    r'image': PropertySchema(
+      id: 2,
       name: r'image',
       type: IsarType.string,
     ),
     r'isCurrent': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'isCurrent',
       type: IsarType.bool,
     ),
     r'number': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'number',
       type: IsarType.long,
     ),
+    r'taskId': PropertySchema(
+      id: 5,
+      name: r'taskId',
+      type: IsarType.long,
+    ),
     r'title': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'title',
       type: IsarType.string,
     )
@@ -57,6 +67,7 @@ int _taskStepEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.id.length * 3;
   {
     final value = object.image;
     if (value != null) {
@@ -79,10 +90,12 @@ void _taskStepSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.description);
-  writer.writeString(offsets[1], object.image);
-  writer.writeBool(offsets[2], object.isCurrent);
-  writer.writeLong(offsets[3], object.number);
-  writer.writeString(offsets[4], object.title);
+  writer.writeString(offsets[1], object.id);
+  writer.writeString(offsets[2], object.image);
+  writer.writeBool(offsets[3], object.isCurrent);
+  writer.writeLong(offsets[4], object.number);
+  writer.writeLong(offsets[5], object.taskId);
+  writer.writeString(offsets[6], object.title);
 }
 
 TaskStep _taskStepDeserialize(
@@ -93,10 +106,12 @@ TaskStep _taskStepDeserialize(
 ) {
   final object = TaskStep();
   object.description = reader.readStringOrNull(offsets[0]);
-  object.image = reader.readStringOrNull(offsets[1]);
-  object.isCurrent = reader.readBool(offsets[2]);
-  object.number = reader.readLongOrNull(offsets[3]);
-  object.title = reader.readStringOrNull(offsets[4]);
+  object.id = reader.readString(offsets[1]);
+  object.image = reader.readStringOrNull(offsets[2]);
+  object.isCurrent = reader.readBool(offsets[3]);
+  object.number = reader.readLongOrNull(offsets[4]);
+  object.taskId = reader.readLongOrNull(offsets[5]);
+  object.title = reader.readStringOrNull(offsets[6]);
   return object;
 }
 
@@ -110,12 +125,16 @@ P _taskStepDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 4:
+      return (reader.readLongOrNull(offset)) as P;
+    case 5:
+      return (reader.readLongOrNull(offset)) as P;
+    case 6:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -268,6 +287,136 @@ extension TaskStepQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'description',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'id',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'id',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> idIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'id',
         value: '',
       ));
     });
@@ -490,6 +639,75 @@ extension TaskStepQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'number',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> taskIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'taskId',
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> taskIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'taskId',
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> taskIdEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'taskId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> taskIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'taskId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> taskIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'taskId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> taskIdBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'taskId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,

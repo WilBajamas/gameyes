@@ -22,7 +22,7 @@ class TaskItem extends StatelessWidget {
     if (steps != null && steps.isNotEmpty) {
       final int stepNumber = steps.indexWhere((s) => s.isCurrent == true) + 1;
       final String? stepTitle =
-          steps.where((s) => s.isCurrent).firstOrNull?.title;
+          steps.where((s) => s.isCurrent == true).firstOrNull?.title;
 
       return (stepNumber.toString(), stepTitle ?? '-');
     }

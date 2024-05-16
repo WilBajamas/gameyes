@@ -209,7 +209,6 @@ class MockGameLocalDatasource extends _i1.Mock
   @override
   _i3.Future<void> addStep({
     required int? taskId,
-    required int? savedGameId,
     required _i8.TaskStep? step,
   }) =>
       (super.noSuchMethod(
@@ -218,7 +217,24 @@ class MockGameLocalDatasource extends _i1.Mock
           [],
           {
             #taskId: taskId,
-            #savedGameId: savedGameId,
+            #step: step,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> removeStep({
+    required int? taskId,
+    required _i8.TaskStep? step,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #removeStep,
+          [],
+          {
+            #taskId: taskId,
             #step: step,
           },
         ),

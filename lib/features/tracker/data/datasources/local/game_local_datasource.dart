@@ -86,8 +86,13 @@ class GameLocalDatasource {
 
   Future<void> addStep({
     required int taskId,
-    required int savedGameId,
     required TaskStep step,
   }) async =>
-      _gameLocalStorage.addStep(taskId, savedGameId, step);
+      _gameLocalStorage.addStep(taskId, step);
+
+  Future<void> removeStep({
+    required int taskId,
+    required TaskStep step,
+  }) async =>
+      _gameLocalStorage.removeStep(taskId, step);
 }

@@ -90,5 +90,6 @@
   "set_title_here": "Set title here",
   "reminder": "Reminder",
   "add_step": "Add step",
-  "step_added": "Step has been added"
+  "step_added": "Step has been added",
+  "edit": "Edit"
 }
