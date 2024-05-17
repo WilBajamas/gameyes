@@ -6,6 +6,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/t
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/task_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_alert_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
@@ -30,7 +31,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     super.initState();
   }
 
-  void showAddStepDialog(int? stepNumber) {
+  void _showAddStepDialog(int? stepNumber) {
     if (widget.taskId case final id?) {
       showDialog(
         context: context,
@@ -82,7 +83,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   ),
                 const SizedBox(height: 20),
                 DefaultOutlinedButton(
-                  onPressed: () => showAddStepDialog(task.steps?.length),
+                  onPressed: () => _showAddStepDialog(task.steps?.length),
                   text: context.localisations.add_step,
                   icon: Icons.add,
                 ),
@@ -252,9 +253,24 @@ class _TaskStepsState extends State<_TaskSteps> {
     if (option == context.localisations.edit) {}
 
     if (option == context.localisations.remove) {
-      context.read<TaskCubit>().removeStep(taskId: widget.task.id, step: step);
+      _showRemoveStepDialog(
+        step,
+        () => context
+            .read<TaskCubit>()
+            .removeStep(taskId: widget.task.id, step: step),
+      );
     }
   }
+
+  void _showRemoveStepDialog(TaskStep step, VoidCallback positiveCallback) =>
+      showDialog(
+        context: context,
+        builder: (context) => DefaultAlertDialog(
+          title: '${context.localisations.remove_step}?',
+          description: context.localisations.remove_step_desc(step.title!),
+          onPositivePressed: positiveCallback,
+        ),
+      );
 
   int _setCurrentStep() =>
       (widget.task.steps != null && _currentStep < widget.task.steps!.length)
