@@ -250,7 +250,9 @@ class _TaskStepsState extends State<_TaskSteps> {
   int _currentStep = 0;
 
   void _handleOptions(String option, TaskStep step) {
-    if (option == context.localisations.edit) {}
+    if (option == context.localisations.edit) {
+      _showEditStepDialog(step);
+    }
 
     if (option == context.localisations.remove) {
       _showRemoveStepDialog(
@@ -269,6 +271,25 @@ class _TaskStepsState extends State<_TaskSteps> {
           title: '${context.localisations.remove_step}?',
           description: context.localisations.remove_step_desc(step.title!),
           onPositivePressed: positiveCallback,
+        ),
+      );
+
+  void _showEditStepDialog(TaskStep step) => showDialog(
+        context: context,
+        builder: (context) => AddContentDialog(
+          dialogTitleAndSnackBarTitle: (
+            context.localisations.add_step,
+            context.localisations.step_added
+          ),
+          titleDescription: (step.title, step.description),
+          onCreatedClicked: (title, description) =>
+              context.read<TaskCubit>().editStep(
+                    taskId: widget.task.id,
+                    stepId: step.id,
+                    title: title,
+                    description: description,
+                    stepNumber: step.number!,
+                  ),
         ),
       );
 

@@ -85,4 +85,21 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   @override
   Stream<Task?> taskStream({required int taskId}) =>
       _gameLocalDatasource.listenToTask(taskId: taskId);
+
+  @override
+  Future<void> editStep({
+    required int taskId,
+    required String stepId,
+    required String title,
+    required String description,
+    required int stepNumber,
+    String? image,
+  }) =>
+      _gameLocalDatasource.editStep(
+        taskId: taskId,
+        stepId: stepId,
+        title: title,
+        description: description,
+        stepNumber: stepNumber,
+      );
 }

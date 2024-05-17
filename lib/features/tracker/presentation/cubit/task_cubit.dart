@@ -44,6 +44,22 @@ class TaskCubit extends Cubit<TaskState> {
     );
   }
 
+  void editStep({
+    required int taskId,
+    required String stepId,
+    required String title,
+    required String description,
+    required int stepNumber,
+    String? image,
+  }) =>
+      _trackerDetailRepository.editStep(
+        taskId: taskId,
+        stepId: stepId,
+        title: title,
+        description: description,
+        stepNumber: stepNumber,
+      );
+
   void removeStep({required int taskId, required TaskStep step}) async =>
       await _trackerDetailRepository.removeStep(taskId: taskId, step: step);
 }

@@ -41,4 +41,12 @@ abstract interface class TrackerDetailRepository {
     required int taskId,
     required TaskStep step,
   });
+  Future<void> editStep({
+    required int taskId,
+    required String stepId,
+    required String title,
+    required String description,
+    required int stepNumber,
+    String? image,
+  });
 }

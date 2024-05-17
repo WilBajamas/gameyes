@@ -95,4 +95,20 @@ class GameLocalDatasource {
     required TaskStep step,
   }) async =>
       _gameLocalStorage.removeStep(taskId, step);
+
+  Future<void> editStep({
+    required int taskId,
+    required String stepId,
+    required String title,
+    required String description,
+    required int stepNumber,
+    String? image,
+  }) async {
+    final oldStep = await _gameLocalStorage.getTaskStep(stepId, taskId);
+    oldStep
+      ..title = title
+      ..description = description
+      ..image = image;
+    return _gameLocalStorage.editStep(taskId, stepId, oldStep);
+  }
 }
