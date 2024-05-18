@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -35,7 +35,7 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     return totalTasks == 0 ? '-/-' : '$completedTasks/$totalTasks';
   }
 
-  List<Task> getPinnedTasks() {
+  List<SavedGameTask> getPinnedTasks() {
     final tasks = state.game!.groupTasks
         .where((gt) => gt.tasks.isNotEmpty)
         .expand((gt) => gt.tasks)

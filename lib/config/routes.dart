@@ -11,7 +11,7 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/scr
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/settings/presentation/screen/settings_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/task_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_game_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart';
@@ -77,7 +77,8 @@ final goRouter = GoRouter(
                       name: RouteConstants.taskDetail,
                       path: 'tracker_task',
                       builder: (context, state) {
-                        final (int id, Task task) = state.extra as (int, Task);
+                        final (int id, SavedGameTask task) =
+                            state.extra as (int, SavedGameTask);
                         return TaskDetailScreen(
                           taskId: id,
                           task: task,

@@ -1,5 +1,5 @@
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:isar/isar.dart';
 
 part 'group_task.g.dart';
@@ -14,7 +14,7 @@ class GroupTask {
 
   String? description;
 
-  final tasks = IsarLinks<Task>();
+  final tasks = IsarLinks<SavedGameTask>();
 
   @Backlink(to: 'groupTasks')
   final savedGame = IsarLink<SavedGame>();

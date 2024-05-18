@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
@@ -17,7 +17,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   TaskCubit() : super(const TaskState());
 
-  void setTask({required Task task}) => emit(TaskState(task: task));
+  void setTask({required SavedGameTask task}) => emit(TaskState(task: task));
 
   void listenToTask({required int taskId}) {
     taskStreamSubscription?.cancel();
@@ -60,6 +60,19 @@ class TaskCubit extends Cubit<TaskState> {
         stepNumber: stepNumber,
       );
 
-  void removeStep({required int taskId, required TaskStep step}) async =>
-      await _trackerDetailRepository.removeStep(taskId: taskId, step: step);
+  void removeStep({required TaskStep step}) async {
+    await _trackerDetailRepository
+        .removeStep(
+          taskId: state.task!.id,
+          step: step,
+        )
+        .then(
+          (removed) => removed
+              ? emit(RemoveStepSuccess(existingTask: state.task!))
+              : emit(RemoveStepFailed(existingTask: state.task!)),
+        );
+  }
+
+  void setCurrentStep({required int stepIndex}) => _trackerDetailRepository
+      .changeCurrentStep(taskId: state.task!.id, stepIndex: stepIndex);
 }

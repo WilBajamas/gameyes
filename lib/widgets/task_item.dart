@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:go_router/go_router.dart';
 
 class TaskItem extends StatelessWidget {
   final bool showGroupTask;
-  final Task task;
+  final SavedGameTask task;
   final String? groupTaskTitle;
 
   const TaskItem({
@@ -19,12 +19,10 @@ class TaskItem extends StatelessWidget {
 
   (String, String)? taskStep() {
     final steps = task.steps;
+    final currentStepNumber = task.currentStepIndex;
     if (steps != null && steps.isNotEmpty) {
-      final int stepNumber = steps.indexWhere((s) => s.isCurrent == true) + 1;
-      final String? stepTitle =
-          steps.where((s) => s.isCurrent == true).firstOrNull?.title;
-
-      return (stepNumber.toString(), stepTitle ?? '-');
+      final String? stepTitle = steps[currentStepNumber].title;
+      return ((currentStepNumber + 1).toString(), stepTitle ?? '-');
     }
 
     return null;
@@ -73,7 +71,7 @@ class _TaskContent extends StatelessWidget {
     required this.task,
   });
 
-  final Task task;
+  final SavedGameTask task;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +108,7 @@ class _StepsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final (number, title) = step;
     return Row(
       children: [
         Container(
@@ -120,7 +119,7 @@ class _StepsRow extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              step.$1,
+              number,
               style: context.themeData.textTheme.bodySmall!
                   .copyWith(color: kColorScheme.background),
             ),
@@ -130,7 +129,7 @@ class _StepsRow extends StatelessWidget {
           width: 8,
         ),
         Text(
-          step.$2,
+          title,
           style: context.themeData.textTheme.bodySmall,
         ),
       ],

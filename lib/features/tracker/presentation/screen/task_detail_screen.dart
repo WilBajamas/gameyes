@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/task_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
@@ -10,10 +10,11 @@ import 'package:gaming_library_assessment_flutter/widgets/default_alert_dialog.d
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_snackbar.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final int? taskId;
-  final Task? task;
+  final SavedGameTask? task;
 
   const TaskDetailScreen({this.taskId, this.task, super.key});
 
@@ -65,7 +66,19 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: BlocBuilder<TaskCubit, TaskState>(
+        child: BlocConsumer<TaskCubit, TaskState>(
+          listener: (context, state) {
+            if (state is RemoveStepFailed || state is RemoveStepSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                DefaultSnackbar(
+                  text: state is RemoveStepSuccess
+                      ? context.localisations.removed_step
+                      : context.localisations.remove_step_failed,
+                ),
+              );
+            }
+          },
+          buildWhen: (previous, current) => previous.task != current.task,
           builder: (context, state) {
             final task = state.task!;
 
@@ -96,8 +109,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   }
 }
 
+//* Task Title
 class _TaskTitle extends StatefulWidget {
-  final Task? task;
+  final SavedGameTask? task;
   const _TaskTitle({this.task});
 
   @override
@@ -140,8 +154,9 @@ class _TaskTitleState extends State<_TaskTitle> {
   }
 }
 
+//* Task Description
 class _TaskDescription extends StatefulWidget {
-  final Task? task;
+  final SavedGameTask? task;
   const _TaskDescription({this.task});
 
   @override
@@ -181,8 +196,9 @@ class _TaskDescriptionState extends State<_TaskDescription> {
   }
 }
 
+//* Reminder
 class _TaskReminder extends StatelessWidget {
-  final Task? task;
+  final SavedGameTask? task;
   const _TaskReminder({this.task});
 
   @override
@@ -237,34 +253,60 @@ class _TaskReminder extends StatelessWidget {
   }
 }
 
-class _TaskSteps extends StatefulWidget {
-  final Task task;
+//* Steps
+class _TaskSteps extends StatelessWidget {
+  final SavedGameTask task;
 
   const _TaskSteps({required this.task});
 
   @override
-  State<_TaskSteps> createState() => _TaskStepsState();
+  Widget build(BuildContext context) {
+    final steps = task.steps!;
+
+    return Stepper(
+      key: Key(steps.length.toString()),
+      connectorColor: MaterialStateProperty.all<Color>(
+        kColorScheme.primary,
+      ),
+      currentStep: task.currentStepIndex,
+      controlsBuilder: (context, controller) {
+        return Container();
+      },
+      physics: const NeverScrollableScrollPhysics(),
+      onStepTapped: (stepIndex) =>
+          context.read<TaskCubit>().setCurrentStep(stepIndex: stepIndex),
+      steps: steps.map((step) {
+        return Step(
+          title: _StepTitle(taskId: task.id, step: step),
+          content: _StepContent(step),
+        );
+      }).toList(),
+    );
+  }
 }
 
-class _TaskStepsState extends State<_TaskSteps> {
-  int _currentStep = 0;
+class _StepTitle extends StatelessWidget {
+  final TaskStep step;
+  final int taskId;
+  const _StepTitle({required this.step, required this.taskId});
 
-  void _handleOptions(String option, TaskStep step) {
+  void _handleOptions(String option, TaskStep step, BuildContext context) {
     if (option == context.localisations.edit) {
-      _showEditStepDialog(step);
-    }
-
-    if (option == context.localisations.remove) {
+      _showEditStepDialog(step, context);
+    } else if (option == context.localisations.remove) {
       _showRemoveStepDialog(
         step,
-        () => context
-            .read<TaskCubit>()
-            .removeStep(taskId: widget.task.id, step: step),
+        () => context.read<TaskCubit>().removeStep(step: step),
+        context,
       );
     }
   }
 
-  void _showRemoveStepDialog(TaskStep step, VoidCallback positiveCallback) =>
+  void _showRemoveStepDialog(
+    TaskStep step,
+    VoidCallback positiveCallback,
+    BuildContext context,
+  ) =>
       showDialog(
         context: context,
         builder: (context) => DefaultAlertDialog(
@@ -274,7 +316,7 @@ class _TaskStepsState extends State<_TaskSteps> {
         ),
       );
 
-  void _showEditStepDialog(TaskStep step) => showDialog(
+  void _showEditStepDialog(TaskStep step, BuildContext context) => showDialog(
         context: context,
         builder: (context) => AddContentDialog(
           dialogTitleAndSnackBarTitle: (
@@ -284,7 +326,7 @@ class _TaskStepsState extends State<_TaskSteps> {
           titleDescription: (step.title, step.description),
           onCreatedClicked: (title, description) =>
               context.read<TaskCubit>().editStep(
-                    taskId: widget.task.id,
+                    taskId: taskId,
                     stepId: step.id,
                     title: title,
                     description: description,
@@ -293,66 +335,52 @@ class _TaskStepsState extends State<_TaskSteps> {
         ),
       );
 
-  int _setCurrentStep() =>
-      (widget.task.steps != null && _currentStep < widget.task.steps!.length)
-          ? _currentStep
-          : (_currentStep = 0);
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            step.title ?? '-',
+            style: context.themeData.textTheme.titleMedium,
+          ),
+        ),
+        DefaultPopUpButton(
+          items: [
+            context.localisations.edit,
+            context.localisations.remove,
+          ],
+          onItemClicked: (String selection) =>
+              _handleOptions(selection, step, context),
+        ),
+      ],
+    );
+  }
+}
+
+class _StepContent extends StatelessWidget {
+  final TaskStep step;
+  const _StepContent(this.step);
 
   @override
   Widget build(BuildContext context) {
-    final steps = widget.task.steps!;
-
-    return Stepper(
-      key: Key(steps.length.toString()),
-      connectorColor: MaterialStateProperty.all<Color>(
-        kColorScheme.primary,
-      ),
-      currentStep: _setCurrentStep(),
-      controlsBuilder: (context, controller) {
-        return Container();
-      },
-      physics: const NeverScrollableScrollPhysics(),
-      onStepTapped: (step) => setState(() => _currentStep = step),
-      steps: steps.map((e) {
-        return Step(
-          title: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  e.title ?? '-',
-                  style: context.themeData.textTheme.titleMedium,
-                ),
-              ),
-              DefaultPopUpButton(
-                items: [
-                  context.localisations.edit,
-                  context.localisations.remove,
-                ],
-                onItemClicked: (String selection) =>
-                    _handleOptions(selection, e),
-              ),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            step.description ?? '-',
+            style: context.themeData.textTheme.bodySmall,
           ),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  e.description ?? '-',
-                  style: context.themeData.textTheme.bodySmall,
-                ),
-              ),
-              const SizedBox(height: 8),
-              if (e.image != null && e.image!.isNotEmpty)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset('assets/images/${e.image}'),
-                ),
-            ],
+        ),
+        const SizedBox(height: 8),
+        if (step.image != null && step.image!.isNotEmpty)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset('assets/images/${step.image}'),
           ),
-        );
-      }).toList(),
+      ],
     );
   }
 }

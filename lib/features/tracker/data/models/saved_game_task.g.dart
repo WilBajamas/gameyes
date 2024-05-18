@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'task.dart';
+part of 'saved_game_task.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,22 +9,22 @@ part of 'task.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetTaskCollection on Isar {
-  IsarCollection<Task> get tasks => this.collection();
+extension GetSavedGameTaskCollection on Isar {
+  IsarCollection<SavedGameTask> get savedGameTasks => this.collection();
 }
 
-const TaskSchema = CollectionSchema(
-  name: r'Task',
-  id: 2998003626758701373,
+const SavedGameTaskSchema = CollectionSchema(
+  name: r'SavedGameTask',
+  id: 4309674529777207973,
   properties: {
     r'completed': PropertySchema(
       id: 0,
       name: r'completed',
       type: IsarType.bool,
     ),
-    r'currentStep': PropertySchema(
+    r'currentStepIndex': PropertySchema(
       id: 1,
-      name: r'currentStep',
+      name: r'currentStepIndex',
       type: IsarType.long,
     ),
     r'description': PropertySchema(
@@ -69,10 +69,10 @@ const TaskSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _taskEstimateSize,
-  serialize: _taskSerialize,
-  deserialize: _taskDeserialize,
-  deserializeProp: _taskDeserializeProp,
+  estimateSize: _savedGameTaskEstimateSize,
+  serialize: _savedGameTaskSerialize,
+  deserialize: _savedGameTaskDeserialize,
+  deserializeProp: _savedGameTaskDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {
@@ -85,14 +85,14 @@ const TaskSchema = CollectionSchema(
     )
   },
   embeddedSchemas: {r'TaskStep': TaskStepSchema},
-  getId: _taskGetId,
-  getLinks: _taskGetLinks,
-  attach: _taskAttach,
+  getId: _savedGameTaskGetId,
+  getLinks: _savedGameTaskGetLinks,
+  attach: _savedGameTaskAttach,
   version: '3.1.0+1',
 );
 
-int _taskEstimateSize(
-  Task object,
+int _savedGameTaskEstimateSize(
+  SavedGameTask object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -131,14 +131,14 @@ int _taskEstimateSize(
   return bytesCount;
 }
 
-void _taskSerialize(
-  Task object,
+void _savedGameTaskSerialize(
+  SavedGameTask object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.completed);
-  writer.writeLong(offsets[1], object.currentStep);
+  writer.writeLong(offsets[1], object.currentStepIndex);
   writer.writeString(offsets[2], object.description);
   writer.writeLong(offsets[3], object.gameId);
   writer.writeBool(offsets[4], object.pinned);
@@ -154,15 +154,15 @@ void _taskSerialize(
   writer.writeString(offsets[9], object.title);
 }
 
-Task _taskDeserialize(
+SavedGameTask _savedGameTaskDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Task();
+  final object = SavedGameTask();
   object.completed = reader.readBoolOrNull(offsets[0]);
-  object.currentStep = reader.readLongOrNull(offsets[1]);
+  object.currentStepIndex = reader.readLong(offsets[1]);
   object.description = reader.readStringOrNull(offsets[2]);
   object.gameId = reader.readLongOrNull(offsets[3]);
   object.id = id;
@@ -180,7 +180,7 @@ Task _taskDeserialize(
   return object;
 }
 
-P _taskDeserializeProp<P>(
+P _savedGameTaskDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -190,7 +190,7 @@ P _taskDeserializeProp<P>(
     case 0:
       return (reader.readBoolOrNull(offset)) as P;
     case 1:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
@@ -217,30 +217,34 @@ P _taskDeserializeProp<P>(
   }
 }
 
-Id _taskGetId(Task object) {
+Id _savedGameTaskGetId(SavedGameTask object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _taskGetLinks(Task object) {
+List<IsarLinkBase<dynamic>> _savedGameTaskGetLinks(SavedGameTask object) {
   return [object.groupTask];
 }
 
-void _taskAttach(IsarCollection<dynamic> col, Id id, Task object) {
+void _savedGameTaskAttach(
+    IsarCollection<dynamic> col, Id id, SavedGameTask object) {
   object.id = id;
   object.groupTask
       .attach(col, col.isar.collection<GroupTask>(), r'groupTask', id);
 }
 
-extension TaskQueryWhereSort on QueryBuilder<Task, Task, QWhere> {
-  QueryBuilder<Task, Task, QAfterWhere> anyId() {
+extension SavedGameTaskQueryWhereSort
+    on QueryBuilder<SavedGameTask, SavedGameTask, QWhere> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
-  QueryBuilder<Task, Task, QAfterWhereClause> idEqualTo(Id id) {
+extension SavedGameTaskQueryWhere
+    on QueryBuilder<SavedGameTask, SavedGameTask, QWhereClause> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -249,7 +253,8 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idNotEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -271,7 +276,8 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idGreaterThan(
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -280,7 +286,8 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idLessThan(
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -289,7 +296,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -306,8 +313,10 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
   }
 }
 
-extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
-  QueryBuilder<Task, Task, QAfterFilterCondition> completedIsNull() {
+extension SavedGameTaskQueryFilter
+    on QueryBuilder<SavedGameTask, SavedGameTask, QFilterCondition> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      completedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'completed',
@@ -315,7 +324,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> completedIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      completedIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'completed',
@@ -323,8 +333,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> completedEqualTo(
-      bool? value) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      completedEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'completed',
@@ -333,67 +343,54 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> currentStepIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'currentStep',
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> currentStepIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'currentStep',
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> currentStepEqualTo(
-      int? value) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      currentStepIndexEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'currentStep',
+        property: r'currentStepIndex',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> currentStepGreaterThan(
-    int? value, {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      currentStepIndexGreaterThan(
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'currentStep',
+        property: r'currentStepIndex',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> currentStepLessThan(
-    int? value, {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      currentStepIndexLessThan(
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'currentStep',
+        property: r'currentStepIndex',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> currentStepBetween(
-    int? lower,
-    int? upper, {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      currentStepIndexBetween(
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'currentStep',
+        property: r'currentStepIndex',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -402,7 +399,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'description',
@@ -410,7 +408,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'description',
@@ -418,7 +417,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionEqualTo(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -431,7 +431,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionGreaterThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -446,7 +447,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionLessThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -461,7 +463,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -480,7 +483,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionStartsWith(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -493,7 +497,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionEndsWith(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -506,9 +511,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'description',
@@ -518,9 +522,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'description',
@@ -530,7 +533,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionIsEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'description',
@@ -539,7 +543,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> descriptionIsNotEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      descriptionIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'description',
@@ -548,7 +553,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> gameIdIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      gameIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'gameId',
@@ -556,7 +562,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> gameIdIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      gameIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'gameId',
@@ -564,7 +571,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> gameIdEqualTo(int? value) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      gameIdEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'gameId',
@@ -573,7 +581,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> gameIdGreaterThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      gameIdGreaterThan(
     int? value, {
     bool include = false,
   }) {
@@ -586,7 +595,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> gameIdLessThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      gameIdLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -599,7 +609,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> gameIdBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      gameIdBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -616,7 +627,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition> idEqualTo(
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -625,7 +637,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -638,7 +651,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idLessThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -651,7 +664,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -668,7 +681,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> pinnedIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      pinnedIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'pinned',
@@ -676,7 +690,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> pinnedIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      pinnedIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'pinned',
@@ -684,7 +699,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> pinnedEqualTo(bool? value) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      pinnedEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'pinned',
@@ -693,7 +709,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> savedGameIdIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      savedGameIdIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'savedGameId',
@@ -701,7 +718,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> savedGameIdIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      savedGameIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'savedGameId',
@@ -709,8 +727,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> savedGameIdEqualTo(
-      int? value) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      savedGameIdEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'savedGameId',
@@ -719,7 +737,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> savedGameIdGreaterThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      savedGameIdGreaterThan(
     int? value, {
     bool include = false,
   }) {
@@ -732,7 +751,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> savedGameIdLessThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      savedGameIdLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -745,7 +765,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> savedGameIdBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      savedGameIdBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -762,8 +783,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> setReminderEqualTo(
-      bool value) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      setReminderEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'setReminder',
@@ -772,7 +793,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'steps',
@@ -780,7 +802,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'steps',
@@ -788,8 +811,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthEqualTo(
-      int length) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'steps',
@@ -801,7 +824,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'steps',
@@ -813,7 +837,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsIsNotEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'steps',
@@ -825,7 +850,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthLessThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -840,7 +866,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthGreaterThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
@@ -855,7 +882,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsLengthBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -872,7 +900,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'timeToComplete',
@@ -880,7 +909,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'timeToComplete',
@@ -888,7 +918,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteEqualTo(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -901,7 +932,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteGreaterThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -916,7 +948,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteLessThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -931,7 +964,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -950,7 +984,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteStartsWith(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -963,7 +998,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteEndsWith(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -976,9 +1012,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'timeToComplete',
@@ -988,9 +1023,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'timeToComplete',
@@ -1000,7 +1034,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteIsEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'timeToComplete',
@@ -1009,7 +1044,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> timeToCompleteIsNotEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      timeToCompleteIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'timeToComplete',
@@ -1018,7 +1054,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'title',
@@ -1026,7 +1063,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleIsNotNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'title',
@@ -1034,7 +1072,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleEqualTo(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -1047,7 +1086,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleGreaterThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1062,7 +1102,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleLessThan(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1077,7 +1118,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleBetween(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1096,7 +1138,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleStartsWith(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1109,7 +1152,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleEndsWith(
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -1122,8 +1166,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleContains(String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'title',
@@ -1133,8 +1177,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleMatches(String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'title',
@@ -1144,7 +1188,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleIsEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'title',
@@ -1153,7 +1198,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> titleIsNotEmpty() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      titleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'title',
@@ -1163,315 +1209,340 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 }
 
-extension TaskQueryObject on QueryBuilder<Task, Task, QFilterCondition> {
-  QueryBuilder<Task, Task, QAfterFilterCondition> stepsElement(
-      FilterQuery<TaskStep> q) {
+extension SavedGameTaskQueryObject
+    on QueryBuilder<SavedGameTask, SavedGameTask, QFilterCondition> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsElement(FilterQuery<TaskStep> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'steps');
     });
   }
 }
 
-extension TaskQueryLinks on QueryBuilder<Task, Task, QFilterCondition> {
-  QueryBuilder<Task, Task, QAfterFilterCondition> groupTask(
+extension SavedGameTaskQueryLinks
+    on QueryBuilder<SavedGameTask, SavedGameTask, QFilterCondition> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition> groupTask(
       FilterQuery<GroupTask> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'groupTask');
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> groupTaskIsNull() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      groupTaskIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'groupTask', 0, true, 0, true);
     });
   }
 }
 
-extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
-  QueryBuilder<Task, Task, QAfterSortBy> sortByCompleted() {
+extension SavedGameTaskQuerySortBy
+    on QueryBuilder<SavedGameTask, SavedGameTask, QSortBy> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByCompletedDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortByCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByCurrentStep() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortByCurrentStepIndex() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentStep', Sort.asc);
+      return query.addSortBy(r'currentStepIndex', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByCurrentStepDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortByCurrentStepIndexDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentStep', Sort.desc);
+      return query.addSortBy(r'currentStepIndex', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByDescription() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByDescription() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByDescriptionDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByGameId() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByGameIdDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByPinned() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByPinned() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinned', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByPinnedDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByPinnedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinned', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortBySavedGameId() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortBySavedGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'savedGameId', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortBySavedGameIdDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortBySavedGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'savedGameId', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortBySetReminder() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortBySetReminder() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'setReminder', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortBySetReminderDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortBySetReminderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'setReminder', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByTimeToComplete() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortByTimeToComplete() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByTimeToCompleteDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      sortByTimeToCompleteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByTitle() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByTitleDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> sortByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
     });
   }
 }
 
-extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
-  QueryBuilder<Task, Task, QAfterSortBy> thenByCompleted() {
+extension SavedGameTaskQuerySortThenBy
+    on QueryBuilder<SavedGameTask, SavedGameTask, QSortThenBy> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByCompletedDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenByCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByCurrentStep() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenByCurrentStepIndex() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentStep', Sort.asc);
+      return query.addSortBy(r'currentStepIndex', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByCurrentStepDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenByCurrentStepIndexDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'currentStep', Sort.desc);
+      return query.addSortBy(r'currentStepIndex', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByDescription() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByDescription() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByDescriptionDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByGameId() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByGameIdDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenById() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByPinned() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByPinned() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinned', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByPinnedDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByPinnedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pinned', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenBySavedGameId() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenBySavedGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'savedGameId', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenBySavedGameIdDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenBySavedGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'savedGameId', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenBySetReminder() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenBySetReminder() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'setReminder', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenBySetReminderDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenBySetReminderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'setReminder', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByTimeToComplete() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenByTimeToComplete() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByTimeToCompleteDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
+      thenByTimeToCompleteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByTitle() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByTitleDesc() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy> thenByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
     });
   }
 }
 
-extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
-  QueryBuilder<Task, Task, QDistinct> distinctByCompleted() {
+extension SavedGameTaskQueryWhereDistinct
+    on QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'completed');
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByCurrentStep() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
+      distinctByCurrentStepIndex() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'currentStep');
+      return query.addDistinctBy(r'currentStepIndex');
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByDescription(
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByDescription(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByGameId() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'gameId');
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByPinned() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByPinned() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'pinned');
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctBySavedGameId() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
+      distinctBySavedGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'savedGameId');
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctBySetReminder() {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
+      distinctBySetReminder() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'setReminder');
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByTimeToComplete(
-      {bool caseSensitive = true}) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
+      distinctByTimeToComplete({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'timeToComplete',
           caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByTitle(
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
@@ -1479,68 +1550,72 @@ extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
   }
 }
 
-extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
-  QueryBuilder<Task, int, QQueryOperations> idProperty() {
+extension SavedGameTaskQueryProperty
+    on QueryBuilder<SavedGameTask, SavedGameTask, QQueryProperty> {
+  QueryBuilder<SavedGameTask, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<Task, bool?, QQueryOperations> completedProperty() {
+  QueryBuilder<SavedGameTask, bool?, QQueryOperations> completedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'completed');
     });
   }
 
-  QueryBuilder<Task, int?, QQueryOperations> currentStepProperty() {
+  QueryBuilder<SavedGameTask, int, QQueryOperations>
+      currentStepIndexProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'currentStep');
+      return query.addPropertyName(r'currentStepIndex');
     });
   }
 
-  QueryBuilder<Task, String?, QQueryOperations> descriptionProperty() {
+  QueryBuilder<SavedGameTask, String?, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
     });
   }
 
-  QueryBuilder<Task, int?, QQueryOperations> gameIdProperty() {
+  QueryBuilder<SavedGameTask, int?, QQueryOperations> gameIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'gameId');
     });
   }
 
-  QueryBuilder<Task, bool?, QQueryOperations> pinnedProperty() {
+  QueryBuilder<SavedGameTask, bool?, QQueryOperations> pinnedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pinned');
     });
   }
 
-  QueryBuilder<Task, int?, QQueryOperations> savedGameIdProperty() {
+  QueryBuilder<SavedGameTask, int?, QQueryOperations> savedGameIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'savedGameId');
     });
   }
 
-  QueryBuilder<Task, bool, QQueryOperations> setReminderProperty() {
+  QueryBuilder<SavedGameTask, bool, QQueryOperations> setReminderProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'setReminder');
     });
   }
 
-  QueryBuilder<Task, List<TaskStep>?, QQueryOperations> stepsProperty() {
+  QueryBuilder<SavedGameTask, List<TaskStep>?, QQueryOperations>
+      stepsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'steps');
     });
   }
 
-  QueryBuilder<Task, String?, QQueryOperations> timeToCompleteProperty() {
+  QueryBuilder<SavedGameTask, String?, QQueryOperations>
+      timeToCompleteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'timeToComplete');
     });
   }
 
-  QueryBuilder<Task, String?, QQueryOperations> titleProperty() {
+  QueryBuilder<SavedGameTask, String?, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
     });

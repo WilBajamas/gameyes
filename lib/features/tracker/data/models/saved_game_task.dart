@@ -2,10 +2,10 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/g
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:isar/isar.dart';
 
-part 'task.g.dart';
+part 'saved_game_task.g.dart';
 
 @collection
-class Task {
+class SavedGameTask {
   Id id = Isar.autoIncrement;
 
   int? savedGameId;
@@ -22,7 +22,7 @@ class Task {
 
   bool? pinned;
 
-  int? currentStep;
+  int currentStepIndex = 0;
 
   List<TaskStep>? steps;
 

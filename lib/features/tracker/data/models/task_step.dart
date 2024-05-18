@@ -6,10 +6,8 @@ part 'task_step.g.dart';
 @embedded
 class TaskStep {
   String id = const Uuid().v4();
-  
-  int? taskId;
 
-  bool isCurrent = false;
+  int? taskId;
 
   int? number;
 

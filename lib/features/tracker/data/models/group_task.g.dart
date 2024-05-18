@@ -43,7 +43,7 @@ const GroupTaskSchema = CollectionSchema(
     r'tasks': LinkSchema(
       id: 1642033242586076829,
       name: r'tasks',
-      target: r'Task',
+      target: r'SavedGameTask',
       single: false,
     ),
     r'savedGame': LinkSchema(
@@ -135,7 +135,7 @@ List<IsarLinkBase<dynamic>> _groupTaskGetLinks(GroupTask object) {
 
 void _groupTaskAttach(IsarCollection<dynamic> col, Id id, GroupTask object) {
   object.id = id;
-  object.tasks.attach(col, col.isar.collection<Task>(), r'tasks', id);
+  object.tasks.attach(col, col.isar.collection<SavedGameTask>(), r'tasks', id);
   object.savedGame
       .attach(col, col.isar.collection<SavedGame>(), r'savedGame', id);
 }
@@ -646,7 +646,7 @@ extension GroupTaskQueryObject
 extension GroupTaskQueryLinks
     on QueryBuilder<GroupTask, GroupTask, QFilterCondition> {
   QueryBuilder<GroupTask, GroupTask, QAfterFilterCondition> tasks(
-      FilterQuery<Task> q) {
+      FilterQuery<SavedGameTask> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'tasks');
     });

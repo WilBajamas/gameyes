@@ -1,6 +1,6 @@
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 
 abstract interface class TrackerDetailRepository {
@@ -17,7 +17,7 @@ abstract interface class TrackerDetailRepository {
 
   Stream<SavedGame?> savedGameDetailStream({required int savedGameId});
 
-  Stream<Task?> taskStream({required int taskId});
+  Stream<SavedGameTask?> taskStream({required int taskId});
 
   Future<void> removeGroupTask({
     required int savedGameId,
@@ -37,10 +37,11 @@ abstract interface class TrackerDetailRepository {
     String? image,
   });
 
-  Future<void> removeStep({
+  Future<bool> removeStep({
     required int taskId,
     required TaskStep step,
   });
+
   Future<void> editStep({
     required int taskId,
     required String stepId,
@@ -49,4 +50,6 @@ abstract interface class TrackerDetailRepository {
     required int stepNumber,
     String? image,
   });
+
+  Future<void> changeCurrentStep({required int taskId, required int stepIndex});
 }

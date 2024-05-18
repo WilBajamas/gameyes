@@ -2,7 +2,7 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
@@ -69,7 +69,6 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
       ..title = title
       ..description = description
       ..image = image
-      ..isCurrent = stepNumber == 1
       ..number = stepNumber;
 
     return _gameLocalDatasource.addStep(
@@ -79,11 +78,15 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   }
 
   @override
-  Future<void> removeStep({required int taskId, required TaskStep step}) =>
-      _gameLocalDatasource.removeStep(taskId: taskId, step: step);
+  Future<bool> removeStep({required int taskId, required TaskStep step}) async {
+    final result =
+        await _gameLocalDatasource.removeStep(taskId: taskId, step: step);
+
+    return result.fold((l) => false, (r) => true);
+  }
 
   @override
-  Stream<Task?> taskStream({required int taskId}) =>
+  Stream<SavedGameTask?> taskStream({required int taskId}) =>
       _gameLocalDatasource.listenToTask(taskId: taskId);
 
   @override
@@ -101,5 +104,15 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
         title: title,
         description: description,
         stepNumber: stepNumber,
+      );
+
+  @override
+  Future<void> changeCurrentStep({
+    required int taskId,
+    required int stepIndex,
+  }) =>
+      _gameLocalDatasource.changeCurrentStep(
+        taskId: taskId,
+        stepIndex: stepIndex,
       );
 }

@@ -100,5 +100,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "remove_step_failed": "Failed removing step",
+  "removed_step": "Step removed"
 }

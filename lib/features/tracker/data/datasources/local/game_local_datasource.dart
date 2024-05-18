@@ -1,10 +1,11 @@
+import 'package:dartz/dartz.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:injectable/injectable.dart';
 
@@ -65,7 +66,7 @@ class GameLocalDatasource {
   Stream<SavedGame?> listenToSavedGame({required int savedGameId}) =>
       _gameLocalStorage.listenToSavedGameDetail(savedGameId);
 
-  Stream<Task?> listenToTask({required int taskId}) =>
+  Stream<SavedGameTask?> listenToTask({required int taskId}) =>
       _gameLocalStorage.listenToTask(taskId);
 
   Future<void> removeGroupTask({
@@ -81,7 +82,7 @@ class GameLocalDatasource {
       await _gameLocalStorage.createTaskInGroup(
         groupTaskId,
         savedGameId,
-        Task()..title = 'New Task',
+        SavedGameTask()..title = 'New Task',
       );
 
   Future<void> addStep({
@@ -90,7 +91,7 @@ class GameLocalDatasource {
   }) async =>
       _gameLocalStorage.addStep(taskId, step);
 
-  Future<void> removeStep({
+  Future<Either<void, void>> removeStep({
     required int taskId,
     required TaskStep step,
   }) async =>
@@ -111,4 +112,10 @@ class GameLocalDatasource {
       ..image = image;
     return _gameLocalStorage.editStep(taskId, stepId, oldStep);
   }
+
+  Future<void> changeCurrentStep({
+    required int taskId,
+    required int stepIndex,
+  }) =>
+      _gameLocalStorage.changeCurrentStep(taskId, stepIndex);
 }

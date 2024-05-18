@@ -28,23 +28,18 @@ const TaskStepSchema = Schema(
       name: r'image',
       type: IsarType.string,
     ),
-    r'isCurrent': PropertySchema(
-      id: 3,
-      name: r'isCurrent',
-      type: IsarType.bool,
-    ),
     r'number': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'number',
       type: IsarType.long,
     ),
     r'taskId': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'taskId',
       type: IsarType.long,
     ),
     r'title': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'title',
       type: IsarType.string,
     )
@@ -92,10 +87,9 @@ void _taskStepSerialize(
   writer.writeString(offsets[0], object.description);
   writer.writeString(offsets[1], object.id);
   writer.writeString(offsets[2], object.image);
-  writer.writeBool(offsets[3], object.isCurrent);
-  writer.writeLong(offsets[4], object.number);
-  writer.writeLong(offsets[5], object.taskId);
-  writer.writeString(offsets[6], object.title);
+  writer.writeLong(offsets[3], object.number);
+  writer.writeLong(offsets[4], object.taskId);
+  writer.writeString(offsets[5], object.title);
 }
 
 TaskStep _taskStepDeserialize(
@@ -108,10 +102,9 @@ TaskStep _taskStepDeserialize(
   object.description = reader.readStringOrNull(offsets[0]);
   object.id = reader.readString(offsets[1]);
   object.image = reader.readStringOrNull(offsets[2]);
-  object.isCurrent = reader.readBool(offsets[3]);
-  object.number = reader.readLongOrNull(offsets[4]);
-  object.taskId = reader.readLongOrNull(offsets[5]);
-  object.title = reader.readStringOrNull(offsets[6]);
+  object.number = reader.readLongOrNull(offsets[3]);
+  object.taskId = reader.readLongOrNull(offsets[4]);
+  object.title = reader.readStringOrNull(offsets[5]);
   return object;
 }
 
@@ -129,12 +122,10 @@ P _taskStepDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 4:
       return (reader.readLongOrNull(offset)) as P;
     case 5:
-      return (reader.readLongOrNull(offset)) as P;
-    case 6:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -564,16 +555,6 @@ extension TaskStepQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'image',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<TaskStep, TaskStep, QAfterFilterCondition> isCurrentEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isCurrent',
-        value: value,
       ));
     });
   }

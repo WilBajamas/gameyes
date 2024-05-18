@@ -104,16 +104,6 @@ class _AddContentDialogState extends State<AddContentDialog> {
                   height: 40,
                   () {
                     if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: kColorScheme.primary,
-                          content: Text(
-                            widget.dialogTitleAndSnackBarTitle.$2,
-                            style: context.themeData.textTheme.bodySmall!
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                      );
                       widget.onCreatedClicked(
                         _titleTextController.text,
                         _descriptionTextController.text,
