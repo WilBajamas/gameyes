@@ -7,7 +7,7 @@ part of 'publisher.dart';
 // **************************************************************************
 
 Publisher _$PublisherFromJson(Map<String, dynamic> json) => Publisher(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 

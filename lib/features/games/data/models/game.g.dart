@@ -7,12 +7,12 @@ part of 'game.dart';
 // **************************************************************************
 
 Game _$GameFromJson(Map<String, dynamic> json) => Game(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['slug'] as String?,
       json['name'] as String?,
       json['released'] as String?,
       json['background_image'] as String?,
-      json['metacritic'] as int?,
+      (json['metacritic'] as num?)?.toInt(),
       (json['platforms'] as List<dynamic>?)
           ?.map((e) => PlatformItem.fromJson(e as Map<String, dynamic>))
           .toList(),

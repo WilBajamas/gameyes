@@ -8,12 +8,12 @@ part of 'games_response.dart';
 
 GamesResponse _$GamesResponseFromJson(Map<String, dynamic> json) =>
     GamesResponse(
-      json['count'] as int,
+      (json['count'] as num).toInt(),
       (json['results'] as List<dynamic>?)
           ?.map((e) => Game.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['next'] as String?,
-      json['currentPage'] as int?,
+      (json['currentPage'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$GamesResponseToJson(GamesResponse instance) =>

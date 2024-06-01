@@ -7,7 +7,7 @@ part of 'developer.dart';
 // **************************************************************************
 
 Developer _$DeveloperFromJson(Map<String, dynamic> json) => Developer(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 
