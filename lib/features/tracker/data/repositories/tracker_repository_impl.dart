@@ -14,10 +14,17 @@ class TrackerRepositoryImpl implements TrackerRepository {
       _gameLocalDatasource.getSavedGames();
 
   @override
-  Stream<List<SavedGame>> savedGamesStream(SavedGameFilterTag tag) =>
-      _gameLocalDatasource.listenToSavedGames(tag);
+  Stream<List<SavedGame>> savedGamesStream(
+    SavedGameFilterTag tag,
+    String? searchTerm,
+  ) =>
+      _gameLocalDatasource.listenToSavedGames(tag, searchTerm);
 
   @override
   Future<void> removeSavedGame(int id) =>
       _gameLocalDatasource.unsaveGame(id: id);
+
+  @override
+  Stream<List<SavedGame>> searchGamesStream(String term) =>
+      _gameLocalDatasource.listenToSearchSavedGames(term);
 }

@@ -43,15 +43,22 @@ const GroupTaskSchema = CollectionSchema(
     r'tasks': LinkSchema(
       id: 1642033242586076829,
       name: r'tasks',
-      target: r'Task',
+      target: r'SavedGameTask',
       single: false,
+    ),
+    r'savedGame': LinkSchema(
+      id: 3704353093703478434,
+      name: r'savedGame',
+      target: r'SavedGame',
+      single: true,
+      linkName: r'groupTasks',
     )
   },
   embeddedSchemas: {},
   getId: _groupTaskGetId,
   getLinks: _groupTaskGetLinks,
   attach: _groupTaskAttach,
-  version: '3.1.0+1',
+  version: '3.1.8',
 );
 
 int _groupTaskEstimateSize(
@@ -123,12 +130,14 @@ Id _groupTaskGetId(GroupTask object) {
 }
 
 List<IsarLinkBase<dynamic>> _groupTaskGetLinks(GroupTask object) {
-  return [object.tasks];
+  return [object.tasks, object.savedGame];
 }
 
 void _groupTaskAttach(IsarCollection<dynamic> col, Id id, GroupTask object) {
   object.id = id;
-  object.tasks.attach(col, col.isar.collection<Task>(), r'tasks', id);
+  object.tasks.attach(col, col.isar.collection<SavedGameTask>(), r'tasks', id);
+  object.savedGame
+      .attach(col, col.isar.collection<SavedGame>(), r'savedGame', id);
 }
 
 extension GroupTaskQueryWhereSort
@@ -637,7 +646,7 @@ extension GroupTaskQueryObject
 extension GroupTaskQueryLinks
     on QueryBuilder<GroupTask, GroupTask, QFilterCondition> {
   QueryBuilder<GroupTask, GroupTask, QAfterFilterCondition> tasks(
-      FilterQuery<Task> q) {
+      FilterQuery<SavedGameTask> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'tasks');
     });
@@ -690,6 +699,19 @@ extension GroupTaskQueryLinks
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'tasks', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<GroupTask, GroupTask, QAfterFilterCondition> savedGame(
+      FilterQuery<SavedGame> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'savedGame');
+    });
+  }
+
+  QueryBuilder<GroupTask, GroupTask, QAfterFilterCondition> savedGameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'savedGame', 0, true, 0, true);
     });
   }
 }

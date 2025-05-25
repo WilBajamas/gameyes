@@ -7,7 +7,7 @@ part of 'platform.dart';
 // **************************************************************************
 
 Platform _$PlatformFromJson(Map<String, dynamic> json) => Platform(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 

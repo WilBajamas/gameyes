@@ -57,5 +57,50 @@
   "delete_saved_game": "Delete saved game",
   "delete_saved_game_description": "Are you sure you want to remove your saved game? All your notes and progress will be lost.",
   "ok": "Ok",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "completed": "Completed",
+  "onHold": "On Hold",
+  "rageQuit": "Rage Quit",
+  "toBuy": "To Buy",
+  "inProgress": "In Progress",
+  "last_updated": "Last Updated",
+  "select_platforms": "Select Platforms",
+  "tasks_in_progress": "Tasks in progress",
+  "task_screenshots": "Task screenshots",
+  "done": "Done",
+  "missed": "Missed",
+  "improve": "Improve",
+  "task_statuses": "Task Statuses",
+  "date_started": "Date started",
+  "not_started": "Not started",
+  "add_group_task": "Add Group Task",
+  "title": "Title",
+  "description": "Description",
+  "keep_it_short": "Keep it short",
+  "a_brief_description": "A breif description",
+  "add_task": "Add task",
+  "tasks_pinned": "Tasks pinned",
+  "back": "Back",
+  "tasks": "Tasks",
+  "no_pinned_tasks_desc": "There are no pinned tasks",
+  "no_group_task_created": "No group task created",
+  "please_enter_value": "Please enter a value",
+  "group_task_created": "Group task created",
+  "only_10_group_tasks_allowed": "Only a maximum of 10 group tasks are allowed.",
+  "set_title_here": "Set title here",
+  "reminder": "Reminder",
+  "add_step": "Add step",
+  "step_added": "Step has been added",
+  "edit": "Edit",
+  "remove_step": "Remove step",
+  "remove_step_desc": "Are you sure you want to remove step {stepName}? This action cannot be undone",
+  "@remove_step_desc": {
+    "placeholders": {
+      "stepName": {
+        "type": "String"
+      }
+    }
+  },
+  "remove_step_failed": "Failed removing step",
+  "removed_step": "Step removed"
 }

@@ -23,10 +23,18 @@ ThemeData buildTheme() {
       fontWeight: FontWeight.w800,
       textStyle: baseTheme.textTheme.titleMedium,
     ),
+    headlineMedium: GoogleFonts.openSans(
+      fontSize: 20,
+      textStyle: baseTheme.textTheme.headlineMedium,
+    ),
     titleSmall: GoogleFonts.chakraPetch(
       fontSize: 14,
       fontWeight: FontWeight.w800,
       textStyle: baseTheme.textTheme.titleSmall,
+    ),
+    labelSmall: GoogleFonts.openSans(
+      fontSize: 12,
+      textStyle: baseTheme.textTheme.labelSmall,
     ),
     bodySmall: GoogleFonts.openSans(
       fontSize: 14,
@@ -82,6 +90,14 @@ ThemeData buildTheme() {
       textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
+  final outlinedButtonTheme = OutlinedButtonThemeData(
+    style: const ButtonStyle().copyWith(
+      textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
+      side: MaterialStateProperty.all(
+        BorderSide(color: kColorScheme.primary),
+      ),
+    ),
+  );
 
   final navigationBarTheme = NavigationBarThemeData(
     labelTextStyle: MaterialStateProperty.all(
@@ -132,6 +148,7 @@ ThemeData buildTheme() {
     textTheme: textTheme,
     navigationBarTheme: navigationBarTheme,
     elevatedButtonTheme: elevatedButtonTheme,
+    outlinedButtonTheme: outlinedButtonTheme,
     iconTheme: iconTheme,
     iconButtonTheme: iconButtonTheme,
     chipTheme: chipTheme,

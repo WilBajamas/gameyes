@@ -3,13 +3,17 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
 import 'package:gaming_library_assessment_flutter/features/browse/presentation/screen/browse_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen_wrapper.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/image_page_view.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/settings/presentation/screen/settings_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/task_detail_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_game_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -44,7 +48,7 @@ final goRouter = GoRouter(
           routes: [
             GoRoute(
               path: RouteConstants.featured,
-              builder: (context, state) => const FeaturedScreen(),
+              builder: (context, state) => const FeaturedScreenWrapper(),
             ),
           ],
         ),
@@ -59,8 +63,32 @@ final goRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: RouteConstants.news,
+              path: RouteConstants.tracker,
               builder: (context, state) => const TrackerScreen(),
+              routes: [
+                GoRoute(
+                  name: RouteConstants.trackerDetail,
+                  path: 'tracker_detail',
+                  parentNavigatorKey: _rootNavigatorKey,
+                  builder: (context, state) =>
+                      TrackerGameDetailScreen(game: state.extra as SavedGame),
+                  routes: [
+                    GoRoute(
+                      name: RouteConstants.taskDetail,
+                      path: 'tracker_task',
+                      builder: (context, state) {
+                        final (int id, SavedGameTask task) =
+                            state.extra as (int, SavedGameTask);
+                        return TaskDetailScreen(
+                          taskId: id,
+                          task: task,
+                        );
+                      },
+                      parentNavigatorKey: _rootNavigatorKey,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

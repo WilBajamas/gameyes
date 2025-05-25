@@ -8,10 +8,10 @@ part of 'game_detail_response.dart';
 
 GameDetailResponse _$GameDetailResponseFromJson(Map<String, dynamic> json) =>
     GameDetailResponse(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
       json['slug'] as String?,
-      json['metacritic'] as int?,
+      (json['metacritic'] as num?)?.toInt(),
       json['released'] as String?,
       json['background_image'] as String?,
       json['background_image_additional'] as String?,

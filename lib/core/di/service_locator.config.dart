@@ -9,103 +9,117 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart'
-    as _i3;
+    as _i646;
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart'
-    as _i4;
+    as _i267;
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart'
-    as _i17;
+    as _i857;
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart'
-    as _i27;
+    as _i3;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repository/featured_repository_impl.dart'
-    as _i8;
+    as _i870;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repository/featured_repository.dart'
-    as _i7;
+    as _i787;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/use_case/fetch_featured_use_case.dart'
-    as _i9;
+    as _i1013;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart'
-    as _i5;
+    as _i857;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart'
-    as _i6;
-import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart'
     as _i11;
+import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart'
+    as _i592;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart'
-    as _i13;
+    as _i750;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_screenshots_datasource.dart'
-    as _i19;
+    as _i187;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/repository/game_detail_repository_impl.dart'
-    as _i15;
+    as _i400;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/repository/game_screenshots_repository_impl.dart'
-    as _i21;
+    as _i991;
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_detail_repository.dart'
-    as _i14;
+    as _i534;
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_screenshots_repository.dart'
-    as _i20;
+    as _i634;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart'
-    as _i12;
+    as _i238;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_screenshot_cubit.dart'
-    as _i18;
+    as _i488;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasource/games_datasource.dart'
-    as _i23;
+    as _i278;
 import 'package:gaming_library_assessment_flutter/features/games/data/repository/games_repository_impl.dart'
-    as _i25;
+    as _i424;
 import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart'
-    as _i24;
+    as _i1005;
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart'
-    as _i10;
+    as _i846;
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart'
-    as _i22;
+    as _i868;
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart'
-    as _i26;
+    as _i1017;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
-    as _i16;
+    as _i944;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_detail_repository_impl.dart'
+    as _i441;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart'
-    as _i30;
+    as _i104;
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart'
+    as _i47;
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart'
-    as _i29;
+    as _i86;
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/task_cubit.dart'
+    as _i564;
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart'
-    as _i28;
-import 'package:get_it/get_it.dart' as _i1;
-import 'package:injectable/injectable.dart' as _i2;
+    as _i110;
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart'
+    as _i185;
+import 'package:get_it/get_it.dart' as _i174;
+import 'package:injectable/injectable.dart' as _i526;
 
-extension GetItInjectableX on _i1.GetIt {
+extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
-  _i1.GetIt init({
+  _i174.GetIt init({
     String? environment,
-    _i2.EnvironmentFilter? environmentFilter,
+    _i526.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i2.GetItHelper(
+    final gh = _i526.GetItHelper(
       this,
       environment,
       environmentFilter,
     );
-    gh.factory<_i3.DefaultDioInterceptor>(() => _i3.DefaultDioInterceptor());
-    gh.singleton<_i4.DioService>(() => _i4.DioService());
-    gh.factory<_i5.FeaturedBloc>(() => _i5.FeaturedBloc());
-    gh.factory<_i6.FeaturedFilterCubit>(() => _i6.FeaturedFilterCubit());
-    gh.factory<_i7.FeaturedRepository>(() => _i8.FeaturedRepositoryImpl());
-    gh.factory<_i9.FetchFeaturedUseCase>(() => _i9.FetchFeaturedUseCase());
-    gh.factory<_i10.FetchGamesUseCase>(() => _i10.FetchGamesUseCase());
-    gh.factory<_i11.FilterCubit>(() => _i11.FilterCubit());
-    gh.factory<_i12.GameDetailCubit>(() => _i12.GameDetailCubit());
-    gh.factory<_i13.GameDetailRemoteDatasource>(
-        () => _i13.GameDetailRemoteDatasource());
-    gh.factory<_i14.GameDetailRepository>(
-        () => _i15.GameDetailRepositoryImpl());
-    gh.factory<_i16.GameLocalDatasource>(() => _i16.GameLocalDatasource());
-    gh.factory<_i17.GameLocalStorageService>(
-        () => _i17.GameLocalStorageService());
-    gh.factory<_i18.GameScreenshotCubit>(() => _i18.GameScreenshotCubit());
-    gh.factory<_i19.GameScreenshotsDatasource>(
-        () => _i19.GameScreenshotsDatasource());
-    gh.factory<_i20.GameScreenshotsRepository>(
-        () => _i21.GameScreenshotsRepositoryImpl());
-    gh.factory<_i22.GamesBloc>(() => _i22.GamesBloc());
-    gh.factory<_i23.GamesDataSource>(() => _i23.GamesDataSource());
-    gh.factory<_i24.GamesRepository>(() => _i25.GamesRepositoryImpl());
-    gh.singleton<_i26.ScrollNotifier>(() => _i26.ScrollNotifier());
-    gh.singleton<_i27.SharedPreference>(() => _i27.SharedPreference());
-    gh.factory<_i28.TrackerCubit>(() => _i28.TrackerCubit());
-    gh.factory<_i29.TrackerRepository>(() => _i30.TrackerRepositoryImpl());
+    gh.factory<_i646.DefaultDioInterceptor>(
+        () => _i646.DefaultDioInterceptor());
+    gh.factory<_i857.GameLocalStorageService>(
+        () => _i857.GameLocalStorageService());
+    gh.factory<_i1013.FetchFeaturedUseCase>(
+        () => _i1013.FetchFeaturedUseCase());
+    gh.factory<_i857.FeaturedBloc>(() => _i857.FeaturedBloc());
+    gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit());
+    gh.factory<_i592.FilterCubit>(() => _i592.FilterCubit());
+    gh.factory<_i278.GamesDataSource>(() => _i278.GamesDataSource());
+    gh.factory<_i846.FetchGamesUseCase>(() => _i846.FetchGamesUseCase());
+    gh.factory<_i868.GamesBloc>(() => _i868.GamesBloc());
+    gh.factory<_i750.GameDetailRemoteDatasource>(
+        () => _i750.GameDetailRemoteDatasource());
+    gh.factory<_i187.GameScreenshotsDatasource>(
+        () => _i187.GameScreenshotsDatasource());
+    gh.factory<_i238.GameDetailCubit>(() => _i238.GameDetailCubit());
+    gh.factory<_i488.GameScreenshotCubit>(() => _i488.GameScreenshotCubit());
+    gh.factory<_i944.GameLocalDatasource>(() => _i944.GameLocalDatasource());
+    gh.factory<_i564.TaskCubit>(() => _i564.TaskCubit());
+    gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
+    gh.factory<_i185.TrackerDetailCubit>(() => _i185.TrackerDetailCubit());
+    gh.singleton<_i267.DioService>(() => _i267.DioService());
+    gh.singleton<_i3.SharedPreference>(() => _i3.SharedPreference());
+    gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
+    gh.factory<_i534.GameDetailRepository>(
+        () => _i400.GameDetailRepositoryImpl());
+    gh.factory<_i1005.GamesRepository>(() => _i424.GamesRepositoryImpl());
+    gh.factory<_i47.TrackerDetailRepository>(
+        () => _i441.TrackerDetailRepositoryImpl());
+    gh.factory<_i634.GameScreenshotsRepository>(
+        () => _i991.GameScreenshotsRepositoryImpl());
+    gh.factory<_i86.TrackerRepository>(() => _i104.TrackerRepositoryImpl());
+    gh.factory<_i787.FeaturedRepository>(() => _i870.FeaturedRepositoryImpl());
     return this;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:gaming_library_assessment_flutter/core/services/storage/i_local_storage.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -20,7 +20,7 @@ class IsarLocalStorageService implements ILocalStorage {
 
       //* Set schemas here
       return await Isar.open(
-        [SavedGameSchema, GroupTaskSchema, TaskSchema],
+        [SavedGameSchema, GroupTaskSchema, SavedGameTaskSchema],
         directory: dir.path,
       );
     }

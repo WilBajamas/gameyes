@@ -4,8 +4,7 @@ class ConfigConstants {
   static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';
   static const heroTag = 'hero_tag';
-  static const enviedFilePath =
-      '../gaming_library_assessment_flutter/secret.env';
+  static const enviedFilePath = '../gameyes/secret.env';
 }
 
 class PathConstants {
@@ -37,6 +36,8 @@ class RouteConstants {
   static const featured = '/featured';
   static const games = '/games';
   static const tracker = '/tracker';
+  static const trackerDetail = '/tracker_detail';
+  static const taskDetail = '/task_detail';
   static const imagePageView = 'image_page_view';
   static const onboarding = '/onboarding';
   static const gameDetail = '/game_detail';

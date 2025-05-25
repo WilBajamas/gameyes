@@ -49,9 +49,13 @@ class SavedGameItem extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             //* Name & Date
-                            _NameDateRow(
-                              name: savedGame.name,
-                              date: savedGame.dateSaved,
+                            AutoSizeText(
+                              savedGame.name ?? '-',
+                              maxFontSize: 20,
+                              minFontSize: 14,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.themeData.textTheme.displayMedium,
                             ),
 
                             const SizedBox(height: 8),
@@ -66,9 +70,10 @@ class SavedGameItem extends StatelessWidget {
                             ),
 
                             //* Platforms & Playtime
-                            const _PlatformPlaytimeRow(
+                            _PlatformDayAddedRow(
                               playtime: null,
-                              platforms: [GamePlatform.pc],
+                              platforms: savedGame.platforms,
+                              date: savedGame.dateSaved,
                             ),
                           ],
                         ),
@@ -161,39 +166,6 @@ class _ImageView extends StatelessWidget {
   }
 }
 
-class _NameDateRow extends StatelessWidget {
-  final String? name;
-  final DateTime? date;
-  const _NameDateRow({required this.name, required this.date});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //* Name
-        AutoSizeText(
-          name ?? '-',
-          maxFontSize: 20,
-          minFontSize: 14,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: context.themeData.textTheme.displayMedium,
-        ),
-
-        const SizedBox(height: 4),
-
-        //* Date added
-        Text(
-          'Date added: ${date.getFormattedStringFromDateTimeSlash() ?? '-'}',
-          style: context.themeData.textTheme.bodySmall,
-        ),
-      ],
-    );
-  }
-}
-
 class _TaskColumn extends StatelessWidget {
   final int? totalTasks;
   final int? tasksCompleted;
@@ -222,27 +194,46 @@ class _TaskColumn extends StatelessWidget {
   }
 }
 
-class _PlatformPlaytimeRow extends StatelessWidget {
+class _PlatformDayAddedRow extends StatelessWidget {
   final String? playtime;
-  final List<GamePlatform> platforms;
+  final DateTime? date;
+  final List<GamePlatform>? platforms;
 
-  const _PlatformPlaytimeRow({required this.playtime, required this.platforms});
+  const _PlatformDayAddedRow({
+    required this.playtime,
+    required this.platforms,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: SizedBox(
             height: 20,
-            child: PlatformRowList(
-              platforms: platforms,
-            ),
+            child: platforms != null && platforms!.isNotEmpty
+                ? PlatformRowList(
+                    platforms: platforms!,
+                    showMax: 3,
+                  )
+                : null,
           ),
         ),
-        Text(
-          playtime ?? '-',
-          style: context.themeData.textTheme.displayMedium,
+        //* Date added
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              '${context.localisations.date_added}:',
+              style: context.themeData.textTheme.bodySmall,
+            ),
+            Text(
+              date.getFormattedStringFromDateTimeSlash() ?? '-',
+              style: context.themeData.textTheme.bodyMedium,
+            ),
+          ],
         ),
       ],
     );

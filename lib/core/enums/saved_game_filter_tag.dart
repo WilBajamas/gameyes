@@ -1,1 +1,1 @@
-enum SavedGameFilterTag { recentlyChanged, name, playtime, date, platform }
+enum SavedGameFilterTag { recentlyChanged, name, date }

@@ -21,9 +21,9 @@ class TypeValuesSelection<T> extends StatelessWidget {
 
   String getTypeNames(T type) {
     if (type is GamePlatform) {
-      return type.name; // Access properties of GamesPlatform
+      return type.name;
     } else if (type is GameOrdering) {
-      return type.name.toUpperCase(); // Handle other types differently
+      return type.name.toUpperCase();
     } else {
       return type.toString();
     }
