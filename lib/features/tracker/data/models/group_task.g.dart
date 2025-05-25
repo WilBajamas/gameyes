@@ -58,7 +58,7 @@ const GroupTaskSchema = CollectionSchema(
   getId: _groupTaskGetId,
   getLinks: _groupTaskGetLinks,
   attach: _groupTaskAttach,
-  version: '3.1.0+1',
+  version: '3.1.8',
 );
 
 int _groupTaskEstimateSize(

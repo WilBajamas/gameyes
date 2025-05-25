@@ -3,7 +3,7 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
 import 'package:gaming_library_assessment_flutter/features/browse/presentation/screen/browse_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen_wrapper.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/image_page_view.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
@@ -48,7 +48,7 @@ final goRouter = GoRouter(
           routes: [
             GoRoute(
               path: RouteConstants.featured,
-              builder: (context, state) => const FeaturedScreen(),
+              builder: (context, state) => const FeaturedScreenWrapper(),
             ),
           ],
         ),
