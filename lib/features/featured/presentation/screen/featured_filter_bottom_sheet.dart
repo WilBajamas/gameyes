@@ -6,15 +6,21 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 import 'package:gaming_library_assessment_flutter/widgets/multi_type_values_selection.dart';
 
 class FeaturedFilterBottomSheet extends StatelessWidget {
-  final VoidCallback onSaveClick;
+  final Function(Set<GamePlatform>) onSaveClick;
+  final Set<GamePlatform> initialPlatforms;
 
   const FeaturedFilterBottomSheet({
     super.key,
     required this.onSaveClick,
+    required this.initialPlatforms,
   });
 
-  void saveButtonClick(BuildContext context) {
-    onSaveClick();
+  void saveButtonClick(
+    BuildContext context, {
+    required Set<GamePlatform> platformsSelected,
+  }) {
+    context.read<FeaturedFilterCubit>().setPlatforms();
+    onSaveClick(platformsSelected);
     Navigator.pop(context);
   }
 
@@ -24,37 +30,42 @@ class FeaturedFilterBottomSheet extends StatelessWidget {
       height: context.screenHeight * 0.7,
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //** Save button */
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () => saveButtonClick(context),
-                style: TextButton.styleFrom(
-                  textStyle: context.themeData.textTheme.titleMedium,
+        child: BlocProvider(
+          create: (context) =>
+              FeaturedFilterCubit(initialPlatforms: initialPlatforms),
+          child: BlocBuilder<FeaturedFilterCubit, FeaturedFilterState>(
+            builder: (context, state) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                //** Save button */
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => saveButtonClick(
+                      context,
+                      platformsSelected: state.tempPlatformsSelected,
+                    ),
+                    style: TextButton.styleFrom(
+                      textStyle: context.themeData.textTheme.titleMedium,
+                    ),
+                    child: Text(context.localisations.save),
+                  ),
                 ),
-                child: Text(context.localisations.save),
-              ),
-            ),
-            const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-            //** Game platform selection */
-            BlocBuilder<FeaturedFilterCubit, FeaturedFilterState>(
-              builder: (context, state) {
-                return MultiTypeValuesSelection<GamePlatform>(
-                  selectedItems: state.platformsSelected,
+                //** Game platform selection */
+                MultiTypeValuesSelection<GamePlatform>(
+                  selectedItems: state.tempPlatformsSelected,
                   title: context.localisations.platforms,
                   onSelect: (platform) => context
                       .read<FeaturedFilterCubit>()
                       .selectPlatform(platform),
                   selections: GamePlatform.values.toSet(),
-                );
-              },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

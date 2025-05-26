@@ -1,24 +1,35 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:injectable/injectable.dart';
 
 part 'featured_filter_state.dart';
 
 @injectable
 class FeaturedFilterCubit extends Cubit<FeaturedFilterState> {
-  FeaturedFilterCubit() : super(const FeaturedFilterState());
+  FeaturedFilterCubit({required Set<GamePlatform> initialPlatforms})
+      : super(const FeaturedFilterState()) {
+    emit(state.copyWith(tempPlatformsSelected: initialPlatforms));
+  }
 
   void selectPlatform(GamePlatform platform) {
-    final currentSelectionState =
-        Set<GamePlatform>.from(state.platformsSelected);
+    final tempSelectionState = Set<GamePlatform>.from(
+      state.tempPlatformsSelected,
+    );
 
-    if (currentSelectionState.contains(platform)) {
-      currentSelectionState.remove(platform);
+    if (tempSelectionState.contains(platform)) {
+      tempSelectionState.remove(platform);
     } else {
-      currentSelectionState.add(platform);
+      tempSelectionState.add(platform);
     }
 
-    emit(state.copyWith(currentSelectionState));
+    emit(state.copyWith(tempPlatformsSelected: tempSelectionState));
   }
+
+  void setPlatforms() => emit(
+        state.copyWith(
+          platformsSelected: state.tempPlatformsSelected,
+        ),
+      );
 }

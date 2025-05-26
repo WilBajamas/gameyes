@@ -16,6 +16,8 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/enums/game_platform.dart';
+
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
 
@@ -58,9 +60,10 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
 
   void _fetchGames({
     FeaturedTag tag = FeaturedTag.newAndTrending,
+    Set<GamePlatform>? platformSelected,
   }) {
-    final platforms =
-        context.read<FeaturedFilterCubit>().state.platformsSelected;
+    final platforms = platformSelected ??
+        context.read<FeaturedBloc>().state.platformsSelected;
     context
         .read<FeaturedBloc>()
         .add(FeaturedFetched(tag: tag, platforms: platforms));
@@ -101,6 +104,23 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
         ),
       ];
 
+  void showBottomSheet(BuildContext context) {
+    final initialPlatforms =
+        context.read<FeaturedBloc>().state.platformsSelected;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (bottomSheetContext) => FeaturedFilterBottomSheet(
+        initialPlatforms: initialPlatforms,
+        onSaveClick: (platforms) => _fetchGames(
+          tag: context.read<FeaturedBloc>().state.tag,
+          platformSelected: platforms,
+        ),
+      ),
+      isScrollControlled: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,15 +136,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                   subtitle: context.localisations.featured_subtitle,
                   actionOne: (
                     IconButton(
-                      onPressed: () => showModalBottomSheet(
-                        context: context,
-                        builder: (context) => FeaturedFilterBottomSheet(
-                          onSaveClick: () => _fetchGames(
-                            tag: context.read<FeaturedBloc>().state.tag,
-                          ),
-                        ),
-                        isScrollControlled: true,
-                      ),
+                      onPressed: () => showBottomSheet(context),
                       icon: Icon(
                         Icons.filter_list,
                         color: context.themeData.colorScheme.onBackground,

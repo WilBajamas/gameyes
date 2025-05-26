@@ -8,6 +8,8 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
+    as _i799;
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart'
     as _i646;
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart'
@@ -93,7 +95,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1013.FetchFeaturedUseCase>(
         () => _i1013.FetchFeaturedUseCase());
     gh.factory<_i857.FeaturedBloc>(() => _i857.FeaturedBloc());
-    gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit());
     gh.factory<_i592.FilterCubit>(() => _i592.FilterCubit());
     gh.factory<_i278.GamesDataSource>(() => _i278.GamesDataSource());
     gh.factory<_i846.FetchGamesUseCase>(() => _i846.FetchGamesUseCase());
@@ -120,6 +121,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i991.GameScreenshotsRepositoryImpl());
     gh.factory<_i86.TrackerRepository>(() => _i104.TrackerRepositoryImpl());
     gh.factory<_i787.FeaturedRepository>(() => _i870.FeaturedRepositoryImpl());
+    gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
+        initialPlatforms: gh<Set<_i799.GamePlatform>>()));
     return this;
   }
 }

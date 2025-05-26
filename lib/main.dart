@@ -39,9 +39,6 @@ class MyApp extends StatelessWidget {
           create: (context) => injection.getIt<FilterCubit>(),
         ),
         BlocProvider(
-          create: (context) => injection.getIt<FeaturedFilterCubit>(),
-        ),
-        BlocProvider(
           create: (context) => injection.getIt<GamesBloc>(),
           child: const GamesScreen(),
         ),

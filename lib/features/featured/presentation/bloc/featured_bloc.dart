@@ -12,11 +12,12 @@ import 'package:gaming_library_assessment_flutter/features/games/data/models/gam
 import 'package:injectable/injectable.dart';
 
 part 'featured_event.dart';
+
 part 'featured_state.dart';
 
 @injectable
 class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
-  final _fetchFeaturedUsecase = injection.getIt<FetchFeaturedUseCase>();
+  final _fetchFeaturedUseCase = injection.getIt<FetchFeaturedUseCase>();
 
   FeaturedBloc() : super(const FeaturedState()) {
     on<FeaturedFetched>(_onFetchFeatured, transformer: droppable());
@@ -34,17 +35,23 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
       ),
     );
 
-    await _fetchFeaturedUsecase(
+    await _fetchFeaturedUseCase(
       page: 1,
       tag: event.tag,
       platforms: event.platforms,
-      onFailure: (error) =>
-          emit(state.copyWith(status: FeaturedStatus.failed, error: error)),
+      onFailure: (error) => emit(
+        state.copyWith(
+          status: FeaturedStatus.failed,
+          error: error,
+          platformsSelected: event.platforms,
+        ),
+      ),
       onSuccess: (response) => emit(
         state.copyWith(
           status: FeaturedStatus.success,
           response: response,
           games: response.results,
+          platformsSelected: event.platforms,
         ),
       ),
     );
@@ -60,7 +67,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
 
     emit(state.copyWith(nextPageStatus: FeaturedNextPageStatus.loading));
 
-    await _fetchFeaturedUsecase(
+    await _fetchFeaturedUseCase(
       page: state.response!.currentPage! + 1,
       tag: state.tag,
       onSuccess: (response) => emit(

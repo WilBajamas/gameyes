@@ -6,6 +6,7 @@ enum FeaturedNextPageStatus { initial, failed, loading }
 
 class FeaturedState extends Equatable {
   final FeaturedTag tag;
+  final Set<GamePlatform> platformsSelected;
   final FeaturedStatus? status;
   final FeaturedNextPageStatus? nextPageStatus;
   final GamesResponse? response;
@@ -15,6 +16,7 @@ class FeaturedState extends Equatable {
 
   const FeaturedState({
     this.tag = FeaturedTag.newAndTrending,
+    this.platformsSelected = const <GamePlatform>{},
     this.status = FeaturedStatus.initial,
     this.nextPageStatus = FeaturedNextPageStatus.initial,
     this.response,
@@ -25,6 +27,7 @@ class FeaturedState extends Equatable {
 
   FeaturedState copyWith({
     FeaturedTag? tag,
+    Set<GamePlatform>? platformsSelected,
     FeaturedStatus? status,
     FeaturedNextPageStatus? nextPageStatus,
     GamesResponse? response,
@@ -35,6 +38,7 @@ class FeaturedState extends Equatable {
   }) =>
       FeaturedState(
         tag: tag ?? this.tag,
+        platformsSelected: platformsSelected ?? this.platformsSelected,
         status: status ?? this.status,
         nextPageStatus: nextPageStatus ?? this.nextPageStatus,
         response: response ?? this.response,
@@ -44,6 +48,14 @@ class FeaturedState extends Equatable {
       );
 
   @override
-  List<Object?> get props =>
-      [tag, status, nextPageStatus, response, games, error, nextPageError];
+  List<Object?> get props => [
+        tag,
+        platformsSelected,
+        status,
+        nextPageStatus,
+        response,
+        games,
+        error,
+        nextPageError
+      ];
 }
