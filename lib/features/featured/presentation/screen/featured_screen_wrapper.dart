@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart';
 
 class FeaturedScreenWrapper extends StatelessWidget {
@@ -14,9 +13,6 @@ class FeaturedScreenWrapper extends StatelessWidget {
         BlocProvider(
           create: (context) => FeaturedBloc(),
         ),
-        // BlocProvider(
-        //   create: (context) => FeaturedFilterCubit(),
-        // ),
       ],
       child: const FeaturedScreen(),
     );
