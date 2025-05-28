@@ -34,7 +34,6 @@ class FeaturedState extends Equatable {
     List<Game>? games,
     ErrorType? error,
     ErrorType? nextPageError,
-    int? currentPage,
   }) =>
       FeaturedState(
         tag: tag ?? this.tag,

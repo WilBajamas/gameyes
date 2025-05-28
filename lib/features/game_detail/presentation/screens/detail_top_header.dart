@@ -9,6 +9,8 @@ import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dar
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_top_content_shimmer.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 
+import '../../../../generated/l10n.dart';
+
 class DetailTopHeader extends StatelessWidget {
   final int? gameId;
   final String fromScreen;
@@ -110,7 +112,7 @@ class DetailContent extends StatelessWidget {
           const SizedBox(height: 8),
           // ** Release date //
           AutoSizeText(
-            '${context.localisations.release_date}:',
+            '${S.current.release_date}:',
             maxLines: 1,
             style: context.themeData.textTheme.titleMedium!
                 .copyWith(color: Colors.white),
@@ -134,7 +136,7 @@ class DetailContent extends StatelessWidget {
               ),
               Expanded(
                 child: AutoSizeText(
-                  context.localisations.metacritic_score,
+                  S.current.metacritic_score,
                   maxLines: 2,
                   style: const TextStyle(
                     color: Colors.white,

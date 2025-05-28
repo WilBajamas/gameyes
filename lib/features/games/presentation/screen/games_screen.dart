@@ -14,6 +14,8 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../generated/l10n.dart';
+
 class GamesScreen extends StatefulWidget {
   const GamesScreen({super.key});
 
@@ -98,8 +100,8 @@ class _GamesScreenState extends State<GamesScreen> {
               controller: _scrollController,
               slivers: [
                 DefaultSliverAppBar(
-                  title: context.localisations.games,
-                  subtitle: context.localisations.games_screen_subtitle,
+                  title: S.current.games,
+                  subtitle: S.current.games_screen_subtitle,
                   actionOne: (
                     IconButton(
                       onPressed: () => showModalBottomSheet(
@@ -187,7 +189,7 @@ class _GamesScreenState extends State<GamesScreen> {
                   SliverFillRemaining(
                     child: Center(
                       child: ErrorRetryWidget(
-                        text: context.localisations.no_results_found,
+                        text: S.current.no_results_found,
                         onRetryClicked: () {
                           _fetchGames();
                         },

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_section_point.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import '../generated/l10n.dart';
 
 class GameDetailMidContentShimmer extends StatelessWidget {
   const GameDetailMidContentShimmer({super.key});
@@ -19,12 +20,12 @@ class GameDetailMidContentShimmer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GameDetailSectionPoint(
-                  title: context.localisations.genre,
+                  title: S.current.genre,
                   value: StringConstants.connectionTimeout,
                 ),
                 const SizedBox(height: 12),
                 GameDetailSectionPoint(
-                  title: context.localisations.publishers,
+                  title: S.current.publishers,
                   value: StringConstants.connectionTimeout,
                 ),
               ],
@@ -35,12 +36,12 @@ class GameDetailMidContentShimmer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GameDetailSectionPoint(
-                  title: context.localisations.developers,
+                  title: S.current.developers,
                   value: StringConstants.connectionTimeout,
                 ),
                 const SizedBox(height: 12),
                 GameDetailSectionPoint(
-                  title: context.localisations.platforms,
+                  title: S.current.platforms,
                   value: StringConstants.connectionTimeout,
                 ),
               ],

@@ -5,6 +5,8 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/multi_type_values_selection.dart';
 
+import '../../../../generated/l10n.dart';
+
 class FeaturedFilterBottomSheet extends StatelessWidget {
   final Function(Set<GamePlatform>) onSaveClick;
   final Set<GamePlatform> initialPlatforms;
@@ -49,7 +51,7 @@ class FeaturedFilterBottomSheet extends StatelessWidget {
                     style: TextButton.styleFrom(
                       textStyle: context.themeData.textTheme.titleMedium,
                     ),
-                    child: Text(context.localisations.save),
+                    child: Text(S.current.save),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -57,7 +59,7 @@ class FeaturedFilterBottomSheet extends StatelessWidget {
                 //** Game platform selection */
                 MultiTypeValuesSelection<GamePlatform>(
                   selectedItems: state.tempPlatformsSelected,
-                  title: context.localisations.platforms,
+                  title: S.current.platforms,
                   onSelect: (platform) => context
                       .read<FeaturedFilterCubit>()
                       .selectPlatform(platform),

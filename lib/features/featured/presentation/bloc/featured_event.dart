@@ -5,11 +5,11 @@ sealed class FeaturedEvent extends Equatable {
 }
 
 final class FeaturedFetched extends FeaturedEvent {
-  final FeaturedTag tag;
+  final FeaturedTag? tag;
   final Set<GamePlatform>? platforms;
 
   const FeaturedFetched({
-    required this.tag,
+    this.tag,
     this.platforms,
   });
 

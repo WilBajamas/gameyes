@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/navigation_destination.dart';
 import 'package:gaming_library_assessment_flutter/widgets/scrolled_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../generated/l10n.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -39,23 +40,23 @@ class _HomeScreenState extends State<HomeScreen> {
           destinations: [
             CustomNavigationDestination(
               iconData: Icons.featured_play_list,
-              label: context.localisations.featured,
+              label: S.current.featured,
             ),
             CustomNavigationDestination(
               iconData: Icons.gamepad,
-              label: context.localisations.games,
+              label: S.current.games,
             ),
             CustomNavigationDestination(
               iconData: Icons.format_list_numbered_rtl_rounded,
-              label: context.localisations.tracker,
+              label: S.current.tracker,
             ),
             CustomNavigationDestination(
               iconData: Icons.search,
-              label: context.localisations.browse,
+              label: S.current.browse,
             ),
             CustomNavigationDestination(
               iconData: Icons.settings,
-              label: context.localisations.settings,
+              label: S.current.settings,
             ),
           ],
         ),

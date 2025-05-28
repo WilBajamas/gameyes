@@ -7,6 +7,8 @@ import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.
 import 'package:gaming_library_assessment_flutter/widgets/horizontal_separator.dart';
 import 'package:gaming_library_assessment_flutter/widgets/task_item.dart';
 
+import '../generated/l10n.dart';
+
 class GroupTaskItem extends StatelessWidget {
   final GroupTask groupTask;
 
@@ -71,11 +73,11 @@ class _TitleAndCheckbox extends StatelessWidget {
   }
 
   void _onPopUpItemClicked(BuildContext context, String selection) {
-    if (selection == context.localisations.add_task) {
+    if (selection == S.current.add_task) {
       context.read<TrackerDetailCubit>().createTask(groupTaskId: groupTask.id);
     }
 
-    if (selection == context.localisations.remove) {
+    if (selection == S.current.remove) {
       context
           .read<TrackerDetailCubit>()
           .removeGroupTask(groupTaskId: groupTask.id);
@@ -104,8 +106,8 @@ class _TitleAndCheckbox extends StatelessWidget {
         ),
         DefaultPopUpButton(
           items: [
-            context.localisations.add_task,
-            context.localisations.remove,
+            S.current.add_task,
+            S.current.remove,
           ],
           onItemClicked: (String selection) =>
               _onPopUpItemClicked(context, selection),

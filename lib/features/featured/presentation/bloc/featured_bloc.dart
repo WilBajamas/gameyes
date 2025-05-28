@@ -22,6 +22,8 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
   FeaturedBloc() : super(const FeaturedState()) {
     on<FeaturedFetched>(_onFetchFeatured, transformer: droppable());
     on<FeaturedNextPage>(_onFetchNextPage, transformer: droppable());
+
+    add(const FeaturedFetched(tag: FeaturedTag.newAndTrending));
   }
 
   Future<void> _onFetchFeatured(
@@ -29,25 +31,36 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
     Emitter<FeaturedState> emit,
   ) async {
     emit(
-      FeaturedState(
-        tag: event.tag,
+      state.copyWith(
+        // tag: event.tag,
         status: FeaturedStatus.loading,
+        // platformsSelected: event.platforms,
+        games: const <Game>[],
+        nextPageStatus: FeaturedNextPageStatus.initial,
       ),
     );
+    // emit(
+    //   FeaturedState(
+    //     tag: event.tag,
+    //     status: FeaturedStatus.loading,
+    //   ),
+    // );
 
     await _fetchFeaturedUseCase(
       page: 1,
-      tag: event.tag,
-      platforms: event.platforms,
+      tag: event.tag ?? state.tag,
+      platforms: event.platforms ?? state.platformsSelected,
       onFailure: (error) => emit(
         state.copyWith(
+          tag: event.tag ?? state.tag,
           status: FeaturedStatus.failed,
           error: error,
-          platformsSelected: event.platforms,
+          platformsSelected: event.platforms ?? state.platformsSelected,
         ),
       ),
       onSuccess: (response) => emit(
         state.copyWith(
+          tag: event.tag ?? state.tag,
           status: FeaturedStatus.success,
           response: response,
           games: response.results,

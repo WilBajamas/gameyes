@@ -133,3 +133,5 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
+flutter_intl:
+  enabled: true

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
+
+import '../../../../generated/l10n.dart';
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
@@ -43,7 +44,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
           physics: const BouncingScrollPhysics(),
           slivers: [
             DefaultSliverAppBar(
-              title: context.localisations.browse,
+              title: S.current.browse,
             ),
             const SliverToBoxAdapter(
               child: Center(child: Text('Browse')),

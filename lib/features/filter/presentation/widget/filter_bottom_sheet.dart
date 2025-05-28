@@ -9,6 +9,8 @@ import 'package:gaming_library_assessment_flutter/widgets/default_border_text_fi
 import 'package:gaming_library_assessment_flutter/widgets/multi_type_values_selection.dart';
 import 'package:gaming_library_assessment_flutter/widgets/type_values_selection.dart';
 
+import '../../../../generated/l10n.dart';
+
 class FilterBottomSheet extends StatefulWidget {
   final VoidCallback onSaveClick;
 
@@ -92,7 +94,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     style: TextButton.styleFrom(
                       textStyle: context.themeData.textTheme.titleMedium,
                     ),
-                    child: Text(context.localisations.save),
+                    child: Text(S.current.save),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -100,7 +102,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //** Search */
                 DefaultBorderTextField(
                   context: context,
-                  title: context.localisations.search_games,
+                  title: S.current.search_games,
                   textEditingController: _searchTextController,
                   prefixIcon: const Icon(Icons.search),
                   onChanged: (value) =>
@@ -110,7 +112,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
                 //** Date range */
                 Text(
-                  context.localisations.date_range,
+                  S.current.date_range,
                   style: context.themeData.textTheme.displaySmall,
                 ),
                 const SizedBox(height: 12),
@@ -122,7 +124,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         context: context,
                         textEditingController: _dateFromController,
                         inputType: TextInputType.number,
-                        title: context.localisations.from,
+                        title: S.current.from,
                         readOnly: true,
                         onClicked: () async {
                           final selectedDate = await _selectDate(
@@ -143,7 +145,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         context: context,
                         textEditingController: _dateToController,
                         inputType: TextInputType.number,
-                        title: context.localisations.to,
+                        title: S.current.to,
                         readOnly: true,
                         onClicked: () async {
                           final selectedDate = await _selectDate(
@@ -164,7 +166,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
                 //** Ordering */
                 TypeValuesSelection(
-                  title: context.localisations.ordering,
+                  title: S.current.ordering,
                   typeList: GameOrdering.values,
                   typeSelection: state.ordering,
                   onTypeSelected: (orderingSelected) => _filterCubit
@@ -176,7 +178,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 //** Game platform selection */
                 MultiTypeValuesSelection<GamePlatform>(
                   selectedItems: state.platforms,
-                  title: context.localisations.platforms,
+                  title: S.current.platforms,
                   onSelect: (platform) =>
                       context.read<FilterCubit>().selectPlatform(platform),
                   selections: GamePlatform.values.toSet(),
@@ -187,7 +189,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 // ** Genres */
                 MultiTypeValuesSelection<GameGenre>(
                   selectedItems: state.genres,
-                  title: context.localisations.genre,
+                  title: S.current.genre,
                   onSelect: (genre) =>
                       context.read<FilterCubit>().selectGenre(genre),
                   selections: GameGenre.values.toSet(),

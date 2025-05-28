@@ -16,6 +16,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/game_platform.dart';
+import '../../../../generated/l10n.dart';
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
@@ -31,8 +32,6 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
   @override
   void initState() {
     _controller.addListener(_onScroll);
-    _fetchGames();
-
     super.initState();
   }
 
@@ -58,15 +57,11 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
       context.read<FeaturedBloc>().add(const FeaturedNextPage());
 
   void _fetchGames({
-    FeaturedTag tag = FeaturedTag.newAndTrending,
+    FeaturedTag? tag,
     Set<GamePlatform>? platformSelected,
-  }) {
-    final platforms = platformSelected ??
-        context.read<FeaturedBloc>().state.platformsSelected;
-    context
+  }) => context
         .read<FeaturedBloc>()
-        .add(FeaturedFetched(tag: tag, platforms: platforms));
-  }
+        .add(FeaturedFetched(tag: tag, platforms: platformSelected));
 
   bool get _isBottom {
     if (!_controller.hasClients) return false;
@@ -78,27 +73,27 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
   List<(FeaturedTag, String, IconData)> get featuredFilters => [
         (
           FeaturedTag.newAndTrending,
-          context.localisations.new_and_trending,
+          S.current.new_and_trending,
           Icons.trending_up
         ),
         (
           FeaturedTag.newReleases,
-          context.localisations.new_releases_30_days,
+          S.current.new_releases_30_days,
           Icons.new_releases
         ),
         (
           FeaturedTag.bestOfTheYear,
-          context.localisations.best_of_the_year,
+          S.current.best_of_the_year,
           Icons.reviews,
         ),
         (
           FeaturedTag.bestMetacritic,
-          context.localisations.best_metacritic,
+          S.current.best_metacritic,
           Icons.fast_rewind,
         ),
         (
           FeaturedTag.allTimeTop100,
-          context.localisations.all_time_top_100,
+          S.current.all_time_top_100,
           Icons.thumb_up_sharp,
         ),
       ];
@@ -131,8 +126,8 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 DefaultSliverAppBar(
-                  title: context.localisations.featured,
-                  subtitle: context.localisations.featured_subtitle,
+                  title: S.current.featured,
+                  subtitle: S.current.featured_subtitle,
                   actionOne: (
                     IconButton(
                       onPressed: () => showBottomSheet(context),
@@ -218,7 +213,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                   SliverFillRemaining(
                     child: Center(
                       child: ErrorRetryWidget(
-                        text: context.localisations.no_results_found,
+                        text: S.current.no_results_found,
                         onRetryClicked: () {
                           _fetchGames();
                         },

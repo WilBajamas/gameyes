@@ -12,6 +12,8 @@ import 'package:gaming_library_assessment_flutter/widgets/default_outlined_butto
 import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_snackbar.dart';
 
+import '../../../../generated/l10n.dart';
+
 class TaskDetailScreen extends StatefulWidget {
   final int? taskId;
   final SavedGameTask? task;
@@ -38,8 +40,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         context: context,
         builder: (context) => AddContentDialog(
           dialogTitleAndSnackBarTitle: (
-            context.localisations.add_step,
-            context.localisations.step_added
+            S.current.add_step,
+            S.current.step_added
           ),
           onCreatedClicked: (title, description) =>
               context.read<TaskCubit>().addStep(
@@ -72,8 +74,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 DefaultSnackbar(
                   text: state is RemoveStepSuccess
-                      ? context.localisations.removed_step
-                      : context.localisations.remove_step_failed,
+                      ? S.current.removed_step
+                      : S.current.remove_step_failed,
                 ),
               );
             }
@@ -97,7 +99,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 const SizedBox(height: 20),
                 DefaultOutlinedButton(
                   onPressed: () => _showAddStepDialog(task.steps?.length),
-                  text: context.localisations.add_step,
+                  text: S.current.add_step,
                   icon: Icons.add,
                 ),
               ],
@@ -129,12 +131,12 @@ class _TaskTitleState extends State<_TaskTitle> {
           child: !_isEditing
               ? Text(
                   widget.task?.title ??
-                      '(${context.localisations.set_title_here})',
+                      '(${S.current.set_title_here})',
                   style: context.themeData.textTheme.displayLarge,
                 )
               : DefaultBorderTextField(
                   context: context,
-                  title: context.localisations.title,
+                  title: S.current.title,
                   maxLength: 30,
                 ),
         ),
@@ -178,7 +180,7 @@ class _TaskDescriptionState extends State<_TaskDescription> {
                 )
               : DefaultBorderTextField(
                   context: context,
-                  title: context.localisations.description,
+                  title: S.current.description,
                   maxLength: 100,
                   maxLines: 5,
                 ),
@@ -210,7 +212,7 @@ class _TaskReminder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              context.localisations.reminder,
+              S.current.reminder,
               style: context.themeData.textTheme.headlineMedium,
             ),
             Switch(
@@ -291,9 +293,9 @@ class _StepTitle extends StatelessWidget {
   const _StepTitle({required this.step, required this.taskId});
 
   void _handleOptions(String option, TaskStep step, BuildContext context) {
-    if (option == context.localisations.edit) {
+    if (option == S.current.edit) {
       _showEditStepDialog(step, context);
-    } else if (option == context.localisations.remove) {
+    } else if (option == S.current.remove) {
       _showRemoveStepDialog(
         step,
         () => context.read<TaskCubit>().removeStep(step: step),
@@ -310,8 +312,8 @@ class _StepTitle extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) => DefaultAlertDialog(
-          title: '${context.localisations.remove_step}?',
-          description: context.localisations.remove_step_desc(step.title!),
+          title: '${S.current.remove_step}?',
+          description: S.current.remove_step_desc(step.title!),
           onPositivePressed: positiveCallback,
         ),
       );
@@ -320,8 +322,8 @@ class _StepTitle extends StatelessWidget {
         context: context,
         builder: (context) => AddContentDialog(
           dialogTitleAndSnackBarTitle: (
-            context.localisations.add_step,
-            context.localisations.step_added
+            S.current.add_step,
+            S.current.step_added
           ),
           titleDescription: (step.title, step.description),
           onCreatedClicked: (title, description) =>
@@ -347,8 +349,8 @@ class _StepTitle extends StatelessWidget {
         ),
         DefaultPopUpButton(
           items: [
-            context.localisations.edit,
-            context.localisations.remove,
+            S.current.edit,
+            S.current.remove,
           ],
           onItemClicked: (String selection) =>
               _handleOptions(selection, step, context),

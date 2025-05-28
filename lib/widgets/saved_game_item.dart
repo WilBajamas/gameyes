@@ -7,6 +7,8 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/s
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
 
+import '../generated/l10n.dart';
+
 class SavedGameItem extends StatelessWidget {
   final SavedGame savedGame;
   final Function(int gameId, String? backgroundImage) onDetailClick;
@@ -112,7 +114,7 @@ class _SlidableView extends StatelessWidget {
             onPressed: (context) => onRemoveClick(),
             foregroundColor: context.themeData.colorScheme.primary,
             icon: Icons.delete,
-            label: context.localisations.remove,
+            label: S.current.remove,
           ),
           SlidableAction(
             borderRadius: const BorderRadius.only(
@@ -122,7 +124,7 @@ class _SlidableView extends StatelessWidget {
             onPressed: (context) => onDetailClick(),
             foregroundColor: context.themeData.colorScheme.primary,
             icon: Icons.details,
-            label: context.localisations.details,
+            label: S.current.details,
           ),
         ],
       ),
@@ -182,7 +184,7 @@ class _TaskColumn extends StatelessWidget {
       children: [
         //* Total task completion
         Text(
-          context.localisations.tasks_completed,
+          S.current.tasks_completed,
           style: context.themeData.textTheme.bodySmall,
         ),
         Text(
@@ -226,7 +228,7 @@ class _PlatformDayAddedRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              '${context.localisations.date_added}:',
+              '${S.current.date_added}:',
               style: context.themeData.textTheme.bodySmall,
             ),
             Text(
