@@ -32,19 +32,11 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
   ) async {
     emit(
       state.copyWith(
-        // tag: event.tag,
         status: FeaturedStatus.loading,
-        // platformsSelected: event.platforms,
         games: const <Game>[],
         nextPageStatus: FeaturedNextPageStatus.initial,
       ),
     );
-    // emit(
-    //   FeaturedState(
-    //     tag: event.tag,
-    //     status: FeaturedStatus.loading,
-    //   ),
-    // );
 
     await _fetchFeaturedUseCase(
       page: 1,

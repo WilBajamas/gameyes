@@ -17,6 +17,8 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/games/presentation/screen/games_screen_wrapper.dart';
+
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final goRouter = GoRouter(
@@ -56,7 +58,7 @@ final goRouter = GoRouter(
           routes: [
             GoRoute(
               path: RouteConstants.games,
-              builder: (context, state) => const GamesScreen(),
+              builder: (context, state) => const GamesScreenWrapper(),
             ),
           ],
         ),
