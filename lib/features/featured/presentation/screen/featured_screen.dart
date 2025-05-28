@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/game_platform.dart';
 import '../../../../generated/l10n.dart';
+import '../constant/featured_tags_constant.dart';
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
@@ -69,34 +70,6 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
     final currentScroll = _controller.offset;
     return currentScroll >= (maxScroll * 0.9);
   }
-
-  List<(FeaturedTag, String, IconData)> get featuredFilters => [
-        (
-          FeaturedTag.newAndTrending,
-          S.current.new_and_trending,
-          Icons.trending_up
-        ),
-        (
-          FeaturedTag.newReleases,
-          S.current.new_releases_30_days,
-          Icons.new_releases
-        ),
-        (
-          FeaturedTag.bestOfTheYear,
-          S.current.best_of_the_year,
-          Icons.reviews,
-        ),
-        (
-          FeaturedTag.bestMetacritic,
-          S.current.best_metacritic,
-          Icons.fast_rewind,
-        ),
-        (
-          FeaturedTag.allTimeTop100,
-          S.current.all_time_top_100,
-          Icons.thumb_up_sharp,
-        ),
-      ];
 
   void showBottomSheet(BuildContext context) {
     final initialPlatforms =

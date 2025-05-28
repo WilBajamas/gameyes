@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gaming_library_assessment_flutter/config/routes.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_screenshot_cubit.dart';
@@ -20,7 +20,6 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart';
 
 import 'generated/l10n.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const MyApp());
