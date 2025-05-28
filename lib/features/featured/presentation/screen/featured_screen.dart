@@ -6,7 +6,6 @@ import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubit/featured_filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_filter_bottom_sheet.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
@@ -15,6 +14,10 @@ import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.da
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/enums/game_platform.dart';
+import '../../../../generated/l10n.dart';
+import '../constant/featured_tags_constant.dart';
 
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
@@ -30,8 +33,6 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
   @override
   void initState() {
     _controller.addListener(_onScroll);
-    _fetchGames();
-
     super.initState();
   }
 
@@ -57,14 +58,11 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
       context.read<FeaturedBloc>().add(const FeaturedNextPage());
 
   void _fetchGames({
-    FeaturedTag tag = FeaturedTag.newAndTrending,
-  }) {
-    final platforms =
-        context.read<FeaturedFilterCubit>().state.platformsSelected;
-    context
+    FeaturedTag? tag,
+    Set<GamePlatform>? platformSelected,
+  }) => context
         .read<FeaturedBloc>()
-        .add(FeaturedFetched(tag: tag, platforms: platforms));
-  }
+        .add(FeaturedFetched(tag: tag, platforms: platformSelected));
 
   bool get _isBottom {
     if (!_controller.hasClients) return false;
@@ -73,33 +71,22 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
     return currentScroll >= (maxScroll * 0.9);
   }
 
-  List<(FeaturedTag, String, IconData)> get featuredFilters => [
-        (
-          FeaturedTag.newAndTrending,
-          context.localisations.new_and_trending,
-          Icons.trending_up
+  void showBottomSheet(BuildContext context) {
+    final initialPlatforms =
+        context.read<FeaturedBloc>().state.platformsSelected;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (bottomSheetContext) => FeaturedFilterBottomSheet(
+        initialPlatforms: initialPlatforms,
+        onSaveClick: (platforms) => _fetchGames(
+          tag: context.read<FeaturedBloc>().state.tag,
+          platformSelected: platforms,
         ),
-        (
-          FeaturedTag.newReleases,
-          context.localisations.new_releases_30_days,
-          Icons.new_releases
-        ),
-        (
-          FeaturedTag.bestOfTheYear,
-          context.localisations.best_of_the_year,
-          Icons.reviews,
-        ),
-        (
-          FeaturedTag.bestMetacritic,
-          context.localisations.best_metacritic,
-          Icons.fast_rewind,
-        ),
-        (
-          FeaturedTag.allTimeTop100,
-          context.localisations.all_time_top_100,
-          Icons.thumb_up_sharp,
-        ),
-      ];
+      ),
+      isScrollControlled: true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,19 +99,11 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 DefaultSliverAppBar(
-                  title: context.localisations.featured,
-                  subtitle: context.localisations.featured_subtitle,
+                  title: S.current.featured,
+                  subtitle: S.current.featured_subtitle,
                   actionOne: (
                     IconButton(
-                      onPressed: () => showModalBottomSheet(
-                        context: context,
-                        builder: (context) => FeaturedFilterBottomSheet(
-                          onSaveClick: () => _fetchGames(
-                            tag: context.read<FeaturedBloc>().state.tag,
-                          ),
-                        ),
-                        isScrollControlled: true,
-                      ),
+                      onPressed: () => showBottomSheet(context),
                       icon: Icon(
                         Icons.filter_list,
                         color: context.themeData.colorScheme.onBackground,
@@ -207,7 +186,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                   SliverFillRemaining(
                     child: Center(
                       child: ErrorRetryWidget(
-                        text: context.localisations.no_results_found,
+                        text: S.current.no_results_found,
                         onRetryClicked: () {
                           _fetchGames();
                         },

@@ -7,6 +7,8 @@ import 'package:gaming_library_assessment_flutter/features/onboarding/presentati
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../generated/l10n.dart';
+
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -16,11 +18,11 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   Map<String, String> get titleAndAnimations => {
-        context.localisations.onboarding_description_one:
+        S.current.onboarding_description_one:
             AssetConstants.onboardingAnimation1,
-        context.localisations.onboarding_description_two:
+        S.current.onboarding_description_two:
             AssetConstants.onboardingAnimation2,
-        context.localisations.onboarding_description_three:
+        S.current.onboarding_description_three:
             AssetConstants.onboardingAnimation3,
       };
 
@@ -55,7 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: TextButton(
                   onPressed: () => skipClicked(),
                   child: Text(
-                    context.localisations.skip,
+                    S.current.skip,
                     style: context.themeData.textTheme.bodyLarge,
                   ),
                 ),
@@ -79,8 +81,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: DefaultFilledButtonFullWidth(
                 _isLastPage
-                    ? context.localisations.skip
-                    : context.localisations.next,
+                    ? S.current.skip
+                    : S.current.next,
                 () => nextButtonClick(),
               ),
             ),

@@ -5,6 +5,8 @@ import 'package:gaming_library_assessment_flutter/widgets/default_border_text_fi
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
 import 'package:go_router/go_router.dart';
 
+import '../generated/l10n.dart';
+
 class AddContentDialog extends StatefulWidget {
   final (String?, String?)? titleDescription;
   final (String, String) dialogTitleAndSnackBarTitle;
@@ -74,12 +76,12 @@ class _AddContentDialogState extends State<AddContentDialog> {
                 DefaultBorderTextField(
                   textEditingController: _titleTextController,
                   context: context,
-                  title: context.localisations.title,
+                  title: S.current.title,
                   minLines: 1,
                   isRequired: true,
                   maxLengthEnforce: true,
                   maxLength: 30,
-                  hint: context.localisations.keep_it_short,
+                  hint: S.current.keep_it_short,
                 ),
                 const SizedBox(
                   height: 8,
@@ -87,20 +89,20 @@ class _AddContentDialogState extends State<AddContentDialog> {
                 DefaultBorderTextField(
                   textEditingController: _descriptionTextController,
                   context: context,
-                  title: context.localisations.description,
+                  title: S.current.description,
                   inputType: TextInputType.multiline,
                   maxLines: null,
                   isRequired: true,
                   minLines: 5,
                   maxLength: 100,
                   maxLengthEnforce: true,
-                  hint: context.localisations.a_brief_description,
+                  hint: S.current.a_brief_description,
                 ),
                 const SizedBox(
                   height: 12,
                 ),
                 DefaultFilledButtonFullWidth(
-                  context.localisations.save,
+                  S.current.save,
                   height: 40,
                   () {
                     if (_formKey.currentState!.validate()) {

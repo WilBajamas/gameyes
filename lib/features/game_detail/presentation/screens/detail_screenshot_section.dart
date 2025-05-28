@@ -8,6 +8,8 @@ import 'package:gaming_library_assessment_flutter/widgets/game_screenshot.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
+import '../../../../generated/l10n.dart';
+
 class DetailScreenshotsSection extends StatelessWidget {
   final int? id;
 
@@ -54,7 +56,7 @@ class DetailScreenshotsSection extends StatelessWidget {
               } else {
                 return Center(
                   child: ErrorRetryWidget(
-                    text: context.localisations.no_results_found,
+                    text: S.current.no_results_found,
                     onRetryClicked: () => context
                         .read<GameScreenshotCubit>()
                         .fetchGameScreenshots(id: id!),

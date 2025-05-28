@@ -7,6 +7,8 @@ import 'package:gaming_library_assessment_flutter/widgets/default_outlined_butto
 import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/group_task_item.dart';
 
+import '../../../../generated/l10n.dart';
+
 class TrackerTasksSection extends StatelessWidget {
   const TrackerTasksSection({super.key});
 
@@ -15,8 +17,8 @@ class TrackerTasksSection extends StatelessWidget {
       context: context,
       builder: (context) => AddContentDialog(
         dialogTitleAndSnackBarTitle: (
-          context.localisations.add_group_task,
-          context.localisations.group_task_created
+          S.current.add_group_task,
+          S.current.group_task_created
         ),
         onCreatedClicked: (title, description) => context
             .read<TrackerDetailCubit>()
@@ -40,7 +42,7 @@ class TrackerTasksSection extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 14),
                   child: Text(
-                    context.localisations.no_group_task_created,
+                    S.current.no_group_task_created,
                     style: context.themeData.textTheme.bodySmall,
                   ),
                 ),
@@ -54,7 +56,7 @@ class TrackerTasksSection extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 12, bottom: 14),
                   child: DefaultOutlinedButton(
                     onPressed: () => showAddGroupTaskDialog(context),
-                    text: context.localisations.add_group_task,
+                    text: S.current.add_group_task,
                     icon: Icons.add,
                   ),
                 ),
@@ -89,7 +91,7 @@ class _GroupTaskLimitWarning extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              context.localisations.only_10_group_tasks_allowed,
+              S.current.only_10_group_tasks_allowed,
               style: context.themeData.textTheme.bodyLarge,
             ),
           ),

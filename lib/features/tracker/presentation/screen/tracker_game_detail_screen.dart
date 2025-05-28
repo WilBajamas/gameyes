@@ -9,6 +9,8 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_tasks_section.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_status_tag.dart';
 
+import '../../../../generated/l10n.dart';
+
 class TrackerGameDetailScreen extends StatefulWidget {
   final SavedGame game;
 
@@ -61,10 +63,10 @@ class _TrackerGameDetailScreenState extends State<TrackerGameDetailScreen> {
                   indicatorColor: Colors.white,
                   tabs: <Widget>[
                     Tab(
-                      text: context.localisations.details,
+                      text: S.current.details,
                     ),
                     Tab(
-                      text: context.localisations.tasks,
+                      text: S.current.tasks,
                     ),
                   ],
                 ),
@@ -118,7 +120,7 @@ class _HeaderBackground extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '${context.localisations.date_added}:',
+                          '${S.current.date_added}:',
                           style: context.themeData.textTheme.bodySmall!
                               .copyWith(color: Colors.white),
                         ),
@@ -147,7 +149,7 @@ class _HeaderBackground extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         AutoSizeText(
-                          context.localisations.tasks_completed,
+                          S.current.tasks_completed,
                           maxLines: 1,
                           maxFontSize: 20,
                           style: context.themeData.textTheme.displaySmall!

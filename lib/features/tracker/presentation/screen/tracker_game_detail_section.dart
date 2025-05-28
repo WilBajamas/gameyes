@@ -7,6 +7,8 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/s
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/task_item.dart';
 
+import '../../../../generated/l10n.dart';
+
 class TrackerGameDetailSection extends StatelessWidget {
   const TrackerGameDetailSection({super.key});
 
@@ -54,7 +56,7 @@ class _PlatformSelector extends StatelessWidget {
               children: [
                 Text(
                   // ignore: lines_longer_than_80_chars
-                  '${context.localisations.platforms} (${context.localisations.select_platforms})',
+                  '${S.current.platforms} (${S.current.select_platforms})',
                   style: context.themeData.textTheme.titleMedium,
                 ),
               ],
@@ -116,13 +118,13 @@ class _TasksPinned extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.localisations.tasks_pinned,
+                  S.current.tasks_pinned,
                   style: context.themeData.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
                 if (tasks.isEmpty)
                   Text(
-                    context.localisations.no_pinned_tasks_desc,
+                    S.current.no_pinned_tasks_desc,
                     style: context.themeData.textTheme.bodySmall,
                   ),
                 ListView.builder(

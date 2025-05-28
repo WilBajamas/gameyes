@@ -10,6 +10,8 @@ import 'package:gaming_library_assessment_flutter/widgets/horizontal_separator.d
 import 'package:readmore/readmore.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../../generated/l10n.dart';
+
 class DetailMidSection extends StatelessWidget {
   final int? gameId;
 
@@ -38,7 +40,7 @@ class DetailMidSection extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                context.localisations.about,
+                S.current.about,
                 style: context.themeData.textTheme.displayLarge,
               ),
               const SizedBox(height: 6),
@@ -53,8 +55,8 @@ class DetailMidSection extends StatelessWidget {
                         state.response!.description!,
                         trimLines: 7,
                         trimMode: TrimMode.Line,
-                        trimCollapsedText: context.localisations.read_more,
-                        trimExpandedText: context.localisations.read_less,
+                        trimCollapsedText: S.current.read_more,
+                        trimExpandedText: S.current.read_less,
                         style: context.themeData.textTheme.bodySmall,
                       ),
                     ],
@@ -103,14 +105,14 @@ class DetailPointsSection extends StatelessWidget {
             children: [
               Expanded(
                 child: GameDetailSectionPoint(
-                  title: context.localisations.genre,
+                  title: S.current.genre,
                   value: state.response!.genreListString,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
                 child: GameDetailSectionPoint(
-                  title: context.localisations.publishers,
+                  title: S.current.publishers,
                   value: state.response!.publisherListString,
                 ),
               ),
@@ -122,14 +124,14 @@ class DetailPointsSection extends StatelessWidget {
             children: [
               Expanded(
                 child: GameDetailSectionPoint(
-                  title: context.localisations.developers,
+                  title: S.current.developers,
                   value: state.response!.developerListString,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
                 child: GameDetailSectionPoint(
-                  title: context.localisations.platforms,
+                  title: S.current.platforms,
                   value: state.response!.platformListString,
                 ),
               ),

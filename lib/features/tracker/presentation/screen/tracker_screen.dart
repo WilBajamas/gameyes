@@ -14,6 +14,8 @@ import 'package:gaming_library_assessment_flutter/widgets/default_filter_list_ap
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../generated/l10n.dart';
+
 class TrackerScreen extends StatefulWidget {
   const TrackerScreen({super.key});
 
@@ -59,8 +61,8 @@ class _TrackerScreenState extends State<TrackerScreen> {
     showDialog(
       context: context,
       builder: (context) => DefaultAlertDialog(
-        title: context.localisations.delete_saved_game,
-        description: context.localisations.delete_saved_game_description,
+        title: S.current.delete_saved_game,
+        description: S.current.delete_saved_game_description,
         onPositivePressed: () =>
             _trackerRepository.removeSavedGame(savedGameId),
       ),
@@ -70,17 +72,17 @@ class _TrackerScreenState extends State<TrackerScreen> {
   List<(SavedGameFilterTag, String, IconData?)> get trackerFilters => [
         (
           SavedGameFilterTag.recentlyChanged,
-          context.localisations.recently_changed,
+          S.current.recently_changed,
           null,
         ),
         (
           SavedGameFilterTag.name,
-          context.localisations.name,
+          S.current.name,
           null,
         ),
         (
           SavedGameFilterTag.date,
-          context.localisations.date_added,
+          S.current.date_added,
           null,
         ),
       ];
@@ -104,7 +106,7 @@ class _TrackerScreenState extends State<TrackerScreen> {
                   child: SearchBar(
                     onSubmitted: (term) =>
                         context.read<TrackerCubit>().setTag(null, term),
-                    hintText: context.localisations.search_saved_games,
+                    hintText: S.current.search_saved_games,
                     padding: const MaterialStatePropertyAll<EdgeInsets>(
                       EdgeInsets.symmetric(horizontal: 12),
                     ),
@@ -208,7 +210,7 @@ class _EmptyListDescription extends StatelessWidget {
           heightFactor: 1,
           child: Text(
             // ignore: lines_longer_than_80_chars
-            '${context.localisations.no_games_saved} \n${context.localisations.no_games_saved_description}',
+            '${S.current.no_games_saved} \n${S.current.no_games_saved_description}',
             textAlign: TextAlign.center,
             style: context.themeData.textTheme.bodySmall,
           ),

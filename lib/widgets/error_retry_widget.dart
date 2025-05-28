@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+
+import '../generated/l10n.dart';
 
 class ErrorRetryWidget extends StatelessWidget {
   final VoidCallback onRetryClicked;
@@ -21,13 +22,13 @@ class ErrorRetryWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            text ?? context.localisations.error_results,
+            text ?? S.current.error_results,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
           ElevatedButton(
             onPressed: onRetryClicked,
-            child: Text(context.localisations.retry),
+            child: Text(S.current.retry),
           ),
         ],
       ),

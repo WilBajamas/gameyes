@@ -9,6 +9,8 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
 
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 
+import '../../../../generated/l10n.dart';
+
 class GameDetailScreen extends StatefulWidget {
   final (int, String, String?)? gameExtra;
 
@@ -77,7 +79,7 @@ class _GameDetailScreenState extends State<GameDetailScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 16, bottom: 12),
                 child: Text(
-                  context.localisations.screenshots,
+                  S.current.screenshots,
                   style: context.themeData.textTheme.displayLarge,
                 ),
               ),

@@ -4,6 +4,8 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../generated/l10n.dart';
+
 class GameDetailTopContentShimmer extends StatelessWidget {
   const GameDetailTopContentShimmer({super.key});
 
@@ -22,7 +24,7 @@ class GameDetailTopContentShimmer extends StatelessWidget {
             const SizedBox(height: 8),
             // ** Release date //
             Text(
-              '${context.localisations.release_date}:',
+              '${S.current.release_date}:',
               style: context.themeData.textTheme.titleMedium!,
             ),
             Text(
@@ -42,7 +44,7 @@ class GameDetailTopContentShimmer extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    context.localisations.metacritic_score,
+                    S.current.metacritic_score,
                   ),
                 ),
               ],

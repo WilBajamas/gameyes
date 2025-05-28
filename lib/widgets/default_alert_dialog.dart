@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
+import '../generated/l10n.dart';
+
 class DefaultAlertDialog extends StatelessWidget {
   final String title;
   final String? description;
@@ -27,7 +29,7 @@ class DefaultAlertDialog extends StatelessWidget {
           : null,
       actions: [
         TextButton(
-          child: Text(context.localisations.ok),
+          child: Text(S.current.ok),
           onPressed: () {
             if (onPositivePressed case final pressed?) pressed();
             Navigator.pop(context);
@@ -35,7 +37,7 @@ class DefaultAlertDialog extends StatelessWidget {
         ),
         TextButton(
           child: Text(
-            context.localisations.cancel,
+            S.current.cancel,
           ),
           onPressed: () {
             if (onNegativePressed case final pressed?) pressed();

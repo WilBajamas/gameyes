@@ -12,15 +12,18 @@ import 'package:gaming_library_assessment_flutter/features/games/data/models/gam
 import 'package:injectable/injectable.dart';
 
 part 'featured_event.dart';
+
 part 'featured_state.dart';
 
 @injectable
 class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
-  final _fetchFeaturedUsecase = injection.getIt<FetchFeaturedUseCase>();
+  final _fetchFeaturedUseCase = injection.getIt<FetchFeaturedUseCase>();
 
   FeaturedBloc() : super(const FeaturedState()) {
     on<FeaturedFetched>(_onFetchFeatured, transformer: droppable());
     on<FeaturedNextPage>(_onFetchNextPage, transformer: droppable());
+
+    add(const FeaturedFetched(tag: FeaturedTag.newAndTrending));
   }
 
   Future<void> _onFetchFeatured(
@@ -28,23 +31,40 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
     Emitter<FeaturedState> emit,
   ) async {
     emit(
-      FeaturedState(
-        tag: event.tag,
+      state.copyWith(
+        // tag: event.tag,
         status: FeaturedStatus.loading,
+        // platformsSelected: event.platforms,
+        games: const <Game>[],
+        nextPageStatus: FeaturedNextPageStatus.initial,
       ),
     );
+    // emit(
+    //   FeaturedState(
+    //     tag: event.tag,
+    //     status: FeaturedStatus.loading,
+    //   ),
+    // );
 
-    await _fetchFeaturedUsecase(
+    await _fetchFeaturedUseCase(
       page: 1,
-      tag: event.tag,
-      platforms: event.platforms,
-      onFailure: (error) =>
-          emit(state.copyWith(status: FeaturedStatus.failed, error: error)),
+      tag: event.tag ?? state.tag,
+      platforms: event.platforms ?? state.platformsSelected,
+      onFailure: (error) => emit(
+        state.copyWith(
+          tag: event.tag ?? state.tag,
+          status: FeaturedStatus.failed,
+          error: error,
+          platformsSelected: event.platforms ?? state.platformsSelected,
+        ),
+      ),
       onSuccess: (response) => emit(
         state.copyWith(
+          tag: event.tag ?? state.tag,
           status: FeaturedStatus.success,
           response: response,
           games: response.results,
+          platformsSelected: event.platforms,
         ),
       ),
     );
@@ -60,7 +80,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
 
     emit(state.copyWith(nextPageStatus: FeaturedNextPageStatus.loading));
 
-    await _fetchFeaturedUsecase(
+    await _fetchFeaturedUseCase(
       page: state.response!.currentPage! + 1,
       tag: state.tag,
       onSuccess: (response) => emit(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
+import '../generated/l10n.dart';
+
 class DefaultBorderTextField extends StatelessWidget {
   final BuildContext context;
   final TextInputType? inputType;
@@ -71,7 +73,7 @@ class DefaultBorderTextField extends StatelessWidget {
       validator: isRequired
           ? (value) {
               if (value == null || value.isEmpty) {
-                return context.localisations.please_enter_value;
+                return S.current.please_enter_value;
               }
               return null;
             }
