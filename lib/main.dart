@@ -7,12 +7,9 @@ import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.d
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_screenshot_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
-import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/task_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';

@@ -208,7 +208,7 @@ class GamesAppBar extends StatelessWidget {
           },
           icon: Icon(
             Icons.filter_list,
-            color: context.themeData.colorScheme.onBackground,
+            color: context.themeData.colorScheme.onSurface,
           ),
         ),
         null
