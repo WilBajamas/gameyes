@@ -14,13 +14,13 @@ final class GamesFetched extends GamesEvent {
   final bool? ascending;
 
   const GamesFetched({
-    required this.searchTerm,
-    required this.dateFrom,
-    required this.dateTo,
-    required this.platforms,
-    required this.ordering,
-    required this.genres,
-    required this.ascending,
+     this.searchTerm,
+     this.dateFrom,
+     this.dateTo,
+     this.platforms,
+     this.ordering,
+     this.genres,
+     this.ascending,
   });
 
   @override
@@ -38,13 +38,13 @@ final class GamesNextPage extends GamesEvent {
   final bool? ascending;
 
   const GamesNextPage({
-    required this.searchTerm,
-    required this.dateFrom,
-    required this.dateTo,
-    required this.platforms,
-    required this.ordering,
-    required this.genres,
-    required this.ascending,
+     this.searchTerm,
+     this.dateFrom,
+     this.dateTo,
+     this.platforms,
+     this.ordering,
+     this.genres,
+     this.ascending,
   });
 
   @override

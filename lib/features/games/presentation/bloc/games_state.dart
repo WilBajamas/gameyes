@@ -12,6 +12,9 @@ final class GamesState extends Equatable {
   final ErrorType? error;
   final ErrorType? nextPageError;
 
+  // Not too sure about this - violates SRP
+  final FilterState filterState;
+
   const GamesState({
     this.status = GamesStatus.initial,
     this.nextPageStatus = GamesNextPageStatus.initial,
@@ -19,6 +22,7 @@ final class GamesState extends Equatable {
     this.games = const <Game>[],
     this.error,
     this.nextPageError,
+    this.filterState = const FilterState(),
   });
 
   GamesState copyWith({
@@ -29,6 +33,7 @@ final class GamesState extends Equatable {
     ErrorType? error,
     ErrorType? nextPageError,
     int? currentPage,
+    FilterState? filterState,
   }) {
     return GamesState(
       status: status ?? this.status,
@@ -37,10 +42,18 @@ final class GamesState extends Equatable {
       games: games ?? this.games,
       error: error ?? this.error,
       nextPageError: nextPageError ?? this.nextPageError,
+      filterState: filterState ?? this.filterState,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [status, nextPageStatus, response, games, error, nextPageError];
+  List<Object?> get props => [
+        status,
+        nextPageStatus,
+        response,
+        games,
+        error,
+        nextPageError,
+        filterState,
+      ];
 }

@@ -95,10 +95,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1013.FetchFeaturedUseCase>(
         () => _i1013.FetchFeaturedUseCase());
     gh.factory<_i857.FeaturedBloc>(() => _i857.FeaturedBloc());
-    gh.factory<_i592.FilterCubit>(() => _i592.FilterCubit());
-    gh.factory<_i278.GamesDataSource>(() => _i278.GamesDataSource());
-    gh.factory<_i846.FetchGamesUseCase>(() => _i846.FetchGamesUseCase());
-    gh.factory<_i868.GamesBloc>(() => _i868.GamesBloc());
     gh.factory<_i750.GameDetailRemoteDatasource>(
         () => _i750.GameDetailRemoteDatasource());
     gh.factory<_i187.GameScreenshotsDatasource>(
@@ -114,15 +110,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i534.GameDetailRepository>(
         () => _i400.GameDetailRepositoryImpl());
-    gh.factory<_i1005.GamesRepository>(() => _i424.GamesRepositoryImpl());
+    gh.factory<_i278.GamesDataSource>(
+        () => _i278.GamesDataSource(gh<_i267.DioService>()));
+    gh.factory<_i1005.GamesRepository>(
+        () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i47.TrackerDetailRepository>(
         () => _i441.TrackerDetailRepositoryImpl());
     gh.factory<_i634.GameScreenshotsRepository>(
         () => _i991.GameScreenshotsRepositoryImpl());
     gh.factory<_i86.TrackerRepository>(() => _i104.TrackerRepositoryImpl());
     gh.factory<_i787.FeaturedRepository>(() => _i870.FeaturedRepositoryImpl());
+    gh.factory<_i592.FilterCubit>(
+        () => _i592.FilterCubit(initialState: gh<_i592.FilterState>()));
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
+    gh.factory<_i846.FetchGamesUseCase>(
+        () => _i846.FetchGamesUseCase(gh<_i1005.GamesRepository>()));
+    gh.factory<_i868.GamesBloc>(
+        () => _i868.GamesBloc(gh<_i846.FetchGamesUseCase>()));
     return this;
   }
 }

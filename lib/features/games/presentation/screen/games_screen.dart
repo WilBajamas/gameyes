@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/widget/filter_bottom_sheet.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
@@ -31,7 +30,6 @@ class _GamesScreenState extends State<GamesScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    _fetchGames();
   }
 
   @override
@@ -42,35 +40,9 @@ class _GamesScreenState extends State<GamesScreen> {
     super.dispose();
   }
 
-  void _fetchGames() {
-    final filterState = context.read<FilterCubit>().state;
-    context.read<GamesBloc>().add(
-          GamesFetched(
-            searchTerm: filterState.searchTerm,
-            dateFrom: filterState.dateFrom,
-            dateTo: filterState.dateTo,
-            platforms: filterState.platforms,
-            ordering: filterState.ordering,
-            genres: filterState.genres,
-            ascending: filterState.ascending,
-          ),
-        );
-  }
-
-  void _fetchNextPage() {
-    final filterState = context.read<FilterCubit>().state;
-    context.read<GamesBloc>().add(
-          GamesNextPage(
-            searchTerm: filterState.searchTerm,
-            dateFrom: filterState.dateFrom,
-            dateTo: filterState.dateTo,
-            platforms: filterState.platforms,
-            ordering: filterState.ordering,
-            genres: filterState.genres,
-            ascending: filterState.ascending,
-          ),
-        );
-  }
+  void _fetchNextPage() => context.read<GamesBloc>().add(
+        const GamesNextPage(),
+      );
 
   void _onScroll() {
     _scrollChangeNotifier.isScrolled =
@@ -99,59 +71,15 @@ class _GamesScreenState extends State<GamesScreen> {
             return CustomScrollView(
               controller: _scrollController,
               slivers: [
-                DefaultSliverAppBar(
-                  title: S.current.games,
-                  subtitle: S.current.games_screen_subtitle,
-                  actionOne: (
-                    IconButton(
-                      onPressed: () => showModalBottomSheet(
-                        context: context,
-                        builder: (context) =>
-                            FilterBottomSheet(onSaveClick: _fetchGames),
-                        isScrollControlled: true,
-                        showDragHandle: true,
-                      ),
-                      icon: Icon(
-                        Icons.filter_list,
-                        color: context.themeData.colorScheme.onBackground,
-                      ),
-                    ),
-                    null
-                  ),
-                ),
+                const GamesAppBar(),
                 if (state.status == GamesStatus.success)
                   CupertinoSliverRefreshControl(
-                    onRefresh: () async => _fetchGames(),
+                    onRefresh: () async => context.read<GamesBloc>().add(
+                          const GamesFetched(),
+                        ),
                   ),
                 if (state.status == GamesStatus.success)
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    sliver: SliverGrid.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.6,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
-                      ),
-                      itemCount: state.games.length,
-                      itemBuilder: (context, index) => GameItem(
-                        fromScreen: RouteConstants.games,
-                        game: state.games[index],
-                        onItemClick: () {
-                          final extra = (
-                            state.games[index].id!,
-                            RouteConstants.games,
-                            state.games[index].backgroundImage
-                          );
-                          context.push(
-                            RouteConstants.gameDetail,
-                            extra: extra,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                  const GamesSliverGrid(),
                 if (state.nextPageStatus == GamesNextPageStatus.loading)
                   const SliverToBoxAdapter(
                     child: Padding(
@@ -179,9 +107,9 @@ class _GamesScreenState extends State<GamesScreen> {
                   SliverFillRemaining(
                     child: Center(
                       child: ErrorRetryWidget(
-                        onRetryClicked: () {
-                          _fetchGames();
-                        },
+                        onRetryClicked: () => context.read<GamesBloc>().add(
+                              const GamesFetched(),
+                            ),
                       ),
                     ),
                   ),
@@ -190,9 +118,9 @@ class _GamesScreenState extends State<GamesScreen> {
                     child: Center(
                       child: ErrorRetryWidget(
                         text: S.current.no_results_found,
-                        onRetryClicked: () {
-                          _fetchGames();
-                        },
+                        onRetryClicked: () => context.read<GamesBloc>().add(
+                              const GamesFetched(),
+                            ),
                       ),
                     ),
                   ),
@@ -204,6 +132,86 @@ class _GamesScreenState extends State<GamesScreen> {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class GamesSliverGrid extends StatelessWidget {
+  const GamesSliverGrid({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<GamesBloc>().state;
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      sliver: SliverGrid.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.6,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+        ),
+        itemCount: state.games.length,
+        itemBuilder: (context, index) => GameItem(
+          fromScreen: RouteConstants.games,
+          game: state.games[index],
+          onItemClick: () {
+            final extra = (
+              state.games[index].id!,
+              RouteConstants.games,
+              state.games[index].backgroundImage
+            );
+            context.push(
+              RouteConstants.gameDetail,
+              extra: extra,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class GamesAppBar extends StatelessWidget {
+  const GamesAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultSliverAppBar(
+      title: S.current.games,
+      subtitle: S.current.games_screen_subtitle,
+      actionOne: (
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (bottomSheetContext) => FilterBottomSheet(
+                onSaveClick: (filter) => context.read<GamesBloc>().add(
+                      GamesFetched(
+                        searchTerm: filter.searchTerm,
+                        dateFrom: filter.dateFrom,
+                        dateTo: filter.dateTo,
+                        platforms: filter.platforms,
+                        ordering: filter.ordering,
+                        genres: filter.genres,
+                        ascending: filter.ascending,
+                      ),
+                    ),
+                filterState: context.read<GamesBloc>().state.filterState,
+              ),
+              isScrollControlled: true,
+              showDragHandle: true,
+            );
+          },
+          icon: Icon(
+            Icons.filter_list,
+            color: context.themeData.colorScheme.onSurface,
+          ),
+        ),
+        null
       ),
     );
   }

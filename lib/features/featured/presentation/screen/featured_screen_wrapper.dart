@@ -8,12 +8,8 @@ class FeaturedScreenWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => FeaturedBloc(),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => FeaturedBloc(),
       child: const FeaturedScreen(),
     );
   }
