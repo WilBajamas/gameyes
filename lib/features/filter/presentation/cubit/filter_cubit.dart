@@ -9,7 +9,9 @@ part 'filter_state.dart';
 
 @injectable
 class FilterCubit extends Cubit<FilterState> {
-  FilterCubit() : super(FilterInitial());
+  FilterCubit({required FilterState initialState}) : super(FilterInitial()) {
+    emit(initialState);
+  }
 
   void changeSelectionValue({
     Set<GamePlatform>? platforms,

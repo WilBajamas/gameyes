@@ -75,6 +75,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
     await _fetchFeaturedUseCase(
       page: state.response!.currentPage! + 1,
       tag: state.tag,
+      platforms: state.platformsSelected,
       onSuccess: (response) => emit(
         state.copyWith(
           nextPageStatus: FeaturedNextPageStatus.initial,

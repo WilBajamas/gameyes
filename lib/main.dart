@@ -34,13 +34,6 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => injection.getIt<FilterCubit>(),
-        ),
-        BlocProvider(
-          create: (context) => injection.getIt<GamesBloc>(),
-          child: const GamesScreen(),
-        ),
-        BlocProvider(
           create: (context) => injection.getIt<GameDetailCubit>(),
           child: const GameDetailScreen(),
         ),

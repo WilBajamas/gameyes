@@ -8,7 +8,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class GamesDataSource {
-  final _dioService = getIt<DioService>();
+  final DioService _dioService;
+
+  const GamesDataSource(this._dioService);
 
   Future<Either<ErrorType, GamesResponse>> fetchDatasourceGames({
     int page = 1,

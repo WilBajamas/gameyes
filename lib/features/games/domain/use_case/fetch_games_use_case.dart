@@ -11,7 +11,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class FetchGamesUseCase {
-  final _repository = getIt<GamesRepository>();
+  final GamesRepository _repository;
+
+  const FetchGamesUseCase(this._repository);
 
   Future<Either<ErrorType, GamesResponse>> call({
     required int page,
@@ -27,27 +29,28 @@ class FetchGamesUseCase {
     final dateToString = dateTo.getFormattedStringFromDateTime() ?? '';
 
     final dateRangeQuery =
-        // ignore: lines_longer_than_80_chars
-        '$dateFromString${dateFromString.isNotEmpty && dateToString.isNotEmpty ? ',' : ''}$dateToString';
+        (dateFromString.isNotEmpty && dateToString.isNotEmpty)
+            ? '$dateFromString,$dateToString'
+            : dateFromString.isNotEmpty
+                ? dateFromString
+                : dateToString;
 
     final gameOrderingQuery = ascending ? ordering?.name : '-${ordering?.name}';
 
-    String getGamePlatformQuery() {
-      if (platforms == null || platforms.isEmpty) return '';
+    String? getGamePlatformQuery() {
+      if (platforms == null || platforms.isEmpty) return null;
 
-      Set<int> allPlatformIds =
-          platforms.fold<Set<int>>({}, (acc, p) => acc..addAll(p.ids));
+      final allPlatformIds = platforms.expand((p) => p.ids).toSet();
 
-      return allPlatformIds.join(',');
+      return allPlatformIds.isNotEmpty ? allPlatformIds.join(',') : null;
     }
 
     return await _repository.fetchGames(
       page: page,
       searchTerm: searchTerm,
-      dateRange: dateRangeQuery,
+      dateRange: dateRangeQuery.isNotEmpty ? dateRangeQuery : null,
       ordering: gameOrderingQuery,
-      platforms:
-          getGamePlatformQuery().isNotEmpty ? getGamePlatformQuery() : null,
+      platforms: getGamePlatformQuery(),
     );
   }
 }
