@@ -5,6 +5,10 @@ class ConfigConstants {
   static const apiKey = 'API_KEY';
   static const heroTag = 'hero_tag';
   static const enviedFilePath = '../gameyes/secret.env';
+
+  static const Duration connectTimeout = Duration(seconds: 15);
+  static const Duration receiveTimeout = Duration(seconds: 15);
+  static const Duration sendTimeout = Duration(seconds: 5);
 }
 
 class PathConstants {
