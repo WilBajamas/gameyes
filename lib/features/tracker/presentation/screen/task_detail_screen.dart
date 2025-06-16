@@ -89,8 +89,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 _TaskTitle(task: task),
                 const SizedBox(height: 8),
                 _TaskDescription(task: task),
-                const SizedBox(height: 16),
-                _TaskReminder(task: task),
+                // const SizedBox(height: 16),
+                // _TaskReminder(task: task),
                 const SizedBox(height: 20),
                 if (task.steps != null && task.steps!.isNotEmpty)
                   _TaskSteps(
@@ -130,8 +130,7 @@ class _TaskTitleState extends State<_TaskTitle> {
         Expanded(
           child: !_isEditing
               ? Text(
-                  widget.task?.title ??
-                      '(${S.current.set_title_here})',
+                  widget.task?.title ?? '(${S.current.set_title_here})',
                   style: context.themeData.textTheme.displayLarge,
                 )
               : DefaultBorderTextField(
@@ -149,7 +148,7 @@ class _TaskTitleState extends State<_TaskTitle> {
             _isEditing ? Icons.done : Icons.edit,
             color: kColorScheme.primary,
           ),
-          color: kColorScheme.onBackground,
+          color: kColorScheme.onSurface,
         ),
       ],
     );
@@ -187,7 +186,7 @@ class _TaskDescriptionState extends State<_TaskDescription> {
         ),
         IconButton(
           onPressed: () => setState(() => _isEditing = !_isEditing),
-          color: kColorScheme.onBackground,
+          color: kColorScheme.onSurface,
           icon: Icon(
             _isEditing ? Icons.done : Icons.edit,
             color: kColorScheme.primary,

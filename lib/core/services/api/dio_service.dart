@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/retrofit_service.dart';
@@ -22,8 +23,8 @@ class DioService {
     dio.interceptors.add(defaultInterceptor);
     dio.interceptors.add(
       PrettyDioLogger(
-        requestBody: true,
-        requestHeader: true,
+        requestBody: kDebugMode,
+        requestHeader: kDebugMode,
       ),
     );
 

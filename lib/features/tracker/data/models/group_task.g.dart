@@ -99,11 +99,12 @@ GroupTask _groupTaskDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = GroupTask();
-  object.description = reader.readStringOrNull(offsets[0]);
-  object.gameId = reader.readLongOrNull(offsets[1]);
+  final object = GroupTask(
+    description: reader.readStringOrNull(offsets[0]),
+    gameId: reader.readLongOrNull(offsets[1]),
+    title: reader.readStringOrNull(offsets[2]),
+  );
   object.id = id;
-  object.title = reader.readStringOrNull(offsets[2]);
   return object;
 }
 

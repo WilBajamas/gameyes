@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'retrofit_service.g.dart';
 

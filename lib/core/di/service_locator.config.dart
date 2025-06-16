@@ -99,7 +99,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i187.GameScreenshotsDatasource());
     gh.factory<_i238.GameDetailCubit>(() => _i238.GameDetailCubit());
     gh.factory<_i488.GameScreenshotCubit>(() => _i488.GameScreenshotCubit());
-    gh.factory<_i944.GameLocalDatasource>(() => _i944.GameLocalDatasource());
     gh.factory<_i564.TaskCubit>(() => _i564.TaskCubit());
     gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
     gh.factory<_i185.TrackerDetailCubit>(() => _i185.TrackerDetailCubit());
@@ -117,14 +116,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i592.FilterCubit(initialState: gh<_i592.FilterState>()));
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
+    gh.factory<_i944.GameLocalDatasource>(
+        () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
     gh.singleton<_i267.DioService>(
         () => _i267.DioService(gh<_i646.DefaultDioInterceptor>()));
     gh.factory<_i278.GamesDataSource>(
         () => _i278.GamesDataSource(gh<_i267.DioService>()));
-    gh.factory<_i1005.GamesRepository>(
-        () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i750.GameDetailRemoteDatasource>(
         () => _i750.GameDetailRemoteDatasource(gh<_i267.DioService>()));
+    gh.factory<_i1005.GamesRepository>(
+        () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i846.FetchGamesUseCase>(
         () => _i846.FetchGamesUseCase(gh<_i1005.GamesRepository>()));
     gh.factory<_i868.GamesBloc>(

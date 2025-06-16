@@ -41,7 +41,7 @@ class TaskItem extends StatelessWidget {
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: context.themeData.colorScheme.background,
+          color: context.themeData.colorScheme.surface,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
