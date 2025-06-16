@@ -7,9 +7,6 @@ import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.d
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
     as injection;
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_screenshot_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/task_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
@@ -30,14 +27,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => injection.getIt<GameDetailCubit>(),
-          child: const GameDetailScreen(),
-        ),
-        BlocProvider(
-          create: (context) => injection.getIt<GameScreenshotCubit>(),
-          child: const GameDetailScreen(),
-        ),
         BlocProvider(
           create: (context) => injection.getIt<TrackerCubit>(),
           child: const TrackerScreen(),

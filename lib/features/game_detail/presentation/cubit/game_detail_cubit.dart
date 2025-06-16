@@ -13,7 +13,9 @@ part 'game_detail_state.dart';
 class GameDetailCubit extends Cubit<GameDetailState> {
   final _gameDetailRepository = getIt<GameDetailRepository>();
 
-  GameDetailCubit() : super(const GameDetailState());
+  GameDetailCubit({required int id}) : super(const GameDetailState()) {
+    fetchGameDetail(id: id);
+  }
 
   void get resetContent => emit(const GameDetailState());
 

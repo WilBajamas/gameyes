@@ -97,8 +97,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i857.FeaturedBloc>(() => _i857.FeaturedBloc());
     gh.factory<_i187.GameScreenshotsDatasource>(
         () => _i187.GameScreenshotsDatasource());
-    gh.factory<_i238.GameDetailCubit>(() => _i238.GameDetailCubit());
-    gh.factory<_i488.GameScreenshotCubit>(() => _i488.GameScreenshotCubit());
     gh.factory<_i564.TaskCubit>(() => _i564.TaskCubit());
     gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
     gh.factory<_i185.TrackerDetailCubit>(() => _i185.TrackerDetailCubit());
@@ -106,6 +104,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i534.GameDetailRepository>(
         () => _i400.GameDetailRepositoryImpl());
+    gh.factory<_i238.GameDetailCubit>(
+        () => _i238.GameDetailCubit(id: gh<int>()));
+    gh.factory<_i488.GameScreenshotCubit>(
+        () => _i488.GameScreenshotCubit(id: gh<int>()));
     gh.factory<_i47.TrackerDetailRepository>(
         () => _i441.TrackerDetailRepositoryImpl());
     gh.factory<_i634.GameScreenshotsRepository>(

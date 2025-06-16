@@ -12,7 +12,9 @@ part 'game_screenshot_state.dart';
 class GameScreenshotCubit extends Cubit<GameScreenshotState> {
   final _gameScreenshotsRepository = getIt<GameScreenshotsRepository>();
 
-  GameScreenshotCubit() : super(const GameScreenshotState());
+  GameScreenshotCubit({required int id}) : super(const GameScreenshotState()) {
+    fetchGameScreenshots(id: id);
+  }
 
   Future<void> fetchGameScreenshots({required int id}) async {
     emit(state.copyWith(status: ScreenshotsStatus.loading));
