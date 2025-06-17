@@ -121,7 +121,7 @@ class _StepsRow extends StatelessWidget {
             child: Text(
               number,
               style: context.themeData.textTheme.bodySmall!
-                  .copyWith(color: kColorScheme.background),
+                  .copyWith(color: kColorScheme.surface),
             ),
           ),
         ),

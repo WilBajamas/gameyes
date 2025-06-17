@@ -266,7 +266,7 @@ class _TaskSteps extends StatelessWidget {
 
     return Stepper(
       key: Key(steps.length.toString()),
-      connectorColor: MaterialStateProperty.all<Color>(
+      connectorColor: WidgetStateProperty.all<Color>(
         kColorScheme.primary,
       ),
       currentStep: task.currentStepIndex,

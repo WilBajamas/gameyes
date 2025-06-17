@@ -32,7 +32,7 @@ class DetailScreenshotsSection extends StatelessWidget {
                   child: ErrorRetryWidget(
                     onRetryClicked: () => context
                         .read<GameScreenshotCubit>()
-                        .fetchGameScreenshots(id: id!),
+                        .fetchGameScreenshots(id: id),
                   ),
                 );
               case ScreenshotsStatus.success:
@@ -62,7 +62,7 @@ class DetailScreenshotsSection extends StatelessWidget {
                       text: S.current.no_results_found,
                       onRetryClicked: () => context
                           .read<GameScreenshotCubit>()
-                          .fetchGameScreenshots(id: id!),
+                          .fetchGameScreenshots(id: id),
                     ),
                   );
                 }

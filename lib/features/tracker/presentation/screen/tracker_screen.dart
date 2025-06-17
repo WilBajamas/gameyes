@@ -109,10 +109,10 @@ class _TrackerScreenState extends State<TrackerScreen> {
                       onSubmitted: (term) =>
                           context.read<TrackerCubit>().setTag(null, term),
                       hintText: S.current.search_saved_games,
-                      padding: const MaterialStatePropertyAll<EdgeInsets>(
+                      padding: const WidgetStatePropertyAll<EdgeInsets>(
                         EdgeInsets.symmetric(horizontal: 12),
                       ),
-                      elevation: const MaterialStatePropertyAll<double>(
+                      elevation: const WidgetStatePropertyAll<double>(
                         1,
                       ),
                       leading: Icon(
