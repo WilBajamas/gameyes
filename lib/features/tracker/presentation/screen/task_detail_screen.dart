@@ -12,33 +12,20 @@ import 'package:gaming_library_assessment_flutter/widgets/default_outlined_butto
 import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_snackbar.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../generated/l10n.dart';
 
-class TaskDetailScreen extends StatefulWidget {
+class TaskDetailScreen extends StatelessWidget {
   final int? taskId;
   final SavedGameTask? task;
 
   const TaskDetailScreen({this.taskId, this.task, super.key});
 
-  @override
-  State<TaskDetailScreen> createState() => _TaskDetailScreenState();
-}
-
-class _TaskDetailScreenState extends State<TaskDetailScreen> {
-  @override
-  void initState() {
-    context.read<TaskCubit>().setTask(task: widget.task!);
-    if (widget.taskId case final id?) {
-      context.read<TaskCubit>().listenToTask(taskId: id);
-    }
-    super.initState();
-  }
-
-  void _showAddStepDialog(int? stepNumber) {
-    if (widget.taskId case final id?) {
+  void _showAddStepDialog(int? stepNumber, BuildContext context) {
+    if (taskId case final id?) {
       showDialog(
         context: context,
-        builder: (context) => AddContentDialog(
+        builder: (dialogContext) => AddContentDialog(
           dialogTitleAndSnackBarTitle: (
             S.current.add_step,
             S.current.step_added
@@ -66,45 +53,49 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: BlocConsumer<TaskCubit, TaskState>(
-          listener: (context, state) {
-            if (state is RemoveStepFailed || state is RemoveStepSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                DefaultSnackbar(
-                  text: state is RemoveStepSuccess
-                      ? S.current.removed_step
-                      : S.current.remove_step_failed,
-                ),
-              );
-            }
-          },
-          buildWhen: (previous, current) => previous.task != current.task,
-          builder: (context, state) {
-            final task = state.task!;
-
-            return Column(
-              children: [
-                _TaskTitle(task: task),
-                const SizedBox(height: 8),
-                _TaskDescription(task: task),
-                const SizedBox(height: 16),
-                _TaskReminder(task: task),
-                const SizedBox(height: 20),
-                if (task.steps != null && task.steps!.isNotEmpty)
-                  _TaskSteps(
-                    task: task,
+      body: BlocProvider(
+        create: (context) => getIt<TaskCubit>(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          child: BlocConsumer<TaskCubit, TaskState>(
+            listener: (context, state) {
+              if (state is RemoveStepFailed || state is RemoveStepSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  DefaultSnackbar(
+                    text: state is RemoveStepSuccess
+                        ? S.current.removed_step
+                        : S.current.remove_step_failed,
                   ),
-                const SizedBox(height: 20),
-                DefaultOutlinedButton(
-                  onPressed: () => _showAddStepDialog(task.steps?.length),
-                  text: S.current.add_step,
-                  icon: Icons.add,
-                ),
-              ],
-            );
-          },
+                );
+              }
+            },
+            buildWhen: (previous, current) => previous.task != current.task,
+            builder: (context, state) {
+              final task = state.task!;
+
+              return Column(
+                children: [
+                  _TaskTitle(task: task),
+                  const SizedBox(height: 8),
+                  _TaskDescription(task: task),
+                  // const SizedBox(height: 16),
+                  // _TaskReminder(task: task),
+                  const SizedBox(height: 20),
+                  if (task.steps != null && task.steps!.isNotEmpty)
+                    _TaskSteps(
+                      task: task,
+                    ),
+                  const SizedBox(height: 20),
+                  DefaultOutlinedButton(
+                    onPressed: () =>
+                        _showAddStepDialog(task.steps?.length, context),
+                    text: S.current.add_step,
+                    icon: Icons.add,
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -114,6 +105,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 //* Task Title
 class _TaskTitle extends StatefulWidget {
   final SavedGameTask? task;
+
   const _TaskTitle({this.task});
 
   @override
@@ -130,8 +122,7 @@ class _TaskTitleState extends State<_TaskTitle> {
         Expanded(
           child: !_isEditing
               ? Text(
-                  widget.task?.title ??
-                      '(${S.current.set_title_here})',
+                  widget.task?.title ?? '(${S.current.set_title_here})',
                   style: context.themeData.textTheme.displayLarge,
                 )
               : DefaultBorderTextField(
@@ -149,7 +140,7 @@ class _TaskTitleState extends State<_TaskTitle> {
             _isEditing ? Icons.done : Icons.edit,
             color: kColorScheme.primary,
           ),
-          color: kColorScheme.onBackground,
+          color: kColorScheme.onSurface,
         ),
       ],
     );
@@ -159,6 +150,7 @@ class _TaskTitleState extends State<_TaskTitle> {
 //* Task Description
 class _TaskDescription extends StatefulWidget {
   final SavedGameTask? task;
+
   const _TaskDescription({this.task});
 
   @override
@@ -187,7 +179,7 @@ class _TaskDescriptionState extends State<_TaskDescription> {
         ),
         IconButton(
           onPressed: () => setState(() => _isEditing = !_isEditing),
-          color: kColorScheme.onBackground,
+          color: kColorScheme.onSurface,
           icon: Icon(
             _isEditing ? Icons.done : Icons.edit,
             color: kColorScheme.primary,
@@ -201,6 +193,7 @@ class _TaskDescriptionState extends State<_TaskDescription> {
 //* Reminder
 class _TaskReminder extends StatelessWidget {
   final SavedGameTask? task;
+
   const _TaskReminder({this.task});
 
   @override
@@ -267,7 +260,7 @@ class _TaskSteps extends StatelessWidget {
 
     return Stepper(
       key: Key(steps.length.toString()),
-      connectorColor: MaterialStateProperty.all<Color>(
+      connectorColor: WidgetStateProperty.all<Color>(
         kColorScheme.primary,
       ),
       currentStep: task.currentStepIndex,
@@ -290,6 +283,7 @@ class _TaskSteps extends StatelessWidget {
 class _StepTitle extends StatelessWidget {
   final TaskStep step;
   final int taskId;
+
   const _StepTitle({required this.step, required this.taskId});
 
   void _handleOptions(String option, TaskStep step, BuildContext context) {
@@ -362,6 +356,7 @@ class _StepTitle extends StatelessWidget {
 
 class _StepContent extends StatelessWidget {
   final TaskStep step;
+
   const _StepContent(this.step);
 
   @override

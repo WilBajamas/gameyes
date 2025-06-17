@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart';
@@ -11,7 +10,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class GameLocalDatasource {
-  final _gameLocalStorage = getIt<GameLocalStorageService>();
+  final GameLocalStorageService _gameLocalStorage;
+
+  GameLocalDatasource(this._gameLocalStorage);
 
   Future<void> saveGame({required SavedGame game}) =>
       _gameLocalStorage.insertGame(game);
@@ -54,10 +55,14 @@ class GameLocalDatasource {
   }) async {
     final game = await _gameLocalStorage.getSavedGame(id);
     if (game case final savedGame?) {
-      final GroupTask groupTaskToSave = GroupTask()
-        ..gameId = game.gameId
-        ..title = title
-        ..description = description;
+      final GroupTask groupTaskToSave = GroupTask(
+        gameId: game.gameId,
+        title: title,
+        description: description,
+      );
+      // ..gameId = game.gameId
+      // ..title = title
+      // ..description = description;
 
       await _gameLocalStorage.createGroupTask(groupTaskToSave, savedGame);
     }

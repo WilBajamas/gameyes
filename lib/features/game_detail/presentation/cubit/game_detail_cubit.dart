@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_detail_repository.dart';
@@ -11,9 +10,15 @@ part 'game_detail_state.dart';
 
 @injectable
 class GameDetailCubit extends Cubit<GameDetailState> {
-  final _gameDetailRepository = getIt<GameDetailRepository>();
+  final GameDetailRepository _gameDetailRepository;
 
-  GameDetailCubit() : super(const GameDetailState());
+  GameDetailCubit({
+    @factoryParam required int id,
+    required GameDetailRepository gameDetailRepository,
+  })  : _gameDetailRepository = gameDetailRepository,
+        super(const GameDetailState()) {
+    fetchGameDetail(id: id);
+  }
 
   void get resetContent => emit(const GameDetailState());
 

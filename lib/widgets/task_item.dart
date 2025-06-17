@@ -41,7 +41,7 @@ class TaskItem extends StatelessWidget {
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: context.themeData.colorScheme.background,
+          color: context.themeData.colorScheme.surface,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -121,7 +121,7 @@ class _StepsRow extends StatelessWidget {
             child: Text(
               number,
               style: context.themeData.textTheme.bodySmall!
-                  .copyWith(color: kColorScheme.background),
+                  .copyWith(color: kColorScheme.surface),
             ),
           ),
         ),

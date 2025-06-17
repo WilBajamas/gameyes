@@ -79,8 +79,8 @@ class _PlatformSelector extends StatelessWidget {
                             'assets/images/${platform.assetName}',
                             height: 20,
                             color: selected
-                                ? kColorScheme.background
-                                : kColorScheme.onBackground,
+                                ? kColorScheme.surface
+                                : kColorScheme.onSurface,
                           ),
                           side: const BorderSide(color: Colors.transparent),
                           selected: selected,

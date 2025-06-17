@@ -60,6 +60,10 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
     as _i1017;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
     as _i944;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
+    as _i80;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart'
+    as _i596;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_detail_repository_impl.dart'
     as _i441;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart'
@@ -95,35 +99,65 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1013.FetchFeaturedUseCase>(
         () => _i1013.FetchFeaturedUseCase());
     gh.factory<_i857.FeaturedBloc>(() => _i857.FeaturedBloc());
-    gh.factory<_i750.GameDetailRemoteDatasource>(
-        () => _i750.GameDetailRemoteDatasource());
     gh.factory<_i187.GameScreenshotsDatasource>(
         () => _i187.GameScreenshotsDatasource());
-    gh.factory<_i238.GameDetailCubit>(() => _i238.GameDetailCubit());
-    gh.factory<_i488.GameScreenshotCubit>(() => _i488.GameScreenshotCubit());
-    gh.factory<_i944.GameLocalDatasource>(() => _i944.GameLocalDatasource());
-    gh.factory<_i564.TaskCubit>(() => _i564.TaskCubit());
     gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
-    gh.factory<_i185.TrackerDetailCubit>(() => _i185.TrackerDetailCubit());
-    gh.singleton<_i267.DioService>(() => _i267.DioService());
     gh.singleton<_i3.SharedPreference>(() => _i3.SharedPreference());
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i534.GameDetailRepository>(
         () => _i400.GameDetailRepositoryImpl());
-    gh.factory<_i278.GamesDataSource>(
-        () => _i278.GamesDataSource(gh<_i267.DioService>()));
-    gh.factory<_i1005.GamesRepository>(
-        () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i47.TrackerDetailRepository>(
         () => _i441.TrackerDetailRepositoryImpl());
     gh.factory<_i634.GameScreenshotsRepository>(
         () => _i991.GameScreenshotsRepositoryImpl());
     gh.factory<_i86.TrackerRepository>(() => _i104.TrackerRepositoryImpl());
     gh.factory<_i787.FeaturedRepository>(() => _i870.FeaturedRepositoryImpl());
+    gh.factoryParam<_i488.GameScreenshotCubit, int, dynamic>((
+      id,
+      _,
+    ) =>
+        _i488.GameScreenshotCubit(
+          id: id,
+          gameScreenshotsRepository: gh<_i634.GameScreenshotsRepository>(),
+        ));
     gh.factory<_i592.FilterCubit>(
         () => _i592.FilterCubit(initialState: gh<_i592.FilterState>()));
+    gh.factoryParam<_i238.GameDetailCubit, int, dynamic>((
+      id,
+      _,
+    ) =>
+        _i238.GameDetailCubit(
+          id: id,
+          gameDetailRepository: gh<_i534.GameDetailRepository>(),
+        ));
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
+    gh.factory<_i944.GameLocalDatasource>(
+        () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
+    gh.singleton<_i267.DioService>(
+        () => _i267.DioService(gh<_i646.DefaultDioInterceptor>()));
+    gh.factoryParam<_i185.TrackerDetailCubit, _i80.SavedGame, dynamic>((
+      game,
+      _,
+    ) =>
+        _i185.TrackerDetailCubit(
+          game: game,
+          trackerDetailRepository: gh<_i47.TrackerDetailRepository>(),
+        ));
+    gh.factory<_i278.GamesDataSource>(
+        () => _i278.GamesDataSource(gh<_i267.DioService>()));
+    gh.factory<_i750.GameDetailRemoteDatasource>(
+        () => _i750.GameDetailRemoteDatasource(gh<_i267.DioService>()));
+    gh.factory<_i1005.GamesRepository>(
+        () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
+    gh.factoryParam<_i564.TaskCubit, _i596.SavedGameTask?, dynamic>((
+      task,
+      _,
+    ) =>
+        _i564.TaskCubit(
+          task: task,
+          trackerDetailRepository: gh<_i47.TrackerDetailRepository>(),
+        ));
     gh.factory<_i846.FetchGamesUseCase>(
         () => _i846.FetchGamesUseCase(gh<_i1005.GamesRepository>()));
     gh.factory<_i868.GamesBloc>(

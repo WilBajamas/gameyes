@@ -14,6 +14,8 @@ class GroupTask {
 
   String? description;
 
+  GroupTask({this.gameId, this.title, this.description});
+
   final tasks = IsarLinks<SavedGameTask>();
 
   @Backlink(to: 'groupTasks')
