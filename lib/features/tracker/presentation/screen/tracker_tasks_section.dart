@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
+import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/group_task_item.dart';
 
 import '../../../../generated/l10n.dart';
@@ -15,7 +15,7 @@ class TrackerTasksSection extends StatelessWidget {
   void showAddGroupTaskDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AddContentDialog(
+      builder: (dialogContext) => AddContentDialog(
         dialogTitleAndSnackBarTitle: (
           S.current.add_group_task,
           S.current.group_task_created

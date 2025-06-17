@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
@@ -13,11 +12,18 @@ part 'tracker_detail_state.dart';
 
 @injectable
 class TrackerDetailCubit extends Cubit<TrackerDetailState> {
-  final _trackerDetailRepository = getIt<TrackerDetailRepository>();
+  final TrackerDetailRepository _trackerDetailRepository;
 
   StreamSubscription? savedGameStreamSubscription;
 
-  TrackerDetailCubit() : super(const TrackerDetailState());
+  TrackerDetailCubit(
+      {@factoryParam required SavedGame game,
+      required TrackerDetailRepository trackerDetailRepository})
+      : _trackerDetailRepository = trackerDetailRepository,
+        super(const TrackerDetailState()) {
+    setSavedGame(game: game);
+    listenToSavedGame(savedGameId: game.id);
+  }
 
   void setSavedGame({required SavedGame game}) =>
       emit(TrackerDetailState(game: game));

@@ -9,74 +9,63 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_tasks_section.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_status_tag.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../generated/l10n.dart';
 
-class TrackerGameDetailScreen extends StatefulWidget {
+class TrackerGameDetailScreen extends StatelessWidget {
   final SavedGame game;
 
   const TrackerGameDetailScreen({required this.game, super.key});
 
   @override
-  State<TrackerGameDetailScreen> createState() =>
-      _TrackerGameDetailScreenState();
-}
-
-class _TrackerGameDetailScreenState extends State<TrackerGameDetailScreen> {
-  @override
-  void initState() {
-    context.read<TrackerDetailCubit>().setSavedGame(game: widget.game);
-    context
-        .read<TrackerDetailCubit>()
-        .listenToSavedGame(savedGameId: widget.game.id);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        body: SafeArea(
-          child: NestedScrollView(
-            headerSliverBuilder: (context, _) => [
-              SliverAppBar(
-                title: Text(widget.game.name!),
-                centerTitle: false,
-                expandedHeight: context.screenHeight * 0.3,
-                backgroundColor: Colors.blueGrey[900],
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.details_outlined,
-                    ),
-                  ),
-                ],
-                pinned: true,
-                flexibleSpace: const FlexibleSpaceBar(
-                  collapseMode: CollapseMode.none,
-                  background: _HeaderBackground(),
-                ),
-                bottom: TabBar(
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: Colors.white,
-                  tabs: <Widget>[
-                    Tab(
-                      text: S.current.details,
-                    ),
-                    Tab(
-                      text: S.current.tasks,
+    return BlocProvider(
+      create: (context) => getIt<TrackerDetailCubit>(param1: game),
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          body: SafeArea(
+            child: NestedScrollView(
+              headerSliverBuilder: (context, _) => [
+                SliverAppBar(
+                  title: Text(game.name!),
+                  centerTitle: false,
+                  expandedHeight: context.screenHeight * 0.3,
+                  backgroundColor: Colors.blueGrey[900],
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.details_outlined,
+                      ),
                     ),
                   ],
+                  pinned: true,
+                  flexibleSpace: const FlexibleSpaceBar(
+                    collapseMode: CollapseMode.none,
+                    background: _HeaderBackground(),
+                  ),
+                  bottom: TabBar(
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: Colors.white,
+                    tabs: <Widget>[
+                      Tab(
+                        text: S.current.details,
+                      ),
+                      Tab(
+                        text: S.current.tasks,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-            body: const TabBarView(
-              children: [
-                TrackerGameDetailSection(),
-                TrackerTasksSection(),
               ],
+              body: const TabBarView(
+                children: [
+                  TrackerGameDetailSection(),
+                  TrackerTasksSection(),
+                ],
+              ),
             ),
           ),
         ),

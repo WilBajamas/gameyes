@@ -91,72 +91,75 @@ class _TrackerScreenState extends State<TrackerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _controller,
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverAppBar(
-              floating: true,
-              toolbarHeight: kToolbarHeight + 10,
-              backgroundColor: context.themeData.scaffoldBackgroundColor,
-              surfaceTintColor: context.themeData.scaffoldBackgroundColor,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SearchBar(
-                    onSubmitted: (term) =>
-                        context.read<TrackerCubit>().setTag(null, term),
-                    hintText: S.current.search_saved_games,
-                    padding: const MaterialStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 12),
-                    ),
-                    elevation: const MaterialStatePropertyAll<double>(
-                      1,
-                    ),
-                    leading: Icon(
-                      Icons.search,
-                      color: context.themeData.colorScheme.primary,
+        child: BlocProvider(
+          create: (context) => getIt<TrackerCubit>(),
+          child: CustomScrollView(
+            controller: _controller,
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverAppBar(
+                floating: true,
+                toolbarHeight: kToolbarHeight + 10,
+                backgroundColor: context.themeData.scaffoldBackgroundColor,
+                surfaceTintColor: context.themeData.scaffoldBackgroundColor,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SearchBar(
+                      onSubmitted: (term) =>
+                          context.read<TrackerCubit>().setTag(null, term),
+                      hintText: S.current.search_saved_games,
+                      padding: const MaterialStatePropertyAll<EdgeInsets>(
+                        EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      elevation: const MaterialStatePropertyAll<double>(
+                        1,
+                      ),
+                      leading: Icon(
+                        Icons.search,
+                        color: context.themeData.colorScheme.primary,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            DefaultFilterListAppBar<SavedGameFilterTag>(
-              filterList: trackerFilters,
-              selected: (selectedTag) =>
-                  context.read<TrackerCubit>().setTag(selectedTag, null),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              sliver: BlocBuilder<TrackerCubit, TrackerState>(
-                builder: (context, state) {
-                  return StreamBuilder<List<SavedGame>>(
-                    stream: _trackerRepository.savedGamesStream(
-                      state.tag,
-                      state.searchTerm,
-                    ),
-                    builder: (context, snapshot) {
-                      final list = snapshot.data;
-
-                      switch (list) {
-                        case List<SavedGame>? list
-                            when list != null && list.isNotEmpty:
-                          return _TrackerList(
-                            onRemoveClick: removeSavedGame,
-                            onDetailClick: toItemDetail,
-                            list: list,
-                          );
-
-                        default:
-                          // Empty or null saved games
-                          return const _EmptyListDescription();
-                      }
-                    },
-                  );
-                },
+              DefaultFilterListAppBar<SavedGameFilterTag>(
+                filterList: trackerFilters,
+                selected: (selectedTag) =>
+                    context.read<TrackerCubit>().setTag(selectedTag, null),
               ),
-            ),
-          ],
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                sliver: BlocBuilder<TrackerCubit, TrackerState>(
+                  builder: (context, state) {
+                    return StreamBuilder<List<SavedGame>>(
+                      stream: _trackerRepository.savedGamesStream(
+                        state.tag,
+                        state.searchTerm,
+                      ),
+                      builder: (context, snapshot) {
+                        final list = snapshot.data;
+
+                        switch (list) {
+                          case List<SavedGame>? list
+                              when list != null && list.isNotEmpty:
+                            return _TrackerList(
+                              onRemoveClick: removeSavedGame,
+                              onDetailClick: toItemDetail,
+                              list: list,
+                            );
+
+                          default:
+                            // Empty or null saved games
+                            return const _EmptyListDescription();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

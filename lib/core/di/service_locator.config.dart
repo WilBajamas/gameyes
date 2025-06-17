@@ -60,6 +60,8 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
     as _i1017;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
     as _i944;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
+    as _i80;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_detail_repository_impl.dart'
     as _i441;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart'
@@ -99,7 +101,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i187.GameScreenshotsDatasource());
     gh.factory<_i564.TaskCubit>(() => _i564.TaskCubit());
     gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
-    gh.factory<_i185.TrackerDetailCubit>(() => _i185.TrackerDetailCubit());
     gh.singleton<_i3.SharedPreference>(() => _i3.SharedPreference());
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i534.GameDetailRepository>(
@@ -134,6 +135,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
     gh.singleton<_i267.DioService>(
         () => _i267.DioService(gh<_i646.DefaultDioInterceptor>()));
+    gh.factoryParam<_i185.TrackerDetailCubit, _i80.SavedGame, dynamic>((
+      game,
+      _,
+    ) =>
+        _i185.TrackerDetailCubit(
+          game: game,
+          trackerDetailRepository: gh<_i47.TrackerDetailRepository>(),
+        ));
     gh.factory<_i278.GamesDataSource>(
         () => _i278.GamesDataSource(gh<_i267.DioService>()));
     gh.factory<_i750.GameDetailRemoteDatasource>(
