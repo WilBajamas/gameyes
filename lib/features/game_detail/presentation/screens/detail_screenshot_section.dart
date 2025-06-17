@@ -8,6 +8,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_screenshot.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../generated/l10n.dart';
 
 class DetailScreenshotsSection extends StatelessWidget {
@@ -18,7 +19,7 @@ class DetailScreenshotsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GameScreenshotCubit(id: id!),
+      create: (context) => getIt<GameScreenshotCubit>(param1: id),
       child: SizedBox(
         height: context.screenHeight / 3,
         child: BlocBuilder<GameScreenshotCubit, GameScreenshotState>(

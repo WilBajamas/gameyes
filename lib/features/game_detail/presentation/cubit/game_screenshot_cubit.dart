@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/screenshot_response.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_screenshots_repository.dart';
@@ -10,9 +9,13 @@ part 'game_screenshot_state.dart';
 
 @injectable
 class GameScreenshotCubit extends Cubit<GameScreenshotState> {
-  final _gameScreenshotsRepository = getIt<GameScreenshotsRepository>();
+  final GameScreenshotsRepository _gameScreenshotsRepository;
 
-  GameScreenshotCubit({required int id}) : super(const GameScreenshotState()) {
+  GameScreenshotCubit(
+      {@factoryParam required int id,
+      required GameScreenshotsRepository gameScreenshotsRepository})
+      : _gameScreenshotsRepository = gameScreenshotsRepository,
+        super(const GameScreenshotState()) {
     fetchGameScreenshots(id: id);
   }
 

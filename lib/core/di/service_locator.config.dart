@@ -104,18 +104,30 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i534.GameDetailRepository>(
         () => _i400.GameDetailRepositoryImpl());
-    gh.factory<_i238.GameDetailCubit>(
-        () => _i238.GameDetailCubit(id: gh<int>()));
-    gh.factory<_i488.GameScreenshotCubit>(
-        () => _i488.GameScreenshotCubit(id: gh<int>()));
     gh.factory<_i47.TrackerDetailRepository>(
         () => _i441.TrackerDetailRepositoryImpl());
     gh.factory<_i634.GameScreenshotsRepository>(
         () => _i991.GameScreenshotsRepositoryImpl());
     gh.factory<_i86.TrackerRepository>(() => _i104.TrackerRepositoryImpl());
     gh.factory<_i787.FeaturedRepository>(() => _i870.FeaturedRepositoryImpl());
+    gh.factoryParam<_i488.GameScreenshotCubit, int, dynamic>((
+      id,
+      _,
+    ) =>
+        _i488.GameScreenshotCubit(
+          id: id,
+          gameScreenshotsRepository: gh<_i634.GameScreenshotsRepository>(),
+        ));
     gh.factory<_i592.FilterCubit>(
         () => _i592.FilterCubit(initialState: gh<_i592.FilterState>()));
+    gh.factoryParam<_i238.GameDetailCubit, int, dynamic>((
+      id,
+      _,
+    ) =>
+        _i238.GameDetailCubit(
+          id: id,
+          gameDetailRepository: gh<_i534.GameDetailRepository>(),
+        ));
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
     gh.factory<_i944.GameLocalDatasource>(
