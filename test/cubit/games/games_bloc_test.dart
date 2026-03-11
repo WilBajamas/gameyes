@@ -25,7 +25,7 @@ void main() {
 
     GetIt.I.registerSingleton(fetchGamesUseCase);
 
-    gamesBloc = GamesBloc();
+    gamesBloc = GamesBloc(fetchGamesUseCase);
   });
 
   tearDown(() {

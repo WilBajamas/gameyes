@@ -20,7 +20,7 @@ void main() {
 
     GetIt.I.registerSingleton(gamesRepository);
 
-    fetchGamesUsecase = FetchGamesUseCase();
+    fetchGamesUsecase = FetchGamesUseCase(gamesRepository);
   });
 
   tearDown(() {

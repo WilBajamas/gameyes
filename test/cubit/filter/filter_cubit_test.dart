@@ -10,7 +10,7 @@ void main() {
   late FilterCubit filterCubit;
 
   setUp(() {
-    filterCubit = FilterCubit();
+    filterCubit = FilterCubit(initialState: FilterInitial());
   });
 
   test('initial state is empty FilterInitial', () {

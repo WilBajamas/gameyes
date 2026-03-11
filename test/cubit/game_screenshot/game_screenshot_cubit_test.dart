@@ -21,7 +21,10 @@ void main() {
 
     GetIt.I.registerSingleton(gameScreenshotRepository);
 
-    gameScreenshotCubit = GameScreenshotCubit();
+    gameScreenshotCubit = GameScreenshotCubit(
+      id: 88,
+      gameScreenshotsRepository: gameScreenshotRepository,
+    );
   });
 
   tearDown(() {
