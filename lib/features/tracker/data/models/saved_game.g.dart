@@ -117,7 +117,7 @@ const SavedGameSchema = CollectionSchema(
   getId: _savedGameGetId,
   getLinks: _savedGameGetLinks,
   attach: _savedGameAttach,
-  version: '3.1.8',
+  version: '3.3.2',
 );
 
 int _savedGameEstimateSize(
