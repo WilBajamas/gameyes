@@ -8,7 +8,7 @@ version: 1.0.0+1
 environment:
   sdk: ">=3.2.5 <4.0.0"
 
-isar_version: &isar_version ^3.1.0
+isar_version: &isar_version 3.3.2
 
 dependencies:
   flutter:
@@ -22,10 +22,10 @@ dependencies:
     sdk: flutter
 
   # Routes
-  go_router: ^15.1.2
+  go_router: ^17.2.0
 
   # Shared pref
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.5.5
 
   # Bloc
   flutter_bloc: ^9.1.1
@@ -34,96 +34,96 @@ dependencies:
   bloc_concurrency: ^0.3.0
 
   # Dio
-  dio: ^5.8.0+1
-  pretty_dio_logger: ^1.4.0
+  dio: ^5.9.2
   http_parser: ^4.1.2
-  retrofit: ^4.4.2
+  retrofit: ^4.9.0
+
+  # Logging
+  logger: ^2.7.0
+  talker_flutter: ^5.1.16
 
   # Local db
-  isar:
+  isar_community:
     version: *isar_version
-    hosted: https://pub.isar-community.dev/
 
-  isar_flutter_libs:
+  isar_community_flutter_libs:
     version: *isar_version
-    hosted: https://pub.isar-community.dev/
 
   # Either - Left or Right
   dartz: ^0.10.1
 
   # Json
-  json_annotation: ^4.9.0
+  json_annotation: ^4.11.0
 
   # DI
-  get_it: ^8.0.3
-  injectable: ^2.5.0
-  injectable_generator: ^2.1.6
+  get_it: ^9.2.1
+  injectable: ^2.7.1+4
+  injectable_generator: ^2.12.1
 
   # Equate
   equatable: ^2.0.7
 
   # UUID
-  uuid: ^4.5.1
+  uuid: ^4.5.3
 
   # Lottie
-  lottie: ^3.3.1
+  lottie: ^3.3.2
   # Flutter animation
   flutter_animate: ^4.5.2
 
   # Slidable
-  flutter_slidable: ^4.0.0
+  flutter_slidable: ^4.0.3
 
   # Text scaler
   auto_size_text: ^3.0.0
   readmore: ^3.0.0
 
   # Shimmer loading
-  skeletonizer: ^2.0.1
+  skeletonizer: ^2.1.3
 
   scroll_snap_list: ^0.9.1
   scrollable_positioned_list: ^0.3.8
 
   # Network image
-  cached_network_image: ^3.3.1
+  cached_network_image: ^3.4.1
 
   # Font
-  google_fonts: 6.1.0
+  google_fonts: ^8.0.2
 
   # Envied - Privatise file
-  envied: ^0.5.3
+  envied: ^1.3.4
 
   # Path provider
-  path_provider: ^2.1.2
+  path_provider: ^2.1.5
 
   # Mocking
-  mockito: ^5.4.4
+  mockito: ^5.6.4
   http_mock_adapter: ^0.6.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^3.0.1
+  flutter_lints: ^6.0.0
 
   # Json
-  json_serializable: ^6.9.0
+  json_serializable: ^6.13.1
 
   # Code generator
-  build_runner: ^2.4.15
+  build_runner: ^2.13.1
 
   # Testing
   bloc_test: ^10.0.0
 
   # Envied generator
-  envied_generator: ^0.5.3
+  envied_generator: ^1.3.4
 
   # Retrofit generator
-  retrofit_generator: ^9.2.0
+  retrofit_generator: ^10.0.1
 
   # Isar generator
-  isar_generator:
+  isar_community_generator:
     version: *isar_version
-    hosted: https://pub.isar-community.dev/
 
 
 flutter:

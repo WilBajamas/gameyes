@@ -21,7 +21,7 @@ void main() {
 
     GetIt.I.registerSingleton(gamesDataSource);
 
-    gamesRepository = GamesRepositoryImpl();
+    gamesRepository = GamesRepositoryImpl(gamesDataSource);
   });
 
   tearDown(() {

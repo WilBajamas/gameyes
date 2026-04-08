@@ -9,7 +9,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/s
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 
 @injectable
 class GameLocalStorageService extends IsarLocalStorageService {

@@ -21,7 +21,10 @@ void main() {
 
     GetIt.I.registerSingleton(gameDetailRepository);
 
-    gameDetailCubit = GameDetailCubit();
+    gameDetailCubit = GameDetailCubit(
+      id: 88,
+      gameDetailRepository: gameDetailRepository,
+    );
   });
 
   tearDown(() {
