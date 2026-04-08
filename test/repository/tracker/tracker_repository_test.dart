@@ -4,7 +4,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/datasour
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart';
 import 'package:get_it/get_it.dart';
-import 'package:isar/isar.dart';
+import 'package:isar_community/isar.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
