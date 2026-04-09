@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
-import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart';
+import 'package:gaming_library_assessment_flutter/features/games/domain/repositories/games_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
