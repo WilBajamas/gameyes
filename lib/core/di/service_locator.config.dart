@@ -52,7 +52,7 @@ import 'package:gaming_library_assessment_flutter/features/games/data/datasource
 import 'package:gaming_library_assessment_flutter/features/games/data/repository/games_repository_impl.dart'
     as _i424;
 import 'package:gaming_library_assessment_flutter/features/games/domain/repositories/games_repository.dart'
-    as _i461;
+    as _i1005;
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart'
     as _i846;
 import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart'
@@ -143,10 +143,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i750.GameDetailRemoteDatasource>(),
           gh<_i944.GameLocalDatasource>(),
         ));
-    gh.factory<_i461.GamesRepository>(
+    gh.factory<_i1005.GamesRepository>(
         () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i846.FetchGamesUseCase>(
-        () => _i846.FetchGamesUseCase(gh<_i461.GamesRepository>()));
+        () => _i846.FetchGamesUseCase(gh<_i1005.GamesRepository>()));
     gh.factory<_i1013.FetchFeaturedUseCase>(
         () => _i1013.FetchFeaturedUseCase(gh<_i787.FeaturedRepository>()));
     gh.factory<_i868.GamesBloc>(
