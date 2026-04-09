@@ -16,10 +16,10 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
 
   StreamSubscription? savedGameStreamSubscription;
 
-  TrackerDetailCubit(
-      {@factoryParam required SavedGame game,
-      required TrackerDetailRepository trackerDetailRepository})
-      : _trackerDetailRepository = trackerDetailRepository,
+  TrackerDetailCubit({
+    @factoryParam required SavedGame game,
+    required TrackerDetailRepository trackerDetailRepository,
+  })  : _trackerDetailRepository = trackerDetailRepository,
         super(const TrackerDetailState()) {
     setSavedGame(game: game);
     listenToSavedGame(savedGameId: game.id);
