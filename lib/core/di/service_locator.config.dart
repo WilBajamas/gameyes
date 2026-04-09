@@ -97,15 +97,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i646.DefaultDioInterceptor());
     gh.factory<_i857.GameLocalStorageService>(
         () => _i857.GameLocalStorageService());
-    gh.factory<_i187.GameScreenshotsDatasource>(
-        () => _i187.GameScreenshotsDatasource());
     gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
     gh.singleton<_i3.SharedPreference>(() => _i3.SharedPreference());
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
-    gh.factory<_i634.GameScreenshotsRepository>(
-        () => _i991.GameScreenshotsRepositoryImpl());
     gh.singleton<_i267.DioService>(
         () => _i267.DioService(gh<_i646.DefaultDioInterceptor>()));
     gh.factory<_i944.GameLocalDatasource>(
@@ -114,6 +110,17 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()));
     gh.factory<_i592.FilterCubit>(
         () => _i592.FilterCubit(initialState: gh<_i592.FilterState>()));
+    gh.factory<_i750.GameDetailRemoteDatasource>(
+        () => _i750.GameDetailRemoteDatasource(gh<_i267.DioService>()));
+    gh.factory<_i187.GameScreenshotsDatasource>(
+        () => _i187.GameScreenshotsDatasource(gh<_i267.DioService>()));
+    gh.factory<_i278.GamesDataSource>(
+        () => _i278.GamesDataSource(gh<_i267.DioService>()));
+    gh.factory<_i634.GameScreenshotsRepository>(() =>
+        _i991.GameScreenshotsRepositoryImpl(
+            gh<_i187.GameScreenshotsDatasource>()));
+    gh.factory<_i47.TrackerDetailRepository>(() =>
+        _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()));
     gh.factoryParam<_i488.GameScreenshotCubit, int, dynamic>((
       id,
       _,
@@ -122,12 +129,6 @@ extension GetItInjectableX on _i174.GetIt {
           id: id,
           gameScreenshotsRepository: gh<_i634.GameScreenshotsRepository>(),
         ));
-    gh.factory<_i750.GameDetailRemoteDatasource>(
-        () => _i750.GameDetailRemoteDatasource(gh<_i267.DioService>()));
-    gh.factory<_i278.GamesDataSource>(
-        () => _i278.GamesDataSource(gh<_i267.DioService>()));
-    gh.factory<_i47.TrackerDetailRepository>(() =>
-        _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()));
     gh.factory<_i787.FeaturedRepository>(
         () => _i870.FeaturedRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factoryParam<_i185.TrackerDetailCubit, _i80.SavedGame, dynamic>((
