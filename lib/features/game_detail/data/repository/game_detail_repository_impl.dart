@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/data/datasource/base_datasource_mixin.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart';
@@ -13,8 +12,13 @@ import 'package:injectable/injectable.dart';
 class GameDetailRepositoryImpl
     with BaseDatasourceRepositoryMixin<GameDetailResponse>
     implements GameDetailRepository {
-  final _gameDetailRemoteDatasource = getIt<GameDetailRemoteDatasource>();
-  final _gameLocalDatasource = getIt<GameLocalDatasource>();
+  final GameDetailRemoteDatasource _gameDetailRemoteDatasource;
+  final GameLocalDatasource _gameLocalDatasource;
+
+  GameDetailRepositoryImpl(
+    this._gameDetailRemoteDatasource,
+    this._gameLocalDatasource,
+  );
 
   @override
   Future<Either<ErrorType, GameDetailResponse>> fetchGameDetail({

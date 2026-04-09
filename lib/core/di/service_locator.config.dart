@@ -102,8 +102,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
     gh.singleton<_i3.SharedPreference>(() => _i3.SharedPreference());
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
-    gh.factory<_i534.GameDetailRepository>(
-        () => _i400.GameDetailRepositoryImpl());
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
     gh.factory<_i634.GameScreenshotsRepository>(
@@ -116,14 +114,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()));
     gh.factory<_i592.FilterCubit>(
         () => _i592.FilterCubit(initialState: gh<_i592.FilterState>()));
-    gh.factoryParam<_i238.GameDetailCubit, int, dynamic>((
-      id,
-      _,
-    ) =>
-        _i238.GameDetailCubit(
-          id: id,
-          gameDetailRepository: gh<_i534.GameDetailRepository>(),
-        ));
     gh.factoryParam<_i488.GameScreenshotCubit, int, dynamic>((
       id,
       _,
@@ -148,6 +138,10 @@ extension GetItInjectableX on _i174.GetIt {
           game: game,
           trackerDetailRepository: gh<_i47.TrackerDetailRepository>(),
         ));
+    gh.factory<_i534.GameDetailRepository>(() => _i400.GameDetailRepositoryImpl(
+          gh<_i750.GameDetailRemoteDatasource>(),
+          gh<_i944.GameLocalDatasource>(),
+        ));
     gh.factory<_i1005.GamesRepository>(
         () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i846.FetchGamesUseCase>(
@@ -163,6 +157,14 @@ extension GetItInjectableX on _i174.GetIt {
         _i564.TaskCubit(
           task: task,
           trackerDetailRepository: gh<_i47.TrackerDetailRepository>(),
+        ));
+    gh.factoryParam<_i238.GameDetailCubit, int, dynamic>((
+      id,
+      _,
+    ) =>
+        _i238.GameDetailCubit(
+          id: id,
+          gameDetailRepository: gh<_i534.GameDetailRepository>(),
         ));
     gh.factory<_i857.FeaturedBloc>(
         () => _i857.FeaturedBloc(gh<_i1013.FetchFeaturedUseCase>()));
