@@ -2,11 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/datasource/games_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/games/data/repository/games_repository_impl.dart';
-import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart';
+import 'package:gaming_library_assessment_flutter/features/games/domain/repositories/games_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-
 import '../../mocks/error_mock.dart';
 import '../../mocks/game_response_mock.dart';
 import 'games_repository_test.mocks.dart';

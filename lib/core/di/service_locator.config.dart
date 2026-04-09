@@ -102,10 +102,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
-    gh.factory<_i846.FetchGamesUseCase>(
-        () => _i846.FetchGamesUseCase(gh<_i461.GamesRepository>()));
-    gh.factory<_i868.GamesBloc>(
-        () => _i868.GamesBloc(gh<_i846.FetchGamesUseCase>()));
     gh.singleton<_i267.DioService>(
         () => _i267.DioService(gh<_i646.DefaultDioInterceptor>()));
     gh.factory<_i944.GameLocalDatasource>(
@@ -147,10 +143,14 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i750.GameDetailRemoteDatasource>(),
           gh<_i944.GameLocalDatasource>(),
         ));
-    gh.factory<_i424.GamesRepositoryImpl>(
+    gh.factory<_i461.GamesRepository>(
         () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
+    gh.factory<_i846.FetchGamesUseCase>(
+        () => _i846.FetchGamesUseCase(gh<_i461.GamesRepository>()));
     gh.factory<_i1013.FetchFeaturedUseCase>(
         () => _i1013.FetchFeaturedUseCase(gh<_i787.FeaturedRepository>()));
+    gh.factory<_i868.GamesBloc>(
+        () => _i868.GamesBloc(gh<_i846.FetchGamesUseCase>()));
     gh.factoryParam<_i564.TaskCubit, _i596.SavedGameTask?, dynamic>((
       task,
       _,
