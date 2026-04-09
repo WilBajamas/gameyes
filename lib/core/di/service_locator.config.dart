@@ -97,9 +97,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i646.DefaultDioInterceptor());
     gh.factory<_i857.GameLocalStorageService>(
         () => _i857.GameLocalStorageService());
-    gh.factory<_i1013.FetchFeaturedUseCase>(
-        () => _i1013.FetchFeaturedUseCase());
-    gh.factory<_i857.FeaturedBloc>(() => _i857.FeaturedBloc());
     gh.factory<_i187.GameScreenshotsDatasource>(
         () => _i187.GameScreenshotsDatasource());
     gh.factory<_i110.TrackerCubit>(() => _i110.TrackerCubit());
@@ -114,7 +111,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i634.GameScreenshotsRepository>(
         () => _i991.GameScreenshotsRepositoryImpl());
     gh.factory<_i86.TrackerRepository>(() => _i104.TrackerRepositoryImpl());
-    gh.factory<_i787.FeaturedRepository>(() => _i870.FeaturedRepositoryImpl());
     gh.factoryParam<_i564.TaskCubit, _i596.SavedGameTask?, dynamic>((
       task,
       _,
@@ -157,12 +153,18 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i750.GameDetailRemoteDatasource(gh<_i267.DioService>()));
     gh.factory<_i278.GamesDataSource>(
         () => _i278.GamesDataSource(gh<_i267.DioService>()));
+    gh.factory<_i787.FeaturedRepository>(
+        () => _i870.FeaturedRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i1005.GamesRepository>(
         () => _i424.GamesRepositoryImpl(gh<_i278.GamesDataSource>()));
     gh.factory<_i846.FetchGamesUseCase>(
         () => _i846.FetchGamesUseCase(gh<_i1005.GamesRepository>()));
+    gh.factory<_i1013.FetchFeaturedUseCase>(
+        () => _i1013.FetchFeaturedUseCase(gh<_i787.FeaturedRepository>()));
     gh.factory<_i868.GamesBloc>(
         () => _i868.GamesBloc(gh<_i846.FetchGamesUseCase>()));
+    gh.factory<_i857.FeaturedBloc>(
+        () => _i857.FeaturedBloc(gh<_i1013.FetchFeaturedUseCase>()));
     return this;
   }
 }

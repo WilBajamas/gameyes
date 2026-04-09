@@ -1,8 +1,6 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart'
-    as injection;
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
@@ -17,9 +15,9 @@ part 'featured_state.dart';
 
 @injectable
 class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
-  final _fetchFeaturedUseCase = injection.getIt<FetchFeaturedUseCase>();
+  final FetchFeaturedUseCase _fetchFeaturedUseCase;
 
-  FeaturedBloc() : super(const FeaturedState()) {
+  FeaturedBloc(this._fetchFeaturedUseCase) : super(const FeaturedState()) {
     on<FeaturedFetched>(_onFetchFeatured, transformer: droppable());
     on<FeaturedNextPage>(_onFetchNextPage, transformer: droppable());
 

@@ -1,4 +1,3 @@
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
@@ -10,7 +9,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class FetchFeaturedUseCase {
-  final FeaturedRepository _repository = getIt<FeaturedRepository>();
+  final FeaturedRepository _repository;
+
+  FetchFeaturedUseCase(this._repository);
 
   Future<void> call({
     required int page,
