@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:gaming_library_assessment_flutter/config/routes.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
@@ -8,7 +8,7 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'generated/l10n.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
   configureDependencies();
 }
 
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: S.delegate.supportedLocales,
       theme: buildTheme(),
       darkTheme: buildDarkTheme(),
-      routerConfig: goRouter,
+      routerConfig: getIt<AppRouter>().config(),
     );
   }
 }

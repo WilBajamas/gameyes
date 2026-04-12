@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:gaming_library_assessment_flutter/widgets/saved_game_status_tag.
 import '../../../../core/di/service_locator.dart';
 import '../../../../generated/l10n.dart';
 
+@RoutePage()
 class TrackerGameDetailScreen extends StatelessWidget {
   final SavedGame game;
 

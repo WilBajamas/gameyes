@@ -9,7 +9,8 @@ part 'filter_state.dart';
 
 @injectable
 class FilterCubit extends Cubit<FilterState> {
-  FilterCubit({required FilterState initialState}) : super(FilterInitial()) {
+  FilterCubit({@factoryParam required FilterState initialState})
+      : super(FilterInitial()) {
     emit(initialState);
   }
 
