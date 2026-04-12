@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
@@ -16,6 +17,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../generated/l10n.dart';
 
+@RoutePage()
 class TrackerScreen extends StatefulWidget {
   const TrackerScreen({super.key});
 

@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../generated/l10n.dart';
 
+@RoutePage()
 class GamesScreen extends StatefulWidget {
   const GamesScreen({super.key});
 

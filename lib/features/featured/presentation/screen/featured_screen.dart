@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ import '../../../../core/enums/game_platform.dart';
 import '../../../../generated/l10n.dart';
 import '../constant/featured_tags_constant.dart';
 
+@RoutePage()
 class FeaturedScreen extends StatefulWidget {
   const FeaturedScreen({super.key});
 
@@ -60,9 +62,10 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
   void _fetchGames({
     FeaturedTag? tag,
     Set<GamePlatform>? platformSelected,
-  }) => context
-        .read<FeaturedBloc>()
-        .add(FeaturedFetched(tag: tag, platforms: platformSelected));
+  }) =>
+      context
+          .read<FeaturedBloc>()
+          .add(FeaturedFetched(tag: tag, platforms: platformSelected));
 
   bool get _isBottom {
     if (!_controller.hasClients) return false;

@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
@@ -9,6 +10,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../generated/l10n.dart';
 
+@RoutePage()
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -80,9 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: DefaultFilledButtonFullWidth(
-                _isLastPage
-                    ? S.current.skip
-                    : S.current.next,
+                _isLastPage ? S.current.skip : S.current.next,
                 () => nextButtonClick(),
               ),
             ),
