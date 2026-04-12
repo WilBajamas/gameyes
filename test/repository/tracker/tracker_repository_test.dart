@@ -22,7 +22,7 @@ void main() {
 
     GetIt.I.registerSingleton(gamesLocalDataSource);
 
-    trackerRepository = TrackerRepositoryImpl();
+    trackerRepository = TrackerRepositoryImpl(gamesLocalDataSource);
   });
 
   tearDown(() {
