@@ -24,6 +24,12 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
     add(const FeaturedFetched(tag: FeaturedTag.newAndTrending));
   }
 
+  void scrolledBottom({bool isBottom = false}) {
+    if (isBottom && state.nextPageStatus != FeaturedNextPageStatus.failed) {
+      add(const FeaturedNextPage());
+    }
+  }
+
   Future<void> _onFetchFeatured(
     FeaturedFetched event,
     Emitter<FeaturedState> emit,

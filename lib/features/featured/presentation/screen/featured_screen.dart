@@ -21,14 +21,26 @@ import '../../../../generated/l10n.dart';
 import '../constant/featured_tags_constant.dart';
 
 @RoutePage()
-class FeaturedScreen extends StatefulWidget {
-  const FeaturedScreen({super.key});
+class FeaturedScreenContainer extends StatelessWidget {
+  const FeaturedScreenContainer({super.key});
 
   @override
-  State<FeaturedScreen> createState() => _FeaturedScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<FeaturedBloc>(),
+      child: const _FeaturedScreen(),
+    );
+  }
 }
 
-class _FeaturedScreenState extends State<FeaturedScreen> {
+class _FeaturedScreen extends StatefulWidget {
+  const _FeaturedScreen();
+
+  @override
+  State<_FeaturedScreen> createState() => _FeaturedScreenState();
+}
+
+class _FeaturedScreenState extends State<_FeaturedScreen> {
   final _controller = ScrollController();
   final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
 
@@ -48,18 +60,11 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
 
   void _onScroll() {
     _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
-
-    if (_isBottom &&
-        context.read<FeaturedBloc>().state.nextPageStatus !=
-            FeaturedNextPageStatus.failed) {
-      _fetchNextPage();
-    }
+    context.read<FeaturedBloc>().scrolledBottom(isBottom: _isBottom);
   }
 
-  void _fetchNextPage() =>
-      context.read<FeaturedBloc>().add(const FeaturedNextPage());
-
   void _fetchGames({
+    required BuildContext context,
     FeaturedTag? tag,
     Set<GamePlatform>? platformSelected,
   }) =>
@@ -83,6 +88,7 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
       builder: (bottomSheetContext) => FeaturedFilterBottomSheet(
         initialPlatforms: initialPlatforms,
         onSaveClick: (platforms) => _fetchGames(
+          context: context,
           tag: context.read<FeaturedBloc>().state.tag,
           platformSelected: platforms,
         ),
@@ -109,19 +115,21 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                       onPressed: () => showBottomSheet(context),
                       icon: Icon(
                         Icons.filter_list,
-                        color: context.themeData.colorScheme.onBackground,
+                        color: context.themeData.colorScheme.onSurface,
                       ),
                     ),
                     null
                   ),
                 ),
                 FilterlistAppBar<FeaturedTag>(
-                  selected: (selectedTag) => _fetchGames(tag: selectedTag),
+                  selected: (selectedTag) =>
+                      _fetchGames(context: context, tag: selectedTag),
                   filterList: featuredFilters,
                 ),
                 if (state.status == FeaturedStatus.success)
                   CupertinoSliverRefreshControl(
-                    onRefresh: () async => _fetchGames(tag: state.tag),
+                    onRefresh: () async =>
+                        _fetchGames(context: context, tag: state.tag),
                   ),
                 if (state.status == FeaturedStatus.success)
                   SliverPadding(
@@ -171,7 +179,9 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                         vertical: 14,
                       ),
                       child: ErrorRetryWidget(
-                        onRetryClicked: () => _fetchNextPage(),
+                        onRetryClicked: () => context
+                            .read<FeaturedBloc>()
+                            .add(const FeaturedNextPage()),
                       ),
                     ),
                   ),
@@ -180,7 +190,9 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                     child: Center(
                       child: ErrorRetryWidget(
                         onRetryClicked: () {
-                          _fetchGames();
+                          _fetchGames(
+                            context: context,
+                          );
                         },
                       ),
                     ),
@@ -191,7 +203,9 @@ class _FeaturedScreenState extends State<FeaturedScreen> {
                       child: ErrorRetryWidget(
                         text: S.current.no_results_found,
                         onRetryClicked: () {
-                          _fetchGames();
+                          _fetchGames(
+                            context: context,
+                          );
                         },
                       ),
                     ),

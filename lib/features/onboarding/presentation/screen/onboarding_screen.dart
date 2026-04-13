@@ -1,5 +1,7 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
@@ -34,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void skipClicked() {
     getIt<SharedPreference>().writeValue(StorageConstants.firstUseKey, true);
-    context.go(RouteConstants.featured);
+    context.replaceRoute(HomeRoute());
   }
 
   void nextButtonClick() {

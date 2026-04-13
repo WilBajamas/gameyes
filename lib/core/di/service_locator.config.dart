@@ -105,14 +105,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i11.FeaturedFilterCubit>(() => _i11.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
+    gh.factoryParam<_i592.FilterCubit, _i592.FilterState, dynamic>((
+      initialState,
+      _,
+    ) =>
+        _i592.FilterCubit(initialState: initialState));
     gh.singleton<_i267.DioService>(
         () => _i267.DioService(gh<_i646.DefaultDioInterceptor>()));
     gh.factory<_i944.GameLocalDatasource>(
         () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
     gh.factory<_i86.TrackerRepository>(
         () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()));
-    gh.factory<_i592.FilterCubit>(
-        () => _i592.FilterCubit(initialState: gh<_i592.FilterState>()));
     gh.factory<_i750.GameDetailRemoteDatasource>(
         () => _i750.GameDetailRemoteDatasource(gh<_i267.DioService>()));
     gh.factory<_i187.GameScreenshotsDatasource>(

@@ -51,17 +51,17 @@ class BrowseRoute extends _i11.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i2.FeaturedScreen]
-class FeaturedRoute extends _i11.PageRouteInfo<void> {
-  const FeaturedRoute({List<_i11.PageRouteInfo>? children})
-      : super(FeaturedRoute.name, initialChildren: children);
+/// [_i2.FeaturedScreenContainer]
+class FeaturedRouteContainer extends _i11.PageRouteInfo<void> {
+  const FeaturedRouteContainer({List<_i11.PageRouteInfo>? children})
+      : super(FeaturedRouteContainer.name, initialChildren: children);
 
-  static const String name = 'FeaturedRoute';
+  static const String name = 'FeaturedRouteContainer';
 
   static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i2.FeaturedScreen();
+      return const _i2.FeaturedScreenContainer();
     },
   );
 }

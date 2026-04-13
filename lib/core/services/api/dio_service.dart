@@ -3,6 +3,7 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/retrofit_service.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 @singleton
 class DioService {
@@ -19,6 +20,12 @@ class DioService {
           ),
         ) {
     dio.interceptors.add(defaultInterceptor);
+    dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+      ),
+    );
 
     retrofitService = RetrofitService(dio);
   }
