@@ -54,19 +54,10 @@ class _GamesScreenState extends State<_GamesScreen> {
     super.dispose();
   }
 
-  void _fetchNextPage() => context.read<GamesBloc>().add(
-        const GamesNextPage(),
-      );
-
   void _onScroll() {
     _scrollChangeNotifier.isScrolled =
         _scrollController.position.userScrollDirection;
-
-    if (_isBottom &&
-        context.read<GamesBloc>().state.nextPageStatus !=
-            GamesNextPageStatus.failed) {
-      _fetchNextPage();
-    }
+    context.read<GamesBloc>().scrolledBottom(isBottom: _isBottom);
   }
 
   bool get _isBottom {
@@ -113,7 +104,9 @@ class _GamesScreenState extends State<_GamesScreen> {
                         vertical: 14,
                       ),
                       child: ErrorRetryWidget(
-                        onRetryClicked: _fetchNextPage,
+                        onRetryClicked: () => context.read<GamesBloc>().add(
+                              const GamesNextPage(),
+                            ),
                       ),
                     ),
                   ),

@@ -29,6 +29,12 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     add(const GamesFetched());
   }
 
+  void scrolledBottom({bool isBottom = false}) {
+    if (isBottom && state.nextPageStatus != GamesNextPageStatus.failed) {
+      add(const GamesNextPage());
+    }
+  }
+
   Future<void> _onFetchGames(
     GamesFetched event,
     Emitter<GamesState> emit,
