@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
@@ -8,7 +7,6 @@ import 'package:gaming_library_assessment_flutter/core/services/storage/shared_p
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/page_view_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../generated/l10n.dart';
 

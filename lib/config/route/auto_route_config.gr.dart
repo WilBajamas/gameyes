@@ -116,17 +116,17 @@ class GameDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i4.GamesScreen]
-class GamesRoute extends _i11.PageRouteInfo<void> {
-  const GamesRoute({List<_i11.PageRouteInfo>? children})
-      : super(GamesRoute.name, initialChildren: children);
+/// [_i4.GamesScreenContainer]
+class GamesRouteContainer extends _i11.PageRouteInfo<void> {
+  const GamesRouteContainer({List<_i11.PageRouteInfo>? children})
+      : super(GamesRouteContainer.name, initialChildren: children);
 
-  static const String name = 'GamesRoute';
+  static const String name = 'GamesRouteContainer';
 
   static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i4.GamesScreen();
+      return const _i4.GamesScreenContainer();
     },
   );
 }

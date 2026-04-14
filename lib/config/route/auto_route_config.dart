@@ -19,7 +19,7 @@ class AppRouter extends RootStackRouter {
           guards: [OnboardingGuard()],
           children: [
             AutoRoute(path: 'featured', page: FeaturedRouteContainer.page),
-            AutoRoute(path: 'games', page: GamesRoute.page),
+            AutoRoute(path: 'games', page: GamesRouteContainer.page),
             AutoRoute(path: 'tracker', page: TrackerRoute.page),
             AutoRoute(path: 'browse', page: BrowseRoute.page),
             AutoRoute(path: 'settings', page: SettingsRoute.page),

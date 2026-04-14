@@ -17,14 +17,26 @@ import 'package:go_router/go_router.dart';
 import '../../../../generated/l10n.dart';
 
 @RoutePage()
-class GamesScreen extends StatefulWidget {
-  const GamesScreen({super.key});
+class GamesScreenContainer extends StatelessWidget {
+  const GamesScreenContainer({super.key});
 
   @override
-  State<GamesScreen> createState() => _GamesScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<GamesBloc>(),
+      child: const _GamesScreen(),
+    );
+  }
 }
 
-class _GamesScreenState extends State<GamesScreen> {
+class _GamesScreen extends StatefulWidget {
+  const _GamesScreen();
+
+  @override
+  State<_GamesScreen> createState() => _GamesScreenState();
+}
+
+class _GamesScreenState extends State<_GamesScreen> {
   final _scrollController = ScrollController();
   final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
 
