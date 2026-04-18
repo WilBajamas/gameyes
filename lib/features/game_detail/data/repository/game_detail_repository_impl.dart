@@ -10,7 +10,7 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: GameDetailRepository)
 class GameDetailRepositoryImpl
-    with BaseDatasourceRepositoryMixin<GameDetailResponse>
+    with BaseRepositoryMixin
     implements GameDetailRepository {
   final GameDetailRemoteDatasource _gameDetailRemoteDatasource;
   final GameLocalDatasource _gameLocalDatasource;
@@ -24,7 +24,7 @@ class GameDetailRepositoryImpl
   Future<Either<ErrorType, GameDetailResponse>> fetchGameDetail({
     required int id,
   }) =>
-      fetchData(
+      fetchData<GameDetailResponse>(
         apiCall: _gameDetailRemoteDatasource.fetchGameDetail(id: id),
       );
 

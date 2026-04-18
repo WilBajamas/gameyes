@@ -2,8 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/data/models/error.dart';
 
-mixin BaseDatasourceRepositoryMixin<T> {
-  Future<Either<ErrorType, T>> fetchData({required Future<T> apiCall}) async {
+mixin BaseRepositoryMixin {
+  Future<Either<ErrorType, T>> fetchData<T>({
+    required Future<T> apiCall,
+  }) async {
     try {
       final response = await apiCall;
 
