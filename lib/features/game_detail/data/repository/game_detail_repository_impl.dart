@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:gaming_library_assessment_flutter/data/datasource/base_datasource_mixin.dart';
-import 'package:gaming_library_assessment_flutter/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/core/data/datasource/base_datasource_mixin.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_detail_repository.dart';

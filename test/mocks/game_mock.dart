@@ -1,4 +1,4 @@
-import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 
 import 'platform_item_mock.dart';
 

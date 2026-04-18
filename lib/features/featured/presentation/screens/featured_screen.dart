@@ -6,8 +6,8 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/bloc/featured_bloc.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_filter_bottom_sheet.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/featured_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/screens/featured_filter_bottom_sheet.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
@@ -18,7 +18,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/game_platform.dart';
 import '../../../../generated/l10n.dart';
-import '../constant/featured_tags_constant.dart';
+import '../constants/featured_tags_constant.dart';
 
 @RoutePage()
 class FeaturedScreenContainer extends StatelessWidget {

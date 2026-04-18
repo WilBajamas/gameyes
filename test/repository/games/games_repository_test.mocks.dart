@@ -3,16 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
 
-import 'package:dartz/dartz.dart' as _i2;
-import 'package:gaming_library_assessment_flutter/data/models/error.dart'
-    as _i5;
+import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart'
+    as _i4;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasource/games_datasource.dart'
-    as _i3;
-import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart'
-    as _i6;
+    as _i2;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -29,27 +27,16 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
-  _FakeEither_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [GamesDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGamesDataSource extends _i1.Mock implements _i3.GamesDataSource {
+class MockGamesDataSource extends _i1.Mock implements _i2.GamesDataSource {
   MockGamesDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>
-      fetchDatasourceGames({
+  _i3.Future<_i4.GamesResponse> fetchDatasourceGames({
     int? page = 1,
     int? pageSize = 20,
     String? searchTerm,
@@ -58,37 +45,36 @@ class MockGamesDataSource extends _i1.Mock implements _i3.GamesDataSource {
     String? platforms,
     String? genres,
   }) =>
-          (super.noSuchMethod(
-            Invocation.method(
-              #fetchDatasourceGames,
-              [],
-              {
-                #page: page,
-                #pageSize: pageSize,
-                #searchTerm: searchTerm,
-                #dateRange: dateRange,
-                #orderings: orderings,
-                #platforms: platforms,
-                #genres: genres,
-              },
-            ),
-            returnValue:
-                _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>.value(
-                    _FakeEither_0<_i5.ErrorType, _i6.GamesResponse>(
-              this,
-              Invocation.method(
-                #fetchDatasourceGames,
-                [],
-                {
-                  #page: page,
-                  #pageSize: pageSize,
-                  #searchTerm: searchTerm,
-                  #dateRange: dateRange,
-                  #orderings: orderings,
-                  #platforms: platforms,
-                  #genres: genres,
-                },
-              ),
-            )),
-          ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>);
+      (super.noSuchMethod(
+        Invocation.method(
+          #fetchDatasourceGames,
+          [],
+          {
+            #page: page,
+            #pageSize: pageSize,
+            #searchTerm: searchTerm,
+            #dateRange: dateRange,
+            #orderings: orderings,
+            #platforms: platforms,
+            #genres: genres,
+          },
+        ),
+        returnValue: _i3.Future<_i4.GamesResponse>.value(
+            _i5.dummyValue<_i4.GamesResponse>(
+          this,
+          Invocation.method(
+            #fetchDatasourceGames,
+            [],
+            {
+              #page: page,
+              #pageSize: pageSize,
+              #searchTerm: searchTerm,
+              #dateRange: dateRange,
+              #orderings: orderings,
+              #platforms: platforms,
+              #genres: genres,
+            },
+          ),
+        )),
+      ) as _i3.Future<_i4.GamesResponse>);
 }

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:gaming_library_assessment_flutter/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 
 mixin BaseRepositoryMixin {
   Future<Either<ErrorType, T>> fetchData<T>({

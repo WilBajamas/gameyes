@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart';
-import 'package:gaming_library_assessment_flutter/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/screenshot_response.dart';
 import 'package:injectable/injectable.dart';
 

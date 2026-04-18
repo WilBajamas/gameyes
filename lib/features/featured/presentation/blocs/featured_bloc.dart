@@ -3,10 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
-import 'package:gaming_library_assessment_flutter/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/domain/use_case/fetch_featured_use_case.dart';
-import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
-import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/fetch_featured_use_case.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
 
 part 'featured_event.dart';

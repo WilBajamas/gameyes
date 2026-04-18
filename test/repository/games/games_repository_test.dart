@@ -31,7 +31,7 @@ void main() {
   test('should return Right(GamesResponse) when datasource fetch is successful',
       () async {
     when(gamesDataSource.fetchDatasourceGames())
-        .thenAnswer((_) async => Right(mockGamesResponse));
+        .thenAnswer((_) async => mockGamesResponse);
 
     final result = await gamesRepository.fetchGames();
 
@@ -41,7 +41,7 @@ void main() {
 
   test('should return Left(ErrorType) when datasource fetch fails', () async {
     when(gamesDataSource.fetchDatasourceGames())
-        .thenAnswer((_) async => Left(mockResponseError));
+        .thenAnswer((_) async => mockResponseError);
 
     final result = await gamesRepository.fetchGames();
 

@@ -12,9 +12,9 @@ import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart'
     as _i9;
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
     as _i7;
-import 'package:gaming_library_assessment_flutter/data/models/error.dart'
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart'
     as _i5;
-import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart'
+import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart'
     as _i6;
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart'
     as _i3;

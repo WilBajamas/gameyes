@@ -6,7 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:dartz/dartz.dart' as _i2;
-import 'package:gaming_library_assessment_flutter/data/models/error.dart'
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart'
     as _i6;

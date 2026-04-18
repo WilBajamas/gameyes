@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'games_response.g.dart';

@@ -11,9 +11,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
-import 'package:gaming_library_assessment_flutter/features/browse/presentation/screen/browse_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/browse/presentation/screens/browse_screen.dart'
     as _i1;
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/screen/featured_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/screens/featured_screen.dart'
     as _i2;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart'
     as _i3;

@@ -1,4 +1,4 @@
-import 'package:gaming_library_assessment_flutter/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 
 ErrorType get mockConnectionTimeoutError => ConnectionTimeoutError();
 ErrorType get mockReceiveTimeoutError => ReceiveTimeoutError();
