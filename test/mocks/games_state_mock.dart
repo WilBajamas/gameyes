@@ -1,4 +1,4 @@
-import 'package:gaming_library_assessment_flutter/features/games/presentation/bloc/games_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_bloc.dart';
 
 import 'game_response_mock.dart';
 

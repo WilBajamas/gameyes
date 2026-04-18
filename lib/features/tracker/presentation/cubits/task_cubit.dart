@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
 part 'task_state.dart';

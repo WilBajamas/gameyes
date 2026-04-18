@@ -6,15 +6,15 @@ import 'package:gaming_library_assessment_flutter/features/browse/presentation/s
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screens/featured_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/image_page_view.dart';
-import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/settings/presentation/screen/settings_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/games/presentation/screens/games_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/home/presentation/screens/home_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/settings/presentation/screens/settings_screen.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/task_detail_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_game_detail_screen.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/task_detail_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_game_detail_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();

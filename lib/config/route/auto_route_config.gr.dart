@@ -19,19 +19,19 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
     as _i3;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/image_page_view.dart'
     as _i6;
-import 'package:gaming_library_assessment_flutter/features/games/presentation/screen/games_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/games/presentation/screens/games_screen.dart'
     as _i4;
-import 'package:gaming_library_assessment_flutter/features/home/presentation/screen/home_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/home/presentation/screens/home_screen.dart'
     as _i5;
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/onboarding_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/onboarding_screen.dart'
     as _i7;
-import 'package:gaming_library_assessment_flutter/features/settings/presentation/screen/settings_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/settings/presentation/screens/settings_screen.dart'
     as _i8;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
     as _i13;
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_game_detail_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_game_detail_screen.dart'
     as _i9;
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_screen.dart'
     as _i10;
 
 /// generated route for

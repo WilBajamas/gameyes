@@ -4,7 +4,7 @@ import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/multi_type_values_selection.dart';
 import 'package:gaming_library_assessment_flutter/widgets/type_values_selection.dart';

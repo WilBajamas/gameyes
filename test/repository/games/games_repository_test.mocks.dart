@@ -7,7 +7,7 @@ import 'dart:async' as _i3;
 
 import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart'
     as _i4;
-import 'package:gaming_library_assessment_flutter/features/games/data/datasource/games_datasource.dart'
+import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;

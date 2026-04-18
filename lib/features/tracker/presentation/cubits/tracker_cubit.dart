@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_state.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_state.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable

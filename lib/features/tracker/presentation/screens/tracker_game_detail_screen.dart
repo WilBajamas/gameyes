@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubit/tracker_detail_cubit.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_game_detail_section.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screen/tracker_tasks_section.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_game_detail_section.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_tasks_section.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_status_tag.dart';
 
 import '../../../../core/di/service_locator.dart';

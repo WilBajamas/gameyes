@@ -16,7 +16,7 @@ import 'package:gaming_library_assessment_flutter/core/data/models/error.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart'
     as _i6;
-import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart'
+import 'package:gaming_library_assessment_flutter/features/games/domain/use_cases/fetch_games_use_case.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 

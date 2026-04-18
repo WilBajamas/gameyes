@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
-import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubit/filter_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart';
 
 import '../../mocks/date_time_mock.dart';
 

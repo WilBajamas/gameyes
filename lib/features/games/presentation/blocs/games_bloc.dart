@@ -10,10 +10,10 @@ import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
 import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
-import 'package:gaming_library_assessment_flutter/features/games/domain/use_case/fetch_games_use_case.dart';
+import 'package:gaming_library_assessment_flutter/features/games/domain/use_cases/fetch_games_use_case.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../filter/presentation/cubit/filter_cubit.dart';
+import '../../../filter/presentation/cubits/filter_cubit.dart';
 
 part 'games_event.dart';
 part 'games_state.dart';

@@ -5,7 +5,7 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screen/page_view_item.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/page_view_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
 
 import '../../../../generated/l10n.dart';

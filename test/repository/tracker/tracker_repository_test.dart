@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_repository.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar_community/isar.dart';
 import 'package:mockito/annotations.dart';

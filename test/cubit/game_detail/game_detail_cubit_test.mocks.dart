@@ -10,7 +10,7 @@ import 'package:gaming_library_assessment_flutter/core/data/models/error.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart'
     as _i6;
-import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_detail_repository.dart'
+import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart'
     as _i3;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
     as _i7;
