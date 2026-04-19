@@ -1,16 +1,15 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:injectable/injectable.dart';
 
-part 'filter_state.dart';
+import 'filter_state.dart';
 
 @injectable
 class FilterCubit extends Cubit<FilterState> {
   FilterCubit({@factoryParam required FilterState initialState})
-      : super(FilterInitial()) {
+      : super(const FilterState()) {
     emit(initialState);
   }
 
@@ -25,13 +24,13 @@ class FilterCubit extends Cubit<FilterState> {
   }) {
     emit(
       state.copyWith(
-        gameOrdering: ordering,
-        platforms: platforms,
-        genres: genres,
+        // ordering: ordering,
+        // platforms: platforms,
+        // genres: genres,
         searchTerm: searchTerm,
         dateFrom: dateFrom,
         dateTo: dateTo,
-        ascending: ascending,
+        // ascending: ascending,
       ),
     );
   }

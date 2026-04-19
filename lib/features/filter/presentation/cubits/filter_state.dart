@@ -1,47 +1,19 @@
-part of 'filter_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 
-final class FilterState extends Equatable {
-  final GameOrdering ordering;
-  final Set<GamePlatform> platforms;
-  final Set<GameGenre> genres;
-  final DateTime? dateFrom;
-  final DateTime? dateTo;
-  final String? searchTerm;
-  final bool ascending;
+part 'filter_state.freezed.dart';
 
-  const FilterState({
-    this.ordering = GameOrdering.released,
-    this.platforms = const {},
-    this.dateFrom,
-    this.dateTo,
-    this.searchTerm,
-    this.genres = const {},
-    this.ascending = false,
-  });
-
-  FilterState copyWith({
-    GameOrdering? gameOrdering,
-    Set<GamePlatform>? platforms,
-    Set<GameGenre>? genres,
+@freezed
+sealed class FilterState with _$FilterState {
+  const factory FilterState({
+    @Default(GameOrdering.released) GameOrdering ordering,
+    @Default(<GamePlatform>{}) Set<GamePlatform> platforms,
+    @Default(<GameGenre>{}) Set<GameGenre> genres,
     DateTime? dateFrom,
     DateTime? dateTo,
     String? searchTerm,
-    bool? ascending,
-  }) {
-    return FilterState(
-      ordering: gameOrdering ?? ordering,
-      platforms: platforms ?? this.platforms,
-      genres: genres ?? this.genres,
-      dateFrom: dateFrom ?? this.dateFrom,
-      dateTo: dateTo ?? this.dateTo,
-      searchTerm: searchTerm ?? this.searchTerm,
-      ascending: ascending ?? this.ascending,
-    );
-  }
-
-  @override
-  List<dynamic> get props =>
-      [ordering, platforms, dateFrom, dateTo, searchTerm, genres, ascending];
+    @Default(false) bool ascending,
+  }) = _FilterState;
 }
-
-final class FilterInitial extends FilterState {}

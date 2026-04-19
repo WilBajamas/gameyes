@@ -33,6 +33,8 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
     as _i53;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart'
     as _i669;
+import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart'
+    as _i113;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart'
     as _i750;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_screenshots_datasource.dart'
@@ -105,7 +107,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.factory<_i53.FeaturedFilterCubit>(() => _i53.FeaturedFilterCubit(
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
-    gh.factoryParam<_i669.FilterCubit, _i669.FilterState, dynamic>((
+    gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>((
       initialState,
       _,
     ) =>
