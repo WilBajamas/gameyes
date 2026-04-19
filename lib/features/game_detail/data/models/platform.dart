@@ -1,16 +1,17 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
-import 'package:json_annotation/json_annotation.dart';
 
+part 'platform.freezed.dart';
 part 'platform.g.dart';
 
-@JsonSerializable()
-final class Platform extends Equatable {
-  final int? id;
+@freezed
+sealed class Platform with _$Platform {
+  const Platform._();
 
-  final String? name;
-
-  const Platform(this.id, this.name);
+  const factory Platform({
+    int? id,
+    String? name,
+  }) = _Platform;
 
   GamePlatform? get value {
     final platformsContainsId =
@@ -25,9 +26,4 @@ final class Platform extends Equatable {
 
   factory Platform.fromJson(Map<String, dynamic> json) =>
       _$PlatformFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PlatformToJson(this);
-
-  @override
-  List<Object?> get props => [];
 }

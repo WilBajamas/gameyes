@@ -6,17 +6,17 @@ part of 'games_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-GamesResponse _$GamesResponseFromJson(Map<String, dynamic> json) =>
-    GamesResponse(
-      (json['count'] as num).toInt(),
-      (json['results'] as List<dynamic>?)
+_GamesResponse _$GamesResponseFromJson(Map<String, dynamic> json) =>
+    _GamesResponse(
+      count: (json['count'] as num).toInt(),
+      currentPage: (json['currentPage'] as num?)?.toInt(),
+      next: json['next'] as String?,
+      results: (json['results'] as List<dynamic>?)
           ?.map((e) => Game.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['next'] as String?,
-      (json['currentPage'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$GamesResponseToJson(GamesResponse instance) =>
+Map<String, dynamic> _$GamesResponseToJson(_GamesResponse instance) =>
     <String, dynamic>{
       'count': instance.count,
       'currentPage': instance.currentPage,

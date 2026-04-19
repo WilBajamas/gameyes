@@ -1,25 +1,23 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/platform_item.dart';
-import 'package:json_annotation/json_annotation.dart';
 
+part 'game.freezed.dart';
 part 'game.g.dart';
 
-@JsonSerializable()
-final class Game extends Equatable {
-  final int? id;
-  final String? slug;
+@freezed
+sealed class Game with _$Game {
+  const Game._();
 
-  final String? name;
-
-  final String? released;
-
-  @JsonKey(name: 'background_image')
-  final String? backgroundImage;
-
-  final int? metacritic;
-
-  final List<PlatformItem>? platforms;
+  const factory Game({
+    int? id,
+    String? slug,
+    String? name,
+    String? released,
+    @JsonKey(name: 'background_image') String? backgroundImage,
+    int? metacritic,
+    List<PlatformItem>? platforms,
+  }) = _Game;
 
   List<GamePlatform>? get platformValues {
     if (platforms case final platforms?) {
@@ -37,19 +35,5 @@ final class Game extends Equatable {
     return null;
   }
 
-  const Game(
-    this.id,
-    this.slug,
-    this.name,
-    this.released,
-    this.backgroundImage,
-    this.metacritic,
-    this.platforms,
-  );
-
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
-  Map<String, dynamic> toJson() => _$GameToJson(this);
-
-  @override
-  List<Object?> get props => [id, name, released, backgroundImage, metacritic];
 }
