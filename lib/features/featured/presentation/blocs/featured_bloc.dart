@@ -1,18 +1,16 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/fetch_featured_use_case.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
 
-part 'featured_event.dart';
+import 'featured_state.dart';
 
-part 'featured_state.dart';
+part 'featured_event.dart';
 
 @injectable
 class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
@@ -54,8 +52,8 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
           tag: event.tag ?? state.tag,
           status: FeaturedStatus.success,
           response: response,
-          games: response.results,
-          platformsSelected: event.platforms,
+          games: response.results ?? state.games,
+          platformsSelected: event.platforms ?? state.platformsSelected,
         ),
       Failure(error: final error) => state.copyWith(
           tag: event.tag ?? state.tag,
@@ -88,7 +86,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
       Success(value: final response) => state.copyWith(
           nextPageStatus: FeaturedNextPageStatus.initial,
           response: response,
-          games: List.of(state.games)..addAll(response.results!),
+          games: List.of(state.games)..addAll(response.results ?? []),
         ),
       Failure(error: final error) => state.copyWith(
           nextPageError: error,

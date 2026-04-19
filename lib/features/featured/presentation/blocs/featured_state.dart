@@ -1,60 +1,27 @@
-part of 'featured_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+
+part 'featured_state.freezed.dart';
 
 enum FeaturedStatus { initial, success, failed, empty, loading }
 
 enum FeaturedNextPageStatus { initial, failed, loading }
 
-class FeaturedState extends Equatable {
-  final FeaturedTag tag;
-  final Set<GamePlatform> platformsSelected;
-  final FeaturedStatus? status;
-  final FeaturedNextPageStatus? nextPageStatus;
-  final GamesResponse? response;
-  final List<Game> games;
-  final ErrorType? error;
-  final ErrorType? nextPageError;
-
-  const FeaturedState({
-    this.tag = FeaturedTag.newAndTrending,
-    this.platformsSelected = const <GamePlatform>{},
-    this.status = FeaturedStatus.initial,
-    this.nextPageStatus = FeaturedNextPageStatus.initial,
-    this.response,
-    this.games = const <Game>[],
-    this.error,
-    this.nextPageError,
-  });
-
-  FeaturedState copyWith({
-    FeaturedTag? tag,
-    Set<GamePlatform>? platformsSelected,
-    FeaturedStatus? status,
+@freezed
+sealed class FeaturedState with _$FeaturedState {
+  const factory FeaturedState({
+    @Default(FeaturedTag.newAndTrending) FeaturedTag tag,
+    @Default(<GamePlatform>{}) Set<GamePlatform> platformsSelected,
+    @Default(FeaturedStatus.initial) FeaturedStatus? status,
+    @Default(FeaturedNextPageStatus.initial)
     FeaturedNextPageStatus? nextPageStatus,
     GamesResponse? response,
-    List<Game>? games,
+    @Default(<Game>[]) List<Game> games,
     ErrorType? error,
     ErrorType? nextPageError,
-  }) =>
-      FeaturedState(
-        tag: tag ?? this.tag,
-        platformsSelected: platformsSelected ?? this.platformsSelected,
-        status: status ?? this.status,
-        nextPageStatus: nextPageStatus ?? this.nextPageStatus,
-        response: response ?? this.response,
-        games: games ?? this.games,
-        error: error ?? this.error,
-        nextPageError: nextPageError ?? this.nextPageError,
-      );
-
-  @override
-  List<Object?> get props => [
-        tag,
-        platformsSelected,
-        status,
-        nextPageStatus,
-        response,
-        games,
-        error,
-        nextPageError
-      ];
+  }) = _FeaturedState;
 }

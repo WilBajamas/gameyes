@@ -18,6 +18,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/game_platform.dart';
 import '../../../../generated/l10n.dart';
+import '../blocs/featured_state.dart';
 import '../constants/featured_tags_constant.dart';
 
 @RoutePage()

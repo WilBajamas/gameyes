@@ -1,27 +1,12 @@
-part of 'featured_filter_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 
-class FeaturedFilterState extends Equatable {
-  final Set<GamePlatform> platformsSelected;
-  final Set<GamePlatform> tempPlatformsSelected;
+part 'featured_filter_state.freezed.dart';
 
-  const FeaturedFilterState({
-    this.platformsSelected = const {},
-    this.tempPlatformsSelected = const {},
-  });
-
-  FeaturedFilterState copyWith({
-    Set<GamePlatform>? platformsSelected,
-    Set<GamePlatform>? tempPlatformsSelected,
-  }) =>
-      FeaturedFilterState(
-        platformsSelected: platformsSelected ?? this.platformsSelected,
-        tempPlatformsSelected:
-            tempPlatformsSelected ?? this.tempPlatformsSelected,
-      );
-
-  @override
-  List<Object?> get props => [
-        platformsSelected,
-        tempPlatformsSelected,
-      ];
+@freezed
+sealed class FeaturedFilterState with _$FeaturedFilterState {
+  const factory FeaturedFilterState({
+    @Default(<GamePlatform>{}) Set<GamePlatform> platformsSelected,
+    @Default(<GamePlatform>{}) Set<GamePlatform> tempPlatformsSelected,
+  }) = _FeaturedFilterState;
 }
