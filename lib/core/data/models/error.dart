@@ -1,44 +1,41 @@
 import 'package:dio/dio.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-sealed class ErrorType {
-  const ErrorType();
+part 'error.freezed.dart';
 
-  factory ErrorType.errorType({
-    required DioException exception,
+@freezed
+sealed class ErrorType with _$ErrorType {
+  const ErrorType._();
+  const factory ErrorType.responseError({
     String? message,
     String? error,
     int? statusCode,
+  }) = ResponseError;
+  const factory ErrorType.connectionTimeout() = ConnectionTimeout;
+  const factory ErrorType.receiveTimeout() = ReceiveTimeout;
+  const factory ErrorType.sendTimeout() = SendTimeout;
+  const factory ErrorType.unknown() = UnknownError;
+
+  factory ErrorType.dioError({
+    required DioException exception,
   }) {
+    final response = exception.response;
+    final data = response?.data;
+
+    final apiError = (data is Map) ? data['error']?.toString() : null;
+    final apiMessage =
+        (data is Map) ? data['message']?.toString() : exception.message;
+
     return switch (exception.type) {
-      DioExceptionType.connectionTimeout => ConnectionTimeoutError(),
-      DioExceptionType.receiveTimeout => ReceiveTimeoutError(),
-      DioExceptionType.sendTimeout => SendTimeoutError(),
-      _ => ResponseError(message: message, statusCode: statusCode)
+      DioExceptionType.connectionTimeout => ErrorType.connectionTimeout(),
+      DioExceptionType.receiveTimeout => ErrorType.receiveTimeout(),
+      DioExceptionType.sendTimeout => ErrorType.sendTimeout(),
+      _ when response == null => const ErrorType.unknown(),
+      _ => ErrorType.responseError(
+          message: apiMessage,
+          statusCode: exception.response?.statusCode,
+          error: apiError,
+        )
     };
   }
-}
-
-class ConnectionTimeoutError extends ErrorType {
-  final String message = StringConstants.connectionTimeout;
-}
-
-class ReceiveTimeoutError extends ErrorType {
-  final String message = StringConstants.connectionTimeout;
-}
-
-class SendTimeoutError extends ErrorType {
-  final String message = StringConstants.connectionTimeout;
-}
-
-class UnknownError extends ErrorType {}
-
-class ResponseError extends ErrorType {
-  final String? message;
-  final int? statusCode;
-
-  const ResponseError({
-    required this.message,
-    required this.statusCode,
-  });
 }

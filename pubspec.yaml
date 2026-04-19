@@ -56,7 +56,7 @@ dependencies:
   dartz: ^0.10.1
 
   # freezed
-  freezed: ^3.2.5
+  freezed_annotation: ^3.1.0
 
   # Json
   json_annotation: ^4.11.0
@@ -92,6 +92,9 @@ dependencies:
 
   # Network image
   cached_network_image: ^3.4.1
+
+  # Freezed
+  freezed: ^3.2.5
 
   # Font
   google_fonts: ^8.0.2

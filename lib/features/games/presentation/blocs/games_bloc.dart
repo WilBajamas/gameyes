@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
@@ -60,22 +60,20 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       filter,
     );
 
-    result.fold(
-      (error) => emit(
-        state.copyWith(
-          status: GamesStatus.failed,
-          error: error,
-        ),
-      ),
-      (response) => emit(
-        state.copyWith(
+    final newState = switch (result) {
+      Success(value: final response) => state.copyWith(
           status: GamesStatus.success,
           response: response,
           games: response.results,
           filterState: filter,
         ),
-      ),
-    );
+      Failure(error: final error) => state.copyWith(
+          status: GamesStatus.failed,
+          error: error,
+        ),
+    };
+
+    emit(newState);
   }
 
   Future<void> _onFetchNextPage(
@@ -93,24 +91,22 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       state.filterState,
     );
 
-    result.fold(
-      (error) => emit(
-        state.copyWith(
+    final newState = switch (result) {
+      Success(value: final response) => state.copyWith(
+          nextPageStatus: GamesNextPageStatus.initial,
+          response: response,
+          games: List.of(state.games)..addAll(response.results ?? []),
+        ),
+      Failure(error: final error) => state.copyWith(
           nextPageError: error,
           nextPageStatus: GamesNextPageStatus.failed,
         ),
-      ),
-      (response) => emit(
-        state.copyWith(
-          nextPageStatus: GamesNextPageStatus.initial,
-          response: response,
-          games: List.of(state.games)..addAll(response.results!),
-        ),
-      ),
-    );
+    };
+
+    emit(newState);
   }
 
-  Future<Either<ErrorType, GamesResponse>> _fetchGames(
+  Future<Result<GamesResponse>> _fetchGames(
     int page,
     FilterState filter,
   ) =>

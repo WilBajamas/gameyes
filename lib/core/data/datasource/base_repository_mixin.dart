@@ -11,18 +11,11 @@ mixin BaseRepositoryMixin {
 
       return Success(response);
     } on DioException catch (dioException) {
-      final Map<String, dynamic>? errorResponse = dioException.response?.data;
-
       return Failure(
-        ErrorType.errorType(
-          exception: dioException,
-          message: errorResponse?['message'],
-          error: errorResponse?['error'],
-          statusCode: dioException.response?.statusCode,
-        ),
+        ErrorType.dioError(exception: dioException),
       );
     } catch (_) {
-      return Failure(UnknownError());
+      return Failure(ErrorType.unknown());
     }
   }
 }

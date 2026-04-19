@@ -31,15 +31,8 @@ class FeaturedRepositoryImpl implements FeaturedRepository {
         response.copyWith(currentPage: page),
       );
     } on DioException catch (dioException) {
-      final Map<String, dynamic>? errorResponse = dioException.response?.data;
-
       return Left(
-        ErrorType.errorType(
-          exception: dioException,
-          message: errorResponse?['message'],
-          error: errorResponse?['error'],
-          statusCode: dioException.response?.statusCode,
-        ),
+        ErrorType.dioError(exception: dioException),
       );
     }
   }

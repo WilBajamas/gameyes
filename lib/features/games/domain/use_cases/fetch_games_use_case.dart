@@ -1,10 +1,9 @@
-import 'package:dartz/dartz.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:gaming_library_assessment_flutter/features/games/domain/repositories/games_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -14,7 +13,7 @@ class FetchGamesUseCase {
 
   const FetchGamesUseCase(this._repository);
 
-  Future<Either<ErrorType, GamesResponse>> call({
+  Future<Result<GamesResponse>> call({
     required int page,
     String? searchTerm,
     DateTime? dateFrom,
