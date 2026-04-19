@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
@@ -27,17 +28,21 @@ class GameDetailCubit extends Cubit<GameDetailState> {
 
     final response = await _gameDetailRepository.fetchGameDetail(id: id);
 
-    response.fold(
-      (error) =>
-          emit(state.copyWith(status: GameDetailStatus.failed, error: error)),
-      (response) {
+    switch (response) {
+      case Success(value: final gameDetailResponse):
         emit(
-          state.copyWith(status: GameDetailStatus.success, response: response),
+          state.copyWith(
+            status: GameDetailStatus.success,
+            response: gameDetailResponse,
+          ),
         );
 
-        if (response.id case final gameId?) getSavedGame(gameId: gameId);
-      },
-    );
+        if (gameDetailResponse.id case final gameId?) {
+          getSavedGame(gameId: gameId);
+        }
+      case Failure(error: final error):
+        emit(state.copyWith(status: GameDetailStatus.failed, error: error));
+    }
   }
 
   void get expandContent => emit(

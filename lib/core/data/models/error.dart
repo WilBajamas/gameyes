@@ -31,6 +31,8 @@ class SendTimeoutError extends ErrorType {
   final String message = StringConstants.connectionTimeout;
 }
 
+class UnknownError extends ErrorType {}
+
 class ResponseError extends ErrorType {
   final String? message;
   final int? statusCode;
