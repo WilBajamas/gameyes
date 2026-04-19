@@ -1,6 +1,7 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
@@ -42,28 +43,29 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
       ),
     );
 
-    await _fetchFeaturedUseCase(
+    final result = await _fetchFeaturedUseCase(
       page: 1,
       tag: event.tag ?? state.tag,
       platforms: event.platforms ?? state.platformsSelected,
-      onFailure: (error) => emit(
-        state.copyWith(
-          tag: event.tag ?? state.tag,
-          status: FeaturedStatus.failed,
-          error: error,
-          platformsSelected: event.platforms ?? state.platformsSelected,
-        ),
-      ),
-      onSuccess: (response) => emit(
-        state.copyWith(
+    );
+
+    final newState = switch (result) {
+      Success(value: final response) => state.copyWith(
           tag: event.tag ?? state.tag,
           status: FeaturedStatus.success,
           response: response,
           games: response.results,
           platformsSelected: event.platforms,
         ),
-      ),
-    );
+      Failure(error: final error) => state.copyWith(
+          tag: event.tag ?? state.tag,
+          status: FeaturedStatus.failed,
+          error: error,
+          platformsSelected: event.platforms ?? state.platformsSelected,
+        ),
+    };
+
+    emit(newState);
   }
 
   Future<void> _onFetchNextPage(
@@ -76,23 +78,24 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
 
     emit(state.copyWith(nextPageStatus: FeaturedNextPageStatus.loading));
 
-    await _fetchFeaturedUseCase(
+    final result = await _fetchFeaturedUseCase(
       page: state.response!.currentPage! + 1,
       tag: state.tag,
       platforms: state.platformsSelected,
-      onSuccess: (response) => emit(
-        state.copyWith(
+    );
+
+    final newState = switch (result) {
+      Success(value: final response) => state.copyWith(
           nextPageStatus: FeaturedNextPageStatus.initial,
           response: response,
           games: List.of(state.games)..addAll(response.results!),
         ),
-      ),
-      onFailure: (error) => emit(
-        state.copyWith(
+      Failure(error: final error) => state.copyWith(
           nextPageError: error,
           nextPageStatus: FeaturedNextPageStatus.failed,
         ),
-      ),
-    );
+    };
+
+    emit(newState);
   }
 }

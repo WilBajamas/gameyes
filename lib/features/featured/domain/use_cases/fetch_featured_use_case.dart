@@ -1,10 +1,10 @@
+import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -13,11 +13,9 @@ class FetchFeaturedUseCase {
 
   FetchFeaturedUseCase(this._repository);
 
-  Future<void> call({
+  Future<Result<GamesResponse>> call({
     required int page,
     required FeaturedTag tag,
-    required Function(GamesResponse) onSuccess,
-    required Function(ErrorType) onFailure,
     Set<GamePlatform>? platforms,
   }) async {
     final feature = _getFeaturedValues(tag);
@@ -41,15 +39,13 @@ class FetchFeaturedUseCase {
       return allPlatformIds.join(',');
     }
 
-    final response = await _repository.fetchGames(
+    return _repository.fetchGames(
       page: page,
       dateRange: dateRangeQuery,
       orderings: gameOrderingQuery,
       platforms:
           getGamePlatformQuery().isNotEmpty ? getGamePlatformQuery() : null,
     );
-
-    response.fold(onFailure, onSuccess);
   }
 }
 
