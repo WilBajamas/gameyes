@@ -1,24 +1,13 @@
-part of 'task_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 
-class TaskState extends Equatable {
-  final SavedGameTask? task;
+part 'task_state.freezed.dart';
 
-  const TaskState({this.task});
-
-  @override
-  List<Object?> get props => [task];
-}
-
-class RemoveStepFailed extends TaskState {
-  final SavedGameTask existingTask;
-
-  const RemoveStepFailed({required this.existingTask})
-      : super(task: existingTask);
-}
-
-class RemoveStepSuccess extends TaskState {
-  final SavedGameTask existingTask;
-
-  const RemoveStepSuccess({required this.existingTask})
-      : super(task: existingTask);
+@freezed
+sealed class TaskState with _$TaskState {
+  const factory TaskState({SavedGameTask? task}) = _TaskState;
+  const factory TaskState.removeStepFailed({SavedGameTask? task}) =
+      RemoveStepFailed;
+  const factory TaskState.removeStepSuccess({SavedGameTask? task}) =
+      RemoveStepSuccess;
 }

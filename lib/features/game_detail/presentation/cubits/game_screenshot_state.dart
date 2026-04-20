@@ -1,29 +1,16 @@
-part of 'game_screenshot_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/screenshot_response.dart';
+
+part 'game_screenshot_state.freezed.dart';
 
 enum ScreenshotsStatus { loading, success, failure }
 
-final class GameScreenshotState extends Equatable {
-  final ScreenshotsStatus status;
-  final ScreenshotResponse? response;
-  final ErrorType? error;
-
-  const GameScreenshotState({
-    this.status = ScreenshotsStatus.loading,
-    this.response,
-    this.error,
-  });
-
-  GameScreenshotState copyWith({
-    ScreenshotsStatus? status,
+@freezed
+sealed class GameScreenshotState with _$GameScreenshotState {
+  const factory GameScreenshotState({
+    @Default(ScreenshotsStatus.loading) ScreenshotsStatus status,
     ScreenshotResponse? response,
     ErrorType? error,
-  }) =>
-      GameScreenshotState(
-        status: status ?? this.status,
-        response: response ?? this.response,
-        error: error ?? this.error,
-      );
-
-  @override
-  List<Object?> get props => [status, response, error];
+  }) = _GameScreenshotState;
 }

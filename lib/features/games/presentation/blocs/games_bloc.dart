@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
@@ -14,8 +12,9 @@ import 'package:gaming_library_assessment_flutter/features/filter/presentation/c
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_cases/fetch_games_use_case.dart';
 import 'package:injectable/injectable.dart';
 
+import 'games_state.dart';
+
 part 'games_event.dart';
-part 'games_state.dart';
 
 @injectable
 class GamesBloc extends Bloc<GamesEvent, GamesState> {
@@ -63,7 +62,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       Success(value: final response) => state.copyWith(
           status: GamesStatus.success,
           response: response,
-          games: response.results,
+          games: response.results ?? [],
           filterState: filter,
         ),
       Failure(error: final error) => state.copyWith(

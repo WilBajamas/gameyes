@@ -11,6 +11,7 @@ import 'package:readmore/readmore.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../generated/l10n.dart';
+import '../cubits/game_detail_state.dart';
 
 class DetailMidSection extends StatelessWidget {
   final int? gameId;

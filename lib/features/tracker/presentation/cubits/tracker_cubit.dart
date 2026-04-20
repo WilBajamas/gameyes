@@ -8,5 +8,5 @@ class TrackerCubit extends Cubit<TrackerState> {
   TrackerCubit() : super(const TrackerState());
 
   void setTag(SavedGameFilterTag? tag, String? searchTerm) =>
-      emit(state.copyWith(tag, searchTerm));
+      emit(state.copyWith(tag: tag ?? state.tag, searchTerm: searchTerm));
 }

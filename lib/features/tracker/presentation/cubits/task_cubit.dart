@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
-part 'task_state.dart';
+import 'task_state.dart';
 
 @injectable
 class TaskCubit extends Cubit<TaskState> {
@@ -76,8 +75,8 @@ class TaskCubit extends Cubit<TaskState> {
         )
         .then(
           (removed) => removed
-              ? emit(RemoveStepSuccess(existingTask: state.task!))
-              : emit(RemoveStepFailed(existingTask: state.task!)),
+              ? emit(TaskState.removeStepSuccess(task: state.task!))
+              : emit(TaskState.removeStepFailed(task: state.task!)),
         );
   }
 

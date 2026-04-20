@@ -1,10 +1,9 @@
-part of 'tracker_detail_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 
-class TrackerDetailState extends Equatable {
-  final SavedGame? game;
+part 'tracker_detail_state.freezed.dart';
 
-  const TrackerDetailState({this.game});
-
-  @override
-  List<Object?> get props => [game];
+@freezed
+sealed class TrackerDetailState with _$TrackerDetailState {
+  const factory TrackerDetailState({SavedGame? game}) = _TrackerDetailState;
 }

@@ -1,59 +1,24 @@
-part of 'games_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart';
+
+part 'games_state.freezed.dart';
 
 enum GamesStatus { initial, success, failed, empty, loading }
 
 enum GamesNextPageStatus { initial, failed, loading }
 
-final class GamesState extends Equatable {
-  final GamesStatus status;
-  final GamesNextPageStatus? nextPageStatus;
-  final GamesResponse? response;
-  final List<Game> games;
-  final ErrorType? error;
-  final ErrorType? nextPageError;
-
-  // Not too sure about this - violates SRP
-  final FilterState filterState;
-
-  const GamesState({
-    this.status = GamesStatus.initial,
-    this.nextPageStatus = GamesNextPageStatus.initial,
-    this.response,
-    this.games = const <Game>[],
-    this.error,
-    this.nextPageError,
-    this.filterState = const FilterState(),
-  });
-
-  GamesState copyWith({
-    GamesStatus? status,
+@freezed
+sealed class GamesState with _$GamesState {
+  const factory GamesState({
+    @Default(GamesStatus.initial) GamesStatus status,
+    @Default(GamesNextPageStatus.initial) GamesNextPageStatus? nextPageStatus,
     GamesResponse? response,
-    List<Game>? games,
-    GamesNextPageStatus? nextPageStatus,
+    @Default(<Game>[]) List<Game> games,
     ErrorType? error,
     ErrorType? nextPageError,
-    int? currentPage,
-    FilterState? filterState,
-  }) {
-    return GamesState(
-      status: status ?? this.status,
-      nextPageStatus: nextPageStatus ?? this.nextPageStatus,
-      response: response ?? this.response,
-      games: games ?? this.games,
-      error: error ?? this.error,
-      nextPageError: nextPageError ?? this.nextPageError,
-      filterState: filterState ?? this.filterState,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        nextPageStatus,
-        response,
-        games,
-        error,
-        nextPageError,
-        filterState,
-      ];
+    @Default(FilterState()) FilterState filterState,
+  }) = _GamesState;
 }

@@ -1,13 +1,10 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:injectable/injectable.dart';
 
-part 'game_detail_state.dart';
+import 'game_detail_state.dart';
 
 @injectable
 class GameDetailCubit extends Cubit<GameDetailState> {
@@ -85,6 +82,6 @@ class GameDetailCubit extends Cubit<GameDetailState> {
 
     await _gameDetailRepository
         .unsaveGame(id: state.savedGame!.id)
-        .then((_) => emit(state.copyWith()));
+        .then((_) => emit(state.copyWith(savedGame: null)));
   }
 }

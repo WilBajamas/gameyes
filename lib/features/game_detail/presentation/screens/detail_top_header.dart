@@ -10,6 +10,7 @@ import 'package:gaming_library_assessment_flutter/widgets/game_detail_top_conten
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 
 import '../../../../generated/l10n.dart';
+import '../cubits/game_detail_state.dart';
 
 class DetailTopHeader extends StatelessWidget {
   final int? gameId;

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
@@ -8,7 +7,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/s
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
-part 'tracker_detail_state.dart';
+import 'tracker_detail_state.dart';
 
 @injectable
 class TrackerDetailCubit extends Cubit<TrackerDetailState> {

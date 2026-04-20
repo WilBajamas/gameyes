@@ -1,11 +1,9 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/screenshot_response.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_screenshots_repository.dart';
 import 'package:injectable/injectable.dart';
 
-part 'game_screenshot_state.dart';
+import 'game_screenshot_state.dart';
 
 @injectable
 class GameScreenshotCubit extends Cubit<GameScreenshotState> {
@@ -25,16 +23,15 @@ class GameScreenshotCubit extends Cubit<GameScreenshotState> {
     final response =
         await _gameScreenshotsRepository.fetchGameScreenshots(id: id);
 
-    response.fold(
-      (error) => emit(
-        state.copyWith(status: ScreenshotsStatus.failure, error: error),
-      ),
-      (response) => emit(
-        state.copyWith(
+    final newState = switch (response) {
+      Success(value: final screenshotResponse) => state.copyWith(
           status: ScreenshotsStatus.success,
-          response: response,
+          response: screenshotResponse,
         ),
-      ),
-    );
+      Failure(error: final error) =>
+        state.copyWith(status: ScreenshotsStatus.failure, error: error),
+    };
+
+    emit(newState);
   }
 }
