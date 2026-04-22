@@ -5,10 +5,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart'
-    as _i5;
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart'
     as _i4;
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart'
+    as _i5;
 import 'package:gaming_library_assessment_flutter/features/games/domain/repositories/games_repository.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -38,7 +38,7 @@ class MockGamesRepository extends _i1.Mock implements _i2.GamesRepository {
   }
 
   @override
-  _i3.Future<_i4.Result<_i5.GamesResponse>> fetchGames({
+  _i3.Future<_i4.Result<_i5.GameListEntity>> fetchGames({
     int? page,
     String? searchTerm,
     String? dateRange,
@@ -59,8 +59,8 @@ class MockGamesRepository extends _i1.Mock implements _i2.GamesRepository {
             #ordering: ordering,
           },
         ),
-        returnValue: _i3.Future<_i4.Result<_i5.GamesResponse>>.value(
-            _i6.dummyValue<_i4.Result<_i5.GamesResponse>>(
+        returnValue: _i3.Future<_i4.Result<_i5.GameListEntity>>.value(
+            _i6.dummyValue<_i4.Result<_i5.GameListEntity>>(
           this,
           Invocation.method(
             #fetchGames,
@@ -75,5 +75,5 @@ class MockGamesRepository extends _i1.Mock implements _i2.GamesRepository {
             },
           ),
         )),
-      ) as _i3.Future<_i4.Result<_i5.GamesResponse>>);
+      ) as _i3.Future<_i4.Result<_i5.GameListEntity>>);
 }

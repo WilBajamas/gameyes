@@ -1,5 +1,5 @@
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
@@ -13,7 +13,7 @@ class FetchGamesUseCase {
 
   const FetchGamesUseCase(this._repository);
 
-  Future<Result<GamesResponse>> call({
+  Future<Result<GameListEntity>> call({
     required int page,
     String? searchTerm,
     DateTime? dateFrom,

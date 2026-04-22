@@ -106,8 +106,8 @@ class _GamesScreenState extends State<_GamesScreen> {
                       ),
                       child: ErrorRetryWidget(
                         onRetryClicked: () => context.read<GamesBloc>().add(
-                              const GamesNextPage(),
-                            ),
+                               const GamesNextPage(),
+                             ),
                       ),
                     ),
                   ),
@@ -116,8 +116,8 @@ class _GamesScreenState extends State<_GamesScreen> {
                     child: Center(
                       child: ErrorRetryWidget(
                         onRetryClicked: () => context.read<GamesBloc>().add(
-                              const GamesFetched(),
-                            ),
+                               const GamesFetched(),
+                             ),
                       ),
                     ),
                   ),
@@ -127,8 +127,8 @@ class _GamesScreenState extends State<_GamesScreen> {
                       child: ErrorRetryWidget(
                         text: S.current.no_results_found,
                         onRetryClicked: () => context.read<GamesBloc>().add(
-                              const GamesFetched(),
-                            ),
+                               const GamesFetched(),
+                             ),
                       ),
                     ),
                   ),
@@ -168,9 +168,9 @@ class GamesSliverGrid extends StatelessWidget {
           game: state.games[index],
           onItemClick: () {
             final extra = (
-              state.games[index].id!,
+              state.games[index].id,
               RouteConstants.games,
-              state.games[index].backgroundImage
+              state.games[index].imageUrl
             );
             context.push(
               RouteConstants.gameDetail,

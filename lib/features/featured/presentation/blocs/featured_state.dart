@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 
@@ -19,8 +19,8 @@ sealed class FeaturedState with _$FeaturedState {
     @Default(FeaturedStatus.initial) FeaturedStatus? status,
     @Default(FeaturedNextPageStatus.initial)
     FeaturedNextPageStatus? nextPageStatus,
-    GamesResponse? response,
-    @Default(<Game>[]) List<Game> games,
+    GameListEntity? response,
+    @Default(<GameEntity>[]) List<GameEntity> games,
     ErrorType? error,
     ErrorType? nextPageError,
   }) = _FeaturedState;

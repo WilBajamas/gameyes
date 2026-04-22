@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart'
+import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart'
     as _i4;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart'
     as _i2;
@@ -36,7 +36,7 @@ class MockGamesDataSource extends _i1.Mock implements _i2.GamesDataSource {
   }
 
   @override
-  _i3.Future<_i4.GamesResponse> fetchDatasourceGames({
+  _i3.Future<_i4.GamesModel> fetchDatasourceGames({
     int? page = 1,
     int? pageSize = 20,
     String? searchTerm,
@@ -59,8 +59,8 @@ class MockGamesDataSource extends _i1.Mock implements _i2.GamesDataSource {
             #genres: genres,
           },
         ),
-        returnValue: _i3.Future<_i4.GamesResponse>.value(
-            _i5.dummyValue<_i4.GamesResponse>(
+        returnValue:
+            _i3.Future<_i4.GamesModel>.value(_i5.dummyValue<_i4.GamesModel>(
           this,
           Invocation.method(
             #fetchDatasourceGames,
@@ -76,5 +76,5 @@ class MockGamesDataSource extends _i1.Mock implements _i2.GamesDataSource {
             },
           ),
         )),
-      ) as _i3.Future<_i4.GamesResponse>);
+      ) as _i3.Future<_i4.GamesModel>);
 }

@@ -5,10 +5,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart'
-    as _i5;
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart'
     as _i4;
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart'
+    as _i5;
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart'
     as _i7;
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart'
@@ -44,7 +44,7 @@ class MockFetchGamesUseCase extends _i1.Mock implements _i2.FetchGamesUseCase {
   }
 
   @override
-  _i3.Future<_i4.Result<_i5.GamesResponse>> call({
+  _i3.Future<_i4.Result<_i5.GameListEntity>> call({
     required int? page,
     String? searchTerm,
     DateTime? dateFrom,
@@ -69,8 +69,8 @@ class MockFetchGamesUseCase extends _i1.Mock implements _i2.FetchGamesUseCase {
             #ascending: ascending,
           },
         ),
-        returnValue: _i3.Future<_i4.Result<_i5.GamesResponse>>.value(
-            _i9.dummyValue<_i4.Result<_i5.GamesResponse>>(
+        returnValue: _i3.Future<_i4.Result<_i5.GameListEntity>>.value(
+            _i9.dummyValue<_i4.Result<_i5.GameListEntity>>(
           this,
           Invocation.method(
             #call,
@@ -87,5 +87,5 @@ class MockFetchGamesUseCase extends _i1.Mock implements _i2.FetchGamesUseCase {
             },
           ),
         )),
-      ) as _i3.Future<_i4.Result<_i5.GamesResponse>>);
+      ) as _i3.Future<_i4.Result<_i5.GameListEntity>>);
 }

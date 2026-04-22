@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'games_response.dart';
+part of 'game_list_entity.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,96 +13,97 @@ part of 'games_response.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$GamesResponse {
-  int get count;
+mixin _$GameListEntity {
+  int get totalCount;
+  List<GameEntity> get items;
   int? get currentPage;
-  String? get next;
-  List<Game>? get results;
+  String? get nextUrl;
 
-  /// Create a copy of GamesResponse
+  /// Create a copy of GameListEntity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $GamesResponseCopyWith<GamesResponse> get copyWith =>
-      _$GamesResponseCopyWithImpl<GamesResponse>(
-          this as GamesResponse, _$identity);
-
-  /// Serializes this GamesResponse to a JSON map.
-  Map<String, dynamic> toJson();
+  $GameListEntityCopyWith<GameListEntity> get copyWith =>
+      _$GameListEntityCopyWithImpl<GameListEntity>(
+          this as GameListEntity, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is GamesResponse &&
-            (identical(other.count, count) || other.count == count) &&
+            other is GameListEntity &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount) &&
+            const DeepCollectionEquality().equals(other.items, items) &&
             (identical(other.currentPage, currentPage) ||
                 other.currentPage == currentPage) &&
-            (identical(other.next, next) || other.next == next) &&
-            const DeepCollectionEquality().equals(other.results, results));
+            (identical(other.nextUrl, nextUrl) || other.nextUrl == nextUrl));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, count, currentPage, next,
-      const DeepCollectionEquality().hash(results));
+  int get hashCode => Object.hash(runtimeType, totalCount,
+      const DeepCollectionEquality().hash(items), currentPage, nextUrl);
 
   @override
   String toString() {
-    return 'GamesResponse(count: $count, currentPage: $currentPage, next: $next, results: $results)';
+    return 'GameListEntity(totalCount: $totalCount, items: $items, currentPage: $currentPage, nextUrl: $nextUrl)';
   }
 }
 
 /// @nodoc
-abstract mixin class $GamesResponseCopyWith<$Res> {
-  factory $GamesResponseCopyWith(
-          GamesResponse value, $Res Function(GamesResponse) _then) =
-      _$GamesResponseCopyWithImpl;
+abstract mixin class $GameListEntityCopyWith<$Res> {
+  factory $GameListEntityCopyWith(
+          GameListEntity value, $Res Function(GameListEntity) _then) =
+      _$GameListEntityCopyWithImpl;
   @useResult
-  $Res call({int count, int? currentPage, String? next, List<Game>? results});
+  $Res call(
+      {int totalCount,
+      List<GameEntity> items,
+      int? currentPage,
+      String? nextUrl});
 }
 
 /// @nodoc
-class _$GamesResponseCopyWithImpl<$Res>
-    implements $GamesResponseCopyWith<$Res> {
-  _$GamesResponseCopyWithImpl(this._self, this._then);
+class _$GameListEntityCopyWithImpl<$Res>
+    implements $GameListEntityCopyWith<$Res> {
+  _$GameListEntityCopyWithImpl(this._self, this._then);
 
-  final GamesResponse _self;
-  final $Res Function(GamesResponse) _then;
+  final GameListEntity _self;
+  final $Res Function(GameListEntity) _then;
 
-  /// Create a copy of GamesResponse
+  /// Create a copy of GameListEntity
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? count = null,
+    Object? totalCount = null,
+    Object? items = null,
     Object? currentPage = freezed,
-    Object? next = freezed,
-    Object? results = freezed,
+    Object? nextUrl = freezed,
   }) {
     return _then(_self.copyWith(
-      count: null == count
-          ? _self.count
-          : count // ignore: cast_nullable_to_non_nullable
+      totalCount: null == totalCount
+          ? _self.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
+      items: null == items
+          ? _self.items
+          : items // ignore: cast_nullable_to_non_nullable
+              as List<GameEntity>,
       currentPage: freezed == currentPage
           ? _self.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      next: freezed == next
-          ? _self.next
-          : next // ignore: cast_nullable_to_non_nullable
+      nextUrl: freezed == nextUrl
+          ? _self.nextUrl
+          : nextUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      results: freezed == results
-          ? _self.results
-          : results // ignore: cast_nullable_to_non_nullable
-              as List<Game>?,
     ));
   }
 }
 
-/// Adds pattern-matching-related methods to [GamesResponse].
-extension GamesResponsePatterns on GamesResponse {
+/// Adds pattern-matching-related methods to [GameListEntity].
+extension GameListEntityPatterns on GameListEntity {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -117,12 +118,12 @@ extension GamesResponsePatterns on GamesResponse {
 
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
-    TResult Function(_GamesResponse value)? $default, {
+    TResult Function(_GameListEntity value)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _GamesResponse() when $default != null:
+      case _GameListEntity() when $default != null:
         return $default(_that);
       case _:
         return orElse();
@@ -144,11 +145,11 @@ extension GamesResponsePatterns on GamesResponse {
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
-    TResult Function(_GamesResponse value) $default,
+    TResult Function(_GameListEntity value) $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _GamesResponse():
+      case _GameListEntity():
         return $default(_that);
     }
   }
@@ -167,11 +168,11 @@ extension GamesResponsePatterns on GamesResponse {
 
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_GamesResponse value)? $default,
+    TResult? Function(_GameListEntity value)? $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _GamesResponse() when $default != null:
+      case _GameListEntity() when $default != null:
         return $default(_that);
       case _:
         return null;
@@ -192,16 +193,16 @@ extension GamesResponsePatterns on GamesResponse {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            int count, int? currentPage, String? next, List<Game>? results)?
+    TResult Function(int totalCount, List<GameEntity> items, int? currentPage,
+            String? nextUrl)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _GamesResponse() when $default != null:
+      case _GameListEntity() when $default != null:
         return $default(
-            _that.count, _that.currentPage, _that.next, _that.results);
+            _that.totalCount, _that.items, _that.currentPage, _that.nextUrl);
       case _:
         return orElse();
     }
@@ -222,15 +223,15 @@ extension GamesResponsePatterns on GamesResponse {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            int count, int? currentPage, String? next, List<Game>? results)
+    TResult Function(int totalCount, List<GameEntity> items, int? currentPage,
+            String? nextUrl)
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _GamesResponse():
+      case _GameListEntity():
         return $default(
-            _that.count, _that.currentPage, _that.next, _that.results);
+            _that.totalCount, _that.items, _that.currentPage, _that.nextUrl);
     }
   }
 
@@ -248,15 +249,15 @@ extension GamesResponsePatterns on GamesResponse {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            int count, int? currentPage, String? next, List<Game>? results)?
+    TResult? Function(int totalCount, List<GameEntity> items, int? currentPage,
+            String? nextUrl)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _GamesResponse() when $default != null:
+      case _GameListEntity() when $default != null:
         return $default(
-            _that.count, _that.currentPage, _that.next, _that.results);
+            _that.totalCount, _that.items, _that.currentPage, _that.nextUrl);
       case _:
         return null;
     }
@@ -264,117 +265,111 @@ extension GamesResponsePatterns on GamesResponse {
 }
 
 /// @nodoc
-@JsonSerializable()
-class _GamesResponse implements GamesResponse {
-  const _GamesResponse(
-      {required this.count,
+
+class _GameListEntity implements GameListEntity {
+  const _GameListEntity(
+      {required this.totalCount,
+      required final List<GameEntity> items,
       this.currentPage,
-      this.next,
-      final List<Game>? results})
-      : _results = results;
-  factory _GamesResponse.fromJson(Map<String, dynamic> json) =>
-      _$GamesResponseFromJson(json);
+      this.nextUrl})
+      : _items = items;
 
   @override
-  final int count;
+  final int totalCount;
+  final List<GameEntity> _items;
+  @override
+  List<GameEntity> get items {
+    if (_items is EqualUnmodifiableListView) return _items;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_items);
+  }
+
   @override
   final int? currentPage;
   @override
-  final String? next;
-  final List<Game>? _results;
-  @override
-  List<Game>? get results {
-    final value = _results;
-    if (value == null) return null;
-    if (_results is EqualUnmodifiableListView) return _results;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
+  final String? nextUrl;
 
-  /// Create a copy of GamesResponse
+  /// Create a copy of GameListEntity
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$GamesResponseCopyWith<_GamesResponse> get copyWith =>
-      __$GamesResponseCopyWithImpl<_GamesResponse>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$GamesResponseToJson(
-      this,
-    );
-  }
+  _$GameListEntityCopyWith<_GameListEntity> get copyWith =>
+      __$GameListEntityCopyWithImpl<_GameListEntity>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _GamesResponse &&
-            (identical(other.count, count) || other.count == count) &&
+            other is _GameListEntity &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount) &&
+            const DeepCollectionEquality().equals(other._items, _items) &&
             (identical(other.currentPage, currentPage) ||
                 other.currentPage == currentPage) &&
-            (identical(other.next, next) || other.next == next) &&
-            const DeepCollectionEquality().equals(other._results, _results));
+            (identical(other.nextUrl, nextUrl) || other.nextUrl == nextUrl));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, count, currentPage, next,
-      const DeepCollectionEquality().hash(_results));
+  int get hashCode => Object.hash(runtimeType, totalCount,
+      const DeepCollectionEquality().hash(_items), currentPage, nextUrl);
 
   @override
   String toString() {
-    return 'GamesResponse(count: $count, currentPage: $currentPage, next: $next, results: $results)';
+    return 'GameListEntity(totalCount: $totalCount, items: $items, currentPage: $currentPage, nextUrl: $nextUrl)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$GamesResponseCopyWith<$Res>
-    implements $GamesResponseCopyWith<$Res> {
-  factory _$GamesResponseCopyWith(
-          _GamesResponse value, $Res Function(_GamesResponse) _then) =
-      __$GamesResponseCopyWithImpl;
+abstract mixin class _$GameListEntityCopyWith<$Res>
+    implements $GameListEntityCopyWith<$Res> {
+  factory _$GameListEntityCopyWith(
+          _GameListEntity value, $Res Function(_GameListEntity) _then) =
+      __$GameListEntityCopyWithImpl;
   @override
   @useResult
-  $Res call({int count, int? currentPage, String? next, List<Game>? results});
+  $Res call(
+      {int totalCount,
+      List<GameEntity> items,
+      int? currentPage,
+      String? nextUrl});
 }
 
 /// @nodoc
-class __$GamesResponseCopyWithImpl<$Res>
-    implements _$GamesResponseCopyWith<$Res> {
-  __$GamesResponseCopyWithImpl(this._self, this._then);
+class __$GameListEntityCopyWithImpl<$Res>
+    implements _$GameListEntityCopyWith<$Res> {
+  __$GameListEntityCopyWithImpl(this._self, this._then);
 
-  final _GamesResponse _self;
-  final $Res Function(_GamesResponse) _then;
+  final _GameListEntity _self;
+  final $Res Function(_GameListEntity) _then;
 
-  /// Create a copy of GamesResponse
+  /// Create a copy of GameListEntity
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? count = null,
+    Object? totalCount = null,
+    Object? items = null,
     Object? currentPage = freezed,
-    Object? next = freezed,
-    Object? results = freezed,
+    Object? nextUrl = freezed,
   }) {
-    return _then(_GamesResponse(
-      count: null == count
-          ? _self.count
-          : count // ignore: cast_nullable_to_non_nullable
+    return _then(_GameListEntity(
+      totalCount: null == totalCount
+          ? _self.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
               as int,
+      items: null == items
+          ? _self._items
+          : items // ignore: cast_nullable_to_non_nullable
+              as List<GameEntity>,
       currentPage: freezed == currentPage
           ? _self.currentPage
           : currentPage // ignore: cast_nullable_to_non_nullable
               as int?,
-      next: freezed == next
-          ? _self.next
-          : next // ignore: cast_nullable_to_non_nullable
+      nextUrl: freezed == nextUrl
+          ? _self.nextUrl
+          : nextUrl // ignore: cast_nullable_to_non_nullable
               as String?,
-      results: freezed == results
-          ? _self._results
-          : results // ignore: cast_nullable_to_non_nullable
-              as List<Game>?,
     ));
   }
 }

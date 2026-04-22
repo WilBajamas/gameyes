@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
@@ -62,7 +62,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       Success(value: final response) => state.copyWith(
           status: GamesStatus.success,
           response: response,
-          games: response.results ?? [],
+          games: response.items,
           filterState: filter,
         ),
       Failure(error: final error) => state.copyWith(
@@ -78,7 +78,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     GamesNextPage event,
     Emitter<GamesState> emit,
   ) async {
-    if (state.response?.next == null || state.response?.currentPage == null) {
+    if (state.response?.nextUrl == null || state.response?.currentPage == null) {
       return;
     }
 
@@ -93,7 +93,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       Success(value: final response) => state.copyWith(
           nextPageStatus: GamesNextPageStatus.initial,
           response: response,
-          games: List.of(state.games)..addAll(response.results ?? []),
+          games: List.of(state.games)..addAll(response.items),
         ),
       Failure(error: final error) => state.copyWith(
           nextPageError: error,
@@ -104,7 +104,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     emit(newState);
   }
 
-  Future<Result<GamesResponse>> _fetchGames(
+  Future<Result<GameListEntity>> _fetchGames(
     int page,
     FilterState filter,
   ) =>

@@ -49,7 +49,7 @@ class _RetrofitService implements RetrofitService {
   }
 
   @override
-  Future<GamesResponse> fetchGames(
+  Future<GamesModel> fetchGames(
     int page,
     int pageSize,
     String? dates,
@@ -71,7 +71,7 @@ class _RetrofitService implements RetrofitService {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<GamesResponse>(
+    final _options = _setStreamType<GamesModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -82,9 +82,9 @@ class _RetrofitService implements RetrofitService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late GamesResponse _value;
+    late GamesModel _value;
     try {
-      _value = GamesResponse.fromJson(_result.data!);
+      _value = GamesModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

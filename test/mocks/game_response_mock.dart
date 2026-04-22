@@ -1,9 +1,17 @@
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
 
 import 'game_mock.dart';
 
-GamesResponse get mockGamesResponse =>
-    GamesResponse(20, mockListGames, 'next_url', 1);
+GameListEntity get mockGamesResponse => GameListEntity(
+      totalCount: 20,
+      items: mockListGames,
+      nextUrl: 'next_url',
+      currentPage: 1,
+    );
 
-GamesResponse get mockGamesResponseEmptyResults =>
-    const GamesResponse(0, null, null, 2);
+GameListEntity get mockGamesResponseEmptyResults => const GameListEntity(
+      totalCount: 0,
+      items: [],
+      nextUrl: null,
+      currentPage: 2,
+    );

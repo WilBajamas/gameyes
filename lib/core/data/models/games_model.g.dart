@@ -1,13 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'games_response.dart';
+part of 'games_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_GamesResponse _$GamesResponseFromJson(Map<String, dynamic> json) =>
-    _GamesResponse(
+_GamesModel _$GamesModelFromJson(Map<String, dynamic> json) => _GamesModel(
       count: (json['count'] as num).toInt(),
       currentPage: (json['currentPage'] as num?)?.toInt(),
       next: json['next'] as String?,
@@ -16,7 +15,7 @@ _GamesResponse _$GamesResponseFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$GamesResponseToJson(_GamesResponse instance) =>
+Map<String, dynamic> _$GamesModelToJson(_GamesModel instance) =>
     <String, dynamic>{
       'count': instance.count,
       'currentPage': instance.currentPage,

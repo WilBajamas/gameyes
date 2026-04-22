@@ -1,5 +1,5 @@
+import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
 import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -8,7 +8,7 @@ class GamesDataSource {
 
   const GamesDataSource(this._dioService);
 
-  Future<GamesResponse> fetchDatasourceGames({
+  Future<GamesModel> fetchDatasourceGames({
     int page = 1,
     int pageSize = 20,
     String? searchTerm,

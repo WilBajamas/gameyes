@@ -16,8 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$GamesState {
   GamesStatus get status;
   GamesNextPageStatus? get nextPageStatus;
-  GamesResponse? get response;
-  List<Game> get games;
+  GameListEntity? get response;
+  List<GameEntity> get games;
   ErrorType? get error;
   ErrorType? get nextPageError;
   FilterState get filterState;
@@ -73,13 +73,13 @@ abstract mixin class $GamesStateCopyWith<$Res> {
   $Res call(
       {GamesStatus status,
       GamesNextPageStatus? nextPageStatus,
-      GamesResponse? response,
-      List<Game> games,
+      GameListEntity? response,
+      List<GameEntity> games,
       ErrorType? error,
       ErrorType? nextPageError,
       FilterState filterState});
 
-  $GamesResponseCopyWith<$Res>? get response;
+  $GameListEntityCopyWith<$Res>? get response;
   $ErrorTypeCopyWith<$Res>? get error;
   $ErrorTypeCopyWith<$Res>? get nextPageError;
   $FilterStateCopyWith<$Res> get filterState;
@@ -117,11 +117,11 @@ class _$GamesStateCopyWithImpl<$Res> implements $GamesStateCopyWith<$Res> {
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable
-              as GamesResponse?,
+              as GameListEntity?,
       games: null == games
           ? _self.games
           : games // ignore: cast_nullable_to_non_nullable
-              as List<Game>,
+              as List<GameEntity>,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -141,12 +141,12 @@ class _$GamesStateCopyWithImpl<$Res> implements $GamesStateCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GamesResponseCopyWith<$Res>? get response {
+  $GameListEntityCopyWith<$Res>? get response {
     if (_self.response == null) {
       return null;
     }
 
-    return $GamesResponseCopyWith<$Res>(_self.response!, (value) {
+    return $GameListEntityCopyWith<$Res>(_self.response!, (value) {
       return _then(_self.copyWith(response: value));
     });
   }
@@ -284,8 +284,8 @@ extension GamesStatePatterns on GamesState {
     TResult Function(
             GamesStatus status,
             GamesNextPageStatus? nextPageStatus,
-            GamesResponse? response,
-            List<Game> games,
+            GameListEntity? response,
+            List<GameEntity> games,
             ErrorType? error,
             ErrorType? nextPageError,
             FilterState filterState)?
@@ -320,8 +320,8 @@ extension GamesStatePatterns on GamesState {
     TResult Function(
             GamesStatus status,
             GamesNextPageStatus? nextPageStatus,
-            GamesResponse? response,
-            List<Game> games,
+            GameListEntity? response,
+            List<GameEntity> games,
             ErrorType? error,
             ErrorType? nextPageError,
             FilterState filterState)
@@ -352,8 +352,8 @@ extension GamesStatePatterns on GamesState {
     TResult? Function(
             GamesStatus status,
             GamesNextPageStatus? nextPageStatus,
-            GamesResponse? response,
-            List<Game> games,
+            GameListEntity? response,
+            List<GameEntity> games,
             ErrorType? error,
             ErrorType? nextPageError,
             FilterState filterState)?
@@ -377,7 +377,7 @@ class _GamesState implements GamesState {
       {this.status = GamesStatus.initial,
       this.nextPageStatus = GamesNextPageStatus.initial,
       this.response,
-      final List<Game> games = const <Game>[],
+      final List<GameEntity> games = const <GameEntity>[],
       this.error,
       this.nextPageError,
       this.filterState = const FilterState()})
@@ -390,11 +390,11 @@ class _GamesState implements GamesState {
   @JsonKey()
   final GamesNextPageStatus? nextPageStatus;
   @override
-  final GamesResponse? response;
-  final List<Game> _games;
+  final GameListEntity? response;
+  final List<GameEntity> _games;
   @override
   @JsonKey()
-  List<Game> get games {
+  List<GameEntity> get games {
     if (_games is EqualUnmodifiableListView) return _games;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_games);
@@ -462,14 +462,14 @@ abstract mixin class _$GamesStateCopyWith<$Res>
   $Res call(
       {GamesStatus status,
       GamesNextPageStatus? nextPageStatus,
-      GamesResponse? response,
-      List<Game> games,
+      GameListEntity? response,
+      List<GameEntity> games,
       ErrorType? error,
       ErrorType? nextPageError,
       FilterState filterState});
 
   @override
-  $GamesResponseCopyWith<$Res>? get response;
+  $GameListEntityCopyWith<$Res>? get response;
   @override
   $ErrorTypeCopyWith<$Res>? get error;
   @override
@@ -510,11 +510,11 @@ class __$GamesStateCopyWithImpl<$Res> implements _$GamesStateCopyWith<$Res> {
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable
-              as GamesResponse?,
+              as GameListEntity?,
       games: null == games
           ? _self._games
           : games // ignore: cast_nullable_to_non_nullable
-              as List<Game>,
+              as List<GameEntity>,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -534,12 +534,12 @@ class __$GamesStateCopyWithImpl<$Res> implements _$GamesStateCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GamesResponseCopyWith<$Res>? get response {
+  $GameListEntityCopyWith<$Res>? get response {
     if (_self.response == null) {
       return null;
     }
 
-    return $GamesResponseCopyWith<$Res>(_self.response!, (value) {
+    return $GameListEntityCopyWith<$Res>(_self.response!, (value) {
       return _then(_self.copyWith(response: value));
     });
   }

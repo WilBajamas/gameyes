@@ -18,8 +18,8 @@ mixin _$FeaturedState {
   Set<GamePlatform> get platformsSelected;
   FeaturedStatus? get status;
   FeaturedNextPageStatus? get nextPageStatus;
-  GamesResponse? get response;
-  List<Game> get games;
+  GameListEntity? get response;
+  List<GameEntity> get games;
   ErrorType? get error;
   ErrorType? get nextPageError;
 
@@ -79,12 +79,12 @@ abstract mixin class $FeaturedStateCopyWith<$Res> {
       Set<GamePlatform> platformsSelected,
       FeaturedStatus? status,
       FeaturedNextPageStatus? nextPageStatus,
-      GamesResponse? response,
-      List<Game> games,
+      GameListEntity? response,
+      List<GameEntity> games,
       ErrorType? error,
       ErrorType? nextPageError});
 
-  $GamesResponseCopyWith<$Res>? get response;
+  $GameListEntityCopyWith<$Res>? get response;
   $ErrorTypeCopyWith<$Res>? get error;
   $ErrorTypeCopyWith<$Res>? get nextPageError;
 }
@@ -131,11 +131,11 @@ class _$FeaturedStateCopyWithImpl<$Res>
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable
-              as GamesResponse?,
+              as GameListEntity?,
       games: null == games
           ? _self.games
           : games // ignore: cast_nullable_to_non_nullable
-              as List<Game>,
+              as List<GameEntity>,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -151,12 +151,12 @@ class _$FeaturedStateCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GamesResponseCopyWith<$Res>? get response {
+  $GameListEntityCopyWith<$Res>? get response {
     if (_self.response == null) {
       return null;
     }
 
-    return $GamesResponseCopyWith<$Res>(_self.response!, (value) {
+    return $GameListEntityCopyWith<$Res>(_self.response!, (value) {
       return _then(_self.copyWith(response: value));
     });
   }
@@ -286,8 +286,8 @@ extension FeaturedStatePatterns on FeaturedState {
             Set<GamePlatform> platformsSelected,
             FeaturedStatus? status,
             FeaturedNextPageStatus? nextPageStatus,
-            GamesResponse? response,
-            List<Game> games,
+            GameListEntity? response,
+            List<GameEntity> games,
             ErrorType? error,
             ErrorType? nextPageError)?
         $default, {
@@ -330,8 +330,8 @@ extension FeaturedStatePatterns on FeaturedState {
             Set<GamePlatform> platformsSelected,
             FeaturedStatus? status,
             FeaturedNextPageStatus? nextPageStatus,
-            GamesResponse? response,
-            List<Game> games,
+            GameListEntity? response,
+            List<GameEntity> games,
             ErrorType? error,
             ErrorType? nextPageError)
         $default,
@@ -370,8 +370,8 @@ extension FeaturedStatePatterns on FeaturedState {
             Set<GamePlatform> platformsSelected,
             FeaturedStatus? status,
             FeaturedNextPageStatus? nextPageStatus,
-            GamesResponse? response,
-            List<Game> games,
+            GameListEntity? response,
+            List<GameEntity> games,
             ErrorType? error,
             ErrorType? nextPageError)?
         $default,
@@ -403,7 +403,7 @@ class _FeaturedState implements FeaturedState {
       this.status = FeaturedStatus.initial,
       this.nextPageStatus = FeaturedNextPageStatus.initial,
       this.response,
-      final List<Game> games = const <Game>[],
+      final List<GameEntity> games = const <GameEntity>[],
       this.error,
       this.nextPageError})
       : _platformsSelected = platformsSelected,
@@ -429,11 +429,11 @@ class _FeaturedState implements FeaturedState {
   @JsonKey()
   final FeaturedNextPageStatus? nextPageStatus;
   @override
-  final GamesResponse? response;
-  final List<Game> _games;
+  final GameListEntity? response;
+  final List<GameEntity> _games;
   @override
   @JsonKey()
-  List<Game> get games {
+  List<GameEntity> get games {
     if (_games is EqualUnmodifiableListView) return _games;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_games);
@@ -502,13 +502,13 @@ abstract mixin class _$FeaturedStateCopyWith<$Res>
       Set<GamePlatform> platformsSelected,
       FeaturedStatus? status,
       FeaturedNextPageStatus? nextPageStatus,
-      GamesResponse? response,
-      List<Game> games,
+      GameListEntity? response,
+      List<GameEntity> games,
       ErrorType? error,
       ErrorType? nextPageError});
 
   @override
-  $GamesResponseCopyWith<$Res>? get response;
+  $GameListEntityCopyWith<$Res>? get response;
   @override
   $ErrorTypeCopyWith<$Res>? get error;
   @override
@@ -557,11 +557,11 @@ class __$FeaturedStateCopyWithImpl<$Res>
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable
-              as GamesResponse?,
+              as GameListEntity?,
       games: null == games
           ? _self._games
           : games // ignore: cast_nullable_to_non_nullable
-              as List<Game>,
+              as List<GameEntity>,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -577,12 +577,12 @@ class __$FeaturedStateCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GamesResponseCopyWith<$Res>? get response {
+  $GameListEntityCopyWith<$Res>? get response {
     if (_self.response == null) {
       return null;
     }
 
-    return $GamesResponseCopyWith<$Res>(_self.response!, (value) {
+    return $GameListEntityCopyWith<$Res>(_self.response!, (value) {
       return _then(_self.copyWith(response: value));
     });
   }

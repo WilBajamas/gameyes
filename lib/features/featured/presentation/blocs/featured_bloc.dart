@@ -1,8 +1,8 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/fetch_featured_use_case.dart';
@@ -36,7 +36,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
     emit(
       state.copyWith(
         status: FeaturedStatus.loading,
-        games: const <Game>[],
+        games: const <GameEntity>[],
         nextPageStatus: FeaturedNextPageStatus.initial,
       ),
     );
@@ -52,7 +52,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
           tag: event.tag ?? state.tag,
           status: FeaturedStatus.success,
           response: response,
-          games: response.results ?? state.games,
+          games: response.items,
           platformsSelected: event.platforms ?? state.platformsSelected,
         ),
       Failure(error: final error) => state.copyWith(
@@ -70,7 +70,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
     FeaturedNextPage event,
     Emitter<FeaturedState> emit,
   ) async {
-    if (state.response?.next == null || state.response?.currentPage == null) {
+    if (state.response?.nextUrl == null || state.response?.currentPage == null) {
       return;
     }
 
@@ -86,7 +86,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
       Success(value: final response) => state.copyWith(
           nextPageStatus: FeaturedNextPageStatus.initial,
           response: response,
-          games: List.of(state.games)..addAll(response.results ?? []),
+          games: List.of(state.games)..addAll(response.items),
         ),
       Failure(error: final error) => state.copyWith(
           nextPageError: error,

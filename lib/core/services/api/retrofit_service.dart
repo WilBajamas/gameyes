@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_model.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'retrofit_service.g.dart';
@@ -18,7 +18,7 @@ abstract class RetrofitService {
 
   //* Game list //
   @GET(ConfigConstants.gamesEndpoint)
-  Future<GamesResponse> fetchGames(
+  Future<GamesModel> fetchGames(
     @Query('page') int page,
     @Query('page_size') int pageSize,
     @Query('dates') String? dates,

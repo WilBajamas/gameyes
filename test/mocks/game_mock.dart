@@ -1,18 +1,18 @@
-import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
 
 import 'platform_item_mock.dart';
 
-Game get mockGame => Game(
-      8,
-      'slug',
-      'test game name',
-      '2020-01-01',
-      'backgroundImage',
-      90,
-      mockListPlatformItem,
+GameEntity get mockGame => GameEntity(
+      id: 8,
+      slug: 'slug',
+      name: 'test game name',
+      releaseDate: '2020-01-01',
+      imageUrl: 'backgroundImage',
+      metacritic: 90,
+      platforms: mockListPlatformItem,
     );
 
-List<Game> get mockListGames => [
+List<GameEntity> get mockListGames => [
       mockGame,
       mockGame,
       mockGame,
