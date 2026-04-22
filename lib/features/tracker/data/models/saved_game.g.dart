@@ -235,6 +235,7 @@ const _SavedGameplatformsEnumValueMap = {
   'nintendo': 5,
   'wii': 6,
   'linux': 7,
+  'other': 8,
 };
 const _SavedGameplatformsValueEnumMap = {
   0: GamePlatform.playstation,
@@ -245,6 +246,7 @@ const _SavedGameplatformsValueEnumMap = {
   5: GamePlatform.nintendo,
   6: GamePlatform.wii,
   7: GamePlatform.linux,
+  8: GamePlatform.other,
 };
 
 Id _savedGameGetId(SavedGame object) {

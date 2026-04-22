@@ -40,6 +40,11 @@ enum GamePlatform implements EnumSelection {
     ids: [6],
     name: 'Linux',
     assetName: 'icon_linux.png',
+  ),
+  other(
+    ids: [],
+    name: 'Other',
+    assetName: 'icon_other.png',
   );
 
   final List<int> ids;
