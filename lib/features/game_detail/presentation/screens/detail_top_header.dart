@@ -44,7 +44,7 @@ class DetailTopHeader extends StatelessWidget {
           return Stack(
             children: [
               DetailBackground(
-                backgroundImage: state.response?.backgroundImageAdditional,
+                backgroundImage: state.game?.additionalImageUrl,
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(16, kToolbarHeight, 16, 16),
@@ -101,7 +101,7 @@ class DetailContent extends StatelessWidget {
         children: [
           // ** Name //
           AutoSizeText(
-            state.response!.name!,
+            state.game?.name ?? '-',
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: context.themeData.textTheme.displayMedium!.merge(
@@ -119,7 +119,7 @@ class DetailContent extends StatelessWidget {
                 .copyWith(color: Colors.white),
           ),
           AutoSizeText(
-            state.response!.released.stringToDateString(),
+            state.game?.releaseDate?.stringToDateString() ?? '-',
             maxLines: 2,
             style: context.themeData.textTheme.bodyLarge!
                 .copyWith(color: Colors.white),
@@ -129,7 +129,7 @@ class DetailContent extends StatelessWidget {
           Row(
             children: [
               MetacriticIndicator(
-                score: state.response?.metacritic,
+                score: state.game?.metacritic,
                 size: 60,
               ),
               const SizedBox(

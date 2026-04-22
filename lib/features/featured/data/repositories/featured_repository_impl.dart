@@ -21,11 +21,12 @@ class FeaturedRepositoryImpl
     String? platforms,
   }) async {
     return fetchData(
-        apiCall: _gamesDatasource.fetchDatasourceGames(
-      page: page,
-      dateRange: dateRange,
-      orderings: orderings,
-      platforms: platforms,
-    ));
+      apiCall: _gamesDatasource.fetchDatasourceGames(
+        page: page,
+        dateRange: dateRange,
+        orderings: orderings,
+        platforms: platforms,
+      ),
+    );
   }
 }

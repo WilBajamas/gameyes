@@ -23,20 +23,18 @@ class GameDetailCubit extends Cubit<GameDetailState> {
   Future<void> fetchGameDetail({required int id}) async {
     emit(state.copyWith(status: GameDetailStatus.loading));
 
-    final response = await _gameDetailRepository.fetchGameDetail(id: id);
+    final result = await _gameDetailRepository.fetchGameDetail(id: id);
 
-    switch (response) {
-      case Success(value: final gameDetailResponse):
+    switch (result) {
+      case Success(value: final gameEntity):
         emit(
           state.copyWith(
             status: GameDetailStatus.success,
-            response: gameDetailResponse,
+            game: gameEntity,
           ),
         );
 
-        if (gameDetailResponse.id case final gameId?) {
-          getSavedGame(gameId: gameId);
-        }
+        getSavedGame(gameId: gameEntity.id);
       case Failure(error: final error):
         emit(state.copyWith(status: GameDetailStatus.failed, error: error));
     }
@@ -63,13 +61,13 @@ class GameDetailCubit extends Cubit<GameDetailState> {
   }
 
   void _saveGame() {
-    if (state.response == null) return;
+    if (state.game == null) return;
 
     final SavedGame gameToSave = SavedGame()
-      ..gameId = state.response?.id
-      ..gameSlug = state.response?.slug
-      ..name = state.response?.name
-      ..imageUrl = state.response?.backgroundImage
+      ..gameId = state.game?.id
+      ..gameSlug = state.game?.slug
+      ..name = state.game?.name
+      ..imageUrl = state.game?.imageUrl
       ..dateSaved = DateTime.now();
 
     _gameDetailRepository

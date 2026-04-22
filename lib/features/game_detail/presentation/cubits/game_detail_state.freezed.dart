@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GameDetailState {
   GameDetailStatus? get status;
-  GameDetailResponse? get response;
+  GameDetailEntity? get game;
   ErrorType? get error;
   bool get contentExpanded;
   SavedGame? get savedGame;
@@ -34,8 +34,7 @@ mixin _$GameDetailState {
         (other.runtimeType == runtimeType &&
             other is GameDetailState &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.response, response) ||
-                other.response == response) &&
+            (identical(other.game, game) || other.game == game) &&
             (identical(other.error, error) || other.error == error) &&
             (identical(other.contentExpanded, contentExpanded) ||
                 other.contentExpanded == contentExpanded) &&
@@ -44,12 +43,12 @@ mixin _$GameDetailState {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, status, response, error, contentExpanded, savedGame);
+  int get hashCode =>
+      Object.hash(runtimeType, status, game, error, contentExpanded, savedGame);
 
   @override
   String toString() {
-    return 'GameDetailState(status: $status, response: $response, error: $error, contentExpanded: $contentExpanded, savedGame: $savedGame)';
+    return 'GameDetailState(status: $status, game: $game, error: $error, contentExpanded: $contentExpanded, savedGame: $savedGame)';
   }
 }
 
@@ -61,12 +60,12 @@ abstract mixin class $GameDetailStateCopyWith<$Res> {
   @useResult
   $Res call(
       {GameDetailStatus? status,
-      GameDetailResponse? response,
+      GameDetailEntity? game,
       ErrorType? error,
       bool contentExpanded,
       SavedGame? savedGame});
 
-  $GameDetailResponseCopyWith<$Res>? get response;
+  $GameDetailEntityCopyWith<$Res>? get game;
   $ErrorTypeCopyWith<$Res>? get error;
 }
 
@@ -84,7 +83,7 @@ class _$GameDetailStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = freezed,
-    Object? response = freezed,
+    Object? game = freezed,
     Object? error = freezed,
     Object? contentExpanded = null,
     Object? savedGame = freezed,
@@ -94,10 +93,10 @@ class _$GameDetailStateCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as GameDetailStatus?,
-      response: freezed == response
-          ? _self.response
-          : response // ignore: cast_nullable_to_non_nullable
-              as GameDetailResponse?,
+      game: freezed == game
+          ? _self.game
+          : game // ignore: cast_nullable_to_non_nullable
+              as GameDetailEntity?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -117,13 +116,13 @@ class _$GameDetailStateCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GameDetailResponseCopyWith<$Res>? get response {
-    if (_self.response == null) {
+  $GameDetailEntityCopyWith<$Res>? get game {
+    if (_self.game == null) {
       return null;
     }
 
-    return $GameDetailResponseCopyWith<$Res>(_self.response!, (value) {
-      return _then(_self.copyWith(response: value));
+    return $GameDetailEntityCopyWith<$Res>(_self.game!, (value) {
+      return _then(_self.copyWith(game: value));
     });
   }
 
@@ -233,7 +232,7 @@ extension GameDetailStatePatterns on GameDetailState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(GameDetailStatus? status, GameDetailResponse? response,
+    TResult Function(GameDetailStatus? status, GameDetailEntity? game,
             ErrorType? error, bool contentExpanded, SavedGame? savedGame)?
         $default, {
     required TResult orElse(),
@@ -241,7 +240,7 @@ extension GameDetailStatePatterns on GameDetailState {
     final _that = this;
     switch (_that) {
       case _GameDetailState() when $default != null:
-        return $default(_that.status, _that.response, _that.error,
+        return $default(_that.status, _that.game, _that.error,
             _that.contentExpanded, _that.savedGame);
       case _:
         return orElse();
@@ -263,14 +262,14 @@ extension GameDetailStatePatterns on GameDetailState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(GameDetailStatus? status, GameDetailResponse? response,
+    TResult Function(GameDetailStatus? status, GameDetailEntity? game,
             ErrorType? error, bool contentExpanded, SavedGame? savedGame)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _GameDetailState():
-        return $default(_that.status, _that.response, _that.error,
+        return $default(_that.status, _that.game, _that.error,
             _that.contentExpanded, _that.savedGame);
     }
   }
@@ -289,14 +288,14 @@ extension GameDetailStatePatterns on GameDetailState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(GameDetailStatus? status, GameDetailResponse? response,
+    TResult? Function(GameDetailStatus? status, GameDetailEntity? game,
             ErrorType? error, bool contentExpanded, SavedGame? savedGame)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _GameDetailState() when $default != null:
-        return $default(_that.status, _that.response, _that.error,
+        return $default(_that.status, _that.game, _that.error,
             _that.contentExpanded, _that.savedGame);
       case _:
         return null;
@@ -309,7 +308,7 @@ extension GameDetailStatePatterns on GameDetailState {
 class _GameDetailState implements GameDetailState {
   const _GameDetailState(
       {this.status,
-      this.response,
+      this.game,
       this.error,
       this.contentExpanded = false,
       this.savedGame});
@@ -317,7 +316,7 @@ class _GameDetailState implements GameDetailState {
   @override
   final GameDetailStatus? status;
   @override
-  final GameDetailResponse? response;
+  final GameDetailEntity? game;
   @override
   final ErrorType? error;
   @override
@@ -340,8 +339,7 @@ class _GameDetailState implements GameDetailState {
         (other.runtimeType == runtimeType &&
             other is _GameDetailState &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.response, response) ||
-                other.response == response) &&
+            (identical(other.game, game) || other.game == game) &&
             (identical(other.error, error) || other.error == error) &&
             (identical(other.contentExpanded, contentExpanded) ||
                 other.contentExpanded == contentExpanded) &&
@@ -350,12 +348,12 @@ class _GameDetailState implements GameDetailState {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, status, response, error, contentExpanded, savedGame);
+  int get hashCode =>
+      Object.hash(runtimeType, status, game, error, contentExpanded, savedGame);
 
   @override
   String toString() {
-    return 'GameDetailState(status: $status, response: $response, error: $error, contentExpanded: $contentExpanded, savedGame: $savedGame)';
+    return 'GameDetailState(status: $status, game: $game, error: $error, contentExpanded: $contentExpanded, savedGame: $savedGame)';
   }
 }
 
@@ -369,13 +367,13 @@ abstract mixin class _$GameDetailStateCopyWith<$Res>
   @useResult
   $Res call(
       {GameDetailStatus? status,
-      GameDetailResponse? response,
+      GameDetailEntity? game,
       ErrorType? error,
       bool contentExpanded,
       SavedGame? savedGame});
 
   @override
-  $GameDetailResponseCopyWith<$Res>? get response;
+  $GameDetailEntityCopyWith<$Res>? get game;
   @override
   $ErrorTypeCopyWith<$Res>? get error;
 }
@@ -394,7 +392,7 @@ class __$GameDetailStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? status = freezed,
-    Object? response = freezed,
+    Object? game = freezed,
     Object? error = freezed,
     Object? contentExpanded = null,
     Object? savedGame = freezed,
@@ -404,10 +402,10 @@ class __$GameDetailStateCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as GameDetailStatus?,
-      response: freezed == response
-          ? _self.response
-          : response // ignore: cast_nullable_to_non_nullable
-              as GameDetailResponse?,
+      game: freezed == game
+          ? _self.game
+          : game // ignore: cast_nullable_to_non_nullable
+              as GameDetailEntity?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -427,13 +425,13 @@ class __$GameDetailStateCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GameDetailResponseCopyWith<$Res>? get response {
-    if (_self.response == null) {
+  $GameDetailEntityCopyWith<$Res>? get game {
+    if (_self.game == null) {
       return null;
     }
 
-    return $GameDetailResponseCopyWith<$Res>(_self.response!, (value) {
-      return _then(_self.copyWith(response: value));
+    return $GameDetailEntityCopyWith<$Res>(_self.game!, (value) {
+      return _then(_self.copyWith(game: value));
     });
   }
 

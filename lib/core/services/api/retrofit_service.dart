@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_model.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/games_response.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -12,7 +12,7 @@ abstract class RetrofitService {
 
   //* Game details //
   @GET('${ConfigConstants.gamesEndpoint}/{id}')
-  Future<GameDetailResponse> fetchGameDetail(
+  Future<GameDetailModel> fetchGameDetail(
     @Path('id') String id,
   );
 

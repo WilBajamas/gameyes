@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'game_detail_response.dart';
+part of 'game_detail_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_GameDetailResponse _$GameDetailResponseFromJson(Map<String, dynamic> json) =>
-    _GameDetailResponse(
+_GameDetailModel _$GameDetailModelFromJson(Map<String, dynamic> json) =>
+    _GameDetailModel(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       slug: json['slug'] as String?,
@@ -30,7 +30,7 @@ _GameDetailResponse _$GameDetailResponseFromJson(Map<String, dynamic> json) =>
       description: json['description_raw'] as String?,
     );
 
-Map<String, dynamic> _$GameDetailResponseToJson(_GameDetailResponse instance) =>
+Map<String, dynamic> _$GameDetailModelToJson(_GameDetailModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

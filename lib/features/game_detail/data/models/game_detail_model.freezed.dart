@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'game_detail_response.dart';
+part of 'game_detail_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,7 +13,7 @@ part of 'game_detail_response.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$GameDetailResponse {
+mixin _$GameDetailModel {
   int? get id;
   String? get name;
   String? get slug;
@@ -30,22 +30,22 @@ mixin _$GameDetailResponse {
   @JsonKey(name: 'description_raw')
   String? get description;
 
-  /// Create a copy of GameDetailResponse
+  /// Create a copy of GameDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $GameDetailResponseCopyWith<GameDetailResponse> get copyWith =>
-      _$GameDetailResponseCopyWithImpl<GameDetailResponse>(
-          this as GameDetailResponse, _$identity);
+  $GameDetailModelCopyWith<GameDetailModel> get copyWith =>
+      _$GameDetailModelCopyWithImpl<GameDetailModel>(
+          this as GameDetailModel, _$identity);
 
-  /// Serializes this GameDetailResponse to a JSON map.
+  /// Serializes this GameDetailModel to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is GameDetailResponse &&
+            other is GameDetailModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.slug, slug) || other.slug == slug) &&
@@ -87,15 +87,15 @@ mixin _$GameDetailResponse {
 
   @override
   String toString() {
-    return 'GameDetailResponse(id: $id, name: $name, slug: $slug, metacritic: $metacritic, released: $released, backgroundImage: $backgroundImage, backgroundImageAdditional: $backgroundImageAdditional, platforms: $platforms, developers: $developers, genres: $genres, publishers: $publishers, description: $description)';
+    return 'GameDetailModel(id: $id, name: $name, slug: $slug, metacritic: $metacritic, released: $released, backgroundImage: $backgroundImage, backgroundImageAdditional: $backgroundImageAdditional, platforms: $platforms, developers: $developers, genres: $genres, publishers: $publishers, description: $description)';
   }
 }
 
 /// @nodoc
-abstract mixin class $GameDetailResponseCopyWith<$Res> {
-  factory $GameDetailResponseCopyWith(
-          GameDetailResponse value, $Res Function(GameDetailResponse) _then) =
-      _$GameDetailResponseCopyWithImpl;
+abstract mixin class $GameDetailModelCopyWith<$Res> {
+  factory $GameDetailModelCopyWith(
+          GameDetailModel value, $Res Function(GameDetailModel) _then) =
+      _$GameDetailModelCopyWithImpl;
   @useResult
   $Res call(
       {int? id,
@@ -114,14 +114,14 @@ abstract mixin class $GameDetailResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GameDetailResponseCopyWithImpl<$Res>
-    implements $GameDetailResponseCopyWith<$Res> {
-  _$GameDetailResponseCopyWithImpl(this._self, this._then);
+class _$GameDetailModelCopyWithImpl<$Res>
+    implements $GameDetailModelCopyWith<$Res> {
+  _$GameDetailModelCopyWithImpl(this._self, this._then);
 
-  final GameDetailResponse _self;
-  final $Res Function(GameDetailResponse) _then;
+  final GameDetailModel _self;
+  final $Res Function(GameDetailModel) _then;
 
-  /// Create a copy of GameDetailResponse
+  /// Create a copy of GameDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -192,8 +192,8 @@ class _$GameDetailResponseCopyWithImpl<$Res>
   }
 }
 
-/// Adds pattern-matching-related methods to [GameDetailResponse].
-extension GameDetailResponsePatterns on GameDetailResponse {
+/// Adds pattern-matching-related methods to [GameDetailModel].
+extension GameDetailModelPatterns on GameDetailModel {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -208,12 +208,12 @@ extension GameDetailResponsePatterns on GameDetailResponse {
 
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
-    TResult Function(_GameDetailResponse value)? $default, {
+    TResult Function(_GameDetailModel value)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _GameDetailResponse() when $default != null:
+      case _GameDetailModel() when $default != null:
         return $default(_that);
       case _:
         return orElse();
@@ -235,11 +235,11 @@ extension GameDetailResponsePatterns on GameDetailResponse {
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
-    TResult Function(_GameDetailResponse value) $default,
+    TResult Function(_GameDetailModel value) $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _GameDetailResponse():
+      case _GameDetailModel():
         return $default(_that);
     }
   }
@@ -258,11 +258,11 @@ extension GameDetailResponsePatterns on GameDetailResponse {
 
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_GameDetailResponse value)? $default,
+    TResult? Function(_GameDetailModel value)? $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _GameDetailResponse() when $default != null:
+      case _GameDetailModel() when $default != null:
         return $default(_that);
       case _:
         return null;
@@ -302,7 +302,7 @@ extension GameDetailResponsePatterns on GameDetailResponse {
   }) {
     final _that = this;
     switch (_that) {
-      case _GameDetailResponse() when $default != null:
+      case _GameDetailModel() when $default != null:
         return $default(
             _that.id,
             _that.name,
@@ -354,7 +354,7 @@ extension GameDetailResponsePatterns on GameDetailResponse {
   ) {
     final _that = this;
     switch (_that) {
-      case _GameDetailResponse():
+      case _GameDetailModel():
         return $default(
             _that.id,
             _that.name,
@@ -403,7 +403,7 @@ extension GameDetailResponsePatterns on GameDetailResponse {
   ) {
     final _that = this;
     switch (_that) {
-      case _GameDetailResponse() when $default != null:
+      case _GameDetailModel() when $default != null:
         return $default(
             _that.id,
             _that.name,
@@ -425,8 +425,8 @@ extension GameDetailResponsePatterns on GameDetailResponse {
 
 /// @nodoc
 @JsonSerializable()
-class _GameDetailResponse extends GameDetailResponse {
-  const _GameDetailResponse(
+class _GameDetailModel extends GameDetailModel {
+  const _GameDetailModel(
       {this.id,
       this.name,
       this.slug,
@@ -445,8 +445,8 @@ class _GameDetailResponse extends GameDetailResponse {
         _genres = genres,
         _publishers = publishers,
         super._();
-  factory _GameDetailResponse.fromJson(Map<String, dynamic> json) =>
-      _$GameDetailResponseFromJson(json);
+  factory _GameDetailModel.fromJson(Map<String, dynamic> json) =>
+      _$GameDetailModelFromJson(json);
 
   @override
   final int? id;
@@ -508,17 +508,17 @@ class _GameDetailResponse extends GameDetailResponse {
   @JsonKey(name: 'description_raw')
   final String? description;
 
-  /// Create a copy of GameDetailResponse
+  /// Create a copy of GameDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$GameDetailResponseCopyWith<_GameDetailResponse> get copyWith =>
-      __$GameDetailResponseCopyWithImpl<_GameDetailResponse>(this, _$identity);
+  _$GameDetailModelCopyWith<_GameDetailModel> get copyWith =>
+      __$GameDetailModelCopyWithImpl<_GameDetailModel>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$GameDetailResponseToJson(
+    return _$GameDetailModelToJson(
       this,
     );
   }
@@ -527,7 +527,7 @@ class _GameDetailResponse extends GameDetailResponse {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _GameDetailResponse &&
+            other is _GameDetailModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.slug, slug) || other.slug == slug) &&
@@ -570,16 +570,16 @@ class _GameDetailResponse extends GameDetailResponse {
 
   @override
   String toString() {
-    return 'GameDetailResponse(id: $id, name: $name, slug: $slug, metacritic: $metacritic, released: $released, backgroundImage: $backgroundImage, backgroundImageAdditional: $backgroundImageAdditional, platforms: $platforms, developers: $developers, genres: $genres, publishers: $publishers, description: $description)';
+    return 'GameDetailModel(id: $id, name: $name, slug: $slug, metacritic: $metacritic, released: $released, backgroundImage: $backgroundImage, backgroundImageAdditional: $backgroundImageAdditional, platforms: $platforms, developers: $developers, genres: $genres, publishers: $publishers, description: $description)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$GameDetailResponseCopyWith<$Res>
-    implements $GameDetailResponseCopyWith<$Res> {
-  factory _$GameDetailResponseCopyWith(
-          _GameDetailResponse value, $Res Function(_GameDetailResponse) _then) =
-      __$GameDetailResponseCopyWithImpl;
+abstract mixin class _$GameDetailModelCopyWith<$Res>
+    implements $GameDetailModelCopyWith<$Res> {
+  factory _$GameDetailModelCopyWith(
+          _GameDetailModel value, $Res Function(_GameDetailModel) _then) =
+      __$GameDetailModelCopyWithImpl;
   @override
   @useResult
   $Res call(
@@ -599,14 +599,14 @@ abstract mixin class _$GameDetailResponseCopyWith<$Res>
 }
 
 /// @nodoc
-class __$GameDetailResponseCopyWithImpl<$Res>
-    implements _$GameDetailResponseCopyWith<$Res> {
-  __$GameDetailResponseCopyWithImpl(this._self, this._then);
+class __$GameDetailModelCopyWithImpl<$Res>
+    implements _$GameDetailModelCopyWith<$Res> {
+  __$GameDetailModelCopyWithImpl(this._self, this._then);
 
-  final _GameDetailResponse _self;
-  final $Res Function(_GameDetailResponse) _then;
+  final _GameDetailModel _self;
+  final $Res Function(_GameDetailModel) _then;
 
-  /// Create a copy of GameDetailResponse
+  /// Create a copy of GameDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
@@ -624,7 +624,7 @@ class __$GameDetailResponseCopyWithImpl<$Res>
     Object? publishers = freezed,
     Object? description = freezed,
   }) {
-    return _then(_GameDetailResponse(
+    return _then(_GameDetailModel(
       id: freezed == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable

@@ -1,7 +1,8 @@
 import 'package:gaming_library_assessment_flutter/core/data/datasource/base_repository_mixin.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_detail_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_model.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
@@ -20,12 +21,15 @@ class GameDetailRepositoryImpl
   );
 
   @override
-  Future<Result<GameDetailResponse>> fetchGameDetail({
+  Future<Result<GameDetailEntity>> fetchGameDetail({
     required int id,
-  }) =>
-      fetchData<GameDetailResponse>(
-        apiCall: _gameDetailRemoteDatasource.fetchGameDetail(id: id),
-      );
+  }) async {
+    final result = await fetchData<GameDetailModel>(
+      apiCall: _gameDetailRemoteDatasource.fetchGameDetail(id: id),
+    );
+
+    return result.map((model) => model.toEntity());
+  }
 
   @override
   Future<void> saveGame({required SavedGame game}) =>

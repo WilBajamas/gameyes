@@ -53,7 +53,7 @@ class DetailMidSection extends StatelessWidget {
                   child: Column(
                     children: [
                       ReadMoreText(
-                        state.response!.description!,
+                        state.game?.description ?? '',
                         trimLines: 7,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: S.current.read_more,
@@ -107,14 +107,14 @@ class DetailPointsSection extends StatelessWidget {
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.genre,
-                  value: state.response!.genreListString,
+                  value: state.game?.genreDisplay,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.publishers,
-                  value: state.response!.publisherListString,
+                  value: state.game?.publisherDisplay,
                 ),
               ),
             ],
@@ -126,14 +126,14 @@ class DetailPointsSection extends StatelessWidget {
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.developers,
-                  value: state.response!.developerListString,
+                  value: state.game?.developerDisplay,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.platforms,
-                  value: state.response!.platformListString,
+                  value: state.game?.platformDisplay,
                 ),
               ),
             ],

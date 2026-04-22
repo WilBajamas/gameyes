@@ -7,7 +7,7 @@ import 'dart:async' as _i3;
 
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart'
     as _i4;
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart'
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_detail_entity.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart'
     as _i2;
@@ -41,7 +41,7 @@ class MockGameDetailRepository extends _i1.Mock
   }
 
   @override
-  _i3.Future<_i4.Result<_i5.GameDetailResponse>> fetchGameDetail(
+  _i3.Future<_i4.Result<_i5.GameDetailEntity>> fetchGameDetail(
           {required int? id}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -49,8 +49,8 @@ class MockGameDetailRepository extends _i1.Mock
           [],
           {#id: id},
         ),
-        returnValue: _i3.Future<_i4.Result<_i5.GameDetailResponse>>.value(
-            _i6.dummyValue<_i4.Result<_i5.GameDetailResponse>>(
+        returnValue: _i3.Future<_i4.Result<_i5.GameDetailEntity>>.value(
+            _i6.dummyValue<_i4.Result<_i5.GameDetailEntity>>(
           this,
           Invocation.method(
             #fetchGameDetail,
@@ -58,7 +58,7 @@ class MockGameDetailRepository extends _i1.Mock
             {#id: id},
           ),
         )),
-      ) as _i3.Future<_i4.Result<_i5.GameDetailResponse>>);
+      ) as _i3.Future<_i4.Result<_i5.GameDetailEntity>>);
 
   @override
   _i3.Future<void> saveGame({required _i7.SavedGame? game}) =>
