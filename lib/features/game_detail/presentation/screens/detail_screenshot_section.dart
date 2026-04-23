@@ -37,8 +37,8 @@ class DetailScreenshotsSection extends StatelessWidget {
                   ),
                 );
               case ScreenshotsStatus.success:
-                if (state.response?.results != null &&
-                    state.response!.results.isNotEmpty) {
+                if (state.response?.imageUrls != null &&
+                    state.response!.imageUrls.isNotEmpty) {
                   return ScrollSnapList(
                     onItemFocus: (int _) {},
                     itemSize: context.screenWidth,
@@ -46,14 +46,14 @@ class DetailScreenshotsSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       child: GameScreenshot(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        imageUrl: state.response?.imageUrls[index],
+                        imageUrl: state.response!.imageUrls[index],
                         onImageTap: () => context.pushNamed(
                           RouteConstants.imagePageView,
-                          extra: (state.response?.imageUrls, index),
+                          extra: (state.response!.imageUrls, index),
                         ),
                       ),
                     ),
-                    itemCount: state.response!.results.length,
+                    itemCount: state.response!.imageUrls.length,
                     duration: 200,
                     scrollPhysics: const PageScrollPhysics(),
                   );

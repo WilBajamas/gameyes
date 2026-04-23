@@ -7,7 +7,7 @@ import 'dart:async' as _i3;
 
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart'
     as _i4;
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/screenshot_response.dart'
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_screenshot_entity.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_screenshots_repository.dart'
     as _i2;
@@ -39,7 +39,7 @@ class MockGameScreenshotsRepository extends _i1.Mock
   }
 
   @override
-  _i3.Future<_i4.Result<_i5.ScreenshotResponse>> fetchGameScreenshots(
+  _i3.Future<_i4.Result<_i5.GameScreenshotEntity>> fetchGameScreenshots(
           {required int? id}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -47,8 +47,8 @@ class MockGameScreenshotsRepository extends _i1.Mock
           [],
           {#id: id},
         ),
-        returnValue: _i3.Future<_i4.Result<_i5.ScreenshotResponse>>.value(
-            _i6.dummyValue<_i4.Result<_i5.ScreenshotResponse>>(
+        returnValue: _i3.Future<_i4.Result<_i5.GameScreenshotEntity>>.value(
+            _i6.dummyValue<_i4.Result<_i5.GameScreenshotEntity>>(
           this,
           Invocation.method(
             #fetchGameScreenshots,
@@ -56,5 +56,5 @@ class MockGameScreenshotsRepository extends _i1.Mock
             {#id: id},
           ),
         )),
-      ) as _i3.Future<_i4.Result<_i5.ScreenshotResponse>>);
+      ) as _i3.Future<_i4.Result<_i5.GameScreenshotEntity>>);
 }

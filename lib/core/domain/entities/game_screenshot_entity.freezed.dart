@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'screenshot_response.dart';
+part of 'game_screenshot_entity.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,74 +13,70 @@ part of 'screenshot_response.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$ScreenshotResponse {
-  List<Screenshot> get results;
+mixin _$GameScreenshotEntity {
+  List<String> get imageUrls;
 
-  /// Create a copy of ScreenshotResponse
+  /// Create a copy of GameScreenshotEntity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $ScreenshotResponseCopyWith<ScreenshotResponse> get copyWith =>
-      _$ScreenshotResponseCopyWithImpl<ScreenshotResponse>(
-          this as ScreenshotResponse, _$identity);
-
-  /// Serializes this ScreenshotResponse to a JSON map.
-  Map<String, dynamic> toJson();
+  $GameScreenshotEntityCopyWith<GameScreenshotEntity> get copyWith =>
+      _$GameScreenshotEntityCopyWithImpl<GameScreenshotEntity>(
+          this as GameScreenshotEntity, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is ScreenshotResponse &&
-            const DeepCollectionEquality().equals(other.results, results));
+            other is GameScreenshotEntity &&
+            const DeepCollectionEquality().equals(other.imageUrls, imageUrls));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(results));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(imageUrls));
 
   @override
   String toString() {
-    return 'ScreenshotResponse(results: $results)';
+    return 'GameScreenshotEntity(imageUrls: $imageUrls)';
   }
 }
 
 /// @nodoc
-abstract mixin class $ScreenshotResponseCopyWith<$Res> {
-  factory $ScreenshotResponseCopyWith(
-          ScreenshotResponse value, $Res Function(ScreenshotResponse) _then) =
-      _$ScreenshotResponseCopyWithImpl;
+abstract mixin class $GameScreenshotEntityCopyWith<$Res> {
+  factory $GameScreenshotEntityCopyWith(GameScreenshotEntity value,
+          $Res Function(GameScreenshotEntity) _then) =
+      _$GameScreenshotEntityCopyWithImpl;
   @useResult
-  $Res call({List<Screenshot> results});
+  $Res call({List<String> imageUrls});
 }
 
 /// @nodoc
-class _$ScreenshotResponseCopyWithImpl<$Res>
-    implements $ScreenshotResponseCopyWith<$Res> {
-  _$ScreenshotResponseCopyWithImpl(this._self, this._then);
+class _$GameScreenshotEntityCopyWithImpl<$Res>
+    implements $GameScreenshotEntityCopyWith<$Res> {
+  _$GameScreenshotEntityCopyWithImpl(this._self, this._then);
 
-  final ScreenshotResponse _self;
-  final $Res Function(ScreenshotResponse) _then;
+  final GameScreenshotEntity _self;
+  final $Res Function(GameScreenshotEntity) _then;
 
-  /// Create a copy of ScreenshotResponse
+  /// Create a copy of GameScreenshotEntity
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? results = null,
+    Object? imageUrls = null,
   }) {
     return _then(_self.copyWith(
-      results: null == results
-          ? _self.results
-          : results // ignore: cast_nullable_to_non_nullable
-              as List<Screenshot>,
+      imageUrls: null == imageUrls
+          ? _self.imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
 
-/// Adds pattern-matching-related methods to [ScreenshotResponse].
-extension ScreenshotResponsePatterns on ScreenshotResponse {
+/// Adds pattern-matching-related methods to [GameScreenshotEntity].
+extension GameScreenshotEntityPatterns on GameScreenshotEntity {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -95,12 +91,12 @@ extension ScreenshotResponsePatterns on ScreenshotResponse {
 
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
-    TResult Function(_ScreenshotResponse value)? $default, {
+    TResult Function(_GameScreenshotEntity value)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _ScreenshotResponse() when $default != null:
+      case _GameScreenshotEntity() when $default != null:
         return $default(_that);
       case _:
         return orElse();
@@ -122,11 +118,11 @@ extension ScreenshotResponsePatterns on ScreenshotResponse {
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
-    TResult Function(_ScreenshotResponse value) $default,
+    TResult Function(_GameScreenshotEntity value) $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _ScreenshotResponse():
+      case _GameScreenshotEntity():
         return $default(_that);
     }
   }
@@ -145,11 +141,11 @@ extension ScreenshotResponsePatterns on ScreenshotResponse {
 
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_ScreenshotResponse value)? $default,
+    TResult? Function(_GameScreenshotEntity value)? $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _ScreenshotResponse() when $default != null:
+      case _GameScreenshotEntity() when $default != null:
         return $default(_that);
       case _:
         return null;
@@ -170,13 +166,13 @@ extension ScreenshotResponsePatterns on ScreenshotResponse {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(List<Screenshot> results)? $default, {
+    TResult Function(List<String> imageUrls)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _ScreenshotResponse() when $default != null:
-        return $default(_that.results);
+      case _GameScreenshotEntity() when $default != null:
+        return $default(_that.imageUrls);
       case _:
         return orElse();
     }
@@ -197,12 +193,12 @@ extension ScreenshotResponsePatterns on ScreenshotResponse {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(List<Screenshot> results) $default,
+    TResult Function(List<String> imageUrls) $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _ScreenshotResponse():
-        return $default(_that.results);
+      case _GameScreenshotEntity():
+        return $default(_that.imageUrls);
     }
   }
 
@@ -220,12 +216,12 @@ extension ScreenshotResponsePatterns on ScreenshotResponse {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(List<Screenshot> results)? $default,
+    TResult? Function(List<String> imageUrls)? $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _ScreenshotResponse() when $default != null:
-        return $default(_that.results);
+      case _GameScreenshotEntity() when $default != null:
+        return $default(_that.imageUrls);
       case _:
         return null;
     }
@@ -233,87 +229,79 @@ extension ScreenshotResponsePatterns on ScreenshotResponse {
 }
 
 /// @nodoc
-@JsonSerializable()
-class _ScreenshotResponse extends ScreenshotResponse {
-  const _ScreenshotResponse({required final List<Screenshot> results})
-      : _results = results,
-        super._();
-  factory _ScreenshotResponse.fromJson(Map<String, dynamic> json) =>
-      _$ScreenshotResponseFromJson(json);
 
-  final List<Screenshot> _results;
+class _GameScreenshotEntity implements GameScreenshotEntity {
+  const _GameScreenshotEntity({final List<String> imageUrls = const []})
+      : _imageUrls = imageUrls;
+
+  final List<String> _imageUrls;
   @override
-  List<Screenshot> get results {
-    if (_results is EqualUnmodifiableListView) return _results;
+  @JsonKey()
+  List<String> get imageUrls {
+    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_results);
+    return EqualUnmodifiableListView(_imageUrls);
   }
 
-  /// Create a copy of ScreenshotResponse
+  /// Create a copy of GameScreenshotEntity
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$ScreenshotResponseCopyWith<_ScreenshotResponse> get copyWith =>
-      __$ScreenshotResponseCopyWithImpl<_ScreenshotResponse>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$ScreenshotResponseToJson(
-      this,
-    );
-  }
+  _$GameScreenshotEntityCopyWith<_GameScreenshotEntity> get copyWith =>
+      __$GameScreenshotEntityCopyWithImpl<_GameScreenshotEntity>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _ScreenshotResponse &&
-            const DeepCollectionEquality().equals(other._results, _results));
+            other is _GameScreenshotEntity &&
+            const DeepCollectionEquality()
+                .equals(other._imageUrls, _imageUrls));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_results));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_imageUrls));
 
   @override
   String toString() {
-    return 'ScreenshotResponse(results: $results)';
+    return 'GameScreenshotEntity(imageUrls: $imageUrls)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$ScreenshotResponseCopyWith<$Res>
-    implements $ScreenshotResponseCopyWith<$Res> {
-  factory _$ScreenshotResponseCopyWith(
-          _ScreenshotResponse value, $Res Function(_ScreenshotResponse) _then) =
-      __$ScreenshotResponseCopyWithImpl;
+abstract mixin class _$GameScreenshotEntityCopyWith<$Res>
+    implements $GameScreenshotEntityCopyWith<$Res> {
+  factory _$GameScreenshotEntityCopyWith(_GameScreenshotEntity value,
+          $Res Function(_GameScreenshotEntity) _then) =
+      __$GameScreenshotEntityCopyWithImpl;
   @override
   @useResult
-  $Res call({List<Screenshot> results});
+  $Res call({List<String> imageUrls});
 }
 
 /// @nodoc
-class __$ScreenshotResponseCopyWithImpl<$Res>
-    implements _$ScreenshotResponseCopyWith<$Res> {
-  __$ScreenshotResponseCopyWithImpl(this._self, this._then);
+class __$GameScreenshotEntityCopyWithImpl<$Res>
+    implements _$GameScreenshotEntityCopyWith<$Res> {
+  __$GameScreenshotEntityCopyWithImpl(this._self, this._then);
 
-  final _ScreenshotResponse _self;
-  final $Res Function(_ScreenshotResponse) _then;
+  final _GameScreenshotEntity _self;
+  final $Res Function(_GameScreenshotEntity) _then;
 
-  /// Create a copy of ScreenshotResponse
+  /// Create a copy of GameScreenshotEntity
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? results = null,
+    Object? imageUrls = null,
   }) {
-    return _then(_ScreenshotResponse(
-      results: null == results
-          ? _self._results
-          : results // ignore: cast_nullable_to_non_nullable
-              as List<Screenshot>,
+    return _then(_GameScreenshotEntity(
+      imageUrls: null == imageUrls
+          ? _self._imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }

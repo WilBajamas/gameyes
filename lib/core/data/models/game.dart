@@ -22,22 +22,6 @@ sealed class Game with _$Game {
     List<PlatformItem>? platforms,
   }) = _Game;
 
-  List<GamePlatform>? get platformValues {
-    if (platforms case final platforms?) {
-      final List<GamePlatform> values = [];
-
-      for (var p in platforms) {
-        if (p.platform?.value case final value?) values.add(value);
-      }
-
-      if (values.isEmpty) return null;
-
-      return values.toSet().toList();
-    }
-
-    return null;
-  }
-
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 
   GameEntity toEntity() => GameEntity(

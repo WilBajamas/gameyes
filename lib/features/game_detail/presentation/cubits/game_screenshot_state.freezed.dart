@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GameScreenshotState {
   ScreenshotsStatus get status;
-  ScreenshotResponse? get response;
+  GameScreenshotEntity? get response;
   ErrorType? get error;
 
   /// Create a copy of GameScreenshotState
@@ -54,10 +54,10 @@ abstract mixin class $GameScreenshotStateCopyWith<$Res> {
   @useResult
   $Res call(
       {ScreenshotsStatus status,
-      ScreenshotResponse? response,
+      GameScreenshotEntity? response,
       ErrorType? error});
 
-  $ScreenshotResponseCopyWith<$Res>? get response;
+  $GameScreenshotEntityCopyWith<$Res>? get response;
   $ErrorTypeCopyWith<$Res>? get error;
 }
 
@@ -86,7 +86,7 @@ class _$GameScreenshotStateCopyWithImpl<$Res>
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable
-              as ScreenshotResponse?,
+              as GameScreenshotEntity?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -98,12 +98,12 @@ class _$GameScreenshotStateCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ScreenshotResponseCopyWith<$Res>? get response {
+  $GameScreenshotEntityCopyWith<$Res>? get response {
     if (_self.response == null) {
       return null;
     }
 
-    return $ScreenshotResponseCopyWith<$Res>(_self.response!, (value) {
+    return $GameScreenshotEntityCopyWith<$Res>(_self.response!, (value) {
       return _then(_self.copyWith(response: value));
     });
   }
@@ -214,7 +214,7 @@ extension GameScreenshotStatePatterns on GameScreenshotState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(ScreenshotsStatus status, ScreenshotResponse? response,
+    TResult Function(ScreenshotsStatus status, GameScreenshotEntity? response,
             ErrorType? error)?
         $default, {
     required TResult orElse(),
@@ -243,7 +243,7 @@ extension GameScreenshotStatePatterns on GameScreenshotState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(ScreenshotsStatus status, ScreenshotResponse? response,
+    TResult Function(ScreenshotsStatus status, GameScreenshotEntity? response,
             ErrorType? error)
         $default,
   ) {
@@ -268,7 +268,7 @@ extension GameScreenshotStatePatterns on GameScreenshotState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(ScreenshotsStatus status, ScreenshotResponse? response,
+    TResult? Function(ScreenshotsStatus status, GameScreenshotEntity? response,
             ErrorType? error)?
         $default,
   ) {
@@ -292,7 +292,7 @@ class _GameScreenshotState implements GameScreenshotState {
   @JsonKey()
   final ScreenshotsStatus status;
   @override
-  final ScreenshotResponse? response;
+  final GameScreenshotEntity? response;
   @override
   final ErrorType? error;
 
@@ -335,11 +335,11 @@ abstract mixin class _$GameScreenshotStateCopyWith<$Res>
   @useResult
   $Res call(
       {ScreenshotsStatus status,
-      ScreenshotResponse? response,
+      GameScreenshotEntity? response,
       ErrorType? error});
 
   @override
-  $ScreenshotResponseCopyWith<$Res>? get response;
+  $GameScreenshotEntityCopyWith<$Res>? get response;
   @override
   $ErrorTypeCopyWith<$Res>? get error;
 }
@@ -369,7 +369,7 @@ class __$GameScreenshotStateCopyWithImpl<$Res>
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable
-              as ScreenshotResponse?,
+              as GameScreenshotEntity?,
       error: freezed == error
           ? _self.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -381,12 +381,12 @@ class __$GameScreenshotStateCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $ScreenshotResponseCopyWith<$Res>? get response {
+  $GameScreenshotEntityCopyWith<$Res>? get response {
     if (_self.response == null) {
       return null;
     }
 
-    return $ScreenshotResponseCopyWith<$Res>(_self.response!, (value) {
+    return $GameScreenshotEntityCopyWith<$Res>(_self.response!, (value) {
       return _then(_self.copyWith(response: value));
     });
   }
