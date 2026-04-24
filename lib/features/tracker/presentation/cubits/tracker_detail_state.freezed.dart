@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TrackerDetailState {
-  SavedGame? get game;
+  TrackerSavedGameEntity? get game;
 
   /// Create a copy of TrackerDetailState
   /// with the given fields replaced by the non-null parameter values.
@@ -47,7 +47,9 @@ abstract mixin class $TrackerDetailStateCopyWith<$Res> {
           TrackerDetailState value, $Res Function(TrackerDetailState) _then) =
       _$TrackerDetailStateCopyWithImpl;
   @useResult
-  $Res call({SavedGame? game});
+  $Res call({TrackerSavedGameEntity? game});
+
+  $TrackerSavedGameEntityCopyWith<$Res>? get game;
 }
 
 /// @nodoc
@@ -69,8 +71,22 @@ class _$TrackerDetailStateCopyWithImpl<$Res>
       game: freezed == game
           ? _self.game
           : game // ignore: cast_nullable_to_non_nullable
-              as SavedGame?,
+              as TrackerSavedGameEntity?,
     ));
+  }
+
+  /// Create a copy of TrackerDetailState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TrackerSavedGameEntityCopyWith<$Res>? get game {
+    if (_self.game == null) {
+      return null;
+    }
+
+    return $TrackerSavedGameEntityCopyWith<$Res>(_self.game!, (value) {
+      return _then(_self.copyWith(game: value));
+    });
   }
 }
 
@@ -165,7 +181,7 @@ extension TrackerDetailStatePatterns on TrackerDetailState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(SavedGame? game)? $default, {
+    TResult Function(TrackerSavedGameEntity? game)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
@@ -192,7 +208,7 @@ extension TrackerDetailStatePatterns on TrackerDetailState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(SavedGame? game) $default,
+    TResult Function(TrackerSavedGameEntity? game) $default,
   ) {
     final _that = this;
     switch (_that) {
@@ -215,7 +231,7 @@ extension TrackerDetailStatePatterns on TrackerDetailState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(SavedGame? game)? $default,
+    TResult? Function(TrackerSavedGameEntity? game)? $default,
   ) {
     final _that = this;
     switch (_that) {
@@ -233,7 +249,7 @@ class _TrackerDetailState implements TrackerDetailState {
   const _TrackerDetailState({this.game});
 
   @override
-  final SavedGame? game;
+  final TrackerSavedGameEntity? game;
 
   /// Create a copy of TrackerDetailState
   /// with the given fields replaced by the non-null parameter values.
@@ -268,7 +284,10 @@ abstract mixin class _$TrackerDetailStateCopyWith<$Res>
       __$TrackerDetailStateCopyWithImpl;
   @override
   @useResult
-  $Res call({SavedGame? game});
+  $Res call({TrackerSavedGameEntity? game});
+
+  @override
+  $TrackerSavedGameEntityCopyWith<$Res>? get game;
 }
 
 /// @nodoc
@@ -290,8 +309,22 @@ class __$TrackerDetailStateCopyWithImpl<$Res>
       game: freezed == game
           ? _self.game
           : game // ignore: cast_nullable_to_non_nullable
-              as SavedGame?,
+              as TrackerSavedGameEntity?,
     ));
+  }
+
+  /// Create a copy of TrackerDetailState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TrackerSavedGameEntityCopyWith<$Res>? get game {
+    if (_self.game == null) {
+      return null;
+    }
+
+    return $TrackerSavedGameEntityCopyWith<$Res>(_self.game!, (value) {
+      return _then(_self.copyWith(game: value));
+    });
   }
 }
 

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -14,7 +14,7 @@ class TaskCubit extends Cubit<TaskState> {
   StreamSubscription? taskStreamSubscription;
 
   TaskCubit(
-      {@factoryParam required SavedGameTask? task,
+      {@factoryParam required TrackerTaskEntity? task,
       required TrackerDetailRepository trackerDetailRepository})
       : _trackerDetailRepository = trackerDetailRepository,
         super(const TaskState()) {
@@ -24,13 +24,15 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  void setTask({required SavedGameTask task}) => emit(TaskState(task: task));
+  void setTask({required TrackerTaskEntity task}) =>
+      emit(TaskState(task: task));
 
   void listenToTask({required int taskId}) {
     taskStreamSubscription?.cancel();
+    // Bridge: Mapping model to entity here because stream still returns models.
     final stream = _trackerDetailRepository
         .taskStream(taskId: taskId)
-        .listen((task) => emit(TaskState(task: task)));
+        .listen((task) => emit(TaskState(task: task?.toEntity())));
 
     taskStreamSubscription = stream;
   }
@@ -65,9 +67,10 @@ class TaskCubit extends Cubit<TaskState> {
         title: title,
         description: description,
         stepNumber: stepNumber,
+        image: image,
       );
 
-  void removeStep({required TaskStep step}) async {
+  void removeStep({required TrackerTaskStepEntity step}) async {
     await _trackerDetailRepository
         .removeStep(
           taskId: state.task!.id,

@@ -11,6 +11,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.dart'
     as _i1015;
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart'
+    as _i190;
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart'
+    as _i424;
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
     as _i799;
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart'
@@ -65,10 +69,6 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
     as _i1017;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
     as _i944;
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
-    as _i80;
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart'
-    as _i596;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_detail_repository_impl.dart'
     as _i441;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart'
@@ -128,13 +128,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()));
     gh.factory<_i985.FeaturedRepository>(
         () => _i840.FeaturedRepositoryImpl(gh<_i621.GamesDataSource>()));
-    gh.factory<_i223.GameDetailRepository>(() => _i366.GameDetailRepositoryImpl(
-          gh<_i750.GameDetailRemoteDatasource>(),
-          gh<_i944.GameLocalDatasource>(),
-        ));
-    gh.factory<_i783.FetchFeaturedUseCase>(
-        () => _i783.FetchFeaturedUseCase(gh<_i985.FeaturedRepository>()));
-    gh.factoryParam<_i633.TaskCubit, _i596.SavedGameTask?, dynamic>((
+    gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>((
       task,
       _,
     ) =>
@@ -142,7 +136,8 @@ extension GetItInjectableX on _i174.GetIt {
           task: task,
           trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
         ));
-    gh.factoryParam<_i43.TrackerDetailCubit, _i80.SavedGame, dynamic>((
+    gh.factoryParam<_i43.TrackerDetailCubit, _i190.TrackerSavedGameEntity,
+        dynamic>((
       game,
       _,
     ) =>
@@ -150,6 +145,12 @@ extension GetItInjectableX on _i174.GetIt {
           game: game,
           trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
         ));
+    gh.factory<_i223.GameDetailRepository>(() => _i366.GameDetailRepositoryImpl(
+          gh<_i750.GameDetailRemoteDatasource>(),
+          gh<_i944.GameLocalDatasource>(),
+        ));
+    gh.factory<_i783.FetchFeaturedUseCase>(
+        () => _i783.FetchFeaturedUseCase(gh<_i985.FeaturedRepository>()));
     gh.factory<_i298.FeaturedBloc>(
         () => _i298.FeaturedBloc(gh<_i783.FetchFeaturedUseCase>()));
     gh.factory<_i461.GamesRepository>(

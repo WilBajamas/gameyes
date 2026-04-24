@@ -1,7 +1,7 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 
 abstract interface class TrackerDetailRepository {
   Future<void> setPlatform({
@@ -39,7 +39,7 @@ abstract interface class TrackerDetailRepository {
 
   Future<bool> removeStep({
     required int taskId,
-    required TaskStep step,
+    required TrackerTaskStepEntity step,
   });
 
   Future<void> editStep({

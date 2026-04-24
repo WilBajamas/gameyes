@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TaskState {
-  SavedGameTask? get task;
+  TrackerTaskEntity? get task;
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
@@ -45,7 +45,9 @@ abstract mixin class $TaskStateCopyWith<$Res> {
   factory $TaskStateCopyWith(TaskState value, $Res Function(TaskState) _then) =
       _$TaskStateCopyWithImpl;
   @useResult
-  $Res call({SavedGameTask? task});
+  $Res call({TrackerTaskEntity? task});
+
+  $TrackerTaskEntityCopyWith<$Res>? get task;
 }
 
 /// @nodoc
@@ -66,8 +68,22 @@ class _$TaskStateCopyWithImpl<$Res> implements $TaskStateCopyWith<$Res> {
       task: freezed == task
           ? _self.task
           : task // ignore: cast_nullable_to_non_nullable
-              as SavedGameTask?,
+              as TrackerTaskEntity?,
     ));
+  }
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TrackerTaskEntityCopyWith<$Res>? get task {
+    if (_self.task == null) {
+      return null;
+    }
+
+    return $TrackerTaskEntityCopyWith<$Res>(_self.task!, (value) {
+      return _then(_self.copyWith(task: value));
+    });
   }
 }
 
@@ -180,9 +196,9 @@ extension TaskStatePatterns on TaskState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(SavedGameTask? task)? $default, {
-    TResult Function(SavedGameTask? task)? removeStepFailed,
-    TResult Function(SavedGameTask? task)? removeStepSuccess,
+    TResult Function(TrackerTaskEntity? task)? $default, {
+    TResult Function(TrackerTaskEntity? task)? removeStepFailed,
+    TResult Function(TrackerTaskEntity? task)? removeStepSuccess,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -213,9 +229,9 @@ extension TaskStatePatterns on TaskState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(SavedGameTask? task) $default, {
-    required TResult Function(SavedGameTask? task) removeStepFailed,
-    required TResult Function(SavedGameTask? task) removeStepSuccess,
+    TResult Function(TrackerTaskEntity? task) $default, {
+    required TResult Function(TrackerTaskEntity? task) removeStepFailed,
+    required TResult Function(TrackerTaskEntity? task) removeStepSuccess,
   }) {
     final _that = this;
     switch (_that) {
@@ -242,9 +258,9 @@ extension TaskStatePatterns on TaskState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(SavedGameTask? task)? $default, {
-    TResult? Function(SavedGameTask? task)? removeStepFailed,
-    TResult? Function(SavedGameTask? task)? removeStepSuccess,
+    TResult? Function(TrackerTaskEntity? task)? $default, {
+    TResult? Function(TrackerTaskEntity? task)? removeStepFailed,
+    TResult? Function(TrackerTaskEntity? task)? removeStepSuccess,
   }) {
     final _that = this;
     switch (_that) {
@@ -266,7 +282,7 @@ class _TaskState implements TaskState {
   const _TaskState({this.task});
 
   @override
-  final SavedGameTask? task;
+  final TrackerTaskEntity? task;
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
@@ -301,7 +317,10 @@ abstract mixin class _$TaskStateCopyWith<$Res>
       __$TaskStateCopyWithImpl;
   @override
   @useResult
-  $Res call({SavedGameTask? task});
+  $Res call({TrackerTaskEntity? task});
+
+  @override
+  $TrackerTaskEntityCopyWith<$Res>? get task;
 }
 
 /// @nodoc
@@ -322,8 +341,22 @@ class __$TaskStateCopyWithImpl<$Res> implements _$TaskStateCopyWith<$Res> {
       task: freezed == task
           ? _self.task
           : task // ignore: cast_nullable_to_non_nullable
-              as SavedGameTask?,
+              as TrackerTaskEntity?,
     ));
+  }
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TrackerTaskEntityCopyWith<$Res>? get task {
+    if (_self.task == null) {
+      return null;
+    }
+
+    return $TrackerTaskEntityCopyWith<$Res>(_self.task!, (value) {
+      return _then(_self.copyWith(task: value));
+    });
   }
 }
 
@@ -333,7 +366,7 @@ class RemoveStepFailed implements TaskState {
   const RemoveStepFailed({this.task});
 
   @override
-  final SavedGameTask? task;
+  final TrackerTaskEntity? task;
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
@@ -368,7 +401,10 @@ abstract mixin class $RemoveStepFailedCopyWith<$Res>
       _$RemoveStepFailedCopyWithImpl;
   @override
   @useResult
-  $Res call({SavedGameTask? task});
+  $Res call({TrackerTaskEntity? task});
+
+  @override
+  $TrackerTaskEntityCopyWith<$Res>? get task;
 }
 
 /// @nodoc
@@ -390,8 +426,22 @@ class _$RemoveStepFailedCopyWithImpl<$Res>
       task: freezed == task
           ? _self.task
           : task // ignore: cast_nullable_to_non_nullable
-              as SavedGameTask?,
+              as TrackerTaskEntity?,
     ));
+  }
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TrackerTaskEntityCopyWith<$Res>? get task {
+    if (_self.task == null) {
+      return null;
+    }
+
+    return $TrackerTaskEntityCopyWith<$Res>(_self.task!, (value) {
+      return _then(_self.copyWith(task: value));
+    });
   }
 }
 
@@ -401,7 +451,7 @@ class RemoveStepSuccess implements TaskState {
   const RemoveStepSuccess({this.task});
 
   @override
-  final SavedGameTask? task;
+  final TrackerTaskEntity? task;
 
   /// Create a copy of TaskState
   /// with the given fields replaced by the non-null parameter values.
@@ -436,7 +486,10 @@ abstract mixin class $RemoveStepSuccessCopyWith<$Res>
       _$RemoveStepSuccessCopyWithImpl;
   @override
   @useResult
-  $Res call({SavedGameTask? task});
+  $Res call({TrackerTaskEntity? task});
+
+  @override
+  $TrackerTaskEntityCopyWith<$Res>? get task;
 }
 
 /// @nodoc
@@ -458,8 +511,22 @@ class _$RemoveStepSuccessCopyWithImpl<$Res>
       task: freezed == task
           ? _self.task
           : task // ignore: cast_nullable_to_non_nullable
-              as SavedGameTask?,
+              as TrackerTaskEntity?,
     ));
+  }
+
+  /// Create a copy of TaskState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TrackerTaskEntityCopyWith<$Res>? get task {
+    if (_self.task == null) {
+      return null;
+    }
+
+    return $TrackerTaskEntityCopyWith<$Res>(_self.task!, (value) {
+      return _then(_self.copyWith(task: value));
+    });
   }
 }
 

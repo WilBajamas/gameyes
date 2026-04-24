@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,7 +16,7 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
   StreamSubscription? savedGameStreamSubscription;
 
   TrackerDetailCubit({
-    @factoryParam required SavedGame game,
+    @factoryParam required TrackerSavedGameEntity game,
     required TrackerDetailRepository trackerDetailRepository,
   })  : _trackerDetailRepository = trackerDetailRepository,
         super(const TrackerDetailState()) {
@@ -24,10 +24,11 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     listenToSavedGame(savedGameId: game.id);
   }
 
-  void setSavedGame({required SavedGame game}) =>
+  void setSavedGame({required TrackerSavedGameEntity game}) =>
       emit(TrackerDetailState(game: game));
 
   String getTasksCompletion() {
+    if (state.game == null) return '-/-';
     final completedTasks = state.game!.groupTasks
         .where((gt) => gt.tasks.isNotEmpty)
         .expand((gt) => gt.tasks)
@@ -40,7 +41,8 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     return totalTasks == 0 ? '-/-' : '$completedTasks/$totalTasks';
   }
 
-  List<SavedGameTask> getPinnedTasks() {
+  List<TrackerTaskEntity> getPinnedTasks() {
+    if (state.game == null) return [];
     final tasks = state.game!.groupTasks
         .where((gt) => gt.tasks.isNotEmpty)
         .expand((gt) => gt.tasks)
@@ -70,9 +72,12 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
 
   void listenToSavedGame({required int savedGameId}) {
     savedGameStreamSubscription?.cancel();
+    // Bridge: Mapping model to entity here because stream still returns models.
+    // This will be fully decoupled once we refactor the repository streams together.
     final stream = _trackerDetailRepository
         .savedGameDetailStream(savedGameId: savedGameId)
-        .listen((savedGame) => emit(TrackerDetailState(game: savedGame)));
+        .listen((savedGame) =>
+            emit(TrackerDetailState(game: savedGame?.toEntity())));
 
     savedGameStreamSubscription = stream;
   }

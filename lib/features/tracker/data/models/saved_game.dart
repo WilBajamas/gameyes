@@ -1,3 +1,4 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:isar_community/isar.dart';
@@ -39,4 +40,17 @@ class SavedGame {
     this.dateModified,
     this.platforms,
   });
+
+  TrackerSavedGameEntity toEntity() => TrackerSavedGameEntity(
+        id: id,
+        name: name,
+        imageUrl: imageUrl,
+        gameId: gameId,
+        gameSlug: gameSlug,
+        dateSaved: dateSaved,
+        completed: completed,
+        platforms: platforms,
+        dateModified: dateModified,
+        groupTasks: groupTasks.map((e) => e.toEntity()).toList(),
+      );
 }

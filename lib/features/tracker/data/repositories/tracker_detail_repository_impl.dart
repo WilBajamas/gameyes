@@ -1,3 +1,4 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
@@ -79,9 +80,15 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   }
 
   @override
-  Future<bool> removeStep({required int taskId, required TaskStep step}) async {
+  Future<bool> removeStep({
+    required int taskId,
+    required TrackerTaskStepEntity step,
+  }) async {
+    // Mapping entity back to model for the technical layer
+    final modelStep = TaskStep()..id = step.id;
+
     final result =
-        await _gameLocalDatasource.removeStep(taskId: taskId, step: step);
+        await _gameLocalDatasource.removeStep(taskId: taskId, step: modelStep);
 
     return result.fold((l) => false, (r) => true);
   }
