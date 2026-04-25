@@ -21,17 +21,21 @@ class TrackerRepositoryImpl implements TrackerRepository {
   }
 
   @override
-  Stream<List<SavedGame>> savedGamesStream(
+  Stream<List<TrackerSavedGameEntity>> savedGamesStream(
     SavedGameFilterTag tag,
     String? searchTerm,
   ) =>
-      _gameLocalDatasource.listenToSavedGames(tag, searchTerm);
+      _gameLocalDatasource
+          .listenToSavedGames(tag, searchTerm)
+          .map((models) => models.map((m) => m.toEntity()).toList());
 
   @override
   Future<void> removeSavedGame(int id) =>
       _gameLocalDatasource.unsaveGame(id: id);
 
   @override
-  Stream<List<SavedGame>> searchGamesStream(String term) =>
-      _gameLocalDatasource.listenToSearchSavedGames(term);
+  Stream<List<TrackerSavedGameEntity>> searchGamesStream(String term) =>
+      _gameLocalDatasource
+          .listenToSearchSavedGames(term)
+          .map((models) => models.map((m) => m.toEntity()).toList());
 }

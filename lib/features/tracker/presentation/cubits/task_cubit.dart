@@ -29,10 +29,9 @@ class TaskCubit extends Cubit<TaskState> {
 
   void listenToTask({required int taskId}) {
     taskStreamSubscription?.cancel();
-    // Bridge: Mapping model to entity here because stream still returns models.
     final stream = _trackerDetailRepository
         .taskStream(taskId: taskId)
-        .listen((task) => emit(TaskState(task: task?.toEntity())));
+        .listen((task) => emit(TaskState(task: task)));
 
     taskStreamSubscription = stream;
   }

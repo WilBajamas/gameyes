@@ -3,8 +3,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_state.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_game_detail_section.dart';
@@ -16,7 +16,7 @@ import '../../../../generated/l10n.dart';
 
 @RoutePage()
 class TrackerGameDetailScreen extends StatelessWidget {
-  final SavedGame game;
+  final TrackerSavedGameEntity game;
 
   const TrackerGameDetailScreen({required this.game, super.key});
 

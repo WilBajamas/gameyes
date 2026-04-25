@@ -1,8 +1,8 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
@@ -36,8 +36,12 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
       );
 
   @override
-  Stream<SavedGame?> savedGameDetailStream({required int savedGameId}) =>
-      _gameLocalDatasource.listenToSavedGame(savedGameId: savedGameId);
+  Stream<TrackerSavedGameEntity?> savedGameDetailStream({
+    required int savedGameId,
+  }) =>
+      _gameLocalDatasource
+          .listenToSavedGame(savedGameId: savedGameId)
+          .map((model) => model?.toEntity());
 
   @override
   Future<void> removeGroupTask({
@@ -94,8 +98,10 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   }
 
   @override
-  Stream<SavedGameTask?> taskStream({required int taskId}) =>
-      _gameLocalDatasource.listenToTask(taskId: taskId);
+  Stream<TrackerTaskEntity?> taskStream({required int taskId}) =>
+      _gameLocalDatasource
+          .listenToTask(taskId: taskId)
+          .map((model) => model?.toEntity());
 
   @override
   Future<void> editStep({

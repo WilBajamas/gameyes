@@ -2,11 +2,11 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_state.dart';
@@ -134,7 +134,7 @@ class _TrackerScreenState extends State<TrackerScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 sliver: BlocBuilder<TrackerCubit, TrackerState>(
                   builder: (context, state) {
-                    return StreamBuilder<List<SavedGame>>(
+                    return StreamBuilder<List<TrackerSavedGameEntity>>(
                       stream: _trackerRepository.savedGamesStream(
                         state.tag,
                         state.searchTerm,
@@ -143,7 +143,7 @@ class _TrackerScreenState extends State<TrackerScreen> {
                         final list = snapshot.data;
 
                         switch (list) {
-                          case List<SavedGame>? list
+                          case List<TrackerSavedGameEntity>? list
                               when list != null && list.isNotEmpty:
                             return _TrackerList(
                               onRemoveClick: removeSavedGame,
@@ -171,7 +171,7 @@ class _TrackerScreenState extends State<TrackerScreen> {
 class _TrackerList extends StatelessWidget {
   final Function(int) onRemoveClick;
   final Function(int, String?) onDetailClick;
-  final List<SavedGame> list;
+  final List<TrackerSavedGameEntity> list;
 
   const _TrackerList({
     required this.onRemoveClick,

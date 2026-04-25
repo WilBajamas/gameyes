@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_state.dart';
 import 'package:gaming_library_assessment_flutter/widgets/task_item.dart';
@@ -42,7 +42,7 @@ class TrackerGameDetailSection extends StatelessWidget {
 }
 
 class _PlatformSelector extends StatelessWidget {
-  final SavedGame game;
+  final TrackerSavedGameEntity game;
   const _PlatformSelector({required this.game});
 
   @override
@@ -66,7 +66,7 @@ class _PlatformSelector extends StatelessWidget {
             Align(
               alignment: Alignment.topLeft,
               child: BlocSelector<TrackerDetailCubit, TrackerDetailState,
-                  SavedGame?>(
+                  TrackerSavedGameEntity?>(
                 selector: (state) => state.game,
                 builder: (context, state) {
                   return Wrap(

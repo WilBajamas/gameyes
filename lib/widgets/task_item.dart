@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:go_router/go_router.dart';
 
 class TaskItem extends StatelessWidget {
   final bool showGroupTask;
-  final SavedGameTask task;
+  final TrackerTaskEntity task;
   final String? groupTaskTitle;
 
   const TaskItem({
@@ -20,7 +20,7 @@ class TaskItem extends StatelessWidget {
   (String, String)? taskStep() {
     final steps = task.steps;
     final currentStepNumber = task.currentStepIndex;
-    if (steps != null && steps.isNotEmpty) {
+    if (steps.isNotEmpty) {
       final String? stepTitle = steps[currentStepNumber].title;
       return ((currentStepNumber + 1).toString(), stepTitle ?? '-');
     }
@@ -71,7 +71,7 @@ class _TaskContent extends StatelessWidget {
     required this.task,
   });
 
-  final SavedGameTask task;
+  final TrackerTaskEntity task;
 
   @override
   Widget build(BuildContext context) {

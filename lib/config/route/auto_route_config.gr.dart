@@ -11,6 +11,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart'
+    as _i13;
 import 'package:gaming_library_assessment_flutter/features/browse/presentation/screens/browse_screen.dart'
     as _i1;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/screens/featured_screen.dart'
@@ -27,8 +29,6 @@ import 'package:gaming_library_assessment_flutter/features/onboarding/presentati
     as _i7;
 import 'package:gaming_library_assessment_flutter/features/settings/presentation/screens/settings_screen.dart'
     as _i8;
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
-    as _i13;
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_game_detail_screen.dart'
     as _i9;
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_screen.dart'
@@ -231,7 +231,7 @@ class SettingsRoute extends _i11.PageRouteInfo<void> {
 class TrackerGameDetailRoute
     extends _i11.PageRouteInfo<TrackerGameDetailRouteArgs> {
   TrackerGameDetailRoute({
-    required _i13.SavedGame game,
+    required _i13.TrackerSavedGameEntity game,
     _i12.Key? key,
     List<_i11.PageRouteInfo>? children,
   }) : super(
@@ -254,7 +254,7 @@ class TrackerGameDetailRoute
 class TrackerGameDetailRouteArgs {
   const TrackerGameDetailRouteArgs({required this.game, this.key});
 
-  final _i13.SavedGame game;
+  final _i13.TrackerSavedGameEntity game;
 
   final _i12.Key? key;
 

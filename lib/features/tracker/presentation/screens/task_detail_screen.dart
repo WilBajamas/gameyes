@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/task_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/task_state.dart';
 import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
@@ -18,7 +18,7 @@ import '../../../../generated/l10n.dart';
 
 class TaskDetailScreen extends StatelessWidget {
   final int? taskId;
-  final SavedGameTask? task;
+  final TrackerTaskEntity? task;
 
   const TaskDetailScreen({this.taskId, this.task, super.key});
 
@@ -82,14 +82,14 @@ class TaskDetailScreen extends StatelessWidget {
                   // const SizedBox(height: 16),
                   // _TaskReminder(task: task),
                   const SizedBox(height: 20),
-                  if (task.steps != null && task.steps!.isNotEmpty)
+                  if (task.steps.isNotEmpty)
                     _TaskSteps(
                       task: task,
                     ),
                   const SizedBox(height: 20),
                   DefaultOutlinedButton(
                     onPressed: () =>
-                        _showAddStepDialog(task.steps?.length, context),
+                        _showAddStepDialog(task.steps.length, context),
                     text: S.current.add_step,
                     icon: Icons.add,
                   ),
@@ -105,7 +105,7 @@ class TaskDetailScreen extends StatelessWidget {
 
 //* Task Title
 class _TaskTitle extends StatefulWidget {
-  final SavedGameTask? task;
+  final TrackerTaskEntity? task;
 
   const _TaskTitle({this.task});
 
@@ -150,7 +150,7 @@ class _TaskTitleState extends State<_TaskTitle> {
 
 //* Task Description
 class _TaskDescription extends StatefulWidget {
-  final SavedGameTask? task;
+  final TrackerTaskEntity? task;
 
   const _TaskDescription({this.task});
 
@@ -193,7 +193,7 @@ class _TaskDescriptionState extends State<_TaskDescription> {
 
 //* Reminder
 class _TaskReminder extends StatelessWidget {
-  final SavedGameTask? task;
+  final TrackerTaskEntity? task;
 
   const _TaskReminder({this.task});
 
@@ -251,13 +251,13 @@ class _TaskReminder extends StatelessWidget {
 
 //* Steps
 class _TaskSteps extends StatelessWidget {
-  final SavedGameTask task;
+  final TrackerTaskEntity task;
 
   const _TaskSteps({required this.task});
 
   @override
   Widget build(BuildContext context) {
-    final steps = task.steps!;
+    final steps = task.steps;
 
     return Stepper(
       key: Key(steps.length.toString()),
@@ -282,12 +282,13 @@ class _TaskSteps extends StatelessWidget {
 }
 
 class _StepTitle extends StatelessWidget {
-  final TaskStep step;
+  final TrackerTaskStepEntity step;
   final int taskId;
 
   const _StepTitle({required this.step, required this.taskId});
 
-  void _handleOptions(String option, TaskStep step, BuildContext context) {
+  void _handleOptions(
+      String option, TrackerTaskStepEntity step, BuildContext context) {
     if (option == S.current.edit) {
       _showEditStepDialog(step, context);
     } else if (option == S.current.remove) {
@@ -300,7 +301,7 @@ class _StepTitle extends StatelessWidget {
   }
 
   void _showRemoveStepDialog(
-    TaskStep step,
+    TrackerTaskStepEntity step,
     VoidCallback positiveCallback,
     BuildContext context,
   ) =>
@@ -313,7 +314,8 @@ class _StepTitle extends StatelessWidget {
         ),
       );
 
-  void _showEditStepDialog(TaskStep step, BuildContext context) => showDialog(
+  void _showEditStepDialog(TrackerTaskStepEntity step, BuildContext context) =>
+      showDialog(
         context: context,
         builder: (context) => AddContentDialog(
           dialogTitleAndSnackBarTitle: (
@@ -356,7 +358,7 @@ class _StepTitle extends StatelessWidget {
 }
 
 class _StepContent extends StatelessWidget {
-  final TaskStep step;
+  final TrackerTaskStepEntity step;
 
   const _StepContent(this.step);
 

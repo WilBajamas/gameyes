@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_group_task_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/horizontal_separator.dart';
@@ -10,7 +10,7 @@ import 'package:gaming_library_assessment_flutter/widgets/task_item.dart';
 import '../generated/l10n.dart';
 
 class GroupTaskItem extends StatelessWidget {
-  final GroupTask groupTask;
+  final TrackerGroupTaskEntity groupTask;
 
   const GroupTaskItem({required this.groupTask, super.key});
 
@@ -57,7 +57,7 @@ class GroupTaskItem extends StatelessWidget {
 }
 
 class _TitleAndCheckbox extends StatelessWidget {
-  final GroupTask groupTask;
+  final TrackerGroupTaskEntity groupTask;
 
   const _TitleAndCheckbox({required this.groupTask});
 

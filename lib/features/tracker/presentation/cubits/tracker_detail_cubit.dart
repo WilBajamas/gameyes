@@ -72,23 +72,22 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
 
   void listenToSavedGame({required int savedGameId}) {
     savedGameStreamSubscription?.cancel();
-    // Bridge: Mapping model to entity here because stream still returns models.
-    // This will be fully decoupled once we refactor the repository streams together.
     final stream = _trackerDetailRepository
         .savedGameDetailStream(savedGameId: savedGameId)
-        .listen((savedGame) =>
-            emit(TrackerDetailState(game: savedGame?.toEntity())));
+        .listen(
+          (savedGame) => emit(TrackerDetailState(game: savedGame)),
+        );
 
     savedGameStreamSubscription = stream;
   }
 
-  void removeGroupTask({required groupTaskId}) async =>
+  void removeGroupTask({required int groupTaskId}) async =>
       await _trackerDetailRepository.removeGroupTask(
         savedGameId: state.game!.id,
         groupTaskId: groupTaskId,
       );
 
-  void createTask({required groupTaskId}) async =>
+  void createTask({required int groupTaskId}) async =>
       await _trackerDetailRepository.createTask(
         savedGameId: state.game!.id,
         groupTaskId: groupTaskId,

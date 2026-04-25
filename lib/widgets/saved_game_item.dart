@@ -1,16 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
 
 import '../generated/l10n.dart';
 
 class SavedGameItem extends StatelessWidget {
-  final SavedGame savedGame;
+  final TrackerSavedGameEntity savedGame;
   final Function(int gameId, String? backgroundImage) onDetailClick;
   final Function(int savedGameId) onRemoveClick;
 

@@ -1,7 +1,7 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 
 abstract interface class TrackerDetailRepository {
   Future<void> setPlatform({
@@ -15,9 +15,11 @@ abstract interface class TrackerDetailRepository {
     required int id,
   });
 
-  Stream<SavedGame?> savedGameDetailStream({required int savedGameId});
+  Stream<TrackerSavedGameEntity?> savedGameDetailStream({
+    required int savedGameId,
+  });
 
-  Stream<SavedGameTask?> taskStream({required int taskId});
+  Stream<TrackerTaskEntity?> taskStream({required int taskId});
 
   Future<void> removeGroupTask({
     required int savedGameId,
