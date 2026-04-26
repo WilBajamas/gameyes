@@ -15,7 +15,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   TaskCubit(
       {@factoryParam required TrackerTaskEntity? task,
-      required TrackerDetailRepository trackerDetailRepository})
+      required TrackerDetailRepository trackerDetailRepository,})
       : _trackerDetailRepository = trackerDetailRepository,
         super(const TaskState()) {
     if (task case final task?) {

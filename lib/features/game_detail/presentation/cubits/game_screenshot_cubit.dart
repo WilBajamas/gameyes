@@ -9,10 +9,10 @@ import 'game_screenshot_state.dart';
 class GameScreenshotCubit extends Cubit<GameScreenshotState> {
   final GameScreenshotsRepository _gameScreenshotsRepository;
 
-  GameScreenshotCubit(
-      {@factoryParam required int id,
-      required GameScreenshotsRepository gameScreenshotsRepository})
-      : _gameScreenshotsRepository = gameScreenshotsRepository,
+  GameScreenshotCubit({
+    @factoryParam required int id,
+    required GameScreenshotsRepository gameScreenshotsRepository,
+  })  : _gameScreenshotsRepository = gameScreenshotsRepository,
         super(const GameScreenshotState()) {
     fetchGameScreenshots(id: id);
   }

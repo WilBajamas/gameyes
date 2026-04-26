@@ -12,6 +12,5 @@ GameListEntity get mockGamesResponse => GameListEntity(
 GameListEntity get mockGamesResponseEmptyResults => const GameListEntity(
       totalCount: 0,
       items: [],
-      nextUrl: null,
       currentPage: 2,
     );

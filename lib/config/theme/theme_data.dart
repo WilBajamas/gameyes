@@ -69,38 +69,38 @@ ThemeData buildTheme() {
 
   final filledButtonTheme = FilledButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
         kColorScheme.primary,
       ),
-      foregroundColor: MaterialStateProperty.all<Color>(
-        kColorScheme.background,
+      foregroundColor: WidgetStateProperty.all<Color>(
+        kColorScheme.surface,
       ),
-      textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
+      textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
 
   final elevatedButtonTheme = ElevatedButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
         kColorScheme.primary,
       ),
-      foregroundColor: MaterialStateProperty.all<Color>(
-        kColorScheme.background,
+      foregroundColor: WidgetStateProperty.all<Color>(
+        kColorScheme.surface,
       ),
-      textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
+      textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
   final outlinedButtonTheme = OutlinedButtonThemeData(
     style: const ButtonStyle().copyWith(
-      textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
-      side: MaterialStateProperty.all(
+      textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
+      side: WidgetStateProperty.all(
         BorderSide(color: kColorScheme.primary),
       ),
     ),
   );
 
   final navigationBarTheme = NavigationBarThemeData(
-    labelTextStyle: MaterialStateProperty.all(
+    labelTextStyle: WidgetStateProperty.all(
       TextStyle(color: kColorScheme.primary, fontSize: 14),
     ),
     backgroundColor: Colors.white,
@@ -114,7 +114,7 @@ ThemeData buildTheme() {
 
   final iconButtonTheme = IconButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all<Color>(
+      foregroundColor: WidgetStateProperty.all<Color>(
         Colors.white,
       ),
     ),
@@ -123,8 +123,8 @@ ThemeData buildTheme() {
   final chipTheme = ChipThemeData(
     checkmarkColor: Colors.white,
     selectedColor: kColorScheme.primary,
-    backgroundColor: kColorScheme.background,
-    labelStyle: TextStyle(color: kColorScheme.background),
+    backgroundColor: kColorScheme.surface,
+    labelStyle: TextStyle(color: kColorScheme.surface),
     shape: StadiumBorder(
       side: const BorderSide().copyWith(color: kColorScheme.primary),
     ),

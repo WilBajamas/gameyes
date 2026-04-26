@@ -15,11 +15,11 @@ ThemeData buildDarkTheme() {
 
   final filledButtonTheme = FilledButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
         kDarkColorScheme.primary,
       ),
-      foregroundColor: MaterialStateProperty.all<Color>(
-        kDarkColorScheme.background,
+      foregroundColor: WidgetStateProperty.all<Color>(
+        kDarkColorScheme.surface,
       ),
     ),
   );
@@ -27,13 +27,13 @@ ThemeData buildDarkTheme() {
   final textTheme = GoogleFonts.openSansTextTheme(baseTheme.textTheme).copyWith(
     titleLarge: GoogleFonts.chakraPetch(
       fontWeight: FontWeight.w600,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.titleLarge,
     ),
     titleMedium: GoogleFonts.chakraPetch(
       fontSize: 18,
       fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.titleLarge,
     ),
     headlineMedium: GoogleFonts.openSans(
@@ -46,58 +46,58 @@ ThemeData buildDarkTheme() {
     ),
     bodySmall: GoogleFonts.openSans(
       fontSize: 14,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.bodySmall,
     ),
     bodyMedium: GoogleFonts.openSans(
       fontSize: 16,
       fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.bodyMedium,
     ),
     bodyLarge: GoogleFonts.openSans(
       fontSize: 16,
       fontWeight: FontWeight.w600,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.bodyLarge,
     ),
     displaySmall: GoogleFonts.openSans(
       fontSize: 18,
       fontWeight: FontWeight.w600,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.displaySmall,
     ),
     displayMedium: GoogleFonts.chakraPetch(
       fontSize: 20,
       fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.displayMedium,
     ),
     displayLarge: GoogleFonts.chakraPetch(
       fontSize: 22,
       fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onBackground,
+      color: kDarkColorScheme.onSurface,
       textStyle: baseTheme.textTheme.displayLarge,
     ),
   );
 
   final navigationBarTheme = NavigationBarThemeData(
-    labelTextStyle: MaterialStateProperty.all(
-      TextStyle(fontSize: 14, color: kDarkColorScheme.onBackground),
+    labelTextStyle: WidgetStateProperty.all(
+      TextStyle(fontSize: 14, color: kDarkColorScheme.onSurface),
     ),
     backgroundColor: kDarkColorScheme.primaryContainer,
-    indicatorColor: kDarkColorScheme.onBackground,
+    indicatorColor: kDarkColorScheme.onSurface,
   );
 
   final elevatedButtonTheme = ElevatedButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: MaterialStateProperty.all<Color>(
+      backgroundColor: WidgetStateProperty.all<Color>(
         kDarkColorScheme.primary,
       ),
-      foregroundColor: MaterialStateProperty.all<Color>(
-        kDarkColorScheme.background,
+      foregroundColor: WidgetStateProperty.all<Color>(
+        kDarkColorScheme.surface,
       ),
-      textStyle: MaterialStateProperty.all<TextStyle?>(textTheme.bodyLarge),
+      textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
 
@@ -107,17 +107,17 @@ ThemeData buildDarkTheme() {
 
   final iconButtonTheme = IconButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all<Color>(
+      foregroundColor: WidgetStateProperty.all<Color>(
         Colors.white,
       ),
     ),
   );
 
   final chipTheme = ChipThemeData(
-    checkmarkColor: kDarkColorScheme.background,
+    checkmarkColor: kDarkColorScheme.surface,
     selectedColor: kDarkColorScheme.primary,
-    backgroundColor: kDarkColorScheme.background,
-    labelStyle: TextStyle(color: kDarkColorScheme.background),
+    backgroundColor: kDarkColorScheme.surface,
+    labelStyle: TextStyle(color: kDarkColorScheme.surface),
     shape: StadiumBorder(
       side: const BorderSide().copyWith(color: kDarkColorScheme.primary),
     ),
@@ -148,7 +148,7 @@ ThemeData buildDarkTheme() {
     iconButtonTheme: iconButtonTheme,
     chipTheme: chipTheme,
     inputDecorationTheme: inputDecorationTheme,
-    scaffoldBackgroundColor: kDarkColorScheme.background,
+    scaffoldBackgroundColor: kDarkColorScheme.surface,
     appBarTheme: appBarTheme,
   );
 }

@@ -288,7 +288,10 @@ class _StepTitle extends StatelessWidget {
   const _StepTitle({required this.step, required this.taskId});
 
   void _handleOptions(
-      String option, TrackerTaskStepEntity step, BuildContext context) {
+    String option,
+    TrackerTaskStepEntity step,
+    BuildContext context,
+  ) {
     if (option == S.current.edit) {
       _showEditStepDialog(step, context);
     } else if (option == S.current.remove) {

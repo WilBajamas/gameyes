@@ -50,9 +50,9 @@ class _DefaultFilterListAppBarState<T>
           splashFactory: NoSplash.splashFactory,
           isScrollable: true,
           dividerColor: Colors.transparent,
-          overlayColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-            return states.contains(MaterialState.focused)
+          overlayColor: WidgetStateProperty.resolveWith<Color?>(
+              (Set<WidgetState> states) {
+            return states.contains(WidgetState.focused)
                 ? null
                 : Colors.transparent;
           }),

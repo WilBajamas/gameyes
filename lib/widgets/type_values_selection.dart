@@ -45,7 +45,7 @@ class TypeValuesSelection<T> extends StatelessWidget {
             (type) {
               return DefaultChoiceChip(
                 label: getTypeNames(type),
-                isSelected: this.typeSelection == type,
+                isSelected: typeSelection == type,
                 onSelected: () => onTypeSelected(type),
               );
             },

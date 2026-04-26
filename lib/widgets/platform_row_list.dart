@@ -37,7 +37,7 @@ class PlatformRowList extends StatelessWidget {
               )
             : Image.asset(
                 'assets/images/${platforms[index].assetName}',
-                color: context.themeData.colorScheme.onBackground,
+                color: context.themeData.colorScheme.onSurface,
               );
       },
     );
