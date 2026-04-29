@@ -1,7 +1,8 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
@@ -14,7 +15,6 @@ import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dar
 import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/game_platform.dart';
 import '../../../../generated/l10n.dart';
@@ -153,9 +153,8 @@ class _FeaturedScreenState extends State<_FeaturedScreen> {
                             RouteConstants.featured,
                             state.games[index].imageUrl
                           );
-                          context.push(
-                            RouteConstants.gameDetail,
-                            extra: extra,
+                          context.router.push(
+                            GameDetailRoute(gameExtra: extra),
                           );
                         },
                       ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 
 class TaskItem extends StatelessWidget {
   final bool showGroupTask;
@@ -34,9 +34,8 @@ class TaskItem extends StatelessWidget {
       customBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      onTap: () => context.pushNamed(
-        RouteConstants.taskDetail,
-        extra: (task.id, task),
+      onTap: () => context.router.push(
+        TaskDetailRoute(taskId: task.id, task: task),
       ),
       child: Ink(
         decoration: BoxDecoration(

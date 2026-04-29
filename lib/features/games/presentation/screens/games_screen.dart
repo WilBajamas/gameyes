@@ -12,7 +12,8 @@ import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
-import 'package:go_router/go_router.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 
 import '../../../../generated/l10n.dart';
 import '../blocs/games_state.dart';
@@ -172,9 +173,8 @@ class GamesSliverGrid extends StatelessWidget {
               RouteConstants.games,
               state.games[index].imageUrl
             );
-            context.push(
-              RouteConstants.gameDetail,
-              extra: extra,
+            context.router.push(
+              GameDetailRoute(gameExtra: extra),
             );
           },
         ),

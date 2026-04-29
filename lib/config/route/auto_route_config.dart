@@ -37,5 +37,9 @@ class AppRouter extends RootStackRouter {
           path: '/tracker-detail',
           page: TrackerGameDetailRoute.page,
         ),
+        AutoRoute(
+          path: '/task-detail',
+          page: TaskDetailRoute.page,
+        ),
       ];
 }

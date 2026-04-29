@@ -1,9 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
-import 'package:go_router/go_router.dart';
 
 import '../generated/l10n.dart';
 
@@ -64,7 +64,7 @@ class _AddContentDialogState extends State<AddContentDialog> {
                       style: context.themeData.textTheme.displayMedium,
                     ),
                     IconButton(
-                      onPressed: () => context.pop(),
+                      onPressed: () => context.router.pop(),
                       icon: const Icon(Icons.cancel_outlined),
                       color: kColorScheme.primary,
                     ),
@@ -110,7 +110,7 @@ class _AddContentDialogState extends State<AddContentDialog> {
                         _titleTextController.text,
                         _descriptionTextController.text,
                       );
-                      context.pop();
+                      context.router.pop();
                     }
                   },
                 ),

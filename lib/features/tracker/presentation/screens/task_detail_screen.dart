@@ -15,7 +15,9 @@ import 'package:gaming_library_assessment_flutter/widgets/default_snackbar.dart'
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../generated/l10n.dart';
+import 'package:auto_route/annotations.dart';
 
+@RoutePage()
 class TaskDetailScreen extends StatelessWidget {
   final int? taskId;
   final TrackerTaskEntity? task;

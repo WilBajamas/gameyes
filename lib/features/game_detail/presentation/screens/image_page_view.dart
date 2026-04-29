@@ -19,7 +19,7 @@ class ImagePageView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: IconButton(
-                onPressed: () => context.pop(),
+                onPressed: () => context.router.pop(),
                 icon: const Icon(Icons.cancel_outlined),
               ),
             ),

@@ -1,6 +1,7 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
@@ -13,7 +14,6 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:gaming_library_assessment_flutter/widgets/default_alert_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filter_list_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../generated/l10n.dart';
 
@@ -53,9 +53,8 @@ class _TrackerScreenState extends State<TrackerScreen> {
   void toItemDetail(int gameId, String? imageUrl) {
     final extra = (gameId, RouteConstants.tracker, imageUrl);
 
-    context.push(
-      RouteConstants.gameDetail,
-      extra: extra,
+    context.router.push(
+      GameDetailRoute(gameExtra: extra),
     );
   }
 
@@ -185,9 +184,8 @@ class _TrackerList extends StatelessWidget {
       itemCount: list.length,
       itemBuilder: (context, index) => InkWell(
         onTap: () {
-          context.pushNamed(
-            RouteConstants.trackerDetail,
-            extra: list[index],
+          context.router.push(
+            TrackerGameDetailRoute(game: list[index]),
           );
         },
         child: SavedGameItem(
