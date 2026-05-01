@@ -22,8 +22,6 @@ dependencies:
     sdk: flutter
 
   # Routes
-  go_router: ^17.2.0 # TODO: Remove this when we migrate to AutoRoute
-
   auto_route: ^11.1.0
 
   # Shared pref
