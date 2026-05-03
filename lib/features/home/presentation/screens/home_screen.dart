@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
+import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
+import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/widgets/navigation_destination.dart';
 import 'package:gaming_library_assessment_flutter/widgets/scrolled_navigation_bar.dart';
 
@@ -16,8 +19,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AutoTabsRouter(
       routes: [
-        FeaturedRouteContainer(),
-        GamesRouteContainer(),
+        FeaturedRoute(),
+        GamesRoute(),
         TrackerRoute(),
         BrowseRoute(),
         SettingsRoute(),
@@ -53,7 +56,21 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: child,
+          body: NotificationListener<UserScrollNotification>(
+            onNotification: (notification) {
+              final notifier = getIt.get<ScrollNotifier>();
+              if (notification.direction == ScrollDirection.forward &&
+                  !notifier.scrolledForward) {
+                notifier.isScrolled = ScrollDirection.forward;
+              } else if (notification.direction == ScrollDirection.reverse &&
+                  notifier.scrolledForward) {
+                notifier.isScrolled = ScrollDirection.reverse;
+              }
+
+              return false;
+            },
+            child: child,
+          ),
         );
       },
     );

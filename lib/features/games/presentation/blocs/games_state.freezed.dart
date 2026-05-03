@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$GamesState {
   GamesStatus get status;
   GamesNextPageStatus? get nextPageStatus;
+  int get currentPage;
   GameListEntity? get response;
   List<GameEntity> get games;
   ErrorType? get error;
@@ -37,6 +38,8 @@ mixin _$GamesState {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.nextPageStatus, nextPageStatus) ||
                 other.nextPageStatus == nextPageStatus) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
             (identical(other.response, response) ||
                 other.response == response) &&
             const DeepCollectionEquality().equals(other.games, games) &&
@@ -52,6 +55,7 @@ mixin _$GamesState {
       runtimeType,
       status,
       nextPageStatus,
+      currentPage,
       response,
       const DeepCollectionEquality().hash(games),
       error,
@@ -60,7 +64,7 @@ mixin _$GamesState {
 
   @override
   String toString() {
-    return 'GamesState(status: $status, nextPageStatus: $nextPageStatus, response: $response, games: $games, error: $error, nextPageError: $nextPageError, filterState: $filterState)';
+    return 'GamesState(status: $status, nextPageStatus: $nextPageStatus, currentPage: $currentPage, response: $response, games: $games, error: $error, nextPageError: $nextPageError, filterState: $filterState)';
   }
 }
 
@@ -73,6 +77,7 @@ abstract mixin class $GamesStateCopyWith<$Res> {
   $Res call(
       {GamesStatus status,
       GamesNextPageStatus? nextPageStatus,
+      int currentPage,
       GameListEntity? response,
       List<GameEntity> games,
       ErrorType? error,
@@ -99,6 +104,7 @@ class _$GamesStateCopyWithImpl<$Res> implements $GamesStateCopyWith<$Res> {
   $Res call({
     Object? status = null,
     Object? nextPageStatus = freezed,
+    Object? currentPage = null,
     Object? response = freezed,
     Object? games = null,
     Object? error = freezed,
@@ -114,6 +120,10 @@ class _$GamesStateCopyWithImpl<$Res> implements $GamesStateCopyWith<$Res> {
           ? _self.nextPageStatus
           : nextPageStatus // ignore: cast_nullable_to_non_nullable
               as GamesNextPageStatus?,
+      currentPage: null == currentPage
+          ? _self.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable
@@ -284,6 +294,7 @@ extension GamesStatePatterns on GamesState {
     TResult Function(
             GamesStatus status,
             GamesNextPageStatus? nextPageStatus,
+            int currentPage,
             GameListEntity? response,
             List<GameEntity> games,
             ErrorType? error,
@@ -295,8 +306,15 @@ extension GamesStatePatterns on GamesState {
     final _that = this;
     switch (_that) {
       case _GamesState() when $default != null:
-        return $default(_that.status, _that.nextPageStatus, _that.response,
-            _that.games, _that.error, _that.nextPageError, _that.filterState);
+        return $default(
+            _that.status,
+            _that.nextPageStatus,
+            _that.currentPage,
+            _that.response,
+            _that.games,
+            _that.error,
+            _that.nextPageError,
+            _that.filterState);
       case _:
         return orElse();
     }
@@ -320,6 +338,7 @@ extension GamesStatePatterns on GamesState {
     TResult Function(
             GamesStatus status,
             GamesNextPageStatus? nextPageStatus,
+            int currentPage,
             GameListEntity? response,
             List<GameEntity> games,
             ErrorType? error,
@@ -330,8 +349,15 @@ extension GamesStatePatterns on GamesState {
     final _that = this;
     switch (_that) {
       case _GamesState():
-        return $default(_that.status, _that.nextPageStatus, _that.response,
-            _that.games, _that.error, _that.nextPageError, _that.filterState);
+        return $default(
+            _that.status,
+            _that.nextPageStatus,
+            _that.currentPage,
+            _that.response,
+            _that.games,
+            _that.error,
+            _that.nextPageError,
+            _that.filterState);
     }
   }
 
@@ -352,6 +378,7 @@ extension GamesStatePatterns on GamesState {
     TResult? Function(
             GamesStatus status,
             GamesNextPageStatus? nextPageStatus,
+            int currentPage,
             GameListEntity? response,
             List<GameEntity> games,
             ErrorType? error,
@@ -362,8 +389,15 @@ extension GamesStatePatterns on GamesState {
     final _that = this;
     switch (_that) {
       case _GamesState() when $default != null:
-        return $default(_that.status, _that.nextPageStatus, _that.response,
-            _that.games, _that.error, _that.nextPageError, _that.filterState);
+        return $default(
+            _that.status,
+            _that.nextPageStatus,
+            _that.currentPage,
+            _that.response,
+            _that.games,
+            _that.error,
+            _that.nextPageError,
+            _that.filterState);
       case _:
         return null;
     }
@@ -376,6 +410,7 @@ class _GamesState implements GamesState {
   const _GamesState(
       {this.status = GamesStatus.initial,
       this.nextPageStatus = GamesNextPageStatus.initial,
+      this.currentPage = 1,
       this.response,
       final List<GameEntity> games = const <GameEntity>[],
       this.error,
@@ -389,6 +424,9 @@ class _GamesState implements GamesState {
   @override
   @JsonKey()
   final GamesNextPageStatus? nextPageStatus;
+  @override
+  @JsonKey()
+  final int currentPage;
   @override
   final GameListEntity? response;
   final List<GameEntity> _games;
@@ -424,6 +462,8 @@ class _GamesState implements GamesState {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.nextPageStatus, nextPageStatus) ||
                 other.nextPageStatus == nextPageStatus) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
             (identical(other.response, response) ||
                 other.response == response) &&
             const DeepCollectionEquality().equals(other._games, _games) &&
@@ -439,6 +479,7 @@ class _GamesState implements GamesState {
       runtimeType,
       status,
       nextPageStatus,
+      currentPage,
       response,
       const DeepCollectionEquality().hash(_games),
       error,
@@ -447,7 +488,7 @@ class _GamesState implements GamesState {
 
   @override
   String toString() {
-    return 'GamesState(status: $status, nextPageStatus: $nextPageStatus, response: $response, games: $games, error: $error, nextPageError: $nextPageError, filterState: $filterState)';
+    return 'GamesState(status: $status, nextPageStatus: $nextPageStatus, currentPage: $currentPage, response: $response, games: $games, error: $error, nextPageError: $nextPageError, filterState: $filterState)';
   }
 }
 
@@ -462,6 +503,7 @@ abstract mixin class _$GamesStateCopyWith<$Res>
   $Res call(
       {GamesStatus status,
       GamesNextPageStatus? nextPageStatus,
+      int currentPage,
       GameListEntity? response,
       List<GameEntity> games,
       ErrorType? error,
@@ -492,6 +534,7 @@ class __$GamesStateCopyWithImpl<$Res> implements _$GamesStateCopyWith<$Res> {
   $Res call({
     Object? status = null,
     Object? nextPageStatus = freezed,
+    Object? currentPage = null,
     Object? response = freezed,
     Object? games = null,
     Object? error = freezed,
@@ -507,6 +550,10 @@ class __$GamesStateCopyWithImpl<$Res> implements _$GamesStateCopyWith<$Res> {
           ? _self.nextPageStatus
           : nextPageStatus // ignore: cast_nullable_to_non_nullable
               as GamesNextPageStatus?,
+      currentPage: null == currentPage
+          ? _self.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
       response: freezed == response
           ? _self.response
           : response // ignore: cast_nullable_to_non_nullable

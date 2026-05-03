@@ -55,17 +55,17 @@ class BrowseRoute extends _i12.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i2.FeaturedScreenContainer]
-class FeaturedRouteContainer extends _i12.PageRouteInfo<void> {
-  const FeaturedRouteContainer({List<_i12.PageRouteInfo>? children})
-      : super(FeaturedRouteContainer.name, initialChildren: children);
+/// [_i2.FeaturedScreen]
+class FeaturedRoute extends _i12.PageRouteInfo<void> {
+  const FeaturedRoute({List<_i12.PageRouteInfo>? children})
+      : super(FeaturedRoute.name, initialChildren: children);
 
-  static const String name = 'FeaturedRouteContainer';
+  static const String name = 'FeaturedRoute';
 
   static _i12.PageInfo page = _i12.PageInfo(
     name,
     builder: (data) {
-      return const _i2.FeaturedScreenContainer();
+      return const _i2.FeaturedScreen();
     },
   );
 }
@@ -120,17 +120,17 @@ class GameDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i4.GamesScreenContainer]
-class GamesRouteContainer extends _i12.PageRouteInfo<void> {
-  const GamesRouteContainer({List<_i12.PageRouteInfo>? children})
-      : super(GamesRouteContainer.name, initialChildren: children);
+/// [_i4.GamesScreen]
+class GamesRoute extends _i12.PageRouteInfo<void> {
+  const GamesRoute({List<_i12.PageRouteInfo>? children})
+      : super(GamesRoute.name, initialChildren: children);
 
-  static const String name = 'GamesRouteContainer';
+  static const String name = 'GamesRoute';
 
   static _i12.PageInfo page = _i12.PageInfo(
     name,
     builder: (data) {
-      return const _i4.GamesScreenContainer();
+      return const _i4.GamesScreen();
     },
   );
 }
@@ -336,16 +336,44 @@ class TrackerGameDetailRouteArgs {
 
 /// generated route for
 /// [_i11.TrackerScreen]
-class TrackerRoute extends _i12.PageRouteInfo<void> {
-  const TrackerRoute({List<_i12.PageRouteInfo>? children})
-      : super(TrackerRoute.name, initialChildren: children);
+class TrackerRoute extends _i12.PageRouteInfo<TrackerRouteArgs> {
+  TrackerRoute({_i13.Key? key, List<_i12.PageRouteInfo>? children})
+      : super(
+          TrackerRoute.name,
+          args: TrackerRouteArgs(key: key),
+          initialChildren: children,
+        );
 
   static const String name = 'TrackerRoute';
 
   static _i12.PageInfo page = _i12.PageInfo(
     name,
     builder: (data) {
-      return const _i11.TrackerScreen();
+      final args = data.argsAs<TrackerRouteArgs>(
+        orElse: () => const TrackerRouteArgs(),
+      );
+      return _i11.TrackerScreen(key: args.key);
     },
   );
+}
+
+class TrackerRouteArgs {
+  const TrackerRouteArgs({this.key});
+
+  final _i13.Key? key;
+
+  @override
+  String toString() {
+    return 'TrackerRouteArgs{key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! TrackerRouteArgs) return false;
+    return key == other.key;
+  }
+
+  @override
+  int get hashCode => key.hashCode;
 }

@@ -15,6 +15,7 @@ sealed class GamesState with _$GamesState {
   const factory GamesState({
     @Default(GamesStatus.initial) GamesStatus status,
     @Default(GamesNextPageStatus.initial) GamesNextPageStatus? nextPageStatus,
+    @Default(1) int currentPage,
     GameListEntity? response,
     @Default(<GameEntity>[]) List<GameEntity> games,
     ErrorType? error,

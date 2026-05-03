@@ -7,8 +7,6 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_s
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_state.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_alert_dialog.dart';
@@ -18,54 +16,20 @@ import 'package:gaming_library_assessment_flutter/widgets/saved_game_item.dart';
 import '../../../../generated/l10n.dart';
 
 @RoutePage()
-class TrackerScreen extends StatefulWidget {
-  const TrackerScreen({super.key});
+class TrackerScreen extends StatelessWidget {
+  TrackerScreen({super.key});
 
-  @override
-  State<TrackerScreen> createState() => _TrackerScreenState();
-}
-
-class _TrackerScreenState extends State<TrackerScreen> {
-  final _controller = ScrollController();
-  final _scrollChangeNotifier = getIt.get<ScrollNotifier>();
-  final _trackerRepository = getIt<TrackerRepository>();
-
-  @override
-  void initState() {
-    _controller.addListener(_onScroll);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller
-      ..removeListener(_onScroll)
-      ..dispose();
-
-    super.dispose();
-  }
-
-  void _onScroll() {
-    _scrollChangeNotifier.isScrolled = _controller.position.userScrollDirection;
-  }
-
-  void toItemDetail(int gameId, String? imageUrl) {
-    final extra = (gameId, RouteConstants.tracker, imageUrl);
-
-    context.router.push(
-      GameDetailRoute(gameExtra: extra),
-    );
-  }
-
-  void removeSavedGame(int savedGameId) {
+  void removeSavedGame(
+    BuildContext context,
+    int savedGameId,
+  ) {
+    final cubit = context.read<TrackerCubit>();
     showDialog(
       context: context,
-      builder: (context) => DefaultAlertDialog(
+      builder: (dialogContext) => DefaultAlertDialog(
         title: S.current.delete_saved_game,
         description: S.current.delete_saved_game_description,
-        onPositivePressed: () =>
-            _trackerRepository.removeSavedGame(savedGameId),
+        onPositivePressed: () => cubit.removeSavedGame(savedGameId),
       ),
     );
   }
@@ -95,7 +59,6 @@ class _TrackerScreenState extends State<TrackerScreen> {
         child: BlocProvider(
           create: (context) => getIt<TrackerCubit>(),
           child: CustomScrollView(
-            controller: _controller,
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverAppBar(
@@ -134,10 +97,7 @@ class _TrackerScreenState extends State<TrackerScreen> {
                 sliver: BlocBuilder<TrackerCubit, TrackerState>(
                   builder: (context, state) {
                     return StreamBuilder<List<TrackerSavedGameEntity>>(
-                      stream: _trackerRepository.savedGamesStream(
-                        state.tag,
-                        state.searchTerm,
-                      ),
+                      stream: context.read<TrackerCubit>().savedGamesStream,
                       builder: (context, snapshot) {
                         final list = snapshot.data;
 
@@ -145,8 +105,16 @@ class _TrackerScreenState extends State<TrackerScreen> {
                           case List<TrackerSavedGameEntity>? list
                               when list != null && list.isNotEmpty:
                             return _TrackerList(
-                              onRemoveClick: removeSavedGame,
-                              onDetailClick: toItemDetail,
+                              onRemoveClick: (savedGameId) =>
+                                  removeSavedGame(context, savedGameId),
+                              onDetailClick: (gameId, imageUrl) {
+                                final extra =
+                                    (gameId, RouteConstants.tracker, imageUrl);
+
+                                context.router.push(
+                                  GameDetailRoute(gameExtra: extra),
+                                );
+                              },
                               list: list,
                             );
 

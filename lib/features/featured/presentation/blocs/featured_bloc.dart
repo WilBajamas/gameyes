@@ -53,6 +53,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
           status: FeaturedStatus.success,
           response: response,
           games: response.items,
+          currentPage: 1,
           platformsSelected: event.platforms ?? state.platformsSelected,
         ),
       Failure(error: final error) => state.copyWith(
@@ -70,14 +71,14 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
     FeaturedNextPage event,
     Emitter<FeaturedState> emit,
   ) async {
-    if (state.response?.nextUrl == null || state.response?.currentPage == null) {
+    if (state.response?.nextUrl == null) {
       return;
     }
 
     emit(state.copyWith(nextPageStatus: FeaturedNextPageStatus.loading));
 
     final result = await _fetchFeaturedUseCase(
-      page: state.response!.currentPage! + 1,
+      page: state.currentPage + 1,
       tag: state.tag,
       platforms: state.platformsSelected,
     );
@@ -86,6 +87,7 @@ class FeaturedBloc extends Bloc<FeaturedEvent, FeaturedState> {
       Success(value: final response) => state.copyWith(
           nextPageStatus: FeaturedNextPageStatus.initial,
           response: response,
+          currentPage: state.currentPage + 1,
           games: List.of(state.games)..addAll(response.items),
         ),
       Failure(error: final error) => state.copyWith(

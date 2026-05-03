@@ -17,6 +17,7 @@ sealed class FeaturedState with _$FeaturedState {
     @Default(FeaturedTag.newAndTrending) FeaturedTag tag,
     @Default(<GamePlatform>{}) Set<GamePlatform> platformsSelected,
     @Default(FeaturedStatus.initial) FeaturedStatus? status,
+    @Default(1) int currentPage,
     @Default(FeaturedNextPageStatus.initial)
     FeaturedNextPageStatus? nextPageStatus,
     GameListEntity? response,

@@ -63,6 +63,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
           status: GamesStatus.success,
           response: response,
           games: response.items,
+          currentPage: 1,
           filterState: filter,
         ),
       Failure(error: final error) => state.copyWith(
@@ -78,14 +79,14 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
     GamesNextPage event,
     Emitter<GamesState> emit,
   ) async {
-    if (state.response?.nextUrl == null || state.response?.currentPage == null) {
+    if (state.response?.nextUrl == null) {
       return;
     }
 
     emit(state.copyWith(nextPageStatus: GamesNextPageStatus.loading));
 
     final result = await _fetchGames(
-      state.response!.currentPage! + 1,
+      state.currentPage + 1,
       state.filterState,
     );
 
@@ -93,6 +94,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       Success(value: final response) => state.copyWith(
           nextPageStatus: GamesNextPageStatus.initial,
           response: response,
+          currentPage: state.currentPage + 1,
           games: List.of(state.games)..addAll(response.items),
         ),
       Failure(error: final error) => state.copyWith(

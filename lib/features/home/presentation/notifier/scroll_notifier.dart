@@ -7,17 +7,26 @@ class ScrollNotifier extends ChangeNotifier {
   bool scrolledForward = false;
 
   set isScrolled(ScrollDirection scrollDirection) {
+    bool stateChanged = false;
     switch (scrollDirection) {
       case ScrollDirection.forward:
-        scrolledForward = true;
+        if (!scrolledForward) {
+          scrolledForward = true;
+          stateChanged = true;
+        }
         break;
       case ScrollDirection.reverse:
-        scrolledForward = false;
+        if (scrolledForward) {
+          scrolledForward = false;
+          stateChanged = true;
+        }
         break;
       case ScrollDirection.idle:
         break;
     }
-
-    notifyListeners();
+    // Only notify listeners if the direction actually flipped
+    if (stateChanged) {
+      notifyListeners();
+    }
   }
 }

@@ -17,6 +17,7 @@ mixin _$FeaturedState {
   FeaturedTag get tag;
   Set<GamePlatform> get platformsSelected;
   FeaturedStatus? get status;
+  int get currentPage;
   FeaturedNextPageStatus? get nextPageStatus;
   GameListEntity? get response;
   List<GameEntity> get games;
@@ -40,6 +41,8 @@ mixin _$FeaturedState {
             const DeepCollectionEquality()
                 .equals(other.platformsSelected, platformsSelected) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
             (identical(other.nextPageStatus, nextPageStatus) ||
                 other.nextPageStatus == nextPageStatus) &&
             (identical(other.response, response) ||
@@ -56,6 +59,7 @@ mixin _$FeaturedState {
       tag,
       const DeepCollectionEquality().hash(platformsSelected),
       status,
+      currentPage,
       nextPageStatus,
       response,
       const DeepCollectionEquality().hash(games),
@@ -64,7 +68,7 @@ mixin _$FeaturedState {
 
   @override
   String toString() {
-    return 'FeaturedState(tag: $tag, platformsSelected: $platformsSelected, status: $status, nextPageStatus: $nextPageStatus, response: $response, games: $games, error: $error, nextPageError: $nextPageError)';
+    return 'FeaturedState(tag: $tag, platformsSelected: $platformsSelected, status: $status, currentPage: $currentPage, nextPageStatus: $nextPageStatus, response: $response, games: $games, error: $error, nextPageError: $nextPageError)';
   }
 }
 
@@ -78,6 +82,7 @@ abstract mixin class $FeaturedStateCopyWith<$Res> {
       {FeaturedTag tag,
       Set<GamePlatform> platformsSelected,
       FeaturedStatus? status,
+      int currentPage,
       FeaturedNextPageStatus? nextPageStatus,
       GameListEntity? response,
       List<GameEntity> games,
@@ -105,6 +110,7 @@ class _$FeaturedStateCopyWithImpl<$Res>
     Object? tag = null,
     Object? platformsSelected = null,
     Object? status = freezed,
+    Object? currentPage = null,
     Object? nextPageStatus = freezed,
     Object? response = freezed,
     Object? games = null,
@@ -124,6 +130,10 @@ class _$FeaturedStateCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as FeaturedStatus?,
+      currentPage: null == currentPage
+          ? _self.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
       nextPageStatus: freezed == nextPageStatus
           ? _self.nextPageStatus
           : nextPageStatus // ignore: cast_nullable_to_non_nullable
@@ -285,6 +295,7 @@ extension FeaturedStatePatterns on FeaturedState {
             FeaturedTag tag,
             Set<GamePlatform> platformsSelected,
             FeaturedStatus? status,
+            int currentPage,
             FeaturedNextPageStatus? nextPageStatus,
             GameListEntity? response,
             List<GameEntity> games,
@@ -300,6 +311,7 @@ extension FeaturedStatePatterns on FeaturedState {
             _that.tag,
             _that.platformsSelected,
             _that.status,
+            _that.currentPage,
             _that.nextPageStatus,
             _that.response,
             _that.games,
@@ -329,6 +341,7 @@ extension FeaturedStatePatterns on FeaturedState {
             FeaturedTag tag,
             Set<GamePlatform> platformsSelected,
             FeaturedStatus? status,
+            int currentPage,
             FeaturedNextPageStatus? nextPageStatus,
             GameListEntity? response,
             List<GameEntity> games,
@@ -343,6 +356,7 @@ extension FeaturedStatePatterns on FeaturedState {
             _that.tag,
             _that.platformsSelected,
             _that.status,
+            _that.currentPage,
             _that.nextPageStatus,
             _that.response,
             _that.games,
@@ -369,6 +383,7 @@ extension FeaturedStatePatterns on FeaturedState {
             FeaturedTag tag,
             Set<GamePlatform> platformsSelected,
             FeaturedStatus? status,
+            int currentPage,
             FeaturedNextPageStatus? nextPageStatus,
             GameListEntity? response,
             List<GameEntity> games,
@@ -383,6 +398,7 @@ extension FeaturedStatePatterns on FeaturedState {
             _that.tag,
             _that.platformsSelected,
             _that.status,
+            _that.currentPage,
             _that.nextPageStatus,
             _that.response,
             _that.games,
@@ -401,6 +417,7 @@ class _FeaturedState implements FeaturedState {
       {this.tag = FeaturedTag.newAndTrending,
       final Set<GamePlatform> platformsSelected = const <GamePlatform>{},
       this.status = FeaturedStatus.initial,
+      this.currentPage = 1,
       this.nextPageStatus = FeaturedNextPageStatus.initial,
       this.response,
       final List<GameEntity> games = const <GameEntity>[],
@@ -425,6 +442,9 @@ class _FeaturedState implements FeaturedState {
   @override
   @JsonKey()
   final FeaturedStatus? status;
+  @override
+  @JsonKey()
+  final int currentPage;
   @override
   @JsonKey()
   final FeaturedNextPageStatus? nextPageStatus;
@@ -461,6 +481,8 @@ class _FeaturedState implements FeaturedState {
             const DeepCollectionEquality()
                 .equals(other._platformsSelected, _platformsSelected) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
             (identical(other.nextPageStatus, nextPageStatus) ||
                 other.nextPageStatus == nextPageStatus) &&
             (identical(other.response, response) ||
@@ -477,6 +499,7 @@ class _FeaturedState implements FeaturedState {
       tag,
       const DeepCollectionEquality().hash(_platformsSelected),
       status,
+      currentPage,
       nextPageStatus,
       response,
       const DeepCollectionEquality().hash(_games),
@@ -485,7 +508,7 @@ class _FeaturedState implements FeaturedState {
 
   @override
   String toString() {
-    return 'FeaturedState(tag: $tag, platformsSelected: $platformsSelected, status: $status, nextPageStatus: $nextPageStatus, response: $response, games: $games, error: $error, nextPageError: $nextPageError)';
+    return 'FeaturedState(tag: $tag, platformsSelected: $platformsSelected, status: $status, currentPage: $currentPage, nextPageStatus: $nextPageStatus, response: $response, games: $games, error: $error, nextPageError: $nextPageError)';
   }
 }
 
@@ -501,6 +524,7 @@ abstract mixin class _$FeaturedStateCopyWith<$Res>
       {FeaturedTag tag,
       Set<GamePlatform> platformsSelected,
       FeaturedStatus? status,
+      int currentPage,
       FeaturedNextPageStatus? nextPageStatus,
       GameListEntity? response,
       List<GameEntity> games,
@@ -531,6 +555,7 @@ class __$FeaturedStateCopyWithImpl<$Res>
     Object? tag = null,
     Object? platformsSelected = null,
     Object? status = freezed,
+    Object? currentPage = null,
     Object? nextPageStatus = freezed,
     Object? response = freezed,
     Object? games = null,
@@ -550,6 +575,10 @@ class __$FeaturedStateCopyWithImpl<$Res>
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
               as FeaturedStatus?,
+      currentPage: null == currentPage
+          ? _self.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
       nextPageStatus: freezed == nextPageStatus
           ? _self.nextPageStatus
           : nextPageStatus // ignore: cast_nullable_to_non_nullable

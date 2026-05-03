@@ -101,7 +101,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i646.DefaultDioInterceptor());
     gh.factory<_i857.GameLocalStorageService>(
         () => _i857.GameLocalStorageService());
-    gh.factory<_i970.TrackerCubit>(() => _i970.TrackerCubit());
     gh.singleton<_i1015.AppRouter>(() => _i1015.AppRouter());
     gh.singleton<_i3.SharedPreference>(() => _i3.SharedPreference());
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
@@ -151,6 +150,8 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i783.FetchFeaturedUseCase>(
         () => _i783.FetchFeaturedUseCase(gh<_i985.FeaturedRepository>()));
+    gh.factory<_i970.TrackerCubit>(
+        () => _i970.TrackerCubit(gh<_i443.TrackerRepository>()));
     gh.factory<_i298.FeaturedBloc>(
         () => _i298.FeaturedBloc(gh<_i783.FetchFeaturedUseCase>()));
     gh.factory<_i461.GamesRepository>(
