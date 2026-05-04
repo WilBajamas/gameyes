@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_model.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/screenshot_response_model.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'retrofit_service.g.dart';
@@ -26,5 +27,12 @@ abstract class RetrofitService {
     @Query('search') String? search,
     @Query('platforms') String? platforms,
     @Query('genres') String? genres,
+  );
+
+  //* Game detail screenshots //
+  @GET(
+      '${ConfigConstants.gamesEndpoint}/{id}/${ConfigConstants.screenshotsEndpoint}')
+  Future<ScreenshotResponseModel> fetchGameScreenshots(
+    @Path('id') String id,
   );
 }
