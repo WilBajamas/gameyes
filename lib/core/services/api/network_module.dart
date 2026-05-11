@@ -4,12 +4,12 @@ import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../res/const.dart';
-import 'default_dio_interceptor.dart';
+import 'twitch_auth_interceptor.dart';
 
 @module
 abstract class NetworkModule {
   @singleton
-  Dio getDioInstance(DefaultDioInterceptor interceptor) {
+  Dio getDioInstance(TwitchAuthInterceptor interceptor) {
     final dio = Dio(
       BaseOptions(
         baseUrl: ConfigConstants.baseUrl,

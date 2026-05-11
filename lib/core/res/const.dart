@@ -3,6 +3,8 @@ class ConfigConstants {
   static const gamesEndpoint = 'games';
   static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';
+  static const twitchClientId = 'TWITCH_CLIENT_ID';
+  static const twitchClientSecret = 'TWITCH_CLIENT_SECRET';
   static const heroTag = 'hero_tag';
   static const enviedFilePath = '../gameyes/secret.env';
 
