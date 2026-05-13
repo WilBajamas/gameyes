@@ -22,8 +22,6 @@ import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_
     as _i646;
 import 'package:gaming_library_assessment_flutter/core/services/api/network_module.dart'
     as _i401;
-import 'package:gaming_library_assessment_flutter/core/services/api/retrofit_service.dart'
-    as _i131;
 import 'package:gaming_library_assessment_flutter/core/services/api/twitch_auth_interceptor.dart'
     as _i641;
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart'
@@ -60,6 +58,8 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/presentat
     as _i32;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_screenshot_cubit.dart'
     as _i544;
+import 'package:gaming_library_assessment_flutter/features/game_detail/services/game_detail_service.dart'
+    as _i54;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart'
     as _i621;
 import 'package:gaming_library_assessment_flutter/features/games/data/repositories/games_repository_impl.dart'
@@ -70,6 +70,8 @@ import 'package:gaming_library_assessment_flutter/features/games/domain/use_case
     as _i14;
 import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_bloc.dart'
     as _i591;
+import 'package:gaming_library_assessment_flutter/features/games/services/games_service.dart'
+    as _i549;
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart'
     as _i1017;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
@@ -116,16 +118,14 @@ extension GetItInjectableX on _i174.GetIt {
         initialPlatforms: gh<Set<_i799.GamePlatform>>()));
     gh.singleton<_i361.Dio>(
         () => networkModule.getDioInstance(gh<_i641.TwitchAuthInterceptor>()));
-    gh.singleton<_i131.RetrofitService>(
+    gh.singleton<_i549.GamesServices>(
         () => networkModule.getRetrofitService(gh<_i361.Dio>()));
+    gh.singleton<_i54.GameDetailService>(
+        () => networkModule.getGameDetailService(gh<_i361.Dio>()));
     gh.factory<_i750.GameDetailRemoteDatasource>(
-        () => _i750.GameDetailRemoteDatasource(gh<_i131.RetrofitService>()));
+        () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()));
     gh.factory<_i187.GameScreenshotsDatasource>(
-        () => _i187.GameScreenshotsDatasource(gh<_i131.RetrofitService>()));
-    gh.factory<_i621.GamesDataSource>(
-        () => _i621.GamesDataSource(gh<_i131.RetrofitService>()));
-    gh.factory<_i461.GamesRepository>(
-        () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()));
+        () => _i187.GameScreenshotsDatasource(gh<_i54.GameDetailService>()));
     gh.factory<_i951.GameScreenshotsRepository>(() =>
         _i716.GameScreenshotsRepositoryImpl(
             gh<_i187.GameScreenshotsDatasource>()));
@@ -136,8 +136,6 @@ extension GetItInjectableX on _i174.GetIt {
         _i669.FilterCubit(initialState: initialState));
     gh.factory<_i944.GameLocalDatasource>(
         () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
-    gh.factory<_i985.FeaturedRepository>(
-        () => _i840.FeaturedRepositoryImpl(gh<_i621.GamesDataSource>()));
     gh.factoryParam<_i544.GameScreenshotCubit, int, dynamic>((
       id,
       _,
@@ -146,16 +144,14 @@ extension GetItInjectableX on _i174.GetIt {
           id: id,
           gameScreenshotsRepository: gh<_i951.GameScreenshotsRepository>(),
         ));
+    gh.factory<_i621.GamesDataSource>(
+        () => _i621.GamesDataSource(gh<_i549.GamesServices>()));
     gh.factory<_i223.GameDetailRepository>(() => _i366.GameDetailRepositoryImpl(
           gh<_i750.GameDetailRemoteDatasource>(),
           gh<_i944.GameLocalDatasource>(),
         ));
-    gh.factory<_i783.FetchFeaturedUseCase>(
-        () => _i783.FetchFeaturedUseCase(gh<_i985.FeaturedRepository>()));
-    gh.factory<_i14.FetchGamesUseCase>(
-        () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()));
-    gh.factory<_i298.FeaturedBloc>(
-        () => _i298.FeaturedBloc(gh<_i783.FetchFeaturedUseCase>()));
+    gh.factory<_i461.GamesRepository>(
+        () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()));
     gh.factoryParam<_i32.GameDetailCubit, int, dynamic>((
       id,
       _,
@@ -168,8 +164,8 @@ extension GetItInjectableX on _i174.GetIt {
         _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()));
     gh.factory<_i443.TrackerRepository>(
         () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()));
-    gh.factory<_i591.GamesBloc>(
-        () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()));
+    gh.factory<_i985.FeaturedRepository>(
+        () => _i840.FeaturedRepositoryImpl(gh<_i621.GamesDataSource>()));
     gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>((
       task,
       _,
@@ -187,8 +183,16 @@ extension GetItInjectableX on _i174.GetIt {
           game: game,
           trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
         ));
+    gh.factory<_i783.FetchFeaturedUseCase>(
+        () => _i783.FetchFeaturedUseCase(gh<_i985.FeaturedRepository>()));
     gh.factory<_i970.TrackerCubit>(
         () => _i970.TrackerCubit(gh<_i443.TrackerRepository>()));
+    gh.factory<_i14.FetchGamesUseCase>(
+        () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()));
+    gh.factory<_i298.FeaturedBloc>(
+        () => _i298.FeaturedBloc(gh<_i783.FetchFeaturedUseCase>()));
+    gh.factory<_i591.GamesBloc>(
+        () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()));
     return this;
   }
 }

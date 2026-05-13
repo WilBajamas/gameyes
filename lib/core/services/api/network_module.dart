@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:gaming_library_assessment_flutter/core/services/api/retrofit_service.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/services/game_detail_service.dart';
+import 'package:gaming_library_assessment_flutter/features/games/services/games_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -30,5 +31,8 @@ abstract class NetworkModule {
   }
 
   @singleton
-  RetrofitService getRetrofitService(Dio dio) => RetrofitService(dio);
+  GamesServices getRetrofitService(Dio dio) => GamesServices(dio);
+
+  @singleton
+  GameDetailService getGameDetailService(Dio dio) => GameDetailService(dio);
 }

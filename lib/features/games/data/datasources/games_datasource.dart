@@ -1,12 +1,13 @@
 import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
-import 'package:gaming_library_assessment_flutter/core/services/api/retrofit_service.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../services/games_service.dart';
 
 @injectable
 class GamesDataSource {
-  final RetrofitService _retrofitService;
+  final GamesServices _gamesServices;
 
-  const GamesDataSource(this._retrofitService);
+  const GamesDataSource(this._gamesServices);
 
   Future<GamesModel> fetchDatasourceGames({
     int page = 1,
@@ -17,13 +18,7 @@ class GamesDataSource {
     String? platforms,
     String? genres,
   }) async =>
-      await _retrofitService.fetchGames(
-        page,
-        pageSize,
-        dateRange,
-        orderings,
-        searchTerm,
-        platforms,
-        genres,
+      await _gamesServices.fetchGames(
+        'dummy_query',
       );
 }

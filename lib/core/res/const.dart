@@ -1,5 +1,6 @@
 class ConfigConstants {
   static const baseUrl = 'https://api.rawg.io/api/';
+  static const igdbBaseUrl = 'https://api.igdb.com/v4/';
   static const gamesEndpoint = 'games';
   static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';

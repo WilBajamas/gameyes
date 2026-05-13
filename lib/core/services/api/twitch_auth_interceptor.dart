@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/config/config_envied.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -12,9 +13,9 @@ class TwitchAuthInterceptor extends QueuedInterceptor {
       : _tokenDio = Dio(
           BaseOptions(
             baseUrl: 'https://id.twitch.tv/oauth2/',
-            connectTimeout: const Duration(seconds: 15),
-            receiveTimeout: const Duration(seconds: 15),
-            sendTimeout: const Duration(seconds: 15),
+            connectTimeout: ConfigConstants.connectTimeout,
+            receiveTimeout: ConfigConstants.receiveTimeout,
+            sendTimeout: ConfigConstants.sendTimeout,
           ),
         ) {
     _tokenDio.interceptors.add(
