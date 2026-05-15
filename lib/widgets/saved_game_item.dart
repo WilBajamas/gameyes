@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
@@ -199,7 +199,7 @@ class _TaskColumn extends StatelessWidget {
 class _PlatformDayAddedRow extends StatelessWidget {
   final String? playtime;
   final DateTime? date;
-  final List<GamePlatform>? platforms;
+  final List<PlatformEntity>? platforms;
 
   const _PlatformDayAddedRow({
     required this.playtime,

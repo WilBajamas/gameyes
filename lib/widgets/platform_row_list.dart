@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class PlatformRowList extends StatelessWidget {
-  final List<GamePlatform> platforms;
+  final List<PlatformEntity> platforms;
   final int showMax;
 
   const PlatformRowList({super.key, required this.platforms, this.showMax = 4});
@@ -35,10 +35,12 @@ class PlatformRowList extends StatelessWidget {
                   fontSize: 12,
                 ),
               )
-            : Image.asset(
-                'assets/images/${platforms[index].assetName}',
-                color: context.themeData.colorScheme.onSurface,
-              );
+            : platforms[index].platformLogo?.url != null
+                ? Image.network(
+                    platforms[index].platformLogo!.url!,
+                    color: context.themeData.colorScheme.onSurface,
+                  )
+                : const SizedBox.shrink();
       },
     );
   }

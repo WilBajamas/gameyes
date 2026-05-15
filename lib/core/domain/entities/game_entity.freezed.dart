@@ -15,12 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GameEntity {
   int get id;
-  String? get name;
-  String? get slug;
-  String? get releaseDate;
-  String? get imageUrl;
-  int? get metacritic;
-  List<GamePlatform>? get platforms;
+  String get name;
+  GameCoverEntity get cover;
+  List<GameModeEntity>? get gameModes;
+  List<GameKeywordEntity>? get gameKeywords;
+  List<PlatformEntity>? get platforms;
+  List<ReleaseDateEntity>? get releaseDates;
 
   /// Create a copy of GameEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -36,23 +36,29 @@ mixin _$GameEntity {
             other is GameEntity &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.slug, slug) || other.slug == slug) &&
-            (identical(other.releaseDate, releaseDate) ||
-                other.releaseDate == releaseDate) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl) &&
-            (identical(other.metacritic, metacritic) ||
-                other.metacritic == metacritic) &&
-            const DeepCollectionEquality().equals(other.platforms, platforms));
+            (identical(other.cover, cover) || other.cover == cover) &&
+            const DeepCollectionEquality().equals(other.gameModes, gameModes) &&
+            const DeepCollectionEquality()
+                .equals(other.gameKeywords, gameKeywords) &&
+            const DeepCollectionEquality().equals(other.platforms, platforms) &&
+            const DeepCollectionEquality()
+                .equals(other.releaseDates, releaseDates));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, slug, releaseDate,
-      imageUrl, metacritic, const DeepCollectionEquality().hash(platforms));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      cover,
+      const DeepCollectionEquality().hash(gameModes),
+      const DeepCollectionEquality().hash(gameKeywords),
+      const DeepCollectionEquality().hash(platforms),
+      const DeepCollectionEquality().hash(releaseDates));
 
   @override
   String toString() {
-    return 'GameEntity(id: $id, name: $name, slug: $slug, releaseDate: $releaseDate, imageUrl: $imageUrl, metacritic: $metacritic, platforms: $platforms)';
+    return 'GameEntity(id: $id, name: $name, cover: $cover, gameModes: $gameModes, gameKeywords: $gameKeywords, platforms: $platforms, releaseDates: $releaseDates)';
   }
 }
 
@@ -64,12 +70,14 @@ abstract mixin class $GameEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      String? name,
-      String? slug,
-      String? releaseDate,
-      String? imageUrl,
-      int? metacritic,
-      List<GamePlatform>? platforms});
+      String name,
+      GameCoverEntity cover,
+      List<GameModeEntity>? gameModes,
+      List<GameKeywordEntity>? gameKeywords,
+      List<PlatformEntity>? platforms,
+      List<ReleaseDateEntity>? releaseDates});
+
+  $GameCoverEntityCopyWith<$Res> get cover;
 }
 
 /// @nodoc
@@ -85,43 +93,53 @@ class _$GameEntityCopyWithImpl<$Res> implements $GameEntityCopyWith<$Res> {
   @override
   $Res call({
     Object? id = null,
-    Object? name = freezed,
-    Object? slug = freezed,
-    Object? releaseDate = freezed,
-    Object? imageUrl = freezed,
-    Object? metacritic = freezed,
+    Object? name = null,
+    Object? cover = null,
+    Object? gameModes = freezed,
+    Object? gameKeywords = freezed,
     Object? platforms = freezed,
+    Object? releaseDates = freezed,
   }) {
     return _then(_self.copyWith(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      name: freezed == name
+      name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      slug: freezed == slug
-          ? _self.slug
-          : slug // ignore: cast_nullable_to_non_nullable
-              as String?,
-      releaseDate: freezed == releaseDate
-          ? _self.releaseDate
-          : releaseDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _self.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      metacritic: freezed == metacritic
-          ? _self.metacritic
-          : metacritic // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String,
+      cover: null == cover
+          ? _self.cover
+          : cover // ignore: cast_nullable_to_non_nullable
+              as GameCoverEntity,
+      gameModes: freezed == gameModes
+          ? _self.gameModes
+          : gameModes // ignore: cast_nullable_to_non_nullable
+              as List<GameModeEntity>?,
+      gameKeywords: freezed == gameKeywords
+          ? _self.gameKeywords
+          : gameKeywords // ignore: cast_nullable_to_non_nullable
+              as List<GameKeywordEntity>?,
       platforms: freezed == platforms
           ? _self.platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<GamePlatform>?,
+              as List<PlatformEntity>?,
+      releaseDates: freezed == releaseDates
+          ? _self.releaseDates
+          : releaseDates // ignore: cast_nullable_to_non_nullable
+              as List<ReleaseDateEntity>?,
     ));
+  }
+
+  /// Create a copy of GameEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GameCoverEntityCopyWith<$Res> get cover {
+    return $GameCoverEntityCopyWith<$Res>(_self.cover, (value) {
+      return _then(_self.copyWith(cover: value));
+    });
   }
 }
 
@@ -216,16 +234,22 @@ extension GameEntityPatterns on GameEntity {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(int id, String? name, String? slug, String? releaseDate,
-            String? imageUrl, int? metacritic, List<GamePlatform>? platforms)?
+    TResult Function(
+            int id,
+            String name,
+            GameCoverEntity cover,
+            List<GameModeEntity>? gameModes,
+            List<GameKeywordEntity>? gameKeywords,
+            List<PlatformEntity>? platforms,
+            List<ReleaseDateEntity>? releaseDates)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _GameEntity() when $default != null:
-        return $default(_that.id, _that.name, _that.slug, _that.releaseDate,
-            _that.imageUrl, _that.metacritic, _that.platforms);
+        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
+            _that.gameKeywords, _that.platforms, _that.releaseDates);
       case _:
         return orElse();
     }
@@ -246,15 +270,21 @@ extension GameEntityPatterns on GameEntity {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(int id, String? name, String? slug, String? releaseDate,
-            String? imageUrl, int? metacritic, List<GamePlatform>? platforms)
+    TResult Function(
+            int id,
+            String name,
+            GameCoverEntity cover,
+            List<GameModeEntity>? gameModes,
+            List<GameKeywordEntity>? gameKeywords,
+            List<PlatformEntity>? platforms,
+            List<ReleaseDateEntity>? releaseDates)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _GameEntity():
-        return $default(_that.id, _that.name, _that.slug, _that.releaseDate,
-            _that.imageUrl, _that.metacritic, _that.platforms);
+        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
+            _that.gameKeywords, _that.platforms, _that.releaseDates);
     }
   }
 
@@ -272,15 +302,21 @@ extension GameEntityPatterns on GameEntity {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(int id, String? name, String? slug, String? releaseDate,
-            String? imageUrl, int? metacritic, List<GamePlatform>? platforms)?
+    TResult? Function(
+            int id,
+            String name,
+            GameCoverEntity cover,
+            List<GameModeEntity>? gameModes,
+            List<GameKeywordEntity>? gameKeywords,
+            List<PlatformEntity>? platforms,
+            List<ReleaseDateEntity>? releaseDates)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _GameEntity() when $default != null:
-        return $default(_that.id, _that.name, _that.slug, _that.releaseDate,
-            _that.imageUrl, _that.metacritic, _that.platforms);
+        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
+            _that.gameKeywords, _that.platforms, _that.releaseDates);
       case _:
         return null;
     }
@@ -292,33 +328,60 @@ extension GameEntityPatterns on GameEntity {
 class _GameEntity extends GameEntity {
   const _GameEntity(
       {required this.id,
-      this.name,
-      this.slug,
-      this.releaseDate,
-      this.imageUrl,
-      this.metacritic,
-      final List<GamePlatform>? platforms})
-      : _platforms = platforms,
+      required this.name,
+      required this.cover,
+      final List<GameModeEntity>? gameModes,
+      final List<GameKeywordEntity>? gameKeywords,
+      final List<PlatformEntity>? platforms,
+      final List<ReleaseDateEntity>? releaseDates})
+      : _gameModes = gameModes,
+        _gameKeywords = gameKeywords,
+        _platforms = platforms,
+        _releaseDates = releaseDates,
         super._();
 
   @override
   final int id;
   @override
-  final String? name;
+  final String name;
   @override
-  final String? slug;
+  final GameCoverEntity cover;
+  final List<GameModeEntity>? _gameModes;
   @override
-  final String? releaseDate;
+  List<GameModeEntity>? get gameModes {
+    final value = _gameModes;
+    if (value == null) return null;
+    if (_gameModes is EqualUnmodifiableListView) return _gameModes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<GameKeywordEntity>? _gameKeywords;
   @override
-  final String? imageUrl;
+  List<GameKeywordEntity>? get gameKeywords {
+    final value = _gameKeywords;
+    if (value == null) return null;
+    if (_gameKeywords is EqualUnmodifiableListView) return _gameKeywords;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<PlatformEntity>? _platforms;
   @override
-  final int? metacritic;
-  final List<GamePlatform>? _platforms;
-  @override
-  List<GamePlatform>? get platforms {
+  List<PlatformEntity>? get platforms {
     final value = _platforms;
     if (value == null) return null;
     if (_platforms is EqualUnmodifiableListView) return _platforms;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ReleaseDateEntity>? _releaseDates;
+  @override
+  List<ReleaseDateEntity>? get releaseDates {
+    final value = _releaseDates;
+    if (value == null) return null;
+    if (_releaseDates is EqualUnmodifiableListView) return _releaseDates;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -338,24 +401,31 @@ class _GameEntity extends GameEntity {
             other is _GameEntity &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.slug, slug) || other.slug == slug) &&
-            (identical(other.releaseDate, releaseDate) ||
-                other.releaseDate == releaseDate) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl) &&
-            (identical(other.metacritic, metacritic) ||
-                other.metacritic == metacritic) &&
+            (identical(other.cover, cover) || other.cover == cover) &&
             const DeepCollectionEquality()
-                .equals(other._platforms, _platforms));
+                .equals(other._gameModes, _gameModes) &&
+            const DeepCollectionEquality()
+                .equals(other._gameKeywords, _gameKeywords) &&
+            const DeepCollectionEquality()
+                .equals(other._platforms, _platforms) &&
+            const DeepCollectionEquality()
+                .equals(other._releaseDates, _releaseDates));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, slug, releaseDate,
-      imageUrl, metacritic, const DeepCollectionEquality().hash(_platforms));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      cover,
+      const DeepCollectionEquality().hash(_gameModes),
+      const DeepCollectionEquality().hash(_gameKeywords),
+      const DeepCollectionEquality().hash(_platforms),
+      const DeepCollectionEquality().hash(_releaseDates));
 
   @override
   String toString() {
-    return 'GameEntity(id: $id, name: $name, slug: $slug, releaseDate: $releaseDate, imageUrl: $imageUrl, metacritic: $metacritic, platforms: $platforms)';
+    return 'GameEntity(id: $id, name: $name, cover: $cover, gameModes: $gameModes, gameKeywords: $gameKeywords, platforms: $platforms, releaseDates: $releaseDates)';
   }
 }
 
@@ -369,12 +439,15 @@ abstract mixin class _$GameEntityCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      String? name,
-      String? slug,
-      String? releaseDate,
-      String? imageUrl,
-      int? metacritic,
-      List<GamePlatform>? platforms});
+      String name,
+      GameCoverEntity cover,
+      List<GameModeEntity>? gameModes,
+      List<GameKeywordEntity>? gameKeywords,
+      List<PlatformEntity>? platforms,
+      List<ReleaseDateEntity>? releaseDates});
+
+  @override
+  $GameCoverEntityCopyWith<$Res> get cover;
 }
 
 /// @nodoc
@@ -390,43 +463,53 @@ class __$GameEntityCopyWithImpl<$Res> implements _$GameEntityCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? id = null,
-    Object? name = freezed,
-    Object? slug = freezed,
-    Object? releaseDate = freezed,
-    Object? imageUrl = freezed,
-    Object? metacritic = freezed,
+    Object? name = null,
+    Object? cover = null,
+    Object? gameModes = freezed,
+    Object? gameKeywords = freezed,
     Object? platforms = freezed,
+    Object? releaseDates = freezed,
   }) {
     return _then(_GameEntity(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      name: freezed == name
+      name: null == name
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      slug: freezed == slug
-          ? _self.slug
-          : slug // ignore: cast_nullable_to_non_nullable
-              as String?,
-      releaseDate: freezed == releaseDate
-          ? _self.releaseDate
-          : releaseDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _self.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      metacritic: freezed == metacritic
-          ? _self.metacritic
-          : metacritic // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String,
+      cover: null == cover
+          ? _self.cover
+          : cover // ignore: cast_nullable_to_non_nullable
+              as GameCoverEntity,
+      gameModes: freezed == gameModes
+          ? _self._gameModes
+          : gameModes // ignore: cast_nullable_to_non_nullable
+              as List<GameModeEntity>?,
+      gameKeywords: freezed == gameKeywords
+          ? _self._gameKeywords
+          : gameKeywords // ignore: cast_nullable_to_non_nullable
+              as List<GameKeywordEntity>?,
       platforms: freezed == platforms
           ? _self._platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<GamePlatform>?,
+              as List<PlatformEntity>?,
+      releaseDates: freezed == releaseDates
+          ? _self._releaseDates
+          : releaseDates // ignore: cast_nullable_to_non_nullable
+              as List<ReleaseDateEntity>?,
     ));
+  }
+
+  /// Create a copy of GameEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GameCoverEntityCopyWith<$Res> get cover {
+    return $GameCoverEntityCopyWith<$Res>(_self.cover, (value) {
+      return _then(_self.copyWith(cover: value));
+    });
   }
 }
 

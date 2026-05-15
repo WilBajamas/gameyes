@@ -118,7 +118,7 @@ class FeaturedScreen extends StatelessWidget {
                               final extra = (
                                 state.games[index].id,
                                 RouteConstants.featured,
-                                state.games[index].imageUrl
+                                state.games[index].cover.url
                               );
                               context.router.push(
                                 GameDetailRoute(gameExtra: extra),

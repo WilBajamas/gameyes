@@ -137,7 +137,7 @@ class GamesSliverGrid extends StatelessWidget {
             final extra = (
               state.games[index].id,
               RouteConstants.games,
-              state.games[index].imageUrl
+              state.games[index].cover.url
             );
             context.router.push(
               GameDetailRoute(gameExtra: extra),

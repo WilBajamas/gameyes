@@ -57,3 +57,18 @@ class HiveConstants {
   static const String specializationsBox = 'specialization_box';
   static const String initializationLog = 'HiveLocalStorageService Initialized';
 }
+
+class IGDBConfig {
+  static const standardGameFields = [
+    'name',
+    'cover.url',
+    'game_modes.name',
+    'keywords.name',
+    'platforms.name',
+    'platforms.abbreviation',
+    'platforms.platform_logo.url',
+    'release_dates.date',
+    'release_dates.human',
+  ];
+}
+
