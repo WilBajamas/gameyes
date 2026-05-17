@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart';
 
 import '../../mocks/date_time_mock.dart';
 
@@ -10,13 +11,13 @@ void main() {
   late FilterCubit filterCubit;
 
   setUp(() {
-    filterCubit = FilterCubit(initialState: FilterInitial());
+    filterCubit = FilterCubit(initialState: const FilterState());
   });
 
   test('initial state is empty FilterInitial', () {
     expect(
       filterCubit.state,
-      FilterInitial(),
+      const FilterState(),
     );
     expect(filterCubit.state.ordering, GameOrdering.released);
     expect(filterCubit.state.platforms, {});

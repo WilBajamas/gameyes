@@ -1,15 +1,14 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_cover_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
 
-import 'platform_item_mock.dart';
-
-GameEntity get mockGame => GameEntity(
+GameEntity get mockGame => const GameEntity(
       id: 8,
-      slug: 'slug',
       name: 'test game name',
-      releaseDate: '2020-01-01',
-      imageUrl: 'backgroundImage',
-      metacritic: 90,
-      platforms: mockListPlatformItem,
+      cover: GameCoverEntity(url: 'test_image_url'),
+      gameModes: [],
+      gameKeywords: [],
+      platforms: [],
+      releaseDates: [],
     );
 
 List<GameEntity> get mockListGames => [

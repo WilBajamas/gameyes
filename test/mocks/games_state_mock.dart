@@ -1,11 +1,11 @@
-import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_state.dart';
 
 import 'game_response_mock.dart';
 
 GamesState get mockExistingGamesState => GamesState(
       status: GamesStatus.success,
       response: mockGamesResponse,
-      games: mockGamesResponse.results!,
+      games: mockGamesResponse.items,
     );
 
 GamesState get mockInitialGamesState => const GamesState();
