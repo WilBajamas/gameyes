@@ -1,11 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game_cover.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game_keyword.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game_mode.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/platform.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/release_date.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_detail_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
-import 'package:gaming_library_assessment_flutter/core/mappers/platform_mapper.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/developer.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/genre.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/platform_item.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/publisher.dart';
 
 part 'game_detail_model.freezed.dart';
 part 'game_detail_model.g.dart';
@@ -17,17 +16,12 @@ sealed class GameDetailModel with _$GameDetailModel {
   const factory GameDetailModel({
     int? id,
     String? name,
-    String? slug,
-    int? metacritic,
-    String? released,
-    @JsonKey(name: 'background_image') String? backgroundImage,
-    @JsonKey(name: 'background_image_additional')
-    String? backgroundImageAdditional,
-    List<PlatformItem>? platforms,
-    List<Developer>? developers,
-    List<Genre>? genres,
-    List<Publisher>? publishers,
-    @JsonKey(name: 'description_raw') String? description,
+    String? summary,
+    GameCover? cover,
+    @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
+    List<GameKeyword>? keywords,
+    List<Platform>? platforms,
+    @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates,
   }) = _GameDetailModel;
 
   factory GameDetailModel.fromJson(Map<String, dynamic> json) =>
@@ -36,18 +30,10 @@ sealed class GameDetailModel with _$GameDetailModel {
   GameDetailEntity toEntity() => GameDetailEntity(
         id: id ?? 0,
         name: name ?? 'Unknown',
-        slug: slug,
-        metacritic: metacritic,
-        releaseDate: released,
-        description: description,
-        imageUrl: backgroundImage,
-        additionalImageUrl: backgroundImageAdditional,
-        platforms: platforms
-            ?.map((p) => p.platform?.id?.toEntity())
-            .whereType<GamePlatform>()
-            .toList(),
-        developers: developers?.map((d) => d.name ?? '').toList(),
-        genres: genres?.map((g) => g.name ?? '').toList(),
-        publishers: publishers?.map((p) => p.name ?? '').toList(),
+        description: summary,
+        imageUrl: cover?.url,
+        platforms: platforms?.map((p) => p.toEntity()).toList(),
+        genres: [],
+        developers: [],
       );
 }

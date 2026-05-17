@@ -4,7 +4,6 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/game_enti
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
-import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
 
 class GameItem extends StatelessWidget {
@@ -59,7 +58,7 @@ class GameItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: AutoSizeText(
-                    game?.releaseDate?.stringToDateString() ??
+                    game?.releaseDates?.firstOrNull?.human ??
                         StringConstants.emptyStringPlaceholder,
                     maxLines: 1,
                     maxFontSize: 14,
@@ -111,13 +110,13 @@ class _TopStack extends StatelessWidget {
               topLeft: Radius.circular(8),
               topRight: Radius.circular(8),
             ),
-            child: game?.imageUrl != null
+            child: game?.cover.url != null
 
                 //** Image */
                 ? Hero(
                     tag: '${ConfigConstants.heroTag}/${game?.id}/$fromScreen',
                     child: DefaultCachedNetworkImage(
-                      imageUrl: game!.imageUrl!,
+                      imageUrl: game!.cover.url!,
                     ),
                   )
                 : Center(
@@ -129,15 +128,16 @@ class _TopStack extends StatelessWidget {
           ),
         ),
 
+        /// TODO: Check IGDB if they return metacritic scores
         //** Score */
-        if (game?.metacritic != null)
-          Positioned(
-            bottom: 8,
-            right: 8,
-            child: MetacriticIndicator(
-              score: game?.metacritic,
-            ),
-          ),
+        // if (game?.metacritic != null)
+        //   Positioned(
+        //     bottom: 8,
+        //     right: 8,
+        //     child: MetacriticIndicator(
+        //       score: game?.metacritic,
+        //     ),
+        //   ),
       ],
     );
   }

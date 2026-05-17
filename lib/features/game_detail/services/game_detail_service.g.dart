@@ -22,12 +22,12 @@ class _GameDetailService implements GameDetailService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<GameDetailModel> fetchGameDetail(String query) async {
+  Future<List<GameDetailModel>> fetchGameDetail(String query) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = query;
-    final _options = _setStreamType<GameDetailModel>(
+    final _options = _setStreamType<List<GameDetailModel>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -37,37 +37,14 @@ class _GameDetailService implements GameDetailService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late GameDetailModel _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<GameDetailModel> _value;
     try {
-      _value = GameDetailModel.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<ScreenshotResponseModel> fetchGameScreenshots(String query) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = query;
-    final _options = _setStreamType<ScreenshotResponseModel>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            'games/{id}/screenshots',
-            queryParameters: queryParameters,
-            data: _data,
+      _value = _result.data!
+          .map(
+            (dynamic i) => GameDetailModel.fromJson(i as Map<String, dynamic>),
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ScreenshotResponseModel _value;
-    try {
-      _value = ScreenshotResponseModel.fromJson(_result.data!);
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

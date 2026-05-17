@@ -13,7 +13,7 @@ abstract class NetworkModule {
   Dio getDioInstance(TwitchAuthInterceptor interceptor) {
     final dio = Dio(
       BaseOptions(
-        baseUrl: ConfigConstants.baseUrl,
+        baseUrl: ConfigConstants.igdbBaseUrl,
         connectTimeout: ConfigConstants.connectTimeout,
         receiveTimeout: ConfigConstants.receiveTimeout,
         sendTimeout: ConfigConstants.sendTimeout,

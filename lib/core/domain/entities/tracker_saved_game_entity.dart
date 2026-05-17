@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'tracker_group_task_entity.dart';
 
 part 'tracker_saved_game_entity.freezed.dart';
@@ -14,7 +14,7 @@ sealed class TrackerSavedGameEntity with _$TrackerSavedGameEntity {
     String? gameSlug,
     DateTime? dateSaved,
     @Default(false) bool completed,
-    List<GamePlatform>? platforms,
+    List<PlatformEntity>? platforms,
     DateTime? dateModified,
     @Default([]) List<TrackerGroupTaskEntity> groupTasks,
   }) = _TrackerSavedGameEntity;

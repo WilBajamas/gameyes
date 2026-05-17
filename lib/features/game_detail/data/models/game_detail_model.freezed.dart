@@ -16,19 +16,14 @@ T _$identity<T>(T value) => value;
 mixin _$GameDetailModel {
   int? get id;
   String? get name;
-  String? get slug;
-  int? get metacritic;
-  String? get released;
-  @JsonKey(name: 'background_image')
-  String? get backgroundImage;
-  @JsonKey(name: 'background_image_additional')
-  String? get backgroundImageAdditional;
-  List<PlatformItem>? get platforms;
-  List<Developer>? get developers;
-  List<Genre>? get genres;
-  List<Publisher>? get publishers;
-  @JsonKey(name: 'description_raw')
-  String? get description;
+  String? get summary;
+  GameCover? get cover;
+  @JsonKey(name: 'game_modes')
+  List<GameMode>? get gameModes;
+  List<GameKeyword>? get keywords;
+  List<Platform>? get platforms;
+  @JsonKey(name: 'release_dates')
+  List<ReleaseDate>? get releaseDates;
 
   /// Create a copy of GameDetailModel
   /// with the given fields replaced by the non-null parameter values.
@@ -48,24 +43,13 @@ mixin _$GameDetailModel {
             other is GameDetailModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.slug, slug) || other.slug == slug) &&
-            (identical(other.metacritic, metacritic) ||
-                other.metacritic == metacritic) &&
-            (identical(other.released, released) ||
-                other.released == released) &&
-            (identical(other.backgroundImage, backgroundImage) ||
-                other.backgroundImage == backgroundImage) &&
-            (identical(other.backgroundImageAdditional,
-                    backgroundImageAdditional) ||
-                other.backgroundImageAdditional == backgroundImageAdditional) &&
+            (identical(other.summary, summary) || other.summary == summary) &&
+            (identical(other.cover, cover) || other.cover == cover) &&
+            const DeepCollectionEquality().equals(other.gameModes, gameModes) &&
+            const DeepCollectionEquality().equals(other.keywords, keywords) &&
             const DeepCollectionEquality().equals(other.platforms, platforms) &&
             const DeepCollectionEquality()
-                .equals(other.developers, developers) &&
-            const DeepCollectionEquality().equals(other.genres, genres) &&
-            const DeepCollectionEquality()
-                .equals(other.publishers, publishers) &&
-            (identical(other.description, description) ||
-                other.description == description));
+                .equals(other.releaseDates, releaseDates));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -74,20 +58,16 @@ mixin _$GameDetailModel {
       runtimeType,
       id,
       name,
-      slug,
-      metacritic,
-      released,
-      backgroundImage,
-      backgroundImageAdditional,
+      summary,
+      cover,
+      const DeepCollectionEquality().hash(gameModes),
+      const DeepCollectionEquality().hash(keywords),
       const DeepCollectionEquality().hash(platforms),
-      const DeepCollectionEquality().hash(developers),
-      const DeepCollectionEquality().hash(genres),
-      const DeepCollectionEquality().hash(publishers),
-      description);
+      const DeepCollectionEquality().hash(releaseDates));
 
   @override
   String toString() {
-    return 'GameDetailModel(id: $id, name: $name, slug: $slug, metacritic: $metacritic, released: $released, backgroundImage: $backgroundImage, backgroundImageAdditional: $backgroundImageAdditional, platforms: $platforms, developers: $developers, genres: $genres, publishers: $publishers, description: $description)';
+    return 'GameDetailModel(id: $id, name: $name, summary: $summary, cover: $cover, gameModes: $gameModes, keywords: $keywords, platforms: $platforms, releaseDates: $releaseDates)';
   }
 }
 
@@ -100,17 +80,14 @@ abstract mixin class $GameDetailModelCopyWith<$Res> {
   $Res call(
       {int? id,
       String? name,
-      String? slug,
-      int? metacritic,
-      String? released,
-      @JsonKey(name: 'background_image') String? backgroundImage,
-      @JsonKey(name: 'background_image_additional')
-      String? backgroundImageAdditional,
-      List<PlatformItem>? platforms,
-      List<Developer>? developers,
-      List<Genre>? genres,
-      List<Publisher>? publishers,
-      @JsonKey(name: 'description_raw') String? description});
+      String? summary,
+      GameCover? cover,
+      @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
+      List<GameKeyword>? keywords,
+      List<Platform>? platforms,
+      @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates});
+
+  $GameCoverCopyWith<$Res>? get cover;
 }
 
 /// @nodoc
@@ -128,16 +105,12 @@ class _$GameDetailModelCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? name = freezed,
-    Object? slug = freezed,
-    Object? metacritic = freezed,
-    Object? released = freezed,
-    Object? backgroundImage = freezed,
-    Object? backgroundImageAdditional = freezed,
+    Object? summary = freezed,
+    Object? cover = freezed,
+    Object? gameModes = freezed,
+    Object? keywords = freezed,
     Object? platforms = freezed,
-    Object? developers = freezed,
-    Object? genres = freezed,
-    Object? publishers = freezed,
-    Object? description = freezed,
+    Object? releaseDates = freezed,
   }) {
     return _then(_self.copyWith(
       id: freezed == id
@@ -148,47 +121,45 @@ class _$GameDetailModelCopyWithImpl<$Res>
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
-      slug: freezed == slug
-          ? _self.slug
-          : slug // ignore: cast_nullable_to_non_nullable
+      summary: freezed == summary
+          ? _self.summary
+          : summary // ignore: cast_nullable_to_non_nullable
               as String?,
-      metacritic: freezed == metacritic
-          ? _self.metacritic
-          : metacritic // ignore: cast_nullable_to_non_nullable
-              as int?,
-      released: freezed == released
-          ? _self.released
-          : released // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backgroundImage: freezed == backgroundImage
-          ? _self.backgroundImage
-          : backgroundImage // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backgroundImageAdditional: freezed == backgroundImageAdditional
-          ? _self.backgroundImageAdditional
-          : backgroundImageAdditional // ignore: cast_nullable_to_non_nullable
-              as String?,
+      cover: freezed == cover
+          ? _self.cover
+          : cover // ignore: cast_nullable_to_non_nullable
+              as GameCover?,
+      gameModes: freezed == gameModes
+          ? _self.gameModes
+          : gameModes // ignore: cast_nullable_to_non_nullable
+              as List<GameMode>?,
+      keywords: freezed == keywords
+          ? _self.keywords
+          : keywords // ignore: cast_nullable_to_non_nullable
+              as List<GameKeyword>?,
       platforms: freezed == platforms
           ? _self.platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<PlatformItem>?,
-      developers: freezed == developers
-          ? _self.developers
-          : developers // ignore: cast_nullable_to_non_nullable
-              as List<Developer>?,
-      genres: freezed == genres
-          ? _self.genres
-          : genres // ignore: cast_nullable_to_non_nullable
-              as List<Genre>?,
-      publishers: freezed == publishers
-          ? _self.publishers
-          : publishers // ignore: cast_nullable_to_non_nullable
-              as List<Publisher>?,
-      description: freezed == description
-          ? _self.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<Platform>?,
+      releaseDates: freezed == releaseDates
+          ? _self.releaseDates
+          : releaseDates // ignore: cast_nullable_to_non_nullable
+              as List<ReleaseDate>?,
     ));
+  }
+
+  /// Create a copy of GameDetailModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GameCoverCopyWith<$Res>? get cover {
+    if (_self.cover == null) {
+      return null;
+    }
+
+    return $GameCoverCopyWith<$Res>(_self.cover!, (value) {
+      return _then(_self.copyWith(cover: value));
+    });
   }
 }
 
@@ -286,17 +257,12 @@ extension GameDetailModelPatterns on GameDetailModel {
     TResult Function(
             int? id,
             String? name,
-            String? slug,
-            int? metacritic,
-            String? released,
-            @JsonKey(name: 'background_image') String? backgroundImage,
-            @JsonKey(name: 'background_image_additional')
-            String? backgroundImageAdditional,
-            List<PlatformItem>? platforms,
-            List<Developer>? developers,
-            List<Genre>? genres,
-            List<Publisher>? publishers,
-            @JsonKey(name: 'description_raw') String? description)?
+            String? summary,
+            GameCover? cover,
+            @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
+            List<GameKeyword>? keywords,
+            List<Platform>? platforms,
+            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates)?
         $default, {
     required TResult orElse(),
   }) {
@@ -306,16 +272,12 @@ extension GameDetailModelPatterns on GameDetailModel {
         return $default(
             _that.id,
             _that.name,
-            _that.slug,
-            _that.metacritic,
-            _that.released,
-            _that.backgroundImage,
-            _that.backgroundImageAdditional,
+            _that.summary,
+            _that.cover,
+            _that.gameModes,
+            _that.keywords,
             _that.platforms,
-            _that.developers,
-            _that.genres,
-            _that.publishers,
-            _that.description);
+            _that.releaseDates);
       case _:
         return orElse();
     }
@@ -339,17 +301,12 @@ extension GameDetailModelPatterns on GameDetailModel {
     TResult Function(
             int? id,
             String? name,
-            String? slug,
-            int? metacritic,
-            String? released,
-            @JsonKey(name: 'background_image') String? backgroundImage,
-            @JsonKey(name: 'background_image_additional')
-            String? backgroundImageAdditional,
-            List<PlatformItem>? platforms,
-            List<Developer>? developers,
-            List<Genre>? genres,
-            List<Publisher>? publishers,
-            @JsonKey(name: 'description_raw') String? description)
+            String? summary,
+            GameCover? cover,
+            @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
+            List<GameKeyword>? keywords,
+            List<Platform>? platforms,
+            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates)
         $default,
   ) {
     final _that = this;
@@ -358,16 +315,12 @@ extension GameDetailModelPatterns on GameDetailModel {
         return $default(
             _that.id,
             _that.name,
-            _that.slug,
-            _that.metacritic,
-            _that.released,
-            _that.backgroundImage,
-            _that.backgroundImageAdditional,
+            _that.summary,
+            _that.cover,
+            _that.gameModes,
+            _that.keywords,
             _that.platforms,
-            _that.developers,
-            _that.genres,
-            _that.publishers,
-            _that.description);
+            _that.releaseDates);
     }
   }
 
@@ -388,17 +341,12 @@ extension GameDetailModelPatterns on GameDetailModel {
     TResult? Function(
             int? id,
             String? name,
-            String? slug,
-            int? metacritic,
-            String? released,
-            @JsonKey(name: 'background_image') String? backgroundImage,
-            @JsonKey(name: 'background_image_additional')
-            String? backgroundImageAdditional,
-            List<PlatformItem>? platforms,
-            List<Developer>? developers,
-            List<Genre>? genres,
-            List<Publisher>? publishers,
-            @JsonKey(name: 'description_raw') String? description)?
+            String? summary,
+            GameCover? cover,
+            @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
+            List<GameKeyword>? keywords,
+            List<Platform>? platforms,
+            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates)?
         $default,
   ) {
     final _that = this;
@@ -407,16 +355,12 @@ extension GameDetailModelPatterns on GameDetailModel {
         return $default(
             _that.id,
             _that.name,
-            _that.slug,
-            _that.metacritic,
-            _that.released,
-            _that.backgroundImage,
-            _that.backgroundImageAdditional,
+            _that.summary,
+            _that.cover,
+            _that.gameModes,
+            _that.keywords,
             _that.platforms,
-            _that.developers,
-            _that.genres,
-            _that.publishers,
-            _that.description);
+            _that.releaseDates);
       case _:
         return null;
     }
@@ -429,21 +373,16 @@ class _GameDetailModel extends GameDetailModel {
   const _GameDetailModel(
       {this.id,
       this.name,
-      this.slug,
-      this.metacritic,
-      this.released,
-      @JsonKey(name: 'background_image') this.backgroundImage,
-      @JsonKey(name: 'background_image_additional')
-      this.backgroundImageAdditional,
-      final List<PlatformItem>? platforms,
-      final List<Developer>? developers,
-      final List<Genre>? genres,
-      final List<Publisher>? publishers,
-      @JsonKey(name: 'description_raw') this.description})
-      : _platforms = platforms,
-        _developers = developers,
-        _genres = genres,
-        _publishers = publishers,
+      this.summary,
+      this.cover,
+      @JsonKey(name: 'game_modes') final List<GameMode>? gameModes,
+      final List<GameKeyword>? keywords,
+      final List<Platform>? platforms,
+      @JsonKey(name: 'release_dates') final List<ReleaseDate>? releaseDates})
+      : _gameModes = gameModes,
+        _keywords = keywords,
+        _platforms = platforms,
+        _releaseDates = releaseDates,
         super._();
   factory _GameDetailModel.fromJson(Map<String, dynamic> json) =>
       _$GameDetailModelFromJson(json);
@@ -453,20 +392,33 @@ class _GameDetailModel extends GameDetailModel {
   @override
   final String? name;
   @override
-  final String? slug;
+  final String? summary;
   @override
-  final int? metacritic;
+  final GameCover? cover;
+  final List<GameMode>? _gameModes;
   @override
-  final String? released;
+  @JsonKey(name: 'game_modes')
+  List<GameMode>? get gameModes {
+    final value = _gameModes;
+    if (value == null) return null;
+    if (_gameModes is EqualUnmodifiableListView) return _gameModes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<GameKeyword>? _keywords;
   @override
-  @JsonKey(name: 'background_image')
-  final String? backgroundImage;
+  List<GameKeyword>? get keywords {
+    final value = _keywords;
+    if (value == null) return null;
+    if (_keywords is EqualUnmodifiableListView) return _keywords;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<Platform>? _platforms;
   @override
-  @JsonKey(name: 'background_image_additional')
-  final String? backgroundImageAdditional;
-  final List<PlatformItem>? _platforms;
-  @override
-  List<PlatformItem>? get platforms {
+  List<Platform>? get platforms {
     final value = _platforms;
     if (value == null) return null;
     if (_platforms is EqualUnmodifiableListView) return _platforms;
@@ -474,39 +426,16 @@ class _GameDetailModel extends GameDetailModel {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Developer>? _developers;
+  final List<ReleaseDate>? _releaseDates;
   @override
-  List<Developer>? get developers {
-    final value = _developers;
+  @JsonKey(name: 'release_dates')
+  List<ReleaseDate>? get releaseDates {
+    final value = _releaseDates;
     if (value == null) return null;
-    if (_developers is EqualUnmodifiableListView) return _developers;
+    if (_releaseDates is EqualUnmodifiableListView) return _releaseDates;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
-
-  final List<Genre>? _genres;
-  @override
-  List<Genre>? get genres {
-    final value = _genres;
-    if (value == null) return null;
-    if (_genres is EqualUnmodifiableListView) return _genres;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<Publisher>? _publishers;
-  @override
-  List<Publisher>? get publishers {
-    final value = _publishers;
-    if (value == null) return null;
-    if (_publishers is EqualUnmodifiableListView) return _publishers;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  @JsonKey(name: 'description_raw')
-  final String? description;
 
   /// Create a copy of GameDetailModel
   /// with the given fields replaced by the non-null parameter values.
@@ -530,25 +459,15 @@ class _GameDetailModel extends GameDetailModel {
             other is _GameDetailModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.slug, slug) || other.slug == slug) &&
-            (identical(other.metacritic, metacritic) ||
-                other.metacritic == metacritic) &&
-            (identical(other.released, released) ||
-                other.released == released) &&
-            (identical(other.backgroundImage, backgroundImage) ||
-                other.backgroundImage == backgroundImage) &&
-            (identical(other.backgroundImageAdditional,
-                    backgroundImageAdditional) ||
-                other.backgroundImageAdditional == backgroundImageAdditional) &&
+            (identical(other.summary, summary) || other.summary == summary) &&
+            (identical(other.cover, cover) || other.cover == cover) &&
+            const DeepCollectionEquality()
+                .equals(other._gameModes, _gameModes) &&
+            const DeepCollectionEquality().equals(other._keywords, _keywords) &&
             const DeepCollectionEquality()
                 .equals(other._platforms, _platforms) &&
             const DeepCollectionEquality()
-                .equals(other._developers, _developers) &&
-            const DeepCollectionEquality().equals(other._genres, _genres) &&
-            const DeepCollectionEquality()
-                .equals(other._publishers, _publishers) &&
-            (identical(other.description, description) ||
-                other.description == description));
+                .equals(other._releaseDates, _releaseDates));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -557,20 +476,16 @@ class _GameDetailModel extends GameDetailModel {
       runtimeType,
       id,
       name,
-      slug,
-      metacritic,
-      released,
-      backgroundImage,
-      backgroundImageAdditional,
+      summary,
+      cover,
+      const DeepCollectionEquality().hash(_gameModes),
+      const DeepCollectionEquality().hash(_keywords),
       const DeepCollectionEquality().hash(_platforms),
-      const DeepCollectionEquality().hash(_developers),
-      const DeepCollectionEquality().hash(_genres),
-      const DeepCollectionEquality().hash(_publishers),
-      description);
+      const DeepCollectionEquality().hash(_releaseDates));
 
   @override
   String toString() {
-    return 'GameDetailModel(id: $id, name: $name, slug: $slug, metacritic: $metacritic, released: $released, backgroundImage: $backgroundImage, backgroundImageAdditional: $backgroundImageAdditional, platforms: $platforms, developers: $developers, genres: $genres, publishers: $publishers, description: $description)';
+    return 'GameDetailModel(id: $id, name: $name, summary: $summary, cover: $cover, gameModes: $gameModes, keywords: $keywords, platforms: $platforms, releaseDates: $releaseDates)';
   }
 }
 
@@ -585,17 +500,15 @@ abstract mixin class _$GameDetailModelCopyWith<$Res>
   $Res call(
       {int? id,
       String? name,
-      String? slug,
-      int? metacritic,
-      String? released,
-      @JsonKey(name: 'background_image') String? backgroundImage,
-      @JsonKey(name: 'background_image_additional')
-      String? backgroundImageAdditional,
-      List<PlatformItem>? platforms,
-      List<Developer>? developers,
-      List<Genre>? genres,
-      List<Publisher>? publishers,
-      @JsonKey(name: 'description_raw') String? description});
+      String? summary,
+      GameCover? cover,
+      @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
+      List<GameKeyword>? keywords,
+      List<Platform>? platforms,
+      @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates});
+
+  @override
+  $GameCoverCopyWith<$Res>? get cover;
 }
 
 /// @nodoc
@@ -613,16 +526,12 @@ class __$GameDetailModelCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? name = freezed,
-    Object? slug = freezed,
-    Object? metacritic = freezed,
-    Object? released = freezed,
-    Object? backgroundImage = freezed,
-    Object? backgroundImageAdditional = freezed,
+    Object? summary = freezed,
+    Object? cover = freezed,
+    Object? gameModes = freezed,
+    Object? keywords = freezed,
     Object? platforms = freezed,
-    Object? developers = freezed,
-    Object? genres = freezed,
-    Object? publishers = freezed,
-    Object? description = freezed,
+    Object? releaseDates = freezed,
   }) {
     return _then(_GameDetailModel(
       id: freezed == id
@@ -633,47 +542,45 @@ class __$GameDetailModelCopyWithImpl<$Res>
           ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
-      slug: freezed == slug
-          ? _self.slug
-          : slug // ignore: cast_nullable_to_non_nullable
+      summary: freezed == summary
+          ? _self.summary
+          : summary // ignore: cast_nullable_to_non_nullable
               as String?,
-      metacritic: freezed == metacritic
-          ? _self.metacritic
-          : metacritic // ignore: cast_nullable_to_non_nullable
-              as int?,
-      released: freezed == released
-          ? _self.released
-          : released // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backgroundImage: freezed == backgroundImage
-          ? _self.backgroundImage
-          : backgroundImage // ignore: cast_nullable_to_non_nullable
-              as String?,
-      backgroundImageAdditional: freezed == backgroundImageAdditional
-          ? _self.backgroundImageAdditional
-          : backgroundImageAdditional // ignore: cast_nullable_to_non_nullable
-              as String?,
+      cover: freezed == cover
+          ? _self.cover
+          : cover // ignore: cast_nullable_to_non_nullable
+              as GameCover?,
+      gameModes: freezed == gameModes
+          ? _self._gameModes
+          : gameModes // ignore: cast_nullable_to_non_nullable
+              as List<GameMode>?,
+      keywords: freezed == keywords
+          ? _self._keywords
+          : keywords // ignore: cast_nullable_to_non_nullable
+              as List<GameKeyword>?,
       platforms: freezed == platforms
           ? _self._platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<PlatformItem>?,
-      developers: freezed == developers
-          ? _self._developers
-          : developers // ignore: cast_nullable_to_non_nullable
-              as List<Developer>?,
-      genres: freezed == genres
-          ? _self._genres
-          : genres // ignore: cast_nullable_to_non_nullable
-              as List<Genre>?,
-      publishers: freezed == publishers
-          ? _self._publishers
-          : publishers // ignore: cast_nullable_to_non_nullable
-              as List<Publisher>?,
-      description: freezed == description
-          ? _self.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<Platform>?,
+      releaseDates: freezed == releaseDates
+          ? _self._releaseDates
+          : releaseDates // ignore: cast_nullable_to_non_nullable
+              as List<ReleaseDate>?,
     ));
+  }
+
+  /// Create a copy of GameDetailModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $GameCoverCopyWith<$Res>? get cover {
+    if (_self.cover == null) {
+      return null;
+    }
+
+    return $GameCoverCopyWith<$Res>(_self.cover!, (value) {
+      return _then(_self.copyWith(cover: value));
+    });
   }
 }
 

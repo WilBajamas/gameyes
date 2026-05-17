@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 
 part 'game_detail_entity.freezed.dart';
 
@@ -16,7 +16,7 @@ sealed class GameDetailEntity with _$GameDetailEntity {
     String? description,
     String? imageUrl,
     String? additionalImageUrl,
-    List<GamePlatform>? platforms,
+    List<PlatformEntity>? platforms,
     List<String>? developers,
     List<String>? genres,
     List<String>? publishers,

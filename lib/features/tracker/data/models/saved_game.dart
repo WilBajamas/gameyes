@@ -49,7 +49,7 @@ class SavedGame {
         gameSlug: gameSlug,
         dateSaved: dateSaved,
         completed: completed,
-        platforms: platforms,
+        platforms: [], // TODO: Implement platform entity and mapping
         dateModified: dateModified,
         groupTasks: groupTasks.map((e) => e.toEntity()).toList(),
       );

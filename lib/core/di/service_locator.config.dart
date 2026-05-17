@@ -44,20 +44,12 @@ import 'package:gaming_library_assessment_flutter/features/filter/presentation/c
     as _i113;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart'
     as _i750;
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_screenshots_datasource.dart'
-    as _i187;
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/repositories/game_detail_repository_impl.dart'
     as _i366;
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/repositories/game_screenshots_repository_impl.dart'
-    as _i716;
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart'
     as _i223;
-import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_screenshots_repository.dart'
-    as _i951;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_cubit.dart'
     as _i32;
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_screenshot_cubit.dart'
-    as _i544;
 import 'package:gaming_library_assessment_flutter/features/game_detail/services/game_detail_service.dart'
     as _i54;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart'
@@ -124,11 +116,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => networkModule.getGameDetailService(gh<_i361.Dio>()));
     gh.factory<_i750.GameDetailRemoteDatasource>(
         () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()));
-    gh.factory<_i187.GameScreenshotsDatasource>(
-        () => _i187.GameScreenshotsDatasource(gh<_i54.GameDetailService>()));
-    gh.factory<_i951.GameScreenshotsRepository>(() =>
-        _i716.GameScreenshotsRepositoryImpl(
-            gh<_i187.GameScreenshotsDatasource>()));
     gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>((
       initialState,
       _,
@@ -136,14 +123,6 @@ extension GetItInjectableX on _i174.GetIt {
         _i669.FilterCubit(initialState: initialState));
     gh.factory<_i944.GameLocalDatasource>(
         () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
-    gh.factoryParam<_i544.GameScreenshotCubit, int, dynamic>((
-      id,
-      _,
-    ) =>
-        _i544.GameScreenshotCubit(
-          id: id,
-          gameScreenshotsRepository: gh<_i951.GameScreenshotsRepository>(),
-        ));
     gh.factory<_i621.GamesDataSource>(
         () => _i621.GamesDataSource(gh<_i549.GamesServices>()));
     gh.factory<_i223.GameDetailRepository>(() => _i366.GameDetailRepositoryImpl(

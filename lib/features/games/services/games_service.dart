@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:retrofit/http.dart';
@@ -11,7 +12,7 @@ abstract class GamesServices {
 
   //* Game list //
   @POST('/games')
-  Future<GamesModel> fetchGames(
+  Future<List<Game>> fetchGames(
     @Body() String query,
   );
 }

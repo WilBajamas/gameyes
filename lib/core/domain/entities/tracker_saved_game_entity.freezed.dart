@@ -21,7 +21,7 @@ mixin _$TrackerSavedGameEntity {
   String? get gameSlug;
   DateTime? get dateSaved;
   bool get completed;
-  List<GamePlatform>? get platforms;
+  List<PlatformEntity>? get platforms;
   DateTime? get dateModified;
   List<TrackerGroupTaskEntity> get groupTasks;
 
@@ -90,7 +90,7 @@ abstract mixin class $TrackerSavedGameEntityCopyWith<$Res> {
       String? gameSlug,
       DateTime? dateSaved,
       bool completed,
-      List<GamePlatform>? platforms,
+      List<PlatformEntity>? platforms,
       DateTime? dateModified,
       List<TrackerGroupTaskEntity> groupTasks});
 }
@@ -151,7 +151,7 @@ class _$TrackerSavedGameEntityCopyWithImpl<$Res>
       platforms: freezed == platforms
           ? _self.platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<GamePlatform>?,
+              as List<PlatformEntity>?,
       dateModified: freezed == dateModified
           ? _self.dateModified
           : dateModified // ignore: cast_nullable_to_non_nullable
@@ -263,7 +263,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             String? gameSlug,
             DateTime? dateSaved,
             bool completed,
-            List<GamePlatform>? platforms,
+            List<PlatformEntity>? platforms,
             DateTime? dateModified,
             List<TrackerGroupTaskEntity> groupTasks)?
         $default, {
@@ -311,7 +311,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             String? gameSlug,
             DateTime? dateSaved,
             bool completed,
-            List<GamePlatform>? platforms,
+            List<PlatformEntity>? platforms,
             DateTime? dateModified,
             List<TrackerGroupTaskEntity> groupTasks)
         $default,
@@ -355,7 +355,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             String? gameSlug,
             DateTime? dateSaved,
             bool completed,
-            List<GamePlatform>? platforms,
+            List<PlatformEntity>? platforms,
             DateTime? dateModified,
             List<TrackerGroupTaskEntity> groupTasks)?
         $default,
@@ -391,7 +391,7 @@ class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
       this.gameSlug,
       this.dateSaved,
       this.completed = false,
-      final List<GamePlatform>? platforms,
+      final List<PlatformEntity>? platforms,
       this.dateModified,
       final List<TrackerGroupTaskEntity> groupTasks = const []})
       : _platforms = platforms,
@@ -412,9 +412,9 @@ class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
   @override
   @JsonKey()
   final bool completed;
-  final List<GamePlatform>? _platforms;
+  final List<PlatformEntity>? _platforms;
   @override
-  List<GamePlatform>? get platforms {
+  List<PlatformEntity>? get platforms {
     final value = _platforms;
     if (value == null) return null;
     if (_platforms is EqualUnmodifiableListView) return _platforms;
@@ -502,7 +502,7 @@ abstract mixin class _$TrackerSavedGameEntityCopyWith<$Res>
       String? gameSlug,
       DateTime? dateSaved,
       bool completed,
-      List<GamePlatform>? platforms,
+      List<PlatformEntity>? platforms,
       DateTime? dateModified,
       List<TrackerGroupTaskEntity> groupTasks});
 }
@@ -563,7 +563,7 @@ class __$TrackerSavedGameEntityCopyWithImpl<$Res>
       platforms: freezed == platforms
           ? _self._platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<GamePlatform>?,
+              as List<PlatformEntity>?,
       dateModified: freezed == dateModified
           ? _self.dateModified
           : dateModified // ignore: cast_nullable_to_non_nullable

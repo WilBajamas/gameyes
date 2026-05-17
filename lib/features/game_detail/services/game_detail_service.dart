@@ -12,14 +12,7 @@ abstract class GameDetailService {
 
   //* Game details //
   @POST('/games')
-  Future<GameDetailModel> fetchGameDetail(
-    @Body() String query,
-  );
-
-  //* Game detail screenshots //
-  @POST(
-      '${ConfigConstants.gamesEndpoint}/{id}/${ConfigConstants.screenshotsEndpoint}')
-  Future<ScreenshotResponseModel> fetchGameScreenshots(
+  Future<List<GameDetailModel>> fetchGameDetail(
     @Body() String query,
   );
 }

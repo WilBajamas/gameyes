@@ -69,7 +69,9 @@ class GameDetailScreen extends StatelessWidget {
                     style: context.themeData.textTheme.displayLarge,
                   ),
                 ),
-                DetailScreenshotsSection(id: gameExtra!.$1),
+
+                /// TODO: fetch screenshots - from game detail
+                // DetailScreenshotsSection(id: gameExtra!.$1),
               ],
             ),
           ),

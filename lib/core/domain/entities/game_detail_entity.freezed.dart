@@ -22,7 +22,7 @@ mixin _$GameDetailEntity {
   String? get description;
   String? get imageUrl;
   String? get additionalImageUrl;
-  List<GamePlatform>? get platforms;
+  List<PlatformEntity>? get platforms;
   List<String>? get developers;
   List<String>? get genres;
   List<String>? get publishers;
@@ -98,7 +98,7 @@ abstract mixin class $GameDetailEntityCopyWith<$Res> {
       String? description,
       String? imageUrl,
       String? additionalImageUrl,
-      List<GamePlatform>? platforms,
+      List<PlatformEntity>? platforms,
       List<String>? developers,
       List<String>? genres,
       List<String>? publishers});
@@ -166,7 +166,7 @@ class _$GameDetailEntityCopyWithImpl<$Res>
       platforms: freezed == platforms
           ? _self.platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<GamePlatform>?,
+              as List<PlatformEntity>?,
       developers: freezed == developers
           ? _self.developers
           : developers // ignore: cast_nullable_to_non_nullable
@@ -283,7 +283,7 @@ extension GameDetailEntityPatterns on GameDetailEntity {
             String? description,
             String? imageUrl,
             String? additionalImageUrl,
-            List<GamePlatform>? platforms,
+            List<PlatformEntity>? platforms,
             List<String>? developers,
             List<String>? genres,
             List<String>? publishers)?
@@ -335,7 +335,7 @@ extension GameDetailEntityPatterns on GameDetailEntity {
             String? description,
             String? imageUrl,
             String? additionalImageUrl,
-            List<GamePlatform>? platforms,
+            List<PlatformEntity>? platforms,
             List<String>? developers,
             List<String>? genres,
             List<String>? publishers)
@@ -383,7 +383,7 @@ extension GameDetailEntityPatterns on GameDetailEntity {
             String? description,
             String? imageUrl,
             String? additionalImageUrl,
-            List<GamePlatform>? platforms,
+            List<PlatformEntity>? platforms,
             List<String>? developers,
             List<String>? genres,
             List<String>? publishers)?
@@ -423,7 +423,7 @@ class _GameDetailEntity extends GameDetailEntity {
       this.description,
       this.imageUrl,
       this.additionalImageUrl,
-      final List<GamePlatform>? platforms,
+      final List<PlatformEntity>? platforms,
       final List<String>? developers,
       final List<String>? genres,
       final List<String>? publishers})
@@ -449,9 +449,9 @@ class _GameDetailEntity extends GameDetailEntity {
   final String? imageUrl;
   @override
   final String? additionalImageUrl;
-  final List<GamePlatform>? _platforms;
+  final List<PlatformEntity>? _platforms;
   @override
-  List<GamePlatform>? get platforms {
+  List<PlatformEntity>? get platforms {
     final value = _platforms;
     if (value == null) return null;
     if (_platforms is EqualUnmodifiableListView) return _platforms;
@@ -563,7 +563,7 @@ abstract mixin class _$GameDetailEntityCopyWith<$Res>
       String? description,
       String? imageUrl,
       String? additionalImageUrl,
-      List<GamePlatform>? platforms,
+      List<PlatformEntity>? platforms,
       List<String>? developers,
       List<String>? genres,
       List<String>? publishers});
@@ -631,7 +631,7 @@ class __$GameDetailEntityCopyWithImpl<$Res>
       platforms: freezed == platforms
           ? _self._platforms
           : platforms // ignore: cast_nullable_to_non_nullable
-              as List<GamePlatform>?,
+              as List<PlatformEntity>?,
       developers: freezed == developers
           ? _self._developers
           : developers // ignore: cast_nullable_to_non_nullable
