@@ -4,8 +4,8 @@ import 'game_response_mock.dart';
 
 GamesState get mockExistingGamesState => GamesState(
       status: GamesStatus.success,
-      response: mockGamesResponse,
-      games: mockGamesResponse.items,
+      response: mockGamesResponse.toEntity(),
+      games: mockGamesResponse.toEntity().items,
     );
 
 GamesState get mockInitialGamesState => const GamesState();

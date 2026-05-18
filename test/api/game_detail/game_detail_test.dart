@@ -31,7 +31,7 @@ void main() {
       ),
     );
 
-    final response = await dio.get(path);
+    final response = await dio.post(path);
 
     final list = (response.data as List)
         .map((i) => Game.fromJson(i as Map<String, dynamic>))

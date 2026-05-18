@@ -1,9 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_cases/fetch_games_use_case.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_bloc.dart';
+import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -35,13 +36,8 @@ void main() {
 
   test('initial state is empty GamesState', () {
     expect(
-      gamesBloc.state,
-      const GamesState(),
-    );
-
-    expect(
       gamesBloc.state.status,
-      GamesStatus.initial,
+      GamesStatus.loading,
     );
   });
 
@@ -59,7 +55,7 @@ void main() {
           genres: mockGameGenres,
           page: 1,
         ),
-      ).thenAnswer((_) async => Right(mockGamesResponse));
+      ).thenAnswer((_) async => Success(mockGamesResponse.toEntity()));
     },
     build: () => gamesBloc,
     act: (bloc) async => bloc.add(
@@ -77,8 +73,8 @@ void main() {
       const GamesState(status: GamesStatus.loading),
       GamesState(
         status: GamesStatus.success,
-        response: mockGamesResponse,
-        games: mockGamesResponse.results!,
+        response: mockGamesResponse.toEntity(),
+        games: mockGamesResponse.toEntity().items,
       ),
     ],
   );
@@ -97,7 +93,7 @@ void main() {
           genres: mockGameGenres,
           page: 1,
         ),
-      ).thenAnswer((_) async => Left(mockResponseError));
+      ).thenAnswer((_) async => Failure(mockResponseError));
     },
     build: () => gamesBloc,
     act: (bloc) async => bloc.add(

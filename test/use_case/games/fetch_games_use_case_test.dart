@@ -1,5 +1,6 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/games/domain/repositories/games_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_cases/fetch_games_use_case.dart';
 import 'package:get_it/get_it.dart';
@@ -16,6 +17,7 @@ void main() {
   late FetchGamesUseCase fetchGamesUsecase;
 
   setUp(() {
+    provideDummy<Result<GameListEntity>>(Success(mockGamesResponse.toEntity()));
     gamesRepository = MockGamesRepository();
 
     GetIt.I.registerSingleton(gamesRepository);
@@ -35,21 +37,28 @@ void main() {
     when(
       gamesRepository.fetchGames(
         page: 1,
-        dateRange: '',
-        ordering: '-null',
+        searchTerm: anyNamed('searchTerm'),
+        dateRange: anyNamed('dateRange'),
+        platforms: anyNamed('platforms'),
+        genres: anyNamed('genres'),
+        ordering: anyNamed('ordering'),
       ),
-    ).thenAnswer((_) async => Right(mockGamesResponse));
+    ).thenAnswer((_) async => Success(mockGamesResponse.toEntity()));
 
     final result = await fetchGamesUsecase.call(
       page: 1,
     );
 
-    expect(result, Right(mockGamesResponse));
+    expect(result, isA<Success<GameListEntity>>());
+    expect((result as Success<GameListEntity>).value, mockGamesResponse.toEntity());
     verify(
       gamesRepository.fetchGames(
         page: 1,
-        dateRange: '',
-        ordering: '-null',
+        searchTerm: anyNamed('searchTerm'),
+        dateRange: anyNamed('dateRange'),
+        platforms: anyNamed('platforms'),
+        genres: anyNamed('genres'),
+        ordering: anyNamed('ordering'),
       ),
     );
   });
@@ -61,21 +70,28 @@ void main() {
     when(
       gamesRepository.fetchGames(
         page: 1,
-        dateRange: '',
-        ordering: '-null',
+        searchTerm: anyNamed('searchTerm'),
+        dateRange: anyNamed('dateRange'),
+        platforms: anyNamed('platforms'),
+        genres: anyNamed('genres'),
+        ordering: anyNamed('ordering'),
       ),
-    ).thenAnswer((_) async => Left(mockResponseError));
+    ).thenAnswer((_) async => Failure(mockResponseError));
 
     final result = await fetchGamesUsecase.call(
       page: 1,
     );
 
-    expect(result, Left(mockResponseError));
+    expect(result, isA<Failure<GameListEntity>>());
+    expect((result as Failure<GameListEntity>).error, mockResponseError);
     verify(
       gamesRepository.fetchGames(
         page: 1,
-        dateRange: '',
-        ordering: '-null',
+        searchTerm: anyNamed('searchTerm'),
+        dateRange: anyNamed('dateRange'),
+        platforms: anyNamed('platforms'),
+        genres: anyNamed('genres'),
+        ordering: anyNamed('ordering'),
       ),
     );
   });

@@ -1,11 +1,12 @@
-import 'package:dartz/dartz.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:bloc_test/bloc_test.dart';
 
 import '../../mocks/error_mock.dart';
 import '../../mocks/game_detail_response_mock.dart';
@@ -47,7 +48,7 @@ void main() {
         gameDetailRepository.fetchGameDetail(
           id: 1,
         ),
-      ).thenAnswer((_) async => Right(mockGameDetailResponse));
+      ).thenAnswer((_) async => Success(mockGameDetailResponse.toEntity()));
     },
     build: () => gameDetailCubit,
     act: (cubit) async => gameDetailCubit.fetchGameDetail(
@@ -57,7 +58,7 @@ void main() {
       const GameDetailState(status: GameDetailStatus.loading),
       GameDetailState(
         status: GameDetailStatus.success,
-        response: mockGameDetailResponse,
+        game: mockGameDetailResponse.toEntity(),
       ),
     ],
   );
@@ -70,7 +71,7 @@ void main() {
         gameDetailRepository.fetchGameDetail(
           id: 1,
         ),
-      ).thenAnswer((_) async => Left(mockResponseError));
+      ).thenAnswer((_) async => Failure(mockResponseError));
     },
     build: () => gameDetailCubit,
     act: (cubit) async => gameDetailCubit.fetchGameDetail(
