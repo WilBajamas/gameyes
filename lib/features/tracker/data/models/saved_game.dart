@@ -1,9 +1,25 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_logo_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
 import 'package:isar_community/isar.dart';
 
 part 'saved_game.g.dart';
+
+@embedded
+class SavedGamePlatform {
+  int? id;
+  String? name;
+  String? abbreviation;
+  String? logoUrl;
+
+  SavedGamePlatform({
+    this.id,
+    this.name,
+    this.abbreviation,
+    this.logoUrl,
+  });
+}
 
 @collection
 class SavedGame {
@@ -23,8 +39,9 @@ class SavedGame {
 
   bool completed = false;
 
-  @enumerated
-  List<GamePlatform>? platforms;
+  List<SavedGamePlatform>? platforms;
+
+  List<SavedGamePlatform>? availablePlatforms;
 
   final groupTasks = IsarLinks<GroupTask>();
 
@@ -39,6 +56,7 @@ class SavedGame {
     this.dateSaved,
     this.dateModified,
     this.platforms,
+    this.availablePlatforms,
   });
 
   TrackerSavedGameEntity toEntity() => TrackerSavedGameEntity(
@@ -49,7 +67,28 @@ class SavedGame {
         gameSlug: gameSlug,
         dateSaved: dateSaved,
         completed: completed,
-        platforms: [], // TODO: Implement platform entity and mapping
+        platforms: platforms
+                ?.map((p) => PlatformEntity(
+                      id: p.id ?? 0,
+                      name: p.name ?? '',
+                      abbreviation: p.abbreviation ?? '',
+                      platformLogo: p.logoUrl != null
+                          ? PlatformLogoEntity(url: p.logoUrl)
+                          : null,
+                    ))
+                .toList() ??
+            [],
+        availablePlatforms: availablePlatforms
+                ?.map((p) => PlatformEntity(
+                      id: p.id ?? 0,
+                      name: p.name ?? '',
+                      abbreviation: p.abbreviation ?? '',
+                      platformLogo: p.logoUrl != null
+                          ? PlatformLogoEntity(url: p.logoUrl)
+                          : null,
+                    ))
+                .toList() ??
+            [],
         dateModified: dateModified,
         groupTasks: groupTasks.map((e) => e.toEntity()).toList(),
       );

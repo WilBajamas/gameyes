@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_detail_state.dart';
@@ -71,22 +70,44 @@ class _PlatformSelector extends StatelessWidget {
                 builder: (context, state) {
                   return Wrap(
                     spacing: 8,
-                    children: GamePlatform.values.map(
+                    children: (state?.availablePlatforms ?? []).map(
                       (platform) {
                         final selected =
-                            state!.platforms?.contains(platform) ?? false;
-                        return ChoiceChip.elevated(
-                          label: Image.asset(
-                            'assets/images/${platform.assetName}',
-                            height: 20,
-                            color: selected
-                                ? kColorScheme.surface
-                                : kColorScheme.onSurface,
-                          ),
+                            state?.platforms?.any((p) => p.id == platform.id) ??
+                                false;
+                        return ChoiceChip(
+                          label: platform.platformLogo?.url != null
+                              ? Image.network(
+                                  platform.platformLogo!.url!,
+                                  height: 20,
+                                  color: selected
+                                      ? kColorScheme.surface
+                                      : kColorScheme.onSurface,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Text(
+                                    platform.abbreviation.isNotEmpty
+                                        ? platform.abbreviation
+                                        : platform.name,
+                                    style: TextStyle(
+                                      color: selected
+                                          ? kColorScheme.surface
+                                          : kColorScheme.onSurface,
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  platform.abbreviation.isNotEmpty
+                                      ? platform.abbreviation
+                                      : platform.name,
+                                  style: TextStyle(
+                                    color: selected
+                                        ? kColorScheme.surface
+                                        : kColorScheme.onSurface,
+                                  ),
+                                ),
                           side: const BorderSide(color: Colors.transparent),
                           selected: selected,
                           showCheckmark: false,
-                          disabledColor: Colors.white,
                           onSelected: (selected) => context
                               .read<TrackerDetailCubit>()
                               .setPlatform(platform: platform),

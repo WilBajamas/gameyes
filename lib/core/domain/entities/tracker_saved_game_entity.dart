@@ -15,6 +15,7 @@ sealed class TrackerSavedGameEntity with _$TrackerSavedGameEntity {
     DateTime? dateSaved,
     @Default(false) bool completed,
     List<PlatformEntity>? platforms,
+    List<PlatformEntity>? availablePlatforms,
     DateTime? dateModified,
     @Default([]) List<TrackerGroupTaskEntity> groupTasks,
   }) = _TrackerSavedGameEntity;

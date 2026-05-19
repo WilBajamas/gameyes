@@ -68,7 +68,15 @@ class GameDetailCubit extends Cubit<GameDetailState> {
       ..gameSlug = state.game?.slug
       ..name = state.game?.name
       ..imageUrl = state.game?.imageUrl
-      ..dateSaved = DateTime.now();
+      ..dateSaved = DateTime.now()
+      ..availablePlatforms = state.game?.platforms
+          ?.map((p) => SavedGamePlatform(
+                id: p.id,
+                name: p.name,
+                abbreviation: p.abbreviation,
+                logoUrl: p.platformLogo?.url,
+              ))
+          .toList();
 
     _gameDetailRepository
         .saveGame(game: gameToSave)

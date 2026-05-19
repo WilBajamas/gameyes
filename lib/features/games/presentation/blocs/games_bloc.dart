@@ -7,7 +7,7 @@ import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart';
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_cases/fetch_games_use_case.dart';
 import 'package:injectable/injectable.dart';

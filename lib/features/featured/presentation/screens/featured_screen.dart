@@ -15,7 +15,7 @@ import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.da
 import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 
-import '../../../../core/enums/game_platform.dart';
+import '../../../filter/data/models/games_platform.dart';
 import '../../../../generated/l10n.dart';
 import '../blocs/featured_state.dart';
 import '../constants/featured_tags_constant.dart';

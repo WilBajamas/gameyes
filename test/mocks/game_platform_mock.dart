@@ -1,10 +1,10 @@
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 
-GamePlatform get mockGamePlatform => GamePlatform.playstation;
+GamePlatform get mockGamePlatform => const Playseason5();
 
 Set<GamePlatform> get mockGamePlatforms =>
-    {GamePlatform.playstation, GamePlatform.pc, GamePlatform.android};
+    {const Playseason5(), const PcPlatform()};
 
 String get mockGamePlatformsName =>
 // ignore: lines_longer_than_80_chars
-    '${GamePlatform.playstation.name}, ${GamePlatform.pc.name}, ${GamePlatform.android.name},';
+    '${const Playseason5().name}, ${const PcPlatform().name},';

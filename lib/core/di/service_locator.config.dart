@@ -16,8 +16,6 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_s
     as _i190;
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart'
     as _i424;
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
-    as _i799;
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart'
     as _i646;
 import 'package:gaming_library_assessment_flutter/core/services/api/network_module.dart'
@@ -38,6 +36,8 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
     as _i298;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubits/featured_filter_cubit.dart'
     as _i53;
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart'
+    as _i305;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart'
     as _i669;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart'
@@ -106,10 +106,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i641.TwitchAuthInterceptor());
     gh.singleton<_i3.SharedPreference>(() => _i3.SharedPreference());
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
-    gh.factory<_i53.FeaturedFilterCubit>(() => _i53.FeaturedFilterCubit(
-        initialPlatforms: gh<Set<_i799.GamePlatform>>()));
     gh.singleton<_i361.Dio>(
         () => networkModule.getDioInstance(gh<_i641.TwitchAuthInterceptor>()));
+    gh.factory<_i53.FeaturedFilterCubit>(() => _i53.FeaturedFilterCubit(
+        initialPlatforms: gh<Set<_i305.GamePlatform>>()));
     gh.singleton<_i549.GamesServices>(
         () => networkModule.getRetrofitService(gh<_i361.Dio>()));
     gh.singleton<_i54.GameDetailService>(

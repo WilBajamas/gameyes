@@ -3,7 +3,7 @@ import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
 
 part 'featured_state.freezed.dart';
 

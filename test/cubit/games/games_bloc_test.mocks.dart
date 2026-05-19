@@ -13,7 +13,7 @@ import 'package:gaming_library_assessment_flutter/core/enums/game_genre.dart'
     as _i7;
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart'
     as _i8;
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
+import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart'
     as _i6;
 import 'package:gaming_library_assessment_flutter/features/games/domain/use_cases/fetch_games_use_case.dart'
     as _i2;

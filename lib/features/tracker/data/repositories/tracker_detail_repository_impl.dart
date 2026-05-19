@@ -1,7 +1,7 @@
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
@@ -15,7 +15,7 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
 
   @override
   Future<void> setPlatform({
-    required GamePlatform platform,
+    required PlatformEntity platform,
     required int savedGameId,
   }) =>
       _gameLocalDatasource.setPlatform(

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -52,7 +52,7 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     return tasks;
   }
 
-  void setPlatform({required GamePlatform platform}) async {
+  void setPlatform({required PlatformEntity platform}) async {
     _trackerDetailRepository.setPlatform(
       platform: platform,
       savedGameId: state.game!.id,

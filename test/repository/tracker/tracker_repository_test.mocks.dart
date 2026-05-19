@@ -6,7 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:dartz/dartz.dart' as _i2;
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart'
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart'
     as _i7;
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart'
     as _i6;
@@ -125,7 +125,7 @@ class MockGameLocalDatasource extends _i1.Mock
 
   @override
   _i4.Future<void> setPlatform({
-    required _i7.GamePlatform? platform,
+    required _i7.PlatformEntity? platform,
     required int? savedGameId,
   }) =>
       (super.noSuchMethod(

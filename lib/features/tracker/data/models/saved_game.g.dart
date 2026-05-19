@@ -17,46 +17,52 @@ const SavedGameSchema = CollectionSchema(
   name: r'SavedGame',
   id: -7719033278776789884,
   properties: {
-    r'completed': PropertySchema(
+    r'availablePlatforms': PropertySchema(
       id: 0,
+      name: r'availablePlatforms',
+      type: IsarType.objectList,
+      target: r'SavedGamePlatform',
+    ),
+    r'completed': PropertySchema(
+      id: 1,
       name: r'completed',
       type: IsarType.bool,
     ),
     r'dateModified': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'dateModified',
       type: IsarType.dateTime,
     ),
     r'dateSaved': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'dateSaved',
       type: IsarType.dateTime,
     ),
     r'gameId': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'gameId',
       type: IsarType.long,
     ),
     r'gameSlug': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'gameSlug',
       type: IsarType.string,
     ),
     r'imageUrl': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'imageUrl',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'name',
       type: IsarType.string,
     ),
     r'platforms': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'platforms',
-      type: IsarType.byteList,
-      enumMap: _SavedGameplatformsEnumValueMap,
+      type: IsarType.objectList,
+      target: r'SavedGamePlatform',
     )
   },
   estimateSize: _savedGameEstimateSize,
@@ -113,7 +119,7 @@ const SavedGameSchema = CollectionSchema(
       single: false,
     )
   },
-  embeddedSchemas: {},
+  embeddedSchemas: {r'SavedGamePlatform': SavedGamePlatformSchema},
   getId: _savedGameGetId,
   getLinks: _savedGameGetLinks,
   attach: _savedGameAttach,
@@ -126,6 +132,20 @@ int _savedGameEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final list = object.availablePlatforms;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[SavedGamePlatform]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              SavedGamePlatformSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
   {
     final value = object.gameSlug;
     if (value != null) {
@@ -145,9 +165,17 @@ int _savedGameEstimateSize(
     }
   }
   {
-    final value = object.platforms;
-    if (value != null) {
-      bytesCount += 3 + value.length;
+    final list = object.platforms;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[SavedGamePlatform]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              SavedGamePlatformSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
     }
   }
   return bytesCount;
@@ -159,15 +187,25 @@ void _savedGameSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeBool(offsets[0], object.completed);
-  writer.writeDateTime(offsets[1], object.dateModified);
-  writer.writeDateTime(offsets[2], object.dateSaved);
-  writer.writeLong(offsets[3], object.gameId);
-  writer.writeString(offsets[4], object.gameSlug);
-  writer.writeString(offsets[5], object.imageUrl);
-  writer.writeString(offsets[6], object.name);
-  writer.writeByteList(
-      offsets[7], object.platforms?.map((e) => e.index).toList());
+  writer.writeObjectList<SavedGamePlatform>(
+    offsets[0],
+    allOffsets,
+    SavedGamePlatformSchema.serialize,
+    object.availablePlatforms,
+  );
+  writer.writeBool(offsets[1], object.completed);
+  writer.writeDateTime(offsets[2], object.dateModified);
+  writer.writeDateTime(offsets[3], object.dateSaved);
+  writer.writeLong(offsets[4], object.gameId);
+  writer.writeString(offsets[5], object.gameSlug);
+  writer.writeString(offsets[6], object.imageUrl);
+  writer.writeString(offsets[7], object.name);
+  writer.writeObjectList<SavedGamePlatform>(
+    offsets[8],
+    allOffsets,
+    SavedGamePlatformSchema.serialize,
+    object.platforms,
+  );
 }
 
 SavedGame _savedGameDeserialize(
@@ -177,19 +215,26 @@ SavedGame _savedGameDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SavedGame(
-    dateModified: reader.readDateTimeOrNull(offsets[1]),
-    dateSaved: reader.readDateTimeOrNull(offsets[2]),
-    gameId: reader.readLongOrNull(offsets[3]),
-    gameSlug: reader.readStringOrNull(offsets[4]),
-    imageUrl: reader.readStringOrNull(offsets[5]),
-    name: reader.readStringOrNull(offsets[6]),
-    platforms: reader
-        .readByteList(offsets[7])
-        ?.map((e) =>
-            _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
-        .toList(),
+    availablePlatforms: reader.readObjectList<SavedGamePlatform>(
+      offsets[0],
+      SavedGamePlatformSchema.deserialize,
+      allOffsets,
+      SavedGamePlatform(),
+    ),
+    dateModified: reader.readDateTimeOrNull(offsets[2]),
+    dateSaved: reader.readDateTimeOrNull(offsets[3]),
+    gameId: reader.readLongOrNull(offsets[4]),
+    gameSlug: reader.readStringOrNull(offsets[5]),
+    imageUrl: reader.readStringOrNull(offsets[6]),
+    name: reader.readStringOrNull(offsets[7]),
+    platforms: reader.readObjectList<SavedGamePlatform>(
+      offsets[8],
+      SavedGamePlatformSchema.deserialize,
+      allOffsets,
+      SavedGamePlatform(),
+    ),
   );
-  object.completed = reader.readBool(offsets[0]);
+  object.completed = reader.readBool(offsets[1]);
   object.id = id;
   return object;
 }
@@ -202,52 +247,37 @@ P _savedGameDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBool(offset)) as P;
+      return (reader.readObjectList<SavedGamePlatform>(
+        offset,
+        SavedGamePlatformSchema.deserialize,
+        allOffsets,
+        SavedGamePlatform(),
+      )) as P;
     case 1:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 5:
       return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader
-          .readByteList(offset)
-          ?.map((e) =>
-              _SavedGameplatformsValueEnumMap[e] ?? GamePlatform.playstation)
-          .toList()) as P;
+      return (reader.readStringOrNull(offset)) as P;
+    case 8:
+      return (reader.readObjectList<SavedGamePlatform>(
+        offset,
+        SavedGamePlatformSchema.deserialize,
+        allOffsets,
+        SavedGamePlatform(),
+      )) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
-
-const _SavedGameplatformsEnumValueMap = {
-  'playstation': 0,
-  'xbox': 1,
-  'android': 2,
-  'ios': 3,
-  'pc': 4,
-  'nintendo': 5,
-  'wii': 6,
-  'linux': 7,
-  'other': 8,
-};
-const _SavedGameplatformsValueEnumMap = {
-  0: GamePlatform.playstation,
-  1: GamePlatform.xbox,
-  2: GamePlatform.android,
-  3: GamePlatform.ios,
-  4: GamePlatform.pc,
-  5: GamePlatform.nintendo,
-  6: GamePlatform.wii,
-  7: GamePlatform.linux,
-  8: GamePlatform.other,
-};
 
 Id _savedGameGetId(SavedGame object) {
   return object.id;
@@ -743,6 +773,113 @@ extension SavedGameQueryWhere
 
 extension SavedGameQueryFilter
     on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'availablePlatforms',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'availablePlatforms',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'availablePlatforms',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'availablePlatforms',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'availablePlatforms',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'availablePlatforms',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'availablePlatforms',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'availablePlatforms',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> completedEqualTo(
       bool value) {
     return QueryBuilder.apply(this, (query) {
@@ -1479,62 +1616,6 @@ extension SavedGameQueryFilter
   }
 
   QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
-      platformsElementEqualTo(GamePlatform value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'platforms',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
-      platformsElementGreaterThan(
-    GamePlatform value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'platforms',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
-      platformsElementLessThan(
-    GamePlatform value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'platforms',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
-      platformsElementBetween(
-    GamePlatform lower,
-    GamePlatform upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'platforms',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
       platformsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
@@ -1624,7 +1705,21 @@ extension SavedGameQueryFilter
 }
 
 extension SavedGameQueryObject
-    on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {}
+    on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      availablePlatformsElement(FilterQuery<SavedGamePlatform> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'availablePlatforms');
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> platformsElement(
+      FilterQuery<SavedGamePlatform> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'platforms');
+    });
+  }
+}
 
 extension SavedGameQueryLinks
     on QueryBuilder<SavedGame, SavedGame, QFilterCondition> {
@@ -1921,12 +2016,6 @@ extension SavedGameQueryWhereDistinct
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
-
-  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByPlatforms() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'platforms');
-    });
-  }
 }
 
 extension SavedGameQueryProperty
@@ -1934,6 +2023,13 @@ extension SavedGameQueryProperty
   QueryBuilder<SavedGame, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<SavedGame, List<SavedGamePlatform>?, QQueryOperations>
+      availablePlatformsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'availablePlatforms');
     });
   }
 
@@ -1979,10 +2075,664 @@ extension SavedGameQueryProperty
     });
   }
 
-  QueryBuilder<SavedGame, List<GamePlatform>?, QQueryOperations>
+  QueryBuilder<SavedGame, List<SavedGamePlatform>?, QQueryOperations>
       platformsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'platforms');
     });
   }
 }
+
+// **************************************************************************
+// IsarEmbeddedGenerator
+// **************************************************************************
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const SavedGamePlatformSchema = Schema(
+  name: r'SavedGamePlatform',
+  id: 1424528807746235984,
+  properties: {
+    r'abbreviation': PropertySchema(
+      id: 0,
+      name: r'abbreviation',
+      type: IsarType.string,
+    ),
+    r'id': PropertySchema(
+      id: 1,
+      name: r'id',
+      type: IsarType.long,
+    ),
+    r'logoUrl': PropertySchema(
+      id: 2,
+      name: r'logoUrl',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 3,
+      name: r'name',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _savedGamePlatformEstimateSize,
+  serialize: _savedGamePlatformSerialize,
+  deserialize: _savedGamePlatformDeserialize,
+  deserializeProp: _savedGamePlatformDeserializeProp,
+);
+
+int _savedGamePlatformEstimateSize(
+  SavedGamePlatform object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.abbreviation;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.logoUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.name;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _savedGamePlatformSerialize(
+  SavedGamePlatform object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.abbreviation);
+  writer.writeLong(offsets[1], object.id);
+  writer.writeString(offsets[2], object.logoUrl);
+  writer.writeString(offsets[3], object.name);
+}
+
+SavedGamePlatform _savedGamePlatformDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = SavedGamePlatform(
+    abbreviation: reader.readStringOrNull(offsets[0]),
+    id: reader.readLongOrNull(offsets[1]),
+    logoUrl: reader.readStringOrNull(offsets[2]),
+    name: reader.readStringOrNull(offsets[3]),
+  );
+  return object;
+}
+
+P _savedGamePlatformDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readStringOrNull(offset)) as P;
+    case 1:
+      return (reader.readLongOrNull(offset)) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
+    case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension SavedGamePlatformQueryFilter
+    on QueryBuilder<SavedGamePlatform, SavedGamePlatform, QFilterCondition> {
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'abbreviation',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'abbreviation',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'abbreviation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'abbreviation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'abbreviation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'abbreviation',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'abbreviation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'abbreviation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'abbreviation',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'abbreviation',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'abbreviation',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      abbreviationIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'abbreviation',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      idEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      idGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      idLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      idBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'logoUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'logoUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'logoUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'logoUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'logoUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'logoUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'logoUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'logoUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'logoUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'logoUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'logoUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      logoUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'logoUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGamePlatform, SavedGamePlatform, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension SavedGamePlatformQueryObject
+    on QueryBuilder<SavedGamePlatform, SavedGamePlatform, QFilterCondition> {}

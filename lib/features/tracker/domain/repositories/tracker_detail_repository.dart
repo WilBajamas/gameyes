@@ -1,11 +1,11 @@
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 
 abstract interface class TrackerDetailRepository {
   Future<void> setPlatform({
-    required GamePlatform platform,
+    required PlatformEntity platform,
     required int savedGameId,
   });
 

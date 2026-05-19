@@ -22,6 +22,7 @@ mixin _$TrackerSavedGameEntity {
   DateTime? get dateSaved;
   bool get completed;
   List<PlatformEntity>? get platforms;
+  List<PlatformEntity>? get availablePlatforms;
   DateTime? get dateModified;
   List<TrackerGroupTaskEntity> get groupTasks;
 
@@ -50,6 +51,8 @@ mixin _$TrackerSavedGameEntity {
             (identical(other.completed, completed) ||
                 other.completed == completed) &&
             const DeepCollectionEquality().equals(other.platforms, platforms) &&
+            const DeepCollectionEquality()
+                .equals(other.availablePlatforms, availablePlatforms) &&
             (identical(other.dateModified, dateModified) ||
                 other.dateModified == dateModified) &&
             const DeepCollectionEquality()
@@ -67,12 +70,13 @@ mixin _$TrackerSavedGameEntity {
       dateSaved,
       completed,
       const DeepCollectionEquality().hash(platforms),
+      const DeepCollectionEquality().hash(availablePlatforms),
       dateModified,
       const DeepCollectionEquality().hash(groupTasks));
 
   @override
   String toString() {
-    return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, dateModified: $dateModified, groupTasks: $groupTasks)';
+    return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, availablePlatforms: $availablePlatforms, dateModified: $dateModified, groupTasks: $groupTasks)';
   }
 }
 
@@ -91,6 +95,7 @@ abstract mixin class $TrackerSavedGameEntityCopyWith<$Res> {
       DateTime? dateSaved,
       bool completed,
       List<PlatformEntity>? platforms,
+      List<PlatformEntity>? availablePlatforms,
       DateTime? dateModified,
       List<TrackerGroupTaskEntity> groupTasks});
 }
@@ -116,6 +121,7 @@ class _$TrackerSavedGameEntityCopyWithImpl<$Res>
     Object? dateSaved = freezed,
     Object? completed = null,
     Object? platforms = freezed,
+    Object? availablePlatforms = freezed,
     Object? dateModified = freezed,
     Object? groupTasks = null,
   }) {
@@ -151,6 +157,10 @@ class _$TrackerSavedGameEntityCopyWithImpl<$Res>
       platforms: freezed == platforms
           ? _self.platforms
           : platforms // ignore: cast_nullable_to_non_nullable
+              as List<PlatformEntity>?,
+      availablePlatforms: freezed == availablePlatforms
+          ? _self.availablePlatforms
+          : availablePlatforms // ignore: cast_nullable_to_non_nullable
               as List<PlatformEntity>?,
       dateModified: freezed == dateModified
           ? _self.dateModified
@@ -264,6 +274,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             DateTime? dateSaved,
             bool completed,
             List<PlatformEntity>? platforms,
+            List<PlatformEntity>? availablePlatforms,
             DateTime? dateModified,
             List<TrackerGroupTaskEntity> groupTasks)?
         $default, {
@@ -281,6 +292,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             _that.dateSaved,
             _that.completed,
             _that.platforms,
+            _that.availablePlatforms,
             _that.dateModified,
             _that.groupTasks);
       case _:
@@ -312,6 +324,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             DateTime? dateSaved,
             bool completed,
             List<PlatformEntity>? platforms,
+            List<PlatformEntity>? availablePlatforms,
             DateTime? dateModified,
             List<TrackerGroupTaskEntity> groupTasks)
         $default,
@@ -328,6 +341,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             _that.dateSaved,
             _that.completed,
             _that.platforms,
+            _that.availablePlatforms,
             _that.dateModified,
             _that.groupTasks);
     }
@@ -356,6 +370,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             DateTime? dateSaved,
             bool completed,
             List<PlatformEntity>? platforms,
+            List<PlatformEntity>? availablePlatforms,
             DateTime? dateModified,
             List<TrackerGroupTaskEntity> groupTasks)?
         $default,
@@ -372,6 +387,7 @@ extension TrackerSavedGameEntityPatterns on TrackerSavedGameEntity {
             _that.dateSaved,
             _that.completed,
             _that.platforms,
+            _that.availablePlatforms,
             _that.dateModified,
             _that.groupTasks);
       case _:
@@ -392,9 +408,11 @@ class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
       this.dateSaved,
       this.completed = false,
       final List<PlatformEntity>? platforms,
+      final List<PlatformEntity>? availablePlatforms,
       this.dateModified,
       final List<TrackerGroupTaskEntity> groupTasks = const []})
       : _platforms = platforms,
+        _availablePlatforms = availablePlatforms,
         _groupTasks = groupTasks;
 
   @override
@@ -418,6 +436,17 @@ class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
     final value = _platforms;
     if (value == null) return null;
     if (_platforms is EqualUnmodifiableListView) return _platforms;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<PlatformEntity>? _availablePlatforms;
+  @override
+  List<PlatformEntity>? get availablePlatforms {
+    final value = _availablePlatforms;
+    if (value == null) return null;
+    if (_availablePlatforms is EqualUnmodifiableListView)
+      return _availablePlatforms;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -460,6 +489,8 @@ class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
                 other.completed == completed) &&
             const DeepCollectionEquality()
                 .equals(other._platforms, _platforms) &&
+            const DeepCollectionEquality()
+                .equals(other._availablePlatforms, _availablePlatforms) &&
             (identical(other.dateModified, dateModified) ||
                 other.dateModified == dateModified) &&
             const DeepCollectionEquality()
@@ -477,12 +508,13 @@ class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
       dateSaved,
       completed,
       const DeepCollectionEquality().hash(_platforms),
+      const DeepCollectionEquality().hash(_availablePlatforms),
       dateModified,
       const DeepCollectionEquality().hash(_groupTasks));
 
   @override
   String toString() {
-    return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, dateModified: $dateModified, groupTasks: $groupTasks)';
+    return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, availablePlatforms: $availablePlatforms, dateModified: $dateModified, groupTasks: $groupTasks)';
   }
 }
 
@@ -503,6 +535,7 @@ abstract mixin class _$TrackerSavedGameEntityCopyWith<$Res>
       DateTime? dateSaved,
       bool completed,
       List<PlatformEntity>? platforms,
+      List<PlatformEntity>? availablePlatforms,
       DateTime? dateModified,
       List<TrackerGroupTaskEntity> groupTasks});
 }
@@ -528,6 +561,7 @@ class __$TrackerSavedGameEntityCopyWithImpl<$Res>
     Object? dateSaved = freezed,
     Object? completed = null,
     Object? platforms = freezed,
+    Object? availablePlatforms = freezed,
     Object? dateModified = freezed,
     Object? groupTasks = null,
   }) {
@@ -563,6 +597,10 @@ class __$TrackerSavedGameEntityCopyWithImpl<$Res>
       platforms: freezed == platforms
           ? _self._platforms
           : platforms // ignore: cast_nullable_to_non_nullable
+              as List<PlatformEntity>?,
+      availablePlatforms: freezed == availablePlatforms
+          ? _self._availablePlatforms
+          : availablePlatforms // ignore: cast_nullable_to_non_nullable
               as List<PlatformEntity>?,
       dateModified: freezed == dateModified
           ? _self.dateModified
