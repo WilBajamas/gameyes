@@ -8,4 +8,4 @@ List<PlatformItem> get mockListPlatformItem => [
       mockPlatformItem,
     ];
 
-PlatformItem get mockPlatformItem => PlatformItem(mockPlatform);
+PlatformItem get mockPlatformItem => PlatformItem(platform: mockPlatform);

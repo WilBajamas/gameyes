@@ -1,55 +1,70 @@
-//** Hardcoding game platforms for simplicity */
 import 'package:equatable/equatable.dart';
+import 'package:gaming_library_assessment_flutter/core/interface/selection.dart';
 
-// ** Locally used entity //
-
-class GamePlatform extends Equatable {
+class GamePlatform extends Equatable implements EnumSelection {
   final int id;
   final String name;
   final String slug;
+  final List<int> ids;
 
   const GamePlatform({
     required this.id,
     required this.name,
     required this.slug,
+    required this.ids,
   });
 
   @override
-  List<Object?> get props => [id, name, slug];
+  String get valueName => name;
+
+  @override
+  List<Object?> get props => [id, name, slug, ids];
+
+  static const List<GamePlatform> values = [
+    Playseason5(),
+    Playseason4(),
+    PcPlatform(),
+    XboxOnePlatform(),
+    XboxSeriesPlatform(),
+    NintendoSwitchPlatform(),
+    WiiPlatform(),
+    WiiUPlatform(),
+  ];
 }
 
-class Playstation5 extends GamePlatform {
-  const Playstation5()
-      : super(id: 187, name: 'Playstation 5', slug: 'playstation5');
+class Playseason5 extends GamePlatform {
+  const Playseason5()
+      : super(id: 187, name: 'Playstation 5', slug: 'playstation5', ids: const [167]);
 }
 
-class Playstation4 extends GamePlatform {
-  const Playstation4()
-      : super(id: 18, name: 'Playstation 4', slug: 'playstation4');
+class Playseason4 extends GamePlatform {
+  const Playseason4()
+      : super(id: 18, name: 'Playstation 4', slug: 'playstation4', ids: const [48]);
 }
 
-class Pc extends GamePlatform {
-  const Pc() : super(id: 4, name: 'PC', slug: 'pc');
+class PcPlatform extends GamePlatform {
+  const PcPlatform() : super(id: 4, name: 'PC', slug: 'pc', ids: const [6]);
 }
 
-class XboxOne extends GamePlatform {
-  const XboxOne() : super(id: 1, name: 'Xbox One', slug: 'xbox-one');
+class XboxOnePlatform extends GamePlatform {
+  const XboxOnePlatform() : super(id: 1, name: 'Xbox One', slug: 'xbox-one', ids: const [49]);
 }
 
-class XboxSeriesSX extends GamePlatform {
-  const XboxSeriesSX()
-      : super(id: 186, name: 'Xbox Series S/X', slug: 'xbox-series-x');
+class XboxSeriesPlatform extends GamePlatform {
+  const XboxSeriesPlatform()
+      : super(id: 186, name: 'Xbox Series S/X', slug: 'xbox-series-x', ids: const [169]);
 }
 
-class NintendoSwitch extends GamePlatform {
-  const NintendoSwitch()
-      : super(id: 7, name: 'Nintendo Switch', slug: 'nintendo-swtich');
+class NintendoSwitchPlatform extends GamePlatform {
+  const NintendoSwitchPlatform()
+      : super(id: 7, name: 'Nintendo Switch', slug: 'nintendo-switch', ids: const [130]);
 }
 
-class Wii extends GamePlatform {
-  const Wii() : super(id: 11, name: 'Wii', slug: 'wii');
+class WiiPlatform extends GamePlatform {
+  const WiiPlatform() : super(id: 11, name: 'Wii', slug: 'wii', ids: const [5]);
 }
 
-class WiiU extends GamePlatform {
-  const WiiU() : super(id: 10, name: 'Wii U', slug: 'wii-u');
+class WiiUPlatform extends GamePlatform {
+  const WiiUPlatform() : super(id: 10, name: 'Wii U', slug: 'wii-u', ids: const [41]);
 }
+

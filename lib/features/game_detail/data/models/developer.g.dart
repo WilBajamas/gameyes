@@ -6,12 +6,13 @@ part of 'developer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Developer _$DeveloperFromJson(Map<String, dynamic> json) => Developer(
-      (json['id'] as num?)?.toInt(),
-      json['name'] as String?,
+_Developer _$DeveloperFromJson(Map<String, dynamic> json) => _Developer(
+      id: (json['id'] as num?)?.toInt(),
+      name: json['name'] as String?,
     );
 
-Map<String, dynamic> _$DeveloperToJson(Developer instance) => <String, dynamic>{
+Map<String, dynamic> _$DeveloperToJson(_Developer instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
     };

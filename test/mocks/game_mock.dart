@@ -1,15 +1,11 @@
-import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 
-import 'platform_item_mock.dart';
-
-Game get mockGame => Game(
-      8,
-      'slug',
-      'test game name',
-      '2020-01-01',
-      'backgroundImage',
-      90,
-      mockListPlatformItem,
+Game get mockGame => const Game(
+      id: 1,
+      name: 'test_name',
+      gameModes: [],
+      platforms: [],
+      releaseDates: [],
     );
 
 List<Game> get mockListGames => [

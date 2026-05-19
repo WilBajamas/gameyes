@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_top_content_shimmer.dart';
 import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 
 import '../../../../generated/l10n.dart';
+import '../cubits/game_detail_state.dart';
 
 class DetailTopHeader extends StatelessWidget {
   final int? gameId;
@@ -43,7 +44,7 @@ class DetailTopHeader extends StatelessWidget {
           return Stack(
             children: [
               DetailBackground(
-                backgroundImage: state.response?.backgroundImageAdditional,
+                backgroundImage: state.game?.additionalImageUrl,
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(16, kToolbarHeight, 16, 16),
@@ -100,7 +101,7 @@ class DetailContent extends StatelessWidget {
         children: [
           // ** Name //
           AutoSizeText(
-            state.response!.name!,
+            state.game?.name ?? '-',
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: context.themeData.textTheme.displayMedium!.merge(
@@ -118,7 +119,7 @@ class DetailContent extends StatelessWidget {
                 .copyWith(color: Colors.white),
           ),
           AutoSizeText(
-            state.response!.released.stringToDateString(),
+            state.game?.releaseDate?.stringToDateString() ?? '-',
             maxLines: 2,
             style: context.themeData.textTheme.bodyLarge!
                 .copyWith(color: Colors.white),
@@ -128,7 +129,7 @@ class DetailContent extends StatelessWidget {
           Row(
             children: [
               MetacriticIndicator(
-                score: state.response?.metacritic,
+                score: state.game?.metacritic,
                 size: 60,
               ),
               const SizedBox(

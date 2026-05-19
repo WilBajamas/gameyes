@@ -1,15 +1,27 @@
-import 'package:gaming_library_assessment_flutter/core/services/api/dio_service.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/igdb_query_builder.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_model.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../services/game_detail_service.dart';
 
 @injectable
 class GameDetailRemoteDatasource {
-  final DioService _dioService;
+  final GameDetailService _gameDetailService;
 
-  GameDetailRemoteDatasource(this._dioService);
+  GameDetailRemoteDatasource(this._gameDetailService);
 
-  Future<GameDetailResponse> fetchGameDetail({
+  Future<GameDetailModel> fetchGameDetail({
     required int id,
-  }) =>
-      _dioService.retrofitService.fetchGameDetail(id.toString());
+  }) async {
+    final query = IGDBQueryBuilder()
+        .fields(IGDBConfig.standardGameFields)
+        .where('id = $id')
+        .limit(1)
+        .build();
+
+    final response = await _gameDetailService.fetchGameDetail(query);
+
+    return response.first;
+  }
 }

@@ -1,9 +1,17 @@
-import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
 
 import 'game_mock.dart';
 
-GamesResponse get mockGamesResponse =>
-    GamesResponse(20, mockListGames, 'next_url', 1);
+GamesModel get mockGamesResponse => GamesModel(
+      count: 20,
+      results: mockListGames,
+      next: 'next_url',
+      currentPage: 1,
+    );
 
-GamesResponse get mockGamesResponseEmptyResults =>
-    const GamesResponse(0, null, null, 2);
+GamesModel get mockGamesResponseEmptyResults => const GamesModel(
+      count: 0,
+      results: [],
+      next: 'next_url',
+      currentPage: 2,
+    );

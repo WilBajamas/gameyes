@@ -1,5 +1,4 @@
-import 'package:dartz/dartz.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
@@ -35,12 +34,14 @@ class GameLocalDatasource {
       _gameLocalStorage.listenToSearchSavedGames(term);
 
   Future<void> setPlatform({
-    required GamePlatform platform,
+    required PlatformEntity platform,
     required int savedGameId,
   }) async {
     final game = await _gameLocalStorage.getSavedGame(savedGameId);
     if (game case final savedGame?) {
-      if (savedGame.platforms != null && game.platforms!.contains(platform)) {
+      final exists =
+          savedGame.platforms?.any((p) => p.id == platform.id) ?? false;
+      if (exists) {
         _gameLocalStorage.removePlatform(platform, savedGame);
       } else {
         _gameLocalStorage.addPlatform(platform, savedGame);
@@ -96,7 +97,7 @@ class GameLocalDatasource {
   }) async =>
       _gameLocalStorage.addStep(taskId, step);
 
-  Future<Either<void, void>> removeStep({
+  Future<bool> removeStep({
     required int taskId,
     required TaskStep step,
   }) async =>

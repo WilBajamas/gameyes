@@ -1,7 +1,5 @@
 import 'dart:async';
-
-import 'package:dartz/dartz.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/isar_local_storage_service.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/group_task.dart';
@@ -101,21 +99,26 @@ class GameLocalStorageService extends IsarLocalStorageService {
   }
 
   Future<void> addPlatform(
-    GamePlatform platform,
+    PlatformEntity platform,
     SavedGame game,
   ) async {
-    final List<GamePlatform> platforms = game.platforms ?? [];
+    final List<SavedGamePlatform> platforms = game.platforms ?? [];
 
-    platforms.add(platform);
+    platforms.add(SavedGamePlatform(
+      id: platform.id,
+      name: platform.name,
+      abbreviation: platform.abbreviation,
+      logoUrl: platform.platformLogo?.url,
+    ));
     game.platforms = platforms;
     await insertGame(game);
   }
 
   Future<void> removePlatform(
-    GamePlatform platform,
+    PlatformEntity platform,
     SavedGame game,
   ) async {
-    game.platforms!.remove(platform);
+    game.platforms?.removeWhere((p) => p.id == platform.id);
     await insertGame(game);
   }
 
@@ -178,7 +181,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
     await insertGame(savedGame!);
   }
 
-  Future<Either<void, void>> removeStep(
+  Future<bool> removeStep(
     int taskId,
     TaskStep stepToRemove,
   ) async {
@@ -194,9 +197,9 @@ class GameLocalStorageService extends IsarLocalStorageService {
       final savedGame = await getSavedGame(savedGameId);
 
       await insertGame(savedGame!);
-      return const Right(null);
+      return true;
     } catch (exception) {
-      return const Left(null);
+      return false;
     }
   }
 

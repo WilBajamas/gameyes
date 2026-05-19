@@ -1,21 +1,14 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'developer.freezed.dart';
 part 'developer.g.dart';
 
-@JsonSerializable()
-final class Developer extends Equatable {
-  final int? id;
-
-  final String? name;
-
-  const Developer(this.id, this.name);
-
+@freezed
+sealed class Developer with _$Developer {
+  const factory Developer({
+    int? id,
+    String? name,
+  }) = _Developer;
   factory Developer.fromJson(Map<String, dynamic> json) =>
       _$DeveloperFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DeveloperToJson(this);
-
-  @override
-  List<Object?> get props => [id, name];
 }

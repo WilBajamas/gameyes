@@ -52,7 +52,7 @@ class DefaultBorderTextField extends StatelessWidget {
           maxLengthEnforce ? MaxLengthEnforcement.enforced : null,
       readOnly: readOnly,
       style: const TextStyle().copyWith(
-        color: context.themeData.colorScheme.onBackground,
+        color: context.themeData.colorScheme.onSurface,
         fontWeight: FontWeight.normal,
       ),
       decoration: InputDecoration(

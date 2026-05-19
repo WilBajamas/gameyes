@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 
 import '../../mocks/game_detail_response_mock.dart';
@@ -22,7 +22,7 @@ void main() {
   test('fetches game detail response successfully', () async {
     const path = '/games/87';
 
-    dioAdapter.onGet(
+    dioAdapter.onPost(
       path,
       (server) => server.reply(
         201,
@@ -31,19 +31,20 @@ void main() {
       ),
     );
 
-    final response = await dio.get(path);
+    final response = await dio.post(path);
 
-    final gamesResponse =
-        GameDetailResponse.fromJson(response.data as Map<String, dynamic>);
+    final list = (response.data as List)
+        .map((i) => Game.fromJson(i as Map<String, dynamic>))
+        .toList();
 
     expect(response.statusCode, 201);
-    expect(gamesResponse, isA<GameDetailResponse>());
+    expect(list, isA<List<Game>>());
   });
 
   test('fetches game detail response failed', () async {
     const path = '/games/87';
 
-    dioAdapter.onGet(
+    dioAdapter.onPost(
       path,
       (server) => server.throws(
         404,

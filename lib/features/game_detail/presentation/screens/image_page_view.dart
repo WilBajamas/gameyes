@@ -1,9 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_screenshot.dart';
-import 'package:go_router/go_router.dart';
-import 'package:scroll_snap_list/scroll_snap_list.dart';
 
+@RoutePage()
 class ImagePageView extends StatelessWidget {
   final (List<String?> images, int indexTapped) pageViewInfo;
   const ImagePageView({super.key, required this.pageViewInfo});
@@ -18,7 +18,7 @@ class ImagePageView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: IconButton(
-                onPressed: () => context.pop(),
+                onPressed: () => context.router.pop(),
                 icon: const Icon(Icons.cancel_outlined),
               ),
             ),
@@ -27,17 +27,13 @@ class ImagePageView extends StatelessWidget {
             child: Center(
               child: SizedBox(
                 height: context.screenHeight / 3,
-                child: ScrollSnapList(
-                  initialIndex: pageViewInfo.$2.toDouble(),
-                  onItemFocus: (int _) {},
-                  itemSize: context.screenWidth,
+                child: PageView.builder(
+                  controller: PageController(initialPage: pageViewInfo.$2),
                   itemBuilder: (_, index) => GameScreenshot(
                     imageUrl: pageViewInfo.$1[index],
                     borderRadius: 0,
                   ),
                   itemCount: pageViewInfo.$1.length,
-                  duration: 200,
-                  scrollPhysics: const PageScrollPhysics(),
                 ),
               ),
             ),

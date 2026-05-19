@@ -1,14 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/games/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
-import 'package:gaming_library_assessment_flutter/widgets/metacritic_indicator.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
 
 class GameItem extends StatelessWidget {
-  final Game? game;
+  final GameEntity? game;
   final bool showReleaseDate;
   final VoidCallback? onItemClick;
   final String fromScreen;
@@ -40,14 +39,14 @@ class GameItem extends StatelessWidget {
 
               //** Platforms */
               if (!showReleaseDate &&
-                  game?.platformValues != null &&
-                  game!.platformValues!.isNotEmpty)
+                  game?.platforms != null &&
+                  game!.platforms!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: SizedBox(
                     height: 16,
                     child: PlatformRowList(
-                      platforms: game!.platformValues!,
+                      platforms: game!.platforms!,
                     ),
                   ),
                 ),
@@ -59,7 +58,7 @@ class GameItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: AutoSizeText(
-                    game?.released.stringToDateString() ??
+                    game?.releaseDates?.firstOrNull?.human ??
                         StringConstants.emptyStringPlaceholder,
                     maxLines: 1,
                     maxFontSize: 14,
@@ -92,7 +91,7 @@ class GameItem extends StatelessWidget {
 }
 
 class _TopStack extends StatelessWidget {
-  final Game? game;
+  final GameEntity? game;
   final String fromScreen;
 
   const _TopStack({
@@ -111,13 +110,13 @@ class _TopStack extends StatelessWidget {
               topLeft: Radius.circular(8),
               topRight: Radius.circular(8),
             ),
-            child: game?.backgroundImage != null
+            child: game?.cover.url != null
 
                 //** Image */
                 ? Hero(
                     tag: '${ConfigConstants.heroTag}/${game?.id}/$fromScreen',
                     child: DefaultCachedNetworkImage(
-                      imageUrl: game!.backgroundImage!,
+                      imageUrl: game!.cover.url!,
                     ),
                   )
                 : Center(
@@ -129,15 +128,16 @@ class _TopStack extends StatelessWidget {
           ),
         ),
 
+        /// TODO: Check IGDB if they return metacritic scores
         //** Score */
-        if (game?.metacritic != null)
-          Positioned(
-            bottom: 8,
-            right: 8,
-            child: MetacriticIndicator(
-              score: game?.metacritic,
-            ),
-          ),
+        // if (game?.metacritic != null)
+        //   Positioned(
+        //     bottom: 8,
+        //     right: 8,
+        //     child: MetacriticIndicator(
+        //       score: game?.metacritic,
+        //     ),
+        //   ),
       ],
     );
   }

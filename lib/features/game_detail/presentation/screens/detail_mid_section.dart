@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_cubit.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_mid_content_shimmer.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_detail_section_point.dart';
@@ -11,6 +11,7 @@ import 'package:readmore/readmore.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../generated/l10n.dart';
+import '../cubits/game_detail_state.dart';
 
 class DetailMidSection extends StatelessWidget {
   final int? gameId;
@@ -52,7 +53,7 @@ class DetailMidSection extends StatelessWidget {
                   child: Column(
                     children: [
                       ReadMoreText(
-                        state.response!.description!,
+                        state.game?.description ?? '',
                         trimLines: 7,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: S.current.read_more,
@@ -106,14 +107,14 @@ class DetailPointsSection extends StatelessWidget {
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.genre,
-                  value: state.response!.genreListString,
+                  value: state.game?.genreDisplay,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.publishers,
-                  value: state.response!.publisherListString,
+                  value: state.game?.publisherDisplay,
                 ),
               ),
             ],
@@ -125,14 +126,14 @@ class DetailPointsSection extends StatelessWidget {
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.developers,
-                  value: state.response!.developerListString,
+                  value: state.game?.developerDisplay,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
                 child: GameDetailSectionPoint(
                   title: S.current.platforms,
-                  value: state.response!.platformListString,
+                  value: state.game?.platformDisplay,
                 ),
               ),
             ],

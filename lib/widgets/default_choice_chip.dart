@@ -21,7 +21,7 @@ class DefaultChoiceChip extends StatelessWidget {
       onSelected: (_) => onSelected(),
       labelStyle: TextStyle(
         color: isSelected
-            ? context.themeData.colorScheme.background
+            ? context.themeData.colorScheme.surface
             : context.themeData.colorScheme.primary,
       ),
     );

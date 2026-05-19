@@ -3,18 +3,18 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
 
-import 'package:dartz/dartz.dart' as _i2;
-import 'package:gaming_library_assessment_flutter/data/models/error.dart'
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart'
+    as _i4;
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_detail_entity.dart'
     as _i5;
-import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_response.dart'
-    as _i6;
-import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repository/game_detail_repository.dart'
-    as _i3;
+import 'package:gaming_library_assessment_flutter/features/game_detail/domain/repositories/game_detail_repository.dart'
+    as _i2;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
     as _i7;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -31,27 +31,17 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
-  _FakeEither_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [GameDetailRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGameDetailRepository extends _i1.Mock
-    implements _i3.GameDetailRepository {
+    implements _i2.GameDetailRepository {
   MockGameDetailRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.ErrorType, _i6.GameDetailResponse>> fetchGameDetail(
+  _i3.Future<_i4.Result<_i5.GameDetailEntity>> fetchGameDetail(
           {required int? id}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -59,9 +49,8 @@ class MockGameDetailRepository extends _i1.Mock
           [],
           {#id: id},
         ),
-        returnValue:
-            _i4.Future<_i2.Either<_i5.ErrorType, _i6.GameDetailResponse>>.value(
-                _FakeEither_0<_i5.ErrorType, _i6.GameDetailResponse>(
+        returnValue: _i3.Future<_i4.Result<_i5.GameDetailEntity>>.value(
+            _i6.dummyValue<_i4.Result<_i5.GameDetailEntity>>(
           this,
           Invocation.method(
             #fetchGameDetail,
@@ -69,39 +58,39 @@ class MockGameDetailRepository extends _i1.Mock
             {#id: id},
           ),
         )),
-      ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.GameDetailResponse>>);
+      ) as _i3.Future<_i4.Result<_i5.GameDetailEntity>>);
 
   @override
-  _i4.Future<void> saveGame({required _i7.SavedGame? game}) =>
+  _i3.Future<void> saveGame({required _i7.SavedGame? game}) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveGame,
           [],
           {#game: game},
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> unsaveGame({required int? id}) => (super.noSuchMethod(
+  _i3.Future<void> unsaveGame({required int? id}) => (super.noSuchMethod(
         Invocation.method(
           #unsaveGame,
           [],
           {#id: id},
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<_i7.SavedGame?> getSavedGame({required int? id}) =>
+  _i3.Future<_i7.SavedGame?> getSavedGame({required int? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getSavedGame,
           [],
           {#id: id},
         ),
-        returnValue: _i4.Future<_i7.SavedGame?>.value(),
-      ) as _i4.Future<_i7.SavedGame?>);
+        returnValue: _i3.Future<_i7.SavedGame?>.value(),
+      ) as _i3.Future<_i7.SavedGame?>);
 }

@@ -1,21 +1,15 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'publisher.freezed.dart';
 part 'publisher.g.dart';
 
-@JsonSerializable()
-final class Publisher extends Equatable {
-  final int? id;
-
-  final String? name;
-
-  const Publisher(this.id, this.name);
+@freezed
+sealed class Publisher with _$Publisher {
+  const factory Publisher({
+    int? id,
+    String? name,
+  }) = _Publisher;
 
   factory Publisher.fromJson(Map<String, dynamic> json) =>
       _$PublisherFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PublisherToJson(this);
-
-  @override
-  List<Object?> get props => [];
 }

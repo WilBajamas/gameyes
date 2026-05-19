@@ -1,19 +1,21 @@
-import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/game_platform.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/domain/repository/tracker_detail_repository.dart';
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: TrackerDetailRepository)
 class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
-  final _gameLocalDatasource = getIt<GameLocalDatasource>();
+  final GameLocalDatasource _gameLocalDatasource;
+
+  TrackerDetailRepositoryImpl(this._gameLocalDatasource);
 
   @override
   Future<void> setPlatform({
-    required GamePlatform platform,
+    required PlatformEntity platform,
     required int savedGameId,
   }) =>
       _gameLocalDatasource.setPlatform(
@@ -34,8 +36,12 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
       );
 
   @override
-  Stream<SavedGame?> savedGameDetailStream({required int savedGameId}) =>
-      _gameLocalDatasource.listenToSavedGame(savedGameId: savedGameId);
+  Stream<TrackerSavedGameEntity?> savedGameDetailStream({
+    required int savedGameId,
+  }) =>
+      _gameLocalDatasource
+          .listenToSavedGame(savedGameId: savedGameId)
+          .map((model) => model?.toEntity());
 
   @override
   Future<void> removeGroupTask({
@@ -78,16 +84,24 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
   }
 
   @override
-  Future<bool> removeStep({required int taskId, required TaskStep step}) async {
-    final result =
-        await _gameLocalDatasource.removeStep(taskId: taskId, step: step);
+  Future<bool> removeStep({
+    required int taskId,
+    required TrackerTaskStepEntity step,
+  }) async {
+    // Mapping entity back to model for the technical layer
+    final modelStep = TaskStep()..id = step.id;
 
-    return result.fold((l) => false, (r) => true);
+    return await _gameLocalDatasource.removeStep(
+      taskId: taskId,
+      step: modelStep,
+    );
   }
 
   @override
-  Stream<SavedGameTask?> taskStream({required int taskId}) =>
-      _gameLocalDatasource.listenToTask(taskId: taskId);
+  Stream<TrackerTaskEntity?> taskStream({required int taskId}) =>
+      _gameLocalDatasource
+          .listenToTask(taskId: taskId)
+          .map((model) => model?.toEntity());
 
   @override
   Future<void> editStep({

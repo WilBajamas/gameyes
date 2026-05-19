@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 //! Must specify type for [T]
 class FilterlistAppBar<T> extends StatefulWidget {
@@ -19,18 +18,23 @@ class FilterlistAppBar<T> extends StatefulWidget {
 
 class _FilterlistAppBarState<T> extends State<FilterlistAppBar<T>> {
   T? _selectedTag;
-  final _itemScrollController = ItemScrollController();
-  final _scrollOffsetController = ScrollOffsetController();
+  final ScrollController _scrollController = ScrollController();
 
-  void _onItemClicked(int index, T tagSelected) {
+  void _onItemClicked(int index, T tagSelected, BuildContext chipContext) {
     setState(() => _selectedTag = tagSelected);
     widget.selected(tagSelected);
-    _itemScrollController.scrollTo(
-      alignment: 0.1,
-      index: index,
+    Scrollable.ensureVisible(
+      chipContext,
+      alignment: 0.5,
       curve: Curves.easeIn,
       duration: const Duration(milliseconds: 200),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,11 +49,10 @@ class _FilterlistAppBarState<T> extends State<FilterlistAppBar<T>> {
       pinned: true,
       surfaceTintColor: context.themeData.scaffoldBackgroundColor,
       expandedHeight: kToolbarHeight,
-      flexibleSpace: ScrollablePositionedList.builder(
+      flexibleSpace: ListView.builder(
+        controller: _scrollController,
         shrinkWrap: true,
         physics: const ClampingScrollPhysics(),
-        itemScrollController: _itemScrollController,
-        scrollOffsetController: _scrollOffsetController,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
         itemCount: widget.filterList.length,
@@ -57,7 +60,8 @@ class _FilterlistAppBarState<T> extends State<FilterlistAppBar<T>> {
           return Padding(
             padding: const EdgeInsets.only(right: 6),
             child: _SelectionChip<T>(
-              onSelect: (tagSelected) => _onItemClicked(index, tagSelected),
+              onSelect: (tagSelected, chipContext) =>
+                  _onItemClicked(index, tagSelected, chipContext),
               isSelected: isItemSelected(index),
               title: widget.filterList[index].$2,
               tag: widget.filterList[index].$1,
@@ -75,7 +79,7 @@ class _SelectionChip<T> extends StatelessWidget {
   final bool isSelected;
   final String title;
   final IconData? icon;
-  final Function(T) onSelect;
+  final Function(T, BuildContext) onSelect;
 
   const _SelectionChip({
     this.icon,
@@ -99,8 +103,10 @@ class _SelectionChip<T> extends StatelessWidget {
         children: [
           Text(
             title,
-            style: context.themeData.textTheme.bodySmall!
-                .copyWith(color: selectedColor, fontWeight: selectedFontWeight),
+            style: context.themeData.textTheme.bodySmall!.copyWith(
+              color: selectedColor,
+              fontWeight: selectedFontWeight,
+            ),
           ),
           if (icon != null) const SizedBox(width: 8),
           if (icon != null)
@@ -112,7 +118,7 @@ class _SelectionChip<T> extends StatelessWidget {
         ],
       ),
       selected: isSelected,
-      onSelected: (_) => onSelect(tag),
+      onSelected: (_) => onSelect(tag, context),
       shape: const StadiumBorder(side: BorderSide(color: Colors.transparent)),
       backgroundColor: context.themeData.colorScheme.secondaryContainer,
       selectedColor: context.themeData.colorScheme.primary,

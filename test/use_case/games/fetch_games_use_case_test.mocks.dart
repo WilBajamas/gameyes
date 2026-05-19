@@ -3,16 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
 
-import 'package:dartz/dartz.dart' as _i2;
-import 'package:gaming_library_assessment_flutter/data/models/error.dart'
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart'
+    as _i4;
+import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart'
     as _i5;
-import 'package:gaming_library_assessment_flutter/features/games/data/models/games_response.dart'
-    as _i6;
-import 'package:gaming_library_assessment_flutter/features/games/domain/games_repository.dart'
-    as _i3;
+import 'package:gaming_library_assessment_flutter/features/games/domain/repositories/games_repository.dart'
+    as _i2;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -29,26 +29,16 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
-  _FakeEither_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [GamesRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
+class MockGamesRepository extends _i1.Mock implements _i2.GamesRepository {
   MockGamesRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>> fetchGames({
+  _i3.Future<_i4.Result<_i5.GameListEntity>> fetchGames({
     int? page,
     String? searchTerm,
     String? dateRange,
@@ -69,9 +59,8 @@ class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
             #ordering: ordering,
           },
         ),
-        returnValue:
-            _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>.value(
-                _FakeEither_0<_i5.ErrorType, _i6.GamesResponse>(
+        returnValue: _i3.Future<_i4.Result<_i5.GameListEntity>>.value(
+            _i6.dummyValue<_i4.Result<_i5.GameListEntity>>(
           this,
           Invocation.method(
             #fetchGames,
@@ -86,5 +75,5 @@ class MockGamesRepository extends _i1.Mock implements _i3.GamesRepository {
             },
           ),
         )),
-      ) as _i4.Future<_i2.Either<_i5.ErrorType, _i6.GamesResponse>>);
+      ) as _i3.Future<_i4.Result<_i5.GameListEntity>>);
 }

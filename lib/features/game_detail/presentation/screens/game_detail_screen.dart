@@ -1,15 +1,17 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubit/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_state.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_mid_section.dart';
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_screenshot_section.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/detail_top_header.dart';
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 
 import '../../../../generated/l10n.dart';
 
+@RoutePage()
 class GameDetailScreen extends StatelessWidget {
   final (int, String, String?)? gameExtra;
 
@@ -66,7 +68,9 @@ class GameDetailScreen extends StatelessWidget {
                     style: context.themeData.textTheme.displayLarge,
                   ),
                 ),
-                DetailScreenshotsSection(id: gameExtra!.$1),
+
+                /// TODO: fetch screenshots - from game detail
+                // DetailScreenshotsSection(id: gameExtra!.$1),
               ],
             ),
           ),

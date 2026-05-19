@@ -1,13 +1,16 @@
 class ConfigConstants {
   static const baseUrl = 'https://api.rawg.io/api/';
+  static const igdbBaseUrl = 'https://api.igdb.com/v4/';
   static const gamesEndpoint = 'games';
   static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';
+  static const twitchClientId = 'TWITCH_CLIENT_ID';
+  static const twitchClientSecret = 'TWITCH_CLIENT_SECRET';
   static const heroTag = 'hero_tag';
   static const enviedFilePath = '../gameyes/secret.env';
 
-  static const Duration connectTimeout = Duration(seconds: 15);
-  static const Duration receiveTimeout = Duration(seconds: 15);
+  static const Duration connectTimeout = Duration(seconds: 30);
+  static const Duration receiveTimeout = Duration(seconds: 30);
   static const Duration sendTimeout = Duration(seconds: 5);
 }
 
@@ -50,7 +53,16 @@ class RouteConstants {
   static const settings = '/settings';
 }
 
-class HiveConstants {
-  static const String specializationsBox = 'specialization_box';
-  static const String initializationLog = 'HiveLocalStorageService Initialized';
+class IGDBConfig {
+  static const standardGameFields = [
+    'name',
+    'cover.url',
+    'game_modes.name',
+    'keywords.name',
+    'platforms.name',
+    'platforms.abbreviation',
+    'platforms.platform_logo.url',
+    'release_dates.date',
+    'release_dates.human',
+  ];
 }

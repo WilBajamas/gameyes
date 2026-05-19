@@ -1,3 +1,4 @@
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_step_entity.dart';
 import 'package:isar_community/isar.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,4 +17,13 @@ class TaskStep {
   String? description;
 
   String? image;
+
+  TrackerTaskStepEntity toEntity() => TrackerTaskStepEntity(
+        id: id,
+        taskId: taskId,
+        number: number,
+        title: title,
+        description: description,
+        image: image,
+      );
 }
