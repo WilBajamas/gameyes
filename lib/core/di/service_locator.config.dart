@@ -108,12 +108,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.singleton<_i361.Dio>(
         () => networkModule.getDioInstance(gh<_i641.TwitchAuthInterceptor>()));
-    gh.factory<_i53.FeaturedFilterCubit>(() => _i53.FeaturedFilterCubit(
-        initialPlatforms: gh<Set<_i305.GamePlatform>>()));
     gh.singleton<_i549.GamesServices>(
         () => networkModule.getRetrofitService(gh<_i361.Dio>()));
     gh.singleton<_i54.GameDetailService>(
         () => networkModule.getGameDetailService(gh<_i361.Dio>()));
+    gh.factoryParam<_i53.FeaturedFilterCubit, Set<_i305.GamePlatform>, dynamic>(
+        (
+      initialPlatforms,
+      _,
+    ) =>
+            _i53.FeaturedFilterCubit(initialPlatforms: initialPlatforms));
     gh.factory<_i750.GameDetailRemoteDatasource>(
         () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()));
     gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>((

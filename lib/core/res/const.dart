@@ -53,11 +53,6 @@ class RouteConstants {
   static const settings = '/settings';
 }
 
-class HiveConstants {
-  static const String specializationsBox = 'specialization_box';
-  static const String initializationLog = 'HiveLocalStorageService Initialized';
-}
-
 class IGDBConfig {
   static const standardGameFields = [
     'name',
@@ -71,4 +66,3 @@ class IGDBConfig {
     'release_dates.human',
   ];
 }
-

@@ -91,10 +91,10 @@ class TrackerDetailRepositoryImpl implements TrackerDetailRepository {
     // Mapping entity back to model for the technical layer
     final modelStep = TaskStep()..id = step.id;
 
-    final result =
-        await _gameLocalDatasource.removeStep(taskId: taskId, step: modelStep);
-
-    return result.fold((l) => false, (r) => true);
+    return await _gameLocalDatasource.removeStep(
+      taskId: taskId,
+      step: modelStep,
+    );
   }
 
   @override

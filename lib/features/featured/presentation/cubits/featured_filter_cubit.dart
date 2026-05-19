@@ -6,7 +6,8 @@ import 'featured_filter_state.dart';
 
 @injectable
 class FeaturedFilterCubit extends Cubit<FeaturedFilterState> {
-  FeaturedFilterCubit({required Set<GamePlatform> initialPlatforms})
+  FeaturedFilterCubit(
+      {@factoryParam required Set<GamePlatform> initialPlatforms})
       : super(const FeaturedFilterState()) {
     emit(state.copyWith(tempPlatformsSelected: initialPlatforms));
   }

@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart';
@@ -98,7 +97,7 @@ class GameLocalDatasource {
   }) async =>
       _gameLocalStorage.addStep(taskId, step);
 
-  Future<Either<void, void>> removeStep({
+  Future<bool> removeStep({
     required int taskId,
     required TaskStep step,
   }) async =>

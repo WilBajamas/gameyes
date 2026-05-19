@@ -3,21 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
 
-import 'package:dartz/dartz.dart' as _i2;
 import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart'
-    as _i7;
-import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart'
     as _i6;
-import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
-    as _i3;
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
+import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart'
     as _i5;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
+    as _i2;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
+    as _i4;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game_task.dart'
-    as _i8;
+    as _i7;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/task_step.dart'
-    as _i9;
+    as _i8;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -35,71 +34,61 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
-  _FakeEither_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
 /// A class which mocks [GameLocalDatasource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGameLocalDatasource extends _i1.Mock
-    implements _i3.GameLocalDatasource {
+    implements _i2.GameLocalDatasource {
   MockGameLocalDatasource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<void> saveGame({required _i5.SavedGame? game}) =>
+  _i3.Future<void> saveGame({required _i4.SavedGame? game}) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveGame,
           [],
           {#game: game},
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> unsaveGame({required int? id}) => (super.noSuchMethod(
+  _i3.Future<void> unsaveGame({required int? id}) => (super.noSuchMethod(
         Invocation.method(
           #unsaveGame,
           [],
           {#id: id},
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<_i5.SavedGame?> getSavedGame({required int? id}) =>
+  _i3.Future<_i4.SavedGame?> getSavedGame({required int? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getSavedGame,
           [],
           {#id: id},
         ),
-        returnValue: _i4.Future<_i5.SavedGame?>.value(),
-      ) as _i4.Future<_i5.SavedGame?>);
+        returnValue: _i3.Future<_i4.SavedGame?>.value(),
+      ) as _i3.Future<_i4.SavedGame?>);
 
   @override
-  _i4.Future<List<_i5.SavedGame?>> getSavedGames() => (super.noSuchMethod(
+  _i3.Future<List<_i4.SavedGame?>> getSavedGames() => (super.noSuchMethod(
         Invocation.method(
           #getSavedGames,
           [],
         ),
-        returnValue: _i4.Future<List<_i5.SavedGame?>>.value(<_i5.SavedGame?>[]),
-      ) as _i4.Future<List<_i5.SavedGame?>>);
+        returnValue: _i3.Future<List<_i4.SavedGame?>>.value(<_i4.SavedGame?>[]),
+      ) as _i3.Future<List<_i4.SavedGame?>>);
 
   @override
-  _i4.Stream<List<_i5.SavedGame>> listenToSavedGames(
-    _i6.SavedGameFilterTag? tag,
+  _i3.Stream<List<_i4.SavedGame>> listenToSavedGames(
+    _i5.SavedGameFilterTag? tag,
     String? searchTerm,
   ) =>
       (super.noSuchMethod(
@@ -110,22 +99,22 @@ class MockGameLocalDatasource extends _i1.Mock
             searchTerm,
           ],
         ),
-        returnValue: _i4.Stream<List<_i5.SavedGame>>.empty(),
-      ) as _i4.Stream<List<_i5.SavedGame>>);
+        returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
+      ) as _i3.Stream<List<_i4.SavedGame>>);
 
   @override
-  _i4.Stream<List<_i5.SavedGame>> listenToSearchSavedGames(String? term) =>
+  _i3.Stream<List<_i4.SavedGame>> listenToSearchSavedGames(String? term) =>
       (super.noSuchMethod(
         Invocation.method(
           #listenToSearchSavedGames,
           [term],
         ),
-        returnValue: _i4.Stream<List<_i5.SavedGame>>.empty(),
-      ) as _i4.Stream<List<_i5.SavedGame>>);
+        returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
+      ) as _i3.Stream<List<_i4.SavedGame>>);
 
   @override
-  _i4.Future<void> setPlatform({
-    required _i7.PlatformEntity? platform,
+  _i3.Future<void> setPlatform({
+    required _i6.PlatformEntity? platform,
     required int? savedGameId,
   }) =>
       (super.noSuchMethod(
@@ -137,12 +126,12 @@ class MockGameLocalDatasource extends _i1.Mock
             #savedGameId: savedGameId,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> createGroupTask({
+  _i3.Future<void> createGroupTask({
     required String? title,
     required String? description,
     required int? id,
@@ -157,34 +146,34 @@ class MockGameLocalDatasource extends _i1.Mock
             #id: id,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Stream<_i5.SavedGame?> listenToSavedGame({required int? savedGameId}) =>
+  _i3.Stream<_i4.SavedGame?> listenToSavedGame({required int? savedGameId}) =>
       (super.noSuchMethod(
         Invocation.method(
           #listenToSavedGame,
           [],
           {#savedGameId: savedGameId},
         ),
-        returnValue: _i4.Stream<_i5.SavedGame?>.empty(),
-      ) as _i4.Stream<_i5.SavedGame?>);
+        returnValue: _i3.Stream<_i4.SavedGame?>.empty(),
+      ) as _i3.Stream<_i4.SavedGame?>);
 
   @override
-  _i4.Stream<_i8.SavedGameTask?> listenToTask({required int? taskId}) =>
+  _i3.Stream<_i7.SavedGameTask?> listenToTask({required int? taskId}) =>
       (super.noSuchMethod(
         Invocation.method(
           #listenToTask,
           [],
           {#taskId: taskId},
         ),
-        returnValue: _i4.Stream<_i8.SavedGameTask?>.empty(),
-      ) as _i4.Stream<_i8.SavedGameTask?>);
+        returnValue: _i3.Stream<_i7.SavedGameTask?>.empty(),
+      ) as _i3.Stream<_i7.SavedGameTask?>);
 
   @override
-  _i4.Future<void> removeGroupTask({
+  _i3.Future<void> removeGroupTask({
     required int? savedGameId,
     required int? groupTaskId,
   }) =>
@@ -197,12 +186,12 @@ class MockGameLocalDatasource extends _i1.Mock
             #groupTaskId: groupTaskId,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> createTaskInGroup({
+  _i3.Future<void> createTaskInGroup({
     required int? groupTaskId,
     required int? savedGameId,
   }) =>
@@ -215,14 +204,14 @@ class MockGameLocalDatasource extends _i1.Mock
             #savedGameId: savedGameId,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> addStep({
+  _i3.Future<void> addStep({
     required int? taskId,
-    required _i9.TaskStep? step,
+    required _i8.TaskStep? step,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -233,14 +222,14 @@ class MockGameLocalDatasource extends _i1.Mock
             #step: step,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<_i2.Either<void, void>> removeStep({
+  _i3.Future<bool> removeStep({
     required int? taskId,
-    required _i9.TaskStep? step,
+    required _i8.TaskStep? step,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -251,22 +240,11 @@ class MockGameLocalDatasource extends _i1.Mock
             #step: step,
           },
         ),
-        returnValue:
-            _i4.Future<_i2.Either<void, void>>.value(_FakeEither_0<void, void>(
-          this,
-          Invocation.method(
-            #removeStep,
-            [],
-            {
-              #taskId: taskId,
-              #step: step,
-            },
-          ),
-        )),
-      ) as _i4.Future<_i2.Either<void, void>>);
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
 
   @override
-  _i4.Future<void> editStep({
+  _i3.Future<void> editStep({
     required int? taskId,
     required String? stepId,
     required String? title,
@@ -287,12 +265,12 @@ class MockGameLocalDatasource extends _i1.Mock
             #image: image,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i4.Future<void> changeCurrentStep({
+  _i3.Future<void> changeCurrentStep({
     required int? taskId,
     required int? stepIndex,
   }) =>
@@ -305,7 +283,7 @@ class MockGameLocalDatasource extends _i1.Mock
             #stepIndex: stepIndex,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

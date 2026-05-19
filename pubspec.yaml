@@ -50,8 +50,7 @@ dependencies:
   isar_community_flutter_libs:
     version: *isar_version
 
-  # Either - Left or Right
-  dartz: ^0.10.1
+
 
   # freezed
   freezed_annotation: ^3.1.0
@@ -85,8 +84,7 @@ dependencies:
   # Shimmer loading
   skeletonizer: ^2.1.3
 
-  scroll_snap_list: ^0.9.1 # TODO: To deprecate this package and use flutter built-in widget
-  scrollable_positioned_list: ^0.3.8 # TODO: To deprecate this package and use flutter built-in widget
+
 
   # Network image
   cached_network_image: ^3.4.1
