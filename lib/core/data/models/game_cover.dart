@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_cover_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 part 'game_cover.freezed.dart';
 part 'game_cover.g.dart';
@@ -15,5 +16,6 @@ sealed class GameCover with _$GameCover {
   factory GameCover.fromJson(Map<String, dynamic> json) =>
       _$GameCoverFromJson(json);
 
-  GameCoverEntity toEntity() => GameCoverEntity(url: url);
+  GameCoverEntity toEntity() => GameCoverEntity(url: url.toAbsoluteImageUrl());
 }
+
