@@ -3,14 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
 import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart'
-    as _i4;
+    as _i5;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart'
+    as _i3;
+import 'package:gaming_library_assessment_flutter/features/games/services/igdb_api_service.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
+import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,16 +29,36 @@ import 'package:mockito/src/dummies.dart' as _i5;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
+class _FakeIgdbApiService_0 extends _i1.SmartFake
+    implements _i2.IgdbApiService {
+  _FakeIgdbApiService_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [GamesDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGamesDataSource extends _i1.Mock implements _i2.GamesDataSource {
+class MockGamesDataSource extends _i1.Mock implements _i3.GamesDataSource {
   MockGamesDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<_i4.GamesModel> fetchDatasourceGames({
+  _i2.IgdbApiService get igdbApiService => (super.noSuchMethod(
+        Invocation.getter(#igdbApiService),
+        returnValue: _FakeIgdbApiService_0(
+          this,
+          Invocation.getter(#igdbApiService),
+        ),
+      ) as _i2.IgdbApiService);
+
+  @override
+  _i4.Future<_i5.GamesModel> fetchDatasourceGames({
     int? page = 1,
     int? pageSize = 20,
     String? searchTerm,
@@ -60,7 +82,7 @@ class MockGamesDataSource extends _i1.Mock implements _i2.GamesDataSource {
           },
         ),
         returnValue:
-            _i3.Future<_i4.GamesModel>.value(_i5.dummyValue<_i4.GamesModel>(
+            _i4.Future<_i5.GamesModel>.value(_i6.dummyValue<_i5.GamesModel>(
           this,
           Invocation.method(
             #fetchDatasourceGames,
@@ -76,5 +98,5 @@ class MockGamesDataSource extends _i1.Mock implements _i2.GamesDataSource {
             },
           ),
         )),
-      ) as _i3.Future<_i4.GamesModel>);
+      ) as _i4.Future<_i5.GamesModel>);
 }

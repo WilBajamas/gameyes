@@ -23,6 +23,9 @@ sealed class Game with _$Game {
     List<GameKeyword>? keywords,
     List<Platform>? platforms,
     @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates,
+    @JsonKey(name: 'total_rating') double? criticScore,
+    int? hypes,
+    List<int>? genres,
   }) = _Game;
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
@@ -35,5 +38,8 @@ sealed class Game with _$Game {
         gameKeywords: keywords?.map((e) => e.toEntity()).toList(),
         platforms: platforms?.map((e) => e.toEntity()).toList(),
         releaseDates: releaseDates?.map((e) => e.toEntity()).toList(),
+        criticScore: criticScore,
+        hypes: hypes,
+        genreIds: genres,
       );
 }

@@ -24,6 +24,11 @@ _Game _$GameFromJson(Map<String, dynamic> json) => _Game(
       releaseDates: (json['release_dates'] as List<dynamic>?)
           ?.map((e) => ReleaseDate.fromJson(e as Map<String, dynamic>))
           .toList(),
+      criticScore: (json['total_rating'] as num?)?.toDouble(),
+      hypes: (json['hypes'] as num?)?.toInt(),
+      genres: (json['genres'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
     );
 
 Map<String, dynamic> _$GameToJson(_Game instance) => <String, dynamic>{
@@ -34,4 +39,7 @@ Map<String, dynamic> _$GameToJson(_Game instance) => <String, dynamic>{
       'keywords': instance.keywords,
       'platforms': instance.platforms,
       'release_dates': instance.releaseDates,
+      'total_rating': instance.criticScore,
+      'hypes': instance.hypes,
+      'genres': instance.genres,
     };

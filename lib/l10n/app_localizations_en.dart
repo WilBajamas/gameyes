@@ -304,4 +304,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get removed_step => 'Step removed';
+
+  @override
+  String get failed_to_load_weekly_releases => 'Failed to load weekly releases';
+
+  @override
+  String get failed_to_load_countdown_game => 'Failed to load countdown game';
+
+  @override
+  String get failed_to_load_critics_choice_reviews =>
+      'Failed to load critics choice reviews';
+
+  @override
+  String get failed_to_load_genre_preferences =>
+      'Failed to load genre preferences';
+
+  @override
+  String get failed_to_save_genre_preference =>
+      'Failed to save genre preference';
+
+  @override
+  String get failed_to_skip_genre_preferences =>
+      'Failed to skip genre preferences';
+
+  @override
+  String get failed_to_load_library_stats => 'Failed to load library stats';
 }

@@ -9,15 +9,15 @@ import 'package:gaming_library_assessment_flutter/features/tracker/data/models/t
 import 'package:injectable/injectable.dart';
 import 'package:isar_community/isar.dart';
 
-@injectable
+@singleton
 class GameLocalStorageService extends IsarLocalStorageService {
   Future<void> insertGame(SavedGame game) async {
-    final isar = await db;
+    final isar = await dbInstance;
     return await isar.writeTxn(() async => isar.savedGames.put(game));
   }
 
   Future<void> insertTask(SavedGameTask task) async {
-    final isar = await db;
+    final isar = await dbInstance;
     return await isar.writeTxn(() async => isar.savedGameTasks.put(task));
   }
 
@@ -25,7 +25,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
     SavedGameFilterTag tag,
     String? searchTerm,
   ) async* {
-    final isar = await db;
+    final isar = await dbInstance;
     final query = isar.savedGames.where(sort: Sort.desc);
     QueryBuilder<SavedGame, SavedGame, QAfterWhere>? tagQuery;
 
@@ -50,28 +50,28 @@ class GameLocalStorageService extends IsarLocalStorageService {
   }
 
   Stream<List<SavedGame>> listenToSearchSavedGames(String term) async* {
-    final isar = await db;
+    final isar = await dbInstance;
     final query = isar.savedGames.filter().nameContains(term);
     yield* query.watch();
   }
 
   Stream<SavedGame?> listenToSavedGameDetail(int savedGameId) async* {
-    final isar = await db;
+    final isar = await dbInstance;
     yield* isar.savedGames.watchObject(savedGameId, fireImmediately: true);
   }
 
   Stream<SavedGameTask?> listenToTask(int taskId) async* {
-    final isar = await db;
+    final isar = await dbInstance;
     yield* isar.savedGameTasks.watchObject(taskId, fireImmediately: true);
   }
 
   Future<List<SavedGame?>> getSavedGames() async {
-    final isar = await db;
+    final isar = await dbInstance;
     return await isar.savedGames.filter().gameIdIsNotNull().findAll();
   }
 
   Future<SavedGame?> getGameById(int gameId) async {
-    final isar = await db;
+    final isar = await dbInstance;
     final existingGame =
         await isar.savedGames.filter().gameIdEqualTo(gameId).findFirst();
 
@@ -79,22 +79,22 @@ class GameLocalStorageService extends IsarLocalStorageService {
   }
 
   Future<SavedGame?> getSavedGame(int id) async {
-    final isar = await db;
+    final isar = await dbInstance;
     return await isar.savedGames.get(id);
   }
 
   Future<void> deleteGame(int id) async {
-    final isar = await db;
+    final isar = await dbInstance;
     return await isar.writeTxn(() async => isar.savedGames.delete(id));
   }
 
   Future<GroupTask?> getGroupTask(int id) async {
-    final isar = await db;
+    final isar = await dbInstance;
     return await isar.writeTxn(() async => isar.groupTasks.get(id));
   }
 
   Future<SavedGameTask?> getTask(int id) async {
-    final isar = await db;
+    final isar = await dbInstance;
     return await isar.writeTxn(() async => isar.savedGameTasks.get(id));
   }
 
@@ -126,7 +126,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
     GroupTask groupTaskToSave,
     SavedGame game,
   ) async {
-    final isar = await db;
+    final isar = await dbInstance;
 
     await isar.writeTxn(() async {
       await isar.groupTasks.put(groupTaskToSave);
@@ -138,7 +138,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
   }
 
   Future<void> removeGroupTask(int savedGameId, int groupTaskId) async {
-    final isar = await db;
+    final isar = await dbInstance;
     await isar.writeTxn(() async {
       await isar.groupTasks.delete(groupTaskId);
     });
@@ -153,7 +153,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
     int savedGameId,
     SavedGameTask taskToCreate,
   ) async {
-    final isar = await db;
+    final isar = await dbInstance;
     final groupTask = await getGroupTask(groupTaskId);
 
     await isar.writeTxn(() async {

@@ -300,4 +300,25 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get removed_step => 'Step removed';
+
+  @override
+  String get failed_to_load_weekly_releases => '加载每周发布失败';
+
+  @override
+  String get failed_to_load_countdown_game => '加载倒计时游戏失败';
+
+  @override
+  String get failed_to_load_critics_choice_reviews => '加载媒体选择评测失败';
+
+  @override
+  String get failed_to_load_genre_preferences => '加载类型偏好失败';
+
+  @override
+  String get failed_to_save_genre_preference => '保存类型偏好失败';
+
+  @override
+  String get failed_to_skip_genre_preferences => '跳过类型偏好失败';
+
+  @override
+  String get failed_to_load_library_stats => '加载库统计信息失败';
 }

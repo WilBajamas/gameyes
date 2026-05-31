@@ -102,5 +102,76 @@
     }
   },
   "remove_step_failed": "Failed removing step",
-  "removed_step": "Step removed"
+  "removed_step": "Step removed",
+  "failed_to_load_weekly_releases": "Failed to load weekly releases",
+  "failed_to_load_countdown_game": "Failed to load countdown game",
+  "failed_to_load_critics_choice_reviews": "Failed to load critics choice reviews",
+  "failed_to_load_genre_preferences": "Failed to load genre preferences",
+  "failed_to_save_genre_preference": "Failed to save genre preference",
+  "failed_to_skip_genre_preferences": "Failed to skip genre preferences",
+  "failed_to_load_library_stats": "Failed to load library stats",
+  "featured_revamp": "Featured Revamp",
+  "loading_game_title_placeholder": "Loading Game Title",
+  "coming_soon": "Coming Soon",
+  "loading_game_release_title": "Loading Game Release Title",
+  "critics_choice_title": "Critics Choice Title",
+  "released_2_days_ago": "Released 2 days ago",
+  "welcome_to_gameyes": "Welcome to GameYes 🎮",
+  "complete_onboarding_steps": "Let's complete your quick onboarding steps.",
+  "add_game_played": "Add a game you've played",
+  "add_button": "+ Add",
+  "mark_playing_now": "Mark what you're playing now",
+  "mark_button": "+ Mark",
+  "wishlist_upcoming_game": "Wishlist an upcoming game",
+  "wishlist_button": "+ Wishlist",
+  "total_games": "Total Games",
+  "wishlist": "Wishlist",
+  "this_week": "This Week",
+  "now_playing": "Now Playing",
+  "no_game_in_progress": "No game in progress",
+  "mark_something_playing": "Mark something as playing →",
+  "active": "Active",
+  "completed_percentage": "{percentage}% completed",
+  "@completed_percentage": {
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "logged_hours_of": "{logged}h logged of {average}h",
+  "@logged_hours_of": {
+    "placeholders": {
+      "logged": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      }
+    }
+  },
+  "played_hours": "{hours}h played",
+  "@played_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_playing": "+ {count} more playing",
+  "@more_playing": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "hours_abbreviation": "{hours}h",
+  "@hours_abbreviation": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  }
 }

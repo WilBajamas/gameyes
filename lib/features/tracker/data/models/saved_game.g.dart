@@ -23,46 +23,76 @@ const SavedGameSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'SavedGamePlatform',
     ),
-    r'completed': PropertySchema(
+    r'averageCompletionHours': PropertySchema(
       id: 1,
+      name: r'averageCompletionHours',
+      type: IsarType.double,
+    ),
+    r'completed': PropertySchema(
+      id: 2,
       name: r'completed',
       type: IsarType.bool,
     ),
     r'dateModified': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'dateModified',
       type: IsarType.dateTime,
     ),
     r'dateSaved': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'dateSaved',
       type: IsarType.dateTime,
     ),
     r'gameId': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'gameId',
       type: IsarType.long,
     ),
     r'gameSlug': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'gameSlug',
       type: IsarType.string,
     ),
+    r'genres': PropertySchema(
+      id: 7,
+      name: r'genres',
+      type: IsarType.longList,
+    ),
+    r'hoursLogged': PropertySchema(
+      id: 8,
+      name: r'hoursLogged',
+      type: IsarType.double,
+    ),
     r'imageUrl': PropertySchema(
-      id: 6,
+      id: 9,
       name: r'imageUrl',
       type: IsarType.string,
     ),
+    r'isWishlisted': PropertySchema(
+      id: 10,
+      name: r'isWishlisted',
+      type: IsarType.bool,
+    ),
+    r'manualProgressPercentage': PropertySchema(
+      id: 11,
+      name: r'manualProgressPercentage',
+      type: IsarType.double,
+    ),
     r'name': PropertySchema(
-      id: 7,
+      id: 12,
       name: r'name',
       type: IsarType.string,
     ),
     r'platforms': PropertySchema(
-      id: 8,
+      id: 13,
       name: r'platforms',
       type: IsarType.objectList,
       target: r'SavedGamePlatform',
+    ),
+    r'status': PropertySchema(
+      id: 14,
+      name: r'status',
+      type: IsarType.string,
     )
   },
   estimateSize: _savedGameEstimateSize,
@@ -153,6 +183,12 @@ int _savedGameEstimateSize(
     }
   }
   {
+    final value = object.genres;
+    if (value != null) {
+      bytesCount += 3 + value.length * 8;
+    }
+  }
+  {
     final value = object.imageUrl;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -178,6 +214,12 @@ int _savedGameEstimateSize(
       }
     }
   }
+  {
+    final value = object.status;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -193,19 +235,25 @@ void _savedGameSerialize(
     SavedGamePlatformSchema.serialize,
     object.availablePlatforms,
   );
-  writer.writeBool(offsets[1], object.completed);
-  writer.writeDateTime(offsets[2], object.dateModified);
-  writer.writeDateTime(offsets[3], object.dateSaved);
-  writer.writeLong(offsets[4], object.gameId);
-  writer.writeString(offsets[5], object.gameSlug);
-  writer.writeString(offsets[6], object.imageUrl);
-  writer.writeString(offsets[7], object.name);
+  writer.writeDouble(offsets[1], object.averageCompletionHours);
+  writer.writeBool(offsets[2], object.completed);
+  writer.writeDateTime(offsets[3], object.dateModified);
+  writer.writeDateTime(offsets[4], object.dateSaved);
+  writer.writeLong(offsets[5], object.gameId);
+  writer.writeString(offsets[6], object.gameSlug);
+  writer.writeLongList(offsets[7], object.genres);
+  writer.writeDouble(offsets[8], object.hoursLogged);
+  writer.writeString(offsets[9], object.imageUrl);
+  writer.writeBool(offsets[10], object.isWishlisted);
+  writer.writeDouble(offsets[11], object.manualProgressPercentage);
+  writer.writeString(offsets[12], object.name);
   writer.writeObjectList<SavedGamePlatform>(
-    offsets[8],
+    offsets[13],
     allOffsets,
     SavedGamePlatformSchema.serialize,
     object.platforms,
   );
+  writer.writeString(offsets[14], object.status);
 }
 
 SavedGame _savedGameDeserialize(
@@ -221,20 +269,26 @@ SavedGame _savedGameDeserialize(
       allOffsets,
       SavedGamePlatform(),
     ),
-    dateModified: reader.readDateTimeOrNull(offsets[2]),
-    dateSaved: reader.readDateTimeOrNull(offsets[3]),
-    gameId: reader.readLongOrNull(offsets[4]),
-    gameSlug: reader.readStringOrNull(offsets[5]),
-    imageUrl: reader.readStringOrNull(offsets[6]),
-    name: reader.readStringOrNull(offsets[7]),
+    averageCompletionHours: reader.readDoubleOrNull(offsets[1]),
+    dateModified: reader.readDateTimeOrNull(offsets[3]),
+    dateSaved: reader.readDateTimeOrNull(offsets[4]),
+    gameId: reader.readLongOrNull(offsets[5]),
+    gameSlug: reader.readStringOrNull(offsets[6]),
+    genres: reader.readLongList(offsets[7]),
+    hoursLogged: reader.readDoubleOrNull(offsets[8]),
+    imageUrl: reader.readStringOrNull(offsets[9]),
+    isWishlisted: reader.readBoolOrNull(offsets[10]) ?? false,
+    manualProgressPercentage: reader.readDoubleOrNull(offsets[11]),
+    name: reader.readStringOrNull(offsets[12]),
     platforms: reader.readObjectList<SavedGamePlatform>(
-      offsets[8],
+      offsets[13],
       SavedGamePlatformSchema.deserialize,
       allOffsets,
       SavedGamePlatform(),
     ),
+    status: reader.readStringOrNull(offsets[14]),
   );
-  object.completed = reader.readBool(offsets[1]);
+  object.completed = reader.readBool(offsets[2]);
   object.id = id;
   return object;
 }
@@ -254,26 +308,38 @@ P _savedGameDeserializeProp<P>(
         SavedGamePlatform(),
       )) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 2:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 3:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 4:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 5:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongList(offset)) as P;
     case 8:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 9:
+      return (reader.readStringOrNull(offset)) as P;
+    case 10:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 11:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 12:
+      return (reader.readStringOrNull(offset)) as P;
+    case 13:
       return (reader.readObjectList<SavedGamePlatform>(
         offset,
         SavedGamePlatformSchema.deserialize,
         allOffsets,
         SavedGamePlatform(),
       )) as P;
+    case 14:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -880,6 +946,90 @@ extension SavedGameQueryFilter
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      averageCompletionHoursIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'averageCompletionHours',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      averageCompletionHoursIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'averageCompletionHours',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      averageCompletionHoursEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'averageCompletionHours',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      averageCompletionHoursGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'averageCompletionHours',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      averageCompletionHoursLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'averageCompletionHours',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      averageCompletionHoursBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'averageCompletionHours',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> completedEqualTo(
       bool value) {
     return QueryBuilder.apply(this, (query) {
@@ -1251,6 +1401,245 @@ extension SavedGameQueryFilter
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> genresIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'genres',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> genresIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'genres',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      genresElementEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'genres',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      genresElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'genres',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      genresElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'genres',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      genresElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'genres',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> genresLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'genres',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> genresIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'genres',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> genresIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'genres',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      genresLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'genres',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      genresLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'genres',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> genresLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'genres',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      hoursLoggedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'hoursLogged',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      hoursLoggedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'hoursLogged',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> hoursLoggedEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hoursLogged',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      hoursLoggedGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hoursLogged',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> hoursLoggedLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hoursLogged',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> hoursLoggedBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hoursLogged',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -1448,6 +1837,100 @@ extension SavedGameQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'imageUrl',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> isWishlistedEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isWishlisted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      manualProgressPercentageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'manualProgressPercentage',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      manualProgressPercentageIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'manualProgressPercentage',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      manualProgressPercentageEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'manualProgressPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      manualProgressPercentageGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'manualProgressPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      manualProgressPercentageLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'manualProgressPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition>
+      manualProgressPercentageBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'manualProgressPercentage',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -1702,6 +2185,152 @@ extension SavedGameQueryFilter
       );
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'status',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'status',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'status',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'status',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'status',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'status',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterFilterCondition> statusIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'status',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension SavedGameQueryObject
@@ -1786,6 +2415,20 @@ extension SavedGameQueryLinks
 }
 
 extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      sortByAverageCompletionHours() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'averageCompletionHours', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      sortByAverageCompletionHoursDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'averageCompletionHours', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.asc);
@@ -1846,6 +2489,18 @@ extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByHoursLogged() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hoursLogged', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByHoursLoggedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hoursLogged', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByImageUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'imageUrl', Sort.asc);
@@ -1855,6 +2510,32 @@ extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByImageUrlDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'imageUrl', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByIsWishlisted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWishlisted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByIsWishlistedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWishlisted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      sortByManualProgressPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'manualProgressPercentage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      sortByManualProgressPercentageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'manualProgressPercentage', Sort.desc);
     });
   }
 
@@ -1869,10 +2550,36 @@ extension SavedGameQuerySortBy on QueryBuilder<SavedGame, SavedGame, QSortBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> sortByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
 }
 
 extension SavedGameQuerySortThenBy
     on QueryBuilder<SavedGame, SavedGame, QSortThenBy> {
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      thenByAverageCompletionHours() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'averageCompletionHours', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      thenByAverageCompletionHoursDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'averageCompletionHours', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.asc);
@@ -1933,6 +2640,18 @@ extension SavedGameQuerySortThenBy
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByHoursLogged() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hoursLogged', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByHoursLoggedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hoursLogged', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1957,6 +2676,32 @@ extension SavedGameQuerySortThenBy
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByIsWishlisted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWishlisted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByIsWishlistedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isWishlisted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      thenByManualProgressPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'manualProgressPercentage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy>
+      thenByManualProgressPercentageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'manualProgressPercentage', Sort.desc);
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1968,10 +2713,29 @@ extension SavedGameQuerySortThenBy
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.asc);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QAfterSortBy> thenByStatusDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'status', Sort.desc);
+    });
+  }
 }
 
 extension SavedGameQueryWhereDistinct
     on QueryBuilder<SavedGame, SavedGame, QDistinct> {
+  QueryBuilder<SavedGame, SavedGame, QDistinct>
+      distinctByAverageCompletionHours() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'averageCompletionHours');
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'completed');
@@ -2003,6 +2767,18 @@ extension SavedGameQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByGenres() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'genres');
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByHoursLogged() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hoursLogged');
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByImageUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2010,10 +2786,30 @@ extension SavedGameQueryWhereDistinct
     });
   }
 
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByIsWishlisted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isWishlisted');
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QDistinct>
+      distinctByManualProgressPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'manualProgressPercentage');
+    });
+  }
+
   QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<SavedGame, SavedGame, QDistinct> distinctByStatus(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'status', caseSensitive: caseSensitive);
     });
   }
 }
@@ -2030,6 +2826,13 @@ extension SavedGameQueryProperty
       availablePlatformsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'availablePlatforms');
+    });
+  }
+
+  QueryBuilder<SavedGame, double?, QQueryOperations>
+      averageCompletionHoursProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'averageCompletionHours');
     });
   }
 
@@ -2063,9 +2866,34 @@ extension SavedGameQueryProperty
     });
   }
 
+  QueryBuilder<SavedGame, List<int>?, QQueryOperations> genresProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'genres');
+    });
+  }
+
+  QueryBuilder<SavedGame, double?, QQueryOperations> hoursLoggedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hoursLogged');
+    });
+  }
+
   QueryBuilder<SavedGame, String?, QQueryOperations> imageUrlProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'imageUrl');
+    });
+  }
+
+  QueryBuilder<SavedGame, bool, QQueryOperations> isWishlistedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isWishlisted');
+    });
+  }
+
+  QueryBuilder<SavedGame, double?, QQueryOperations>
+      manualProgressPercentageProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'manualProgressPercentage');
     });
   }
 
@@ -2079,6 +2907,12 @@ extension SavedGameQueryProperty
       platformsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'platforms');
+    });
+  }
+
+  QueryBuilder<SavedGame, String?, QQueryOperations> statusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'status');
     });
   }
 }

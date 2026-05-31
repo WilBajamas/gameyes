@@ -23,6 +23,10 @@ mixin _$Game {
   List<Platform>? get platforms;
   @JsonKey(name: 'release_dates')
   List<ReleaseDate>? get releaseDates;
+  @JsonKey(name: 'total_rating')
+  double? get criticScore;
+  int? get hypes;
+  List<int>? get genres;
 
   /// Create a copy of Game
   /// with the given fields replaced by the non-null parameter values.
@@ -46,7 +50,11 @@ mixin _$Game {
             const DeepCollectionEquality().equals(other.keywords, keywords) &&
             const DeepCollectionEquality().equals(other.platforms, platforms) &&
             const DeepCollectionEquality()
-                .equals(other.releaseDates, releaseDates));
+                .equals(other.releaseDates, releaseDates) &&
+            (identical(other.criticScore, criticScore) ||
+                other.criticScore == criticScore) &&
+            (identical(other.hypes, hypes) || other.hypes == hypes) &&
+            const DeepCollectionEquality().equals(other.genres, genres));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -59,11 +67,14 @@ mixin _$Game {
       const DeepCollectionEquality().hash(gameModes),
       const DeepCollectionEquality().hash(keywords),
       const DeepCollectionEquality().hash(platforms),
-      const DeepCollectionEquality().hash(releaseDates));
+      const DeepCollectionEquality().hash(releaseDates),
+      criticScore,
+      hypes,
+      const DeepCollectionEquality().hash(genres));
 
   @override
   String toString() {
-    return 'Game(id: $id, name: $name, cover: $cover, gameModes: $gameModes, keywords: $keywords, platforms: $platforms, releaseDates: $releaseDates)';
+    return 'Game(id: $id, name: $name, cover: $cover, gameModes: $gameModes, keywords: $keywords, platforms: $platforms, releaseDates: $releaseDates, criticScore: $criticScore, hypes: $hypes, genres: $genres)';
   }
 }
 
@@ -79,7 +90,10 @@ abstract mixin class $GameCopyWith<$Res> {
       @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
       List<GameKeyword>? keywords,
       List<Platform>? platforms,
-      @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates});
+      @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates,
+      @JsonKey(name: 'total_rating') double? criticScore,
+      int? hypes,
+      List<int>? genres});
 
   $GameCoverCopyWith<$Res>? get cover;
 }
@@ -103,6 +117,9 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
     Object? keywords = freezed,
     Object? platforms = freezed,
     Object? releaseDates = freezed,
+    Object? criticScore = freezed,
+    Object? hypes = freezed,
+    Object? genres = freezed,
   }) {
     return _then(_self.copyWith(
       id: freezed == id
@@ -133,6 +150,18 @@ class _$GameCopyWithImpl<$Res> implements $GameCopyWith<$Res> {
           ? _self.releaseDates
           : releaseDates // ignore: cast_nullable_to_non_nullable
               as List<ReleaseDate>?,
+      criticScore: freezed == criticScore
+          ? _self.criticScore
+          : criticScore // ignore: cast_nullable_to_non_nullable
+              as double?,
+      hypes: freezed == hypes
+          ? _self.hypes
+          : hypes // ignore: cast_nullable_to_non_nullable
+              as int?,
+      genres: freezed == genres
+          ? _self.genres
+          : genres // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 
@@ -249,15 +278,27 @@ extension GamePatterns on Game {
             @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
             List<GameKeyword>? keywords,
             List<Platform>? platforms,
-            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates)?
+            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates,
+            @JsonKey(name: 'total_rating') double? criticScore,
+            int? hypes,
+            List<int>? genres)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _Game() when $default != null:
-        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
-            _that.keywords, _that.platforms, _that.releaseDates);
+        return $default(
+            _that.id,
+            _that.name,
+            _that.cover,
+            _that.gameModes,
+            _that.keywords,
+            _that.platforms,
+            _that.releaseDates,
+            _that.criticScore,
+            _that.hypes,
+            _that.genres);
       case _:
         return orElse();
     }
@@ -285,14 +326,26 @@ extension GamePatterns on Game {
             @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
             List<GameKeyword>? keywords,
             List<Platform>? platforms,
-            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates)
+            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates,
+            @JsonKey(name: 'total_rating') double? criticScore,
+            int? hypes,
+            List<int>? genres)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _Game():
-        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
-            _that.keywords, _that.platforms, _that.releaseDates);
+        return $default(
+            _that.id,
+            _that.name,
+            _that.cover,
+            _that.gameModes,
+            _that.keywords,
+            _that.platforms,
+            _that.releaseDates,
+            _that.criticScore,
+            _that.hypes,
+            _that.genres);
     }
   }
 
@@ -317,14 +370,26 @@ extension GamePatterns on Game {
             @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
             List<GameKeyword>? keywords,
             List<Platform>? platforms,
-            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates)?
+            @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates,
+            @JsonKey(name: 'total_rating') double? criticScore,
+            int? hypes,
+            List<int>? genres)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _Game() when $default != null:
-        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
-            _that.keywords, _that.platforms, _that.releaseDates);
+        return $default(
+            _that.id,
+            _that.name,
+            _that.cover,
+            _that.gameModes,
+            _that.keywords,
+            _that.platforms,
+            _that.releaseDates,
+            _that.criticScore,
+            _that.hypes,
+            _that.genres);
       case _:
         return null;
     }
@@ -341,11 +406,15 @@ class _Game extends Game {
       @JsonKey(name: 'game_modes') final List<GameMode>? gameModes,
       final List<GameKeyword>? keywords,
       final List<Platform>? platforms,
-      @JsonKey(name: 'release_dates') final List<ReleaseDate>? releaseDates})
+      @JsonKey(name: 'release_dates') final List<ReleaseDate>? releaseDates,
+      @JsonKey(name: 'total_rating') this.criticScore,
+      this.hypes,
+      final List<int>? genres})
       : _gameModes = gameModes,
         _keywords = keywords,
         _platforms = platforms,
         _releaseDates = releaseDates,
+        _genres = genres,
         super._();
   factory _Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 
@@ -397,6 +466,21 @@ class _Game extends Game {
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  @JsonKey(name: 'total_rating')
+  final double? criticScore;
+  @override
+  final int? hypes;
+  final List<int>? _genres;
+  @override
+  List<int>? get genres {
+    final value = _genres;
+    if (value == null) return null;
+    if (_genres is EqualUnmodifiableListView) return _genres;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   /// Create a copy of Game
   /// with the given fields replaced by the non-null parameter values.
   @override
@@ -426,7 +510,11 @@ class _Game extends Game {
             const DeepCollectionEquality()
                 .equals(other._platforms, _platforms) &&
             const DeepCollectionEquality()
-                .equals(other._releaseDates, _releaseDates));
+                .equals(other._releaseDates, _releaseDates) &&
+            (identical(other.criticScore, criticScore) ||
+                other.criticScore == criticScore) &&
+            (identical(other.hypes, hypes) || other.hypes == hypes) &&
+            const DeepCollectionEquality().equals(other._genres, _genres));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -439,11 +527,14 @@ class _Game extends Game {
       const DeepCollectionEquality().hash(_gameModes),
       const DeepCollectionEquality().hash(_keywords),
       const DeepCollectionEquality().hash(_platforms),
-      const DeepCollectionEquality().hash(_releaseDates));
+      const DeepCollectionEquality().hash(_releaseDates),
+      criticScore,
+      hypes,
+      const DeepCollectionEquality().hash(_genres));
 
   @override
   String toString() {
-    return 'Game(id: $id, name: $name, cover: $cover, gameModes: $gameModes, keywords: $keywords, platforms: $platforms, releaseDates: $releaseDates)';
+    return 'Game(id: $id, name: $name, cover: $cover, gameModes: $gameModes, keywords: $keywords, platforms: $platforms, releaseDates: $releaseDates, criticScore: $criticScore, hypes: $hypes, genres: $genres)';
   }
 }
 
@@ -460,7 +551,10 @@ abstract mixin class _$GameCopyWith<$Res> implements $GameCopyWith<$Res> {
       @JsonKey(name: 'game_modes') List<GameMode>? gameModes,
       List<GameKeyword>? keywords,
       List<Platform>? platforms,
-      @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates});
+      @JsonKey(name: 'release_dates') List<ReleaseDate>? releaseDates,
+      @JsonKey(name: 'total_rating') double? criticScore,
+      int? hypes,
+      List<int>? genres});
 
   @override
   $GameCoverCopyWith<$Res>? get cover;
@@ -485,6 +579,9 @@ class __$GameCopyWithImpl<$Res> implements _$GameCopyWith<$Res> {
     Object? keywords = freezed,
     Object? platforms = freezed,
     Object? releaseDates = freezed,
+    Object? criticScore = freezed,
+    Object? hypes = freezed,
+    Object? genres = freezed,
   }) {
     return _then(_Game(
       id: freezed == id
@@ -515,6 +612,18 @@ class __$GameCopyWithImpl<$Res> implements _$GameCopyWith<$Res> {
           ? _self._releaseDates
           : releaseDates // ignore: cast_nullable_to_non_nullable
               as List<ReleaseDate>?,
+      criticScore: freezed == criticScore
+          ? _self.criticScore
+          : criticScore // ignore: cast_nullable_to_non_nullable
+              as double?,
+      hypes: freezed == hypes
+          ? _self.hypes
+          : hypes // ignore: cast_nullable_to_non_nullable
+              as int?,
+      genres: freezed == genres
+          ? _self._genres
+          : genres // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 

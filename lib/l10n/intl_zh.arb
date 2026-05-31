@@ -102,5 +102,76 @@
     }
   },
   "remove_step_failed": "Failed removing step",
-  "removed_step": "Step removed"
+  "removed_step": "Step removed",
+  "failed_to_load_weekly_releases": "加载每周发布失败",
+  "failed_to_load_countdown_game": "加载倒计时游戏失败",
+  "failed_to_load_critics_choice_reviews": "加载媒体选择评测失败",
+  "failed_to_load_genre_preferences": "加载类型偏好失败",
+  "failed_to_save_genre_preference": "保存类型偏好失败",
+  "failed_to_skip_genre_preferences": "跳过类型偏好失败",
+  "failed_to_load_library_stats": "加载库统计信息失败",
+  "featured_revamp": "精选改版",
+  "loading_game_title_placeholder": "加载游戏标题",
+  "coming_soon": "即将推出",
+  "loading_game_release_title": "加载游戏发布标题",
+  "critics_choice_title": "媒体选择标题",
+  "released_2_days_ago": "2天前发布",
+  "welcome_to_gameyes": "欢迎来到 GameYes 🎮",
+  "complete_onboarding_steps": "让我们完成快速入门步骤。",
+  "add_game_played": "添加一款你玩过的游戏",
+  "add_button": "+ 添加",
+  "mark_playing_now": "标记你现在正在玩的游戏",
+  "mark_button": "+ 标记",
+  "wishlist_upcoming_game": "将即将推出的游戏加入心愿单",
+  "wishlist_button": "+ 心愿单",
+  "total_games": "总游戏数",
+  "wishlist": "心愿单",
+  "this_week": "本周",
+  "now_playing": "正在玩",
+  "no_game_in_progress": "目前没有正在进行的游戏",
+  "mark_something_playing": "标记一些游戏为正在玩 →",
+  "active": "活跃",
+  "completed_percentage": "已完成 {percentage}%",
+  "@completed_percentage": {
+    "placeholders": {
+      "percentage": {
+        "type": "String"
+      }
+    }
+  },
+  "logged_hours_of": "已记录 {logged}小时，共 {average}小时",
+  "@logged_hours_of": {
+    "placeholders": {
+      "logged": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      }
+    }
+  },
+  "played_hours": "已游玩 {hours}小时",
+  "@played_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_playing": "还有 {count} 款正在玩",
+  "@more_playing": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "hours_abbreviation": "{hours}小时",
+  "@hours_abbreviation": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  }
 }

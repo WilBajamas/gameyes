@@ -673,6 +673,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step removed'**
   String get removed_step;
+
+  /// No description provided for @failed_to_load_weekly_releases.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load weekly releases'**
+  String get failed_to_load_weekly_releases;
+
+  /// No description provided for @failed_to_load_countdown_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load countdown game'**
+  String get failed_to_load_countdown_game;
+
+  /// No description provided for @failed_to_load_critics_choice_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load critics choice reviews'**
+  String get failed_to_load_critics_choice_reviews;
+
+  /// No description provided for @failed_to_load_genre_preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load genre preferences'**
+  String get failed_to_load_genre_preferences;
+
+  /// No description provided for @failed_to_save_genre_preference.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save genre preference'**
+  String get failed_to_save_genre_preference;
+
+  /// No description provided for @failed_to_skip_genre_preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to skip genre preferences'**
+  String get failed_to_skip_genre_preferences;
+
+  /// No description provided for @failed_to_load_library_stats.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load library stats'**
+  String get failed_to_load_library_stats;
 }
 
 class _AppLocalizationsDelegate

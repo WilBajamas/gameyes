@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'games_service.dart';
+part of 'igdb_api_service.dart';
 
 // dart format off
 
@@ -10,8 +10,8 @@ part of 'games_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
-class _GamesServices implements GamesServices {
-  _GamesServices(this._dio, {this.baseUrl, this.errorLogger}) {
+class _IgdbApiService implements IgdbApiService {
+  _IgdbApiService(this._dio, {this.baseUrl, this.errorLogger}) {
     baseUrl ??= 'https://api.igdb.com/v4/';
   }
 
@@ -42,6 +42,35 @@ class _GamesServices implements GamesServices {
     try {
       _value = _result.data!
           .map((dynamic i) => Game.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<List<ReleaseDate>> fetchReleaseDates(String query) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = query;
+    final _options = _setStreamType<List<ReleaseDate>>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/release_dates',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<ReleaseDate> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => ReleaseDate.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

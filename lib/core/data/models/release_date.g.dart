@@ -9,10 +9,12 @@ part of 'release_date.dart';
 _ReleaseDate _$ReleaseDateFromJson(Map<String, dynamic> json) => _ReleaseDate(
       date: (json['date'] as num?)?.toInt(),
       human: json['human'] as String?,
+      category: (json['category'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ReleaseDateToJson(_ReleaseDate instance) =>
     <String, dynamic>{
       'date': instance.date,
       'human': instance.human,
+      'category': instance.category,
     };
