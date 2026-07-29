@@ -19,6 +19,22 @@ import '../../../../generated/l10n.dart';
 class TrackerScreen extends StatelessWidget {
   TrackerScreen({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: BlocProvider(
+          create: (context) => getIt<TrackerCubit>(),
+          child: const _TrackerView(),
+        ),
+      ),
+    );
+  }
+}
+
+class _TrackerView extends StatelessWidget {
+  const _TrackerView();
+
   void removeSavedGame(
     BuildContext context,
     int savedGameId,
@@ -54,83 +70,77 @@ class TrackerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocProvider(
-          create: (context) => getIt<TrackerCubit>(),
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverAppBar(
-                floating: true,
-                toolbarHeight: kToolbarHeight + 10,
-                backgroundColor: context.themeData.scaffoldBackgroundColor,
-                surfaceTintColor: context.themeData.scaffoldBackgroundColor,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SearchBar(
-                      onSubmitted: (term) =>
-                          context.read<TrackerCubit>().setTag(null, term),
-                      hintText: S.current.search_saved_games,
-                      padding: const WidgetStatePropertyAll<EdgeInsets>(
-                        EdgeInsets.symmetric(horizontal: 12),
-                      ),
-                      elevation: const WidgetStatePropertyAll<double>(
-                        1,
-                      ),
-                      leading: Icon(
-                        Icons.search,
-                        color: context.themeData.colorScheme.primary,
-                      ),
-                    ),
-                  ),
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        SliverAppBar(
+          floating: true,
+          toolbarHeight: kToolbarHeight + 10,
+          backgroundColor: context.themeData.scaffoldBackgroundColor,
+          surfaceTintColor: context.themeData.scaffoldBackgroundColor,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SearchBar(
+                onSubmitted: (term) =>
+                    context.read<TrackerCubit>().setSearchTerm(term),
+                hintText: S.current.search_saved_games,
+                padding: const WidgetStatePropertyAll<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 12),
+                ),
+                elevation: const WidgetStatePropertyAll<double>(
+                  1,
+                ),
+                leading: Icon(
+                  Icons.search,
+                  color: context.themeData.colorScheme.primary,
                 ),
               ),
-              DefaultFilterListAppBar<SavedGameFilterTag>(
-                filterList: trackerFilters,
-                selected: (selectedTag) =>
-                    context.read<TrackerCubit>().setTag(selectedTag, null),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                sliver: BlocBuilder<TrackerCubit, TrackerState>(
-                  builder: (context, state) {
-                    return StreamBuilder<List<TrackerSavedGameEntity>>(
-                      stream: context.read<TrackerCubit>().savedGamesStream,
-                      builder: (context, snapshot) {
-                        final list = snapshot.data;
-
-                        switch (list) {
-                          case List<TrackerSavedGameEntity>? list
-                              when list != null && list.isNotEmpty:
-                            return _TrackerList(
-                              onRemoveClick: (savedGameId) =>
-                                  removeSavedGame(context, savedGameId),
-                              onDetailClick: (gameId, imageUrl) {
-                                final extra =
-                                    (gameId, RouteConstants.tracker, imageUrl);
-
-                                context.router.push(
-                                  GameDetailRoute(gameExtra: extra),
-                                );
-                              },
-                              list: list,
-                            );
-
-                          default:
-                            // Empty or null saved games
-                            return const _EmptyListDescription();
-                        }
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+        DefaultFilterListAppBar<SavedGameFilterTag>(
+          filterList: trackerFilters,
+          initialSelection: context.read<TrackerCubit>().state.tag,
+          selected: (selectedTag) =>
+              context.read<TrackerCubit>().setSortTag(selectedTag),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          sliver: BlocBuilder<TrackerCubit, TrackerState>(
+            builder: (context, state) {
+              return StreamBuilder<List<TrackerSavedGameEntity>>(
+                stream: context.read<TrackerCubit>().savedGamesStream,
+                builder: (context, snapshot) {
+                  final list = snapshot.data;
+
+                  switch (list) {
+                    case List<TrackerSavedGameEntity>? list
+                        when list != null && list.isNotEmpty:
+                      return _TrackerList(
+                        onRemoveClick: (savedGameId) =>
+                            removeSavedGame(context, savedGameId),
+                        onDetailClick: (gameId, imageUrl) {
+                          final extra =
+                              (gameId, RouteConstants.tracker, imageUrl);
+
+                          context.router.push(
+                            GameDetailRoute(gameExtra: extra),
+                          );
+                        },
+                        list: list,
+                      );
+
+                    default:
+                      // Empty or null saved games
+                      return const _EmptyListDescription();
+                  }
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

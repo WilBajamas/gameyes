@@ -28,6 +28,7 @@ class AssetConstants {
 
 class StorageConstants {
   static const firstUseKey = 'first_use';
+  static const trackerSortTagKey = 'tracker_sort_tag';
 }
 
 class StringConstants {

@@ -80,14 +80,24 @@ import 'package:gaming_library_assessment_flutter/features/home/presentation/not
     as _i1017;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
     as _i944;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/tracker_preferences_datasource.dart'
+    as _i629;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_detail_repository_impl.dart'
     as _i441;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_repository_impl.dart'
     as _i104;
+import 'package:gaming_library_assessment_flutter/features/tracker/data/repositories/tracker_sort_repository_impl.dart'
+    as _i856;
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_detail_repository.dart'
     as _i980;
 import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_repository.dart'
     as _i443;
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/repositories/tracker_sort_repository.dart'
+    as _i922;
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/use_cases/get_tracker_sort_use_case.dart'
+    as _i671;
+import 'package:gaming_library_assessment_flutter/features/tracker/domain/use_cases/save_tracker_sort_use_case.dart'
+    as _i422;
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/task_cubit.dart'
     as _i633;
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/tracker_cubit.dart'
@@ -129,6 +139,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => networkModule.getIgdbApiService(gh<_i361.Dio>()));
     gh.singleton<_i54.GameDetailService>(
         () => networkModule.getGameDetailService(gh<_i361.Dio>()));
+    gh.factory<_i629.TrackerPreferencesDatasource>(() =>
+        _i629.TrackerPreferencesDatasource(gh<_i460.SharedPreferences>()));
+    gh.factory<_i922.TrackerSortRepository>(() =>
+        _i856.TrackerSortRepositoryImpl(
+            gh<_i629.TrackerPreferencesDatasource>()));
     gh.factory<_i554.FeaturedLocalDatasource>(
         () => _i554.FeaturedLocalDatasource(
               gh<_i857.GameLocalStorageService>(),
@@ -147,6 +162,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i554.FeaturedLocalDatasource>(),
           gh<_i35.IgdbApiService>(),
         ));
+    gh.factory<_i671.GetTrackerSortUseCase>(
+        () => _i671.GetTrackerSortUseCase(gh<_i922.TrackerSortRepository>()));
+    gh.factory<_i422.SaveTrackerSortUseCase>(
+        () => _i422.SaveTrackerSortUseCase(gh<_i922.TrackerSortRepository>()));
     gh.factory<_i223.GameDetailRepository>(() => _i366.GameDetailRepositoryImpl(
           gh<_i750.GameDetailRemoteDatasource>(),
           gh<_i944.GameLocalDatasource>(),
@@ -209,10 +228,13 @@ extension GetItInjectableX on _i174.GetIt {
           game: game,
           trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
         ));
-    gh.factory<_i970.TrackerCubit>(
-        () => _i970.TrackerCubit(gh<_i443.TrackerRepository>()));
     gh.factory<_i14.FetchGamesUseCase>(
         () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()));
+    gh.factory<_i970.TrackerCubit>(() => _i970.TrackerCubit(
+          gh<_i443.TrackerRepository>(),
+          gh<_i422.SaveTrackerSortUseCase>(),
+          gh<_i671.GetTrackerSortUseCase>(),
+        ));
     gh.factory<_i591.GamesBloc>(
         () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()));
     return this;
