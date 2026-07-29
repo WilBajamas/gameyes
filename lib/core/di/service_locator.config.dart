@@ -26,42 +26,30 @@ import 'package:gaming_library_assessment_flutter/core/services/api/twitch_auth_
     as _i641;
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart'
     as _i857;
+import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart'
+    as _i554;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repositories/featured_repository_impl.dart'
     as _i840;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart'
     as _i985;
-import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/fetch_featured_use_case.dart'
-    as _i783;
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/featured_bloc.dart'
-    as _i298;
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/cubits/featured_filter_cubit.dart'
-    as _i53;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/data/datasources/featured_revamp_local_datasource.dart'
-    as _i61;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/data/repositories/featured_revamp_repository_impl.dart'
-    as _i323;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/repositories/featured_revamp_repository.dart'
-    as _i649;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/use_cases/get_countdown_game_use_case.dart'
-    as _i248;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/use_cases/get_critics_choice_use_case.dart'
-    as _i1034;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/use_cases/get_genre_preferences_use_case.dart'
-    as _i240;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/use_cases/get_library_snapshot_use_case.dart'
-    as _i443;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/use_cases/get_out_this_week_use_case.dart'
-    as _i43;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/use_cases/save_genre_preferences_use_case.dart'
-    as _i649;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/presentation/blocs/countdown_releases_cubit.dart'
-    as _i446;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/presentation/blocs/critics_grid_cubit.dart'
-    as _i1048;
-import 'package:gaming_library_assessment_flutter/features/featured_revamp/presentation/blocs/library_stats_cubit.dart'
-    as _i768;
-import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart'
-    as _i305;
+import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_countdown_game_use_case.dart'
+    as _i781;
+import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_critics_choice_use_case.dart'
+    as _i971;
+import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_genre_preferences_use_case.dart'
+    as _i804;
+import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_library_snapshot_use_case.dart'
+    as _i851;
+import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_out_this_week_use_case.dart'
+    as _i526;
+import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/save_genre_preferences_use_case.dart'
+    as _i151;
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/countdown_releases_cubit.dart'
+    as _i208;
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/critics_grid_cubit.dart'
+    as _i187;
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_cubit.dart'
+    as _i426;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart'
     as _i669;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart'
@@ -141,14 +129,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => networkModule.getIgdbApiService(gh<_i361.Dio>()));
     gh.singleton<_i54.GameDetailService>(
         () => networkModule.getGameDetailService(gh<_i361.Dio>()));
-    gh.factoryParam<_i53.FeaturedFilterCubit, Set<_i305.GamePlatform>, dynamic>(
-        (
-      initialPlatforms,
-      _,
-    ) =>
-            _i53.FeaturedFilterCubit(initialPlatforms: initialPlatforms));
-    gh.factory<_i61.FeaturedRevampLocalDatasource>(
-        () => _i61.FeaturedRevampLocalDatasource(
+    gh.factory<_i554.FeaturedLocalDatasource>(
+        () => _i554.FeaturedLocalDatasource(
               gh<_i857.GameLocalStorageService>(),
               gh<_i460.SharedPreferences>(),
             ));
@@ -161,19 +143,34 @@ extension GetItInjectableX on _i174.GetIt {
         _i669.FilterCubit(initialState: initialState));
     gh.factory<_i944.GameLocalDatasource>(
         () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
+    gh.factory<_i985.FeaturedRepository>(() => _i840.FeaturedRepositoryImpl(
+          gh<_i554.FeaturedLocalDatasource>(),
+          gh<_i35.IgdbApiService>(),
+        ));
     gh.factory<_i223.GameDetailRepository>(() => _i366.GameDetailRepositoryImpl(
           gh<_i750.GameDetailRemoteDatasource>(),
           gh<_i944.GameLocalDatasource>(),
         ));
     gh.factory<_i621.GamesDataSource>(
         () => _i621.GamesDataSource(gh<_i35.IgdbApiService>()));
-    gh.factory<_i649.FeaturedRevampRepository>(
-        () => _i323.FeaturedRevampRepositoryImpl(
-              gh<_i61.FeaturedRevampLocalDatasource>(),
-              gh<_i35.IgdbApiService>(),
-            ));
+    gh.factory<_i781.GetCountdownGameUseCase>(
+        () => _i781.GetCountdownGameUseCase(gh<_i985.FeaturedRepository>()));
+    gh.factory<_i971.GetCriticsChoiceUseCase>(
+        () => _i971.GetCriticsChoiceUseCase(gh<_i985.FeaturedRepository>()));
+    gh.factory<_i804.GetGenrePreferencesUseCase>(
+        () => _i804.GetGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()));
+    gh.factory<_i851.GetLibrarySnapshotUseCase>(
+        () => _i851.GetLibrarySnapshotUseCase(gh<_i985.FeaturedRepository>()));
+    gh.factory<_i526.GetOutThisWeekUseCase>(
+        () => _i526.GetOutThisWeekUseCase(gh<_i985.FeaturedRepository>()));
+    gh.factory<_i151.SaveGenrePreferencesUseCase>(() =>
+        _i151.SaveGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()));
     gh.factory<_i461.GamesRepository>(
         () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()));
+    gh.factory<_i426.LibraryStatsCubit>(() => _i426.LibraryStatsCubit(
+          gh<_i851.GetLibrarySnapshotUseCase>(),
+          gh<_i460.SharedPreferences>(),
+        ));
     gh.factoryParam<_i32.GameDetailCubit, int, dynamic>((
       id,
       _,
@@ -186,8 +183,15 @@ extension GetItInjectableX on _i174.GetIt {
         _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()));
     gh.factory<_i443.TrackerRepository>(
         () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()));
-    gh.factory<_i985.FeaturedRepository>(
-        () => _i840.FeaturedRepositoryImpl(gh<_i621.GamesDataSource>()));
+    gh.factory<_i187.CriticsGridCubit>(() => _i187.CriticsGridCubit(
+          gh<_i804.GetGenrePreferencesUseCase>(),
+          gh<_i971.GetCriticsChoiceUseCase>(),
+          gh<_i151.SaveGenrePreferencesUseCase>(),
+        ));
+    gh.factory<_i208.CountdownReleasesCubit>(() => _i208.CountdownReleasesCubit(
+          gh<_i781.GetCountdownGameUseCase>(),
+          gh<_i526.GetOutThisWeekUseCase>(),
+        ));
     gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>((
       task,
       _,
@@ -205,42 +209,12 @@ extension GetItInjectableX on _i174.GetIt {
           game: game,
           trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
         ));
-    gh.factory<_i783.FetchFeaturedUseCase>(
-        () => _i783.FetchFeaturedUseCase(gh<_i985.FeaturedRepository>()));
-    gh.factory<_i248.GetCountdownGameUseCase>(() =>
-        _i248.GetCountdownGameUseCase(gh<_i649.FeaturedRevampRepository>()));
-    gh.factory<_i1034.GetCriticsChoiceUseCase>(() =>
-        _i1034.GetCriticsChoiceUseCase(gh<_i649.FeaturedRevampRepository>()));
-    gh.factory<_i240.GetGenrePreferencesUseCase>(() =>
-        _i240.GetGenrePreferencesUseCase(gh<_i649.FeaturedRevampRepository>()));
-    gh.factory<_i443.GetLibrarySnapshotUseCase>(() =>
-        _i443.GetLibrarySnapshotUseCase(gh<_i649.FeaturedRevampRepository>()));
-    gh.factory<_i43.GetOutThisWeekUseCase>(
-        () => _i43.GetOutThisWeekUseCase(gh<_i649.FeaturedRevampRepository>()));
-    gh.factory<_i649.SaveGenrePreferencesUseCase>(() =>
-        _i649.SaveGenrePreferencesUseCase(
-            gh<_i649.FeaturedRevampRepository>()));
-    gh.factory<_i446.CountdownReleasesCubit>(() => _i446.CountdownReleasesCubit(
-          gh<_i248.GetCountdownGameUseCase>(),
-          gh<_i43.GetOutThisWeekUseCase>(),
-        ));
     gh.factory<_i970.TrackerCubit>(
         () => _i970.TrackerCubit(gh<_i443.TrackerRepository>()));
     gh.factory<_i14.FetchGamesUseCase>(
         () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()));
-    gh.factory<_i298.FeaturedBloc>(
-        () => _i298.FeaturedBloc(gh<_i783.FetchFeaturedUseCase>()));
-    gh.factory<_i1048.CriticsGridCubit>(() => _i1048.CriticsGridCubit(
-          gh<_i240.GetGenrePreferencesUseCase>(),
-          gh<_i1034.GetCriticsChoiceUseCase>(),
-          gh<_i649.SaveGenrePreferencesUseCase>(),
-        ));
     gh.factory<_i591.GamesBloc>(
         () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()));
-    gh.factory<_i768.LibraryStatsCubit>(() => _i768.LibraryStatsCubit(
-          gh<_i443.GetLibrarySnapshotUseCase>(),
-          gh<_i460.SharedPreferences>(),
-        ));
     return this;
   }
 }
