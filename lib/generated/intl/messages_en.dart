@@ -20,7 +20,17 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(stepName) =>
+  static String m0(percentage) => "${percentage}% completed";
+
+  static String m1(hours) => "${hours}h";
+
+  static String m2(logged, average) => "${logged}h logged of ${average}h";
+
+  static String m3(count) => "+ ${count} more playing";
+
+  static String m4(hours) => "${hours}h played";
+
+  static String m5(stepName) =>
       "Are you sure you want to remove step ${stepName}? This action cannot be undone";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -29,6 +39,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "A breif description",
     ),
     "about": MessageLookupByLibrary.simpleMessage("About"),
+    "active": MessageLookupByLibrary.simpleMessage("Active"),
+    "add_button": MessageLookupByLibrary.simpleMessage("+ Add"),
+    "add_game_played": MessageLookupByLibrary.simpleMessage(
+      "Add a game you\'ve played",
+    ),
     "add_group_task": MessageLookupByLibrary.simpleMessage("Add Group Task"),
     "add_step": MessageLookupByLibrary.simpleMessage("Add step"),
     "add_task": MessageLookupByLibrary.simpleMessage("Add task"),
@@ -45,7 +60,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "browse": MessageLookupByLibrary.simpleMessage("Browse"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "coming_soon": MessageLookupByLibrary.simpleMessage("Coming Soon"),
+    "complete_onboarding_steps": MessageLookupByLibrary.simpleMessage(
+      "Let\'s complete your quick onboarding steps.",
+    ),
     "completed": MessageLookupByLibrary.simpleMessage("Completed"),
+    "completed_percentage": m0,
+    "critics_choice_title": MessageLookupByLibrary.simpleMessage(
+      "Critics Choice Title",
+    ),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
     "date_added": MessageLookupByLibrary.simpleMessage("Date added"),
     "date_range": MessageLookupByLibrary.simpleMessage("Date range"),
@@ -64,7 +87,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "error_results": MessageLookupByLibrary.simpleMessage(
       "Error retrieving results",
     ),
+    "failed_to_load_countdown_game": MessageLookupByLibrary.simpleMessage(
+      "Failed to load countdown game",
+    ),
+    "failed_to_load_critics_choice_reviews":
+        MessageLookupByLibrary.simpleMessage(
+          "Failed to load critics choice reviews",
+        ),
+    "failed_to_load_genre_preferences": MessageLookupByLibrary.simpleMessage(
+      "Failed to load genre preferences",
+    ),
+    "failed_to_load_library_stats": MessageLookupByLibrary.simpleMessage(
+      "Failed to load library stats",
+    ),
+    "failed_to_load_weekly_releases": MessageLookupByLibrary.simpleMessage(
+      "Failed to load weekly releases",
+    ),
+    "failed_to_save_genre_preference": MessageLookupByLibrary.simpleMessage(
+      "Failed to save genre preference",
+    ),
+    "failed_to_skip_genre_preferences": MessageLookupByLibrary.simpleMessage(
+      "Failed to skip genre preferences",
+    ),
     "featured": MessageLookupByLibrary.simpleMessage("Featured"),
+    "featured_revamp": MessageLookupByLibrary.simpleMessage("Featured Revamp"),
     "featured_screen_title": MessageLookupByLibrary.simpleMessage(
       "Check out our featured lists of games, from most anticipated to the latest releases.",
     ),
@@ -80,15 +126,31 @@ class MessageLookup extends MessageLookupByLibrary {
     "group_task_created": MessageLookupByLibrary.simpleMessage(
       "Group task created",
     ),
+    "hours_abbreviation": m1,
     "improve": MessageLookupByLibrary.simpleMessage("Improve"),
     "inProgress": MessageLookupByLibrary.simpleMessage("In Progress"),
     "keep_it_short": MessageLookupByLibrary.simpleMessage("Keep it short"),
     "last_updated": MessageLookupByLibrary.simpleMessage("Last Updated"),
     "latest_releases": MessageLookupByLibrary.simpleMessage("Latest Releases"),
+    "loading_game_release_title": MessageLookupByLibrary.simpleMessage(
+      "Loading Game Release Title",
+    ),
+    "loading_game_title_placeholder": MessageLookupByLibrary.simpleMessage(
+      "Loading Game Title",
+    ),
+    "logged_hours_of": m2,
+    "mark_button": MessageLookupByLibrary.simpleMessage("+ Mark"),
+    "mark_playing_now": MessageLookupByLibrary.simpleMessage(
+      "Mark what you\'re playing now",
+    ),
+    "mark_something_playing": MessageLookupByLibrary.simpleMessage(
+      "Mark something as playing →",
+    ),
     "metacritic_score": MessageLookupByLibrary.simpleMessage(
       "Metacritic score",
     ),
     "missed": MessageLookupByLibrary.simpleMessage("Missed"),
+    "more_playing": m3,
     "most_anticipated": MessageLookupByLibrary.simpleMessage(
       "Most Anticipated",
     ),
@@ -99,6 +161,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "news": MessageLookupByLibrary.simpleMessage("News"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
+    "no_game_in_progress": MessageLookupByLibrary.simpleMessage(
+      "No game in progress",
+    ),
     "no_games_saved": MessageLookupByLibrary.simpleMessage("No games saved"),
     "no_games_saved_description": MessageLookupByLibrary.simpleMessage(
       "Bookmark some games from the games or featured sections.",
@@ -113,6 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No results found",
     ),
     "not_started": MessageLookupByLibrary.simpleMessage("Not started"),
+    "now_playing": MessageLookupByLibrary.simpleMessage("Now Playing"),
     "ok": MessageLookupByLibrary.simpleMessage("Ok"),
     "onHold": MessageLookupByLibrary.simpleMessage("On Hold"),
     "onboarding_description_one": MessageLookupByLibrary.simpleMessage(
@@ -129,6 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ordering": MessageLookupByLibrary.simpleMessage("Ordering"),
     "platforms": MessageLookupByLibrary.simpleMessage("Platforms"),
+    "played_hours": m4,
     "playtime": MessageLookupByLibrary.simpleMessage("Playtime"),
     "please_enter_value": MessageLookupByLibrary.simpleMessage(
       "Please enter a value",
@@ -144,10 +211,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Recently changed",
     ),
     "release_date": MessageLookupByLibrary.simpleMessage("Release date"),
+    "released_2_days_ago": MessageLookupByLibrary.simpleMessage(
+      "Released 2 days ago",
+    ),
     "reminder": MessageLookupByLibrary.simpleMessage("Reminder"),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "remove_step": MessageLookupByLibrary.simpleMessage("Remove step"),
-    "remove_step_desc": m0,
+    "remove_step_desc": m5,
     "remove_step_failed": MessageLookupByLibrary.simpleMessage(
       "Failed removing step",
     ),
@@ -176,10 +246,20 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tasks in progress",
     ),
     "tasks_pinned": MessageLookupByLibrary.simpleMessage("Tasks pinned"),
+    "this_week": MessageLookupByLibrary.simpleMessage("This Week"),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
     "to": MessageLookupByLibrary.simpleMessage("To"),
     "toBuy": MessageLookupByLibrary.simpleMessage("To Buy"),
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
+    "total_games": MessageLookupByLibrary.simpleMessage("Total Games"),
     "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),
+    "welcome_to_gameyes": MessageLookupByLibrary.simpleMessage(
+      "Welcome to GameYes 🎮",
+    ),
+    "wishlist": MessageLookupByLibrary.simpleMessage("Wishlist"),
+    "wishlist_button": MessageLookupByLibrary.simpleMessage("+ Wishlist"),
+    "wishlist_upcoming_game": MessageLookupByLibrary.simpleMessage(
+      "Wishlist an upcoming game",
+    ),
   };
 }

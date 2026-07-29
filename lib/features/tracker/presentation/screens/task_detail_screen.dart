@@ -56,9 +56,12 @@ class TaskDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocProvider(
-        create: (context) => getIt<TaskCubit>(),
-        child: SingleChildScrollView(
+      body: SafeArea(
+        top: false,
+        child: BlocProvider(
+          create: (context) => getIt<TaskCubit>(),
+          child: SingleChildScrollView(
+
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           child: BlocConsumer<TaskCubit, TaskState>(
             listener: (context, state) {
@@ -101,6 +104,7 @@ class TaskDetailScreen extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

@@ -80,3 +80,11 @@ extension DateTimeExtension on DateTime {
     return DateTime(year - yearsBefore, month - monthsBefore, day - daysBefore);
   }
 }
+
+extension ImageUrlResolver on String? {
+  String? toAbsoluteImageUrl() {
+    if (this == null) return null;
+    return this!.startsWith('//') ? 'https:$this' : this;
+  }
+}
+

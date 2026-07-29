@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_logo_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 part 'platform_logo.freezed.dart';
 part 'platform_logo.g.dart';
@@ -16,6 +17,7 @@ sealed class PlatformLogo with _$PlatformLogo {
       _$PlatformLogoFromJson(json);
 
   PlatformLogoEntity toEntity() => PlatformLogoEntity(
-        url: url,
+        url: url.toAbsoluteImageUrl(),
       );
 }
+

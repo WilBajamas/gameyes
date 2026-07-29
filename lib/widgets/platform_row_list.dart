@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/platform_entity.dart';
-import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 
 class PlatformRowList extends StatelessWidget {
   final List<PlatformEntity> platforms;
@@ -38,7 +37,6 @@ class PlatformRowList extends StatelessWidget {
             : platforms[index].platformLogo?.url != null
                 ? Image.network(
                     platforms[index].platformLogo!.url!,
-                    color: context.themeData.colorScheme.onSurface,
                   )
                 : const SizedBox.shrink();
       },

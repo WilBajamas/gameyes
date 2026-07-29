@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/core/services/storage/shared_preferences.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/page_view_item.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../generated/l10n.dart';
 
@@ -33,7 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   bool _isLastPage = false;
 
   void skipClicked() {
-    getIt<SharedPreference>().writeValue(StorageConstants.firstUseKey, true);
+    getIt<SharedPreferences>().setBool(StorageConstants.firstUseKey, true);
     context.replaceRoute(HomeRoute());
   }
 

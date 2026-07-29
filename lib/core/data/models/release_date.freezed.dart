@@ -16,6 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$ReleaseDate {
   int? get date;
   String? get human;
+  int? get category;
 
   /// Create a copy of ReleaseDate
   /// with the given fields replaced by the non-null parameter values.
@@ -33,16 +34,18 @@ mixin _$ReleaseDate {
         (other.runtimeType == runtimeType &&
             other is ReleaseDate &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.human, human) || other.human == human));
+            (identical(other.human, human) || other.human == human) &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, date, human);
+  int get hashCode => Object.hash(runtimeType, date, human, category);
 
   @override
   String toString() {
-    return 'ReleaseDate(date: $date, human: $human)';
+    return 'ReleaseDate(date: $date, human: $human, category: $category)';
   }
 }
 
@@ -52,7 +55,7 @@ abstract mixin class $ReleaseDateCopyWith<$Res> {
           ReleaseDate value, $Res Function(ReleaseDate) _then) =
       _$ReleaseDateCopyWithImpl;
   @useResult
-  $Res call({int? date, String? human});
+  $Res call({int? date, String? human, int? category});
 }
 
 /// @nodoc
@@ -69,6 +72,7 @@ class _$ReleaseDateCopyWithImpl<$Res> implements $ReleaseDateCopyWith<$Res> {
   $Res call({
     Object? date = freezed,
     Object? human = freezed,
+    Object? category = freezed,
   }) {
     return _then(_self.copyWith(
       date: freezed == date
@@ -79,6 +83,10 @@ class _$ReleaseDateCopyWithImpl<$Res> implements $ReleaseDateCopyWith<$Res> {
           ? _self.human
           : human // ignore: cast_nullable_to_non_nullable
               as String?,
+      category: freezed == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -174,13 +182,13 @@ extension ReleaseDatePatterns on ReleaseDate {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(int? date, String? human)? $default, {
+    TResult Function(int? date, String? human, int? category)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _ReleaseDate() when $default != null:
-        return $default(_that.date, _that.human);
+        return $default(_that.date, _that.human, _that.category);
       case _:
         return orElse();
     }
@@ -201,12 +209,12 @@ extension ReleaseDatePatterns on ReleaseDate {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(int? date, String? human) $default,
+    TResult Function(int? date, String? human, int? category) $default,
   ) {
     final _that = this;
     switch (_that) {
       case _ReleaseDate():
-        return $default(_that.date, _that.human);
+        return $default(_that.date, _that.human, _that.category);
     }
   }
 
@@ -224,12 +232,12 @@ extension ReleaseDatePatterns on ReleaseDate {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(int? date, String? human)? $default,
+    TResult? Function(int? date, String? human, int? category)? $default,
   ) {
     final _that = this;
     switch (_that) {
       case _ReleaseDate() when $default != null:
-        return $default(_that.date, _that.human);
+        return $default(_that.date, _that.human, _that.category);
       case _:
         return null;
     }
@@ -239,7 +247,7 @@ extension ReleaseDatePatterns on ReleaseDate {
 /// @nodoc
 @JsonSerializable()
 class _ReleaseDate extends ReleaseDate {
-  const _ReleaseDate({this.date, this.human}) : super._();
+  const _ReleaseDate({this.date, this.human, this.category}) : super._();
   factory _ReleaseDate.fromJson(Map<String, dynamic> json) =>
       _$ReleaseDateFromJson(json);
 
@@ -247,6 +255,8 @@ class _ReleaseDate extends ReleaseDate {
   final int? date;
   @override
   final String? human;
+  @override
+  final int? category;
 
   /// Create a copy of ReleaseDate
   /// with the given fields replaced by the non-null parameter values.
@@ -269,16 +279,18 @@ class _ReleaseDate extends ReleaseDate {
         (other.runtimeType == runtimeType &&
             other is _ReleaseDate &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.human, human) || other.human == human));
+            (identical(other.human, human) || other.human == human) &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, date, human);
+  int get hashCode => Object.hash(runtimeType, date, human, category);
 
   @override
   String toString() {
-    return 'ReleaseDate(date: $date, human: $human)';
+    return 'ReleaseDate(date: $date, human: $human, category: $category)';
   }
 }
 
@@ -290,7 +302,7 @@ abstract mixin class _$ReleaseDateCopyWith<$Res>
       __$ReleaseDateCopyWithImpl;
   @override
   @useResult
-  $Res call({int? date, String? human});
+  $Res call({int? date, String? human, int? category});
 }
 
 /// @nodoc
@@ -307,6 +319,7 @@ class __$ReleaseDateCopyWithImpl<$Res> implements _$ReleaseDateCopyWith<$Res> {
   $Res call({
     Object? date = freezed,
     Object? human = freezed,
+    Object? category = freezed,
   }) {
     return _then(_ReleaseDate(
       date: freezed == date
@@ -317,6 +330,10 @@ class __$ReleaseDateCopyWithImpl<$Res> implements _$ReleaseDateCopyWith<$Res> {
           ? _self.human
           : human // ignore: cast_nullable_to_non_nullable
               as String?,
+      category: freezed == category
+          ? _self.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }

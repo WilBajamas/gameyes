@@ -1,189 +1,288 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
-import 'package:gaming_library_assessment_flutter/core/enums/featured_tag.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/featured_bloc.dart';
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/screens/featured_filter_bottom_sheet.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
-import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
-import 'package:gaming_library_assessment_flutter/widgets/filter_list_app_bar.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
-
-import '../../../filter/data/models/games_platform.dart';
-import '../../../../generated/l10n.dart';
-import '../blocs/featured_state.dart';
-import '../constants/featured_tags_constant.dart';
+import 'package:gaming_library_assessment_flutter/core/presentation/mixins/stale_data_refresh_mixin.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/countdown_releases_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/countdown_releases_state.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/critics_grid_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/critics_grid_state.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_state.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/utils/game_loading_data.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/widgets/countdown_releases.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/widgets/critics_grid.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/widgets/library_stats.dart';
+import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 @RoutePage()
 class FeaturedScreen extends StatelessWidget {
   const FeaturedScreen({super.key});
 
-  void _fetchGames({
-    required BuildContext context,
-    FeaturedTag? tag,
-    Set<GamePlatform>? platformSelected,
-  }) =>
-      context
-          .read<FeaturedBloc>()
-          .add(FeaturedFetched(tag: tag, platforms: platformSelected));
-
-  void showBottomSheet(BuildContext context) {
-    final initialPlatforms =
-        context.read<FeaturedBloc>().state.platformsSelected;
-
-    showModalBottomSheet(
-      context: context,
-      builder: (bottomSheetContext) => FeaturedFilterBottomSheet(
-        initialPlatforms: initialPlatforms,
-        onSaveClick: (platforms) => _fetchGames(
-          context: context,
-          tag: context.read<FeaturedBloc>().state.tag,
-          platformSelected: platforms,
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LibraryStatsCubit>(
+          create: (context) =>
+              getIt<LibraryStatsCubit>()..loadLibrarySnapshot(),
         ),
-      ),
-      isScrollControlled: true,
+        BlocProvider<CountdownReleasesCubit>(
+          create: (context) =>
+              getIt<CountdownReleasesCubit>()..loadCountdownAndReleases(),
+        ),
+        BlocProvider<CriticsGridCubit>(
+          create: (context) => getIt<CriticsGridCubit>()..loadCriticsGrid(),
+        ),
+      ],
+      child: const FeaturedView(),
     );
+  }
+}
+
+class FeaturedView extends StatefulWidget {
+  const FeaturedView({super.key});
+
+  @override
+  State<FeaturedView> createState() => _FeaturedViewState();
+}
+
+class _FeaturedViewState extends State<FeaturedView>
+    with StaleDataRefreshMixin {
+  @override
+  Duration get staleThreshold => const Duration(minutes: 15);
+
+  @override
+  void onStaleRefresh() {
+    _refreshData(silent: true);
+  }
+
+  Future<void> _refreshData({required bool silent}) async {
+    final libraryCubit = context.read<LibraryStatsCubit>();
+    final countdownCubit = context.read<CountdownReleasesCubit>();
+    final criticsCubit = context.read<CriticsGridCubit>();
+
+    if (silent) {
+      libraryCubit.loadLibrarySnapshot();
+      countdownCubit.loadCountdownAndReleases();
+      criticsCubit.loadCriticsGrid();
+    } else {
+      await Future.wait([
+        libraryCubit.loadLibrarySnapshot(),
+        countdownCubit.loadCountdownAndReleases(),
+        criticsCubit.loadCriticsGrid(),
+      ]);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<FeaturedBloc>(),
-      child: Scaffold(
-        body: SafeArea(
-          child: BlocBuilder<FeaturedBloc, FeaturedState>(
-            builder: (context, state) {
-              return NotificationListener<ScrollUpdateNotification>(
-                onNotification: (notification) {
-                  final metrics = notification.metrics;
-                  final isBottom =
-                      metrics.pixels >= (metrics.maxScrollExtent * 0.9);
-
-                  if (isBottom) {
-                    context.read<FeaturedBloc>().scrolledBottom(
-                          isBottom: isBottom,
-                        );
-                  }
-                  return false;
-                },
-                child: CustomScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  slivers: [
-                    DefaultSliverAppBar(
-                      title: S.current.featured,
-                      subtitle: S.current.featured_subtitle,
-                      actionOne: (
-                        IconButton(
-                          onPressed: () => showBottomSheet(context),
-                          icon: Icon(
-                            Icons.filter_list,
-                            color: context.themeData.colorScheme.onSurface,
-                          ),
-                        ),
-                        null
-                      ),
-                    ),
-                    FilterlistAppBar<FeaturedTag>(
-                      selected: (selectedTag) =>
-                          _fetchGames(context: context, tag: selectedTag),
-                      filterList: featuredFilters,
-                    ),
-                    if (state.status == FeaturedStatus.success)
-                      CupertinoSliverRefreshControl(
-                        onRefresh: () async =>
-                            _fetchGames(context: context, tag: state.tag),
-                      ),
-                    if (state.status == FeaturedStatus.success)
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        sliver: SliverGrid.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.6,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                          ),
-                          itemCount: state.games.length,
-                          itemBuilder: (context, index) => GameItem(
-                            fromScreen: RouteConstants.featured,
-                            game: state.games[index],
-                            onItemClick: () {
-                              final extra = (
-                                state.games[index].id,
-                                RouteConstants.featured,
-                                state.games[index].cover.url
-                              );
-                              context.router.push(
-                                GameDetailRoute(gameExtra: extra),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    if (state.nextPageStatus == FeaturedNextPageStatus.loading)
-                      const SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 14,
-                          ),
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                      ),
-                    if (state.nextPageStatus == FeaturedNextPageStatus.failed)
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 14,
-                          ),
-                          child: ErrorRetryWidget(
-                            onRetryClicked: () => context
-                                .read<FeaturedBloc>()
-                                .add(const FeaturedNextPage()),
-                          ),
-                        ),
-                      ),
-                    if (state.status == FeaturedStatus.failed)
-                      SliverFillRemaining(
-                        child: Center(
-                          child: ErrorRetryWidget(
-                            onRetryClicked: () => _fetchGames(
-                              context: context,
-                            ),
-                          ),
-                        ),
-                      ),
-                    if (state.status == FeaturedStatus.empty)
-                      SliverFillRemaining(
-                        child: Center(
-                          child: ErrorRetryWidget(
-                            text: S.current.no_results_found,
-                            onRetryClicked: () => _fetchGames(
-                              context: context,
-                            ),
-                          ),
-                        ),
-                      ),
-                    if (state.status == FeaturedStatus.loading)
-                      const SliverFillRemaining(
-                        child: GameItemGridLoadingShimmer(),
-                      ),
-                  ],
-                ),
-              );
-            },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(S.current.featured),
+      ),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshData(silent: false),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _YouSection(),
+              const SizedBox(height: 24),
+              _RightNowSection(),
+              const SizedBox(height: 24),
+              _DiscoverSection(),
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _YouSection extends StatelessWidget {
+  const _YouSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LibraryStatsCubit, LibraryStatsState>(
+      builder: (context, state) {
+        if (state.status == LibraryStatsStatus.initial ||
+            (state.status == LibraryStatsStatus.loading &&
+                state.snapshot == null)) {
+          return const SizedBox(
+            height: 150,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        if (state.status == LibraryStatsStatus.failed) {
+          return Card(
+            color: Colors.red.shade50,
+            child: ListTile(
+              leading: const Icon(Icons.error, color: Colors.red),
+              title: Text(state.errorMessage ?? ''),
+              trailing: IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () =>
+                    context.read<LibraryStatsCubit>().loadLibrarySnapshot(),
+              ),
+            ),
+          );
+        }
+
+        return LibraryStatsWidget(
+          snapshot: state.snapshot,
+          isChecklistDismissed: state.isChecklistDismissed,
+          step1Completed: state.step1Completed,
+          step2Completed: state.step2Completed,
+          step3Completed: state.step3Completed,
+          checklistProgress: state.checklistProgress,
+          onAddPlayedGame: () => AutoTabsRouter.of(context).setActiveIndex(1),
+          onMarkNowPlaying: () => AutoTabsRouter.of(context).setActiveIndex(1),
+          onWishlistUpcoming: () =>
+              AutoTabsRouter.of(context).setActiveIndex(1),
+        );
+      },
+    );
+  }
+}
+
+class _RightNowSection extends StatelessWidget {
+  const _RightNowSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LibraryStatsCubit, LibraryStatsState>(
+      builder: (context, libraryState) {
+        final ownedIds = libraryState.snapshot?.ownedGameIds ?? <int>{};
+
+        return BlocBuilder<CountdownReleasesCubit, CountdownReleasesState>(
+          builder: (context, state) {
+            final isLoading = state.status == CountdownReleasesStatus.loading &&
+                state.countdownGame == null &&
+                state.outThisWeekGames.isEmpty;
+
+            if (state.status == CountdownReleasesStatus.failed) {
+              return Card(
+                color: Colors.red.shade50,
+                child: ListTile(
+                  leading: const Icon(Icons.error, color: Colors.red),
+                  title: Text(state.errorMessage ?? ''),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () => context
+                        .read<CountdownReleasesCubit>()
+                        .loadCountdownAndReleases(),
+                  ),
+                ),
+              );
+            }
+
+            if (isLoading) {
+              return Skeletonizer(
+                child: CountdownReleasesWidget(
+                  countdownGame: GameLoadingWidgetData.countdownGame,
+                  outThisWeekGames: GameLoadingWidgetData.weeklyReleases,
+                  durationRemaining: GameLoadingWidgetData.countdownDuration,
+                  isReleaseDay: false,
+                  isComingSoonLabel: false,
+                  localLibraryGameIds: ownedIds,
+                  onGameClick: (_, __, ___) {},
+                ),
+              );
+            }
+
+            if (state.countdownGame == null && state.outThisWeekGames.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
+            return CountdownReleasesWidget(
+              countdownGame: state.countdownGame,
+              outThisWeekGames: state.outThisWeekGames,
+              durationRemaining: state.durationRemaining,
+              isReleaseDay: state.isReleaseDay,
+              isComingSoonLabel: state.isComingSoonLabel,
+              localLibraryGameIds: ownedIds,
+              onGameClick: (id, name, imageUrl) {
+                context.router
+                    .push(GameDetailRoute(gameExtra: (id, name, imageUrl)));
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _DiscoverSection extends StatelessWidget {
+  const _DiscoverSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LibraryStatsCubit, LibraryStatsState>(
+      builder: (context, libraryState) {
+        final ownedIds = libraryState.snapshot?.ownedGameIds ?? <int>{};
+
+        return BlocBuilder<CriticsGridCubit, CriticsGridState>(
+          builder: (context, state) {
+            final isLoading = state.status == CriticsGridStatus.loading &&
+                state.criticsGames.isEmpty;
+
+            if (state.status == CriticsGridStatus.failed) {
+              return Card(
+                color: Colors.red.shade50,
+                child: ListTile(
+                  leading: const Icon(Icons.error, color: Colors.red),
+                  title: Text(state.errorMessage ?? ''),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () =>
+                        context.read<CriticsGridCubit>().loadCriticsGrid(),
+                  ),
+                ),
+              );
+            }
+
+            if (isLoading) {
+              return Skeletonizer(
+                child: CriticsGridWidget(
+                  criticsGames: GameLoadingWidgetData.criticsGames,
+                  genrePreferencesEntity:
+                      GameLoadingWidgetData.defaultGenrePrefs,
+                  localLibraryGameIds: ownedIds,
+                  onGenreToggled: (_) {},
+                  onSkipPressed: () {},
+                  onGameClick: (_, __, ___) {},
+                ),
+              );
+            }
+
+            return CriticsGridWidget(
+              criticsGames: state.criticsGames,
+              genrePreferencesEntity: state.genrePreferencesEntity,
+              localLibraryGameIds: ownedIds,
+              onGenreToggled: (genreId) {
+                context.read<CriticsGridCubit>().toggleGenrePreference(genreId);
+              },
+              onSkipPressed: () {
+                context.read<CriticsGridCubit>().skipGenrePreferences();
+              },
+              onGameClick: (id, name, imageUrl) {
+                context.router
+                    .push(GameDetailRoute(gameExtra: (id, name, imageUrl)));
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

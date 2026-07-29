@@ -1,0 +1,89 @@
+{
+  // Common Gameyes commands. Run with Ctrl+Shift+P -> "Tasks: Run Task",
+  // or Ctrl+Shift+B for the default build task.
+  //
+  // Every task runs through PowerShell because `fvm` lives on the PowerShell
+  // PATH and is not resolvable from Git Bash. Using fvm keeps generated code on
+  // the Flutter version pinned in .fvmrc (3.41.4) rather than whatever the
+  // system SDK happens to be.
+  "version": "2.0.0",
+  "options": {
+    "shell": {
+      "executable": "powershell.exe",
+      "args": ["-NoProfile", "-Command"]
+    }
+  },
+  "presentation": {
+    "panel": "dedicated",
+    "clear": true,
+    "showReuseMessage": false
+  },
+  "tasks": [
+    {
+      "label": "build_runner",
+      "detail": "Regenerate freezed, json, retrofit, injectable, isar, routes, mocks",
+      "type": "shell",
+      "command": "fvm dart run build_runner build --delete-conflicting-outputs",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "build_runner: watch",
+      "detail": "Regenerate continuously as files change",
+      "type": "shell",
+      "command": "fvm dart run build_runner watch --delete-conflicting-outputs",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "build_runner: clean",
+      "detail": "Drop the build cache — use when generation goes strange",
+      "type": "shell",
+      "command": "fvm dart run build_runner clean",
+      "problemMatcher": []
+    },
+    {
+      "label": "regen (clean + build)",
+      "detail": "Full clean rebuild of all generated code",
+      "dependsOrder": "sequence",
+      "dependsOn": ["build_runner: clean", "build_runner"],
+      "problemMatcher": []
+    },
+    {
+      "label": "analyze",
+      "detail": "Static analysis across the project",
+      "type": "shell",
+      "command": "fvm flutter analyze",
+      "problemMatcher": []
+    },
+    {
+      "label": "test",
+      "detail": "Run the whole test suite",
+      "type": "shell",
+      "command": "fvm flutter test",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "test: current file",
+      "detail": "Run only the test file open in the editor",
+      "type": "shell",
+      "command": "fvm flutter test '${relativeFile}'",
+      "problemMatcher": []
+    },
+    {
+      "label": "pub get",
+      "detail": "Fetch dependencies",
+      "type": "shell",
+      "command": "fvm flutter pub get",
+      "problemMatcher": []
+    },
+    {
+      "label": "check (analyze + test)",
+      "detail": "What to run before committing",
+      "dependsOrder": "sequence",
+      "dependsOn": ["analyze", "test"],
+      "problemMatcher": []
+    }
+  ]
+}

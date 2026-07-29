@@ -3,13 +3,13 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/igdb_query_builder.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../services/games_service.dart';
+import '../../services/igdb_api_service.dart';
 
 @injectable
 class GamesDataSource {
-  final GamesServices _gamesServices;
+  final IgdbApiService igdbApiService;
 
-  const GamesDataSource(this._gamesServices);
+  const GamesDataSource(this.igdbApiService);
 
   Future<GamesModel> fetchDatasourceGames({
     int page = 1,
@@ -34,7 +34,7 @@ class GamesDataSource {
     // Note: Converting RAWG-style filters to IGDB where-clauses will require more logic.
     // For now, we apply the basic query.
 
-    final response = await _gamesServices.fetchGames(queryBuilder.build());
+    final response = await igdbApiService.fetchGames(queryBuilder.build());
 
     // We manually wrap the IGDB list into the old GamesModel for backward compatibility
     return GamesModel(

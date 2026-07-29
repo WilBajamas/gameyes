@@ -768,6 +768,296 @@ class S {
       args: [],
     );
   }
+
+  /// `Failed to load weekly releases`
+  String get failed_to_load_weekly_releases {
+    return Intl.message(
+      'Failed to load weekly releases',
+      name: 'failed_to_load_weekly_releases',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load countdown game`
+  String get failed_to_load_countdown_game {
+    return Intl.message(
+      'Failed to load countdown game',
+      name: 'failed_to_load_countdown_game',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load critics choice reviews`
+  String get failed_to_load_critics_choice_reviews {
+    return Intl.message(
+      'Failed to load critics choice reviews',
+      name: 'failed_to_load_critics_choice_reviews',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load genre preferences`
+  String get failed_to_load_genre_preferences {
+    return Intl.message(
+      'Failed to load genre preferences',
+      name: 'failed_to_load_genre_preferences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to save genre preference`
+  String get failed_to_save_genre_preference {
+    return Intl.message(
+      'Failed to save genre preference',
+      name: 'failed_to_save_genre_preference',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to skip genre preferences`
+  String get failed_to_skip_genre_preferences {
+    return Intl.message(
+      'Failed to skip genre preferences',
+      name: 'failed_to_skip_genre_preferences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to load library stats`
+  String get failed_to_load_library_stats {
+    return Intl.message(
+      'Failed to load library stats',
+      name: 'failed_to_load_library_stats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Featured Revamp`
+  String get featured_revamp {
+    return Intl.message(
+      'Featured Revamp',
+      name: 'featured_revamp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading Game Title`
+  String get loading_game_title_placeholder {
+    return Intl.message(
+      'Loading Game Title',
+      name: 'loading_game_title_placeholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coming Soon`
+  String get coming_soon {
+    return Intl.message('Coming Soon', name: 'coming_soon', desc: '', args: []);
+  }
+
+  /// `Loading Game Release Title`
+  String get loading_game_release_title {
+    return Intl.message(
+      'Loading Game Release Title',
+      name: 'loading_game_release_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Critics Choice Title`
+  String get critics_choice_title {
+    return Intl.message(
+      'Critics Choice Title',
+      name: 'critics_choice_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Released 2 days ago`
+  String get released_2_days_ago {
+    return Intl.message(
+      'Released 2 days ago',
+      name: 'released_2_days_ago',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome to GameYes 🎮`
+  String get welcome_to_gameyes {
+    return Intl.message(
+      'Welcome to GameYes 🎮',
+      name: 'welcome_to_gameyes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Let's complete your quick onboarding steps.`
+  String get complete_onboarding_steps {
+    return Intl.message(
+      'Let\'s complete your quick onboarding steps.',
+      name: 'complete_onboarding_steps',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a game you've played`
+  String get add_game_played {
+    return Intl.message(
+      'Add a game you\'ve played',
+      name: 'add_game_played',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+ Add`
+  String get add_button {
+    return Intl.message('+ Add', name: 'add_button', desc: '', args: []);
+  }
+
+  /// `Mark what you're playing now`
+  String get mark_playing_now {
+    return Intl.message(
+      'Mark what you\'re playing now',
+      name: 'mark_playing_now',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+ Mark`
+  String get mark_button {
+    return Intl.message('+ Mark', name: 'mark_button', desc: '', args: []);
+  }
+
+  /// `Wishlist an upcoming game`
+  String get wishlist_upcoming_game {
+    return Intl.message(
+      'Wishlist an upcoming game',
+      name: 'wishlist_upcoming_game',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `+ Wishlist`
+  String get wishlist_button {
+    return Intl.message(
+      '+ Wishlist',
+      name: 'wishlist_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Games`
+  String get total_games {
+    return Intl.message('Total Games', name: 'total_games', desc: '', args: []);
+  }
+
+  /// `Wishlist`
+  String get wishlist {
+    return Intl.message('Wishlist', name: 'wishlist', desc: '', args: []);
+  }
+
+  /// `This Week`
+  String get this_week {
+    return Intl.message('This Week', name: 'this_week', desc: '', args: []);
+  }
+
+  /// `Now Playing`
+  String get now_playing {
+    return Intl.message('Now Playing', name: 'now_playing', desc: '', args: []);
+  }
+
+  /// `No game in progress`
+  String get no_game_in_progress {
+    return Intl.message(
+      'No game in progress',
+      name: 'no_game_in_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark something as playing →`
+  String get mark_something_playing {
+    return Intl.message(
+      'Mark something as playing →',
+      name: 'mark_something_playing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get active {
+    return Intl.message('Active', name: 'active', desc: '', args: []);
+  }
+
+  /// `{percentage}% completed`
+  String completed_percentage(String percentage) {
+    return Intl.message(
+      '$percentage% completed',
+      name: 'completed_percentage',
+      desc: '',
+      args: [percentage],
+    );
+  }
+
+  /// `{logged}h logged of {average}h`
+  String logged_hours_of(String logged, String average) {
+    return Intl.message(
+      '${logged}h logged of ${average}h',
+      name: 'logged_hours_of',
+      desc: '',
+      args: [logged, average],
+    );
+  }
+
+  /// `{hours}h played`
+  String played_hours(String hours) {
+    return Intl.message(
+      '${hours}h played',
+      name: 'played_hours',
+      desc: '',
+      args: [hours],
+    );
+  }
+
+  /// `+ {count} more playing`
+  String more_playing(String count) {
+    return Intl.message(
+      '+ $count more playing',
+      name: 'more_playing',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `{hours}h`
+  String hours_abbreviation(String hours) {
+    return Intl.message(
+      '${hours}h',
+      name: 'hours_abbreviation',
+      desc: '',
+      args: [hours],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -19,5 +19,8 @@ sealed class GameEntity with _$GameEntity {
     List<GameKeywordEntity>? gameKeywords,
     List<PlatformEntity>? platforms,
     List<ReleaseDateEntity>? releaseDates,
+    double? criticScore,
+    int? hypes,
+    List<int>? genreIds,
   }) = _GameEntity;
 }

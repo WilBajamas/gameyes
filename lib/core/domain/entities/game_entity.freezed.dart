@@ -21,6 +21,9 @@ mixin _$GameEntity {
   List<GameKeywordEntity>? get gameKeywords;
   List<PlatformEntity>? get platforms;
   List<ReleaseDateEntity>? get releaseDates;
+  double? get criticScore;
+  int? get hypes;
+  List<int>? get genreIds;
 
   /// Create a copy of GameEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -42,7 +45,11 @@ mixin _$GameEntity {
                 .equals(other.gameKeywords, gameKeywords) &&
             const DeepCollectionEquality().equals(other.platforms, platforms) &&
             const DeepCollectionEquality()
-                .equals(other.releaseDates, releaseDates));
+                .equals(other.releaseDates, releaseDates) &&
+            (identical(other.criticScore, criticScore) ||
+                other.criticScore == criticScore) &&
+            (identical(other.hypes, hypes) || other.hypes == hypes) &&
+            const DeepCollectionEquality().equals(other.genreIds, genreIds));
   }
 
   @override
@@ -54,11 +61,14 @@ mixin _$GameEntity {
       const DeepCollectionEquality().hash(gameModes),
       const DeepCollectionEquality().hash(gameKeywords),
       const DeepCollectionEquality().hash(platforms),
-      const DeepCollectionEquality().hash(releaseDates));
+      const DeepCollectionEquality().hash(releaseDates),
+      criticScore,
+      hypes,
+      const DeepCollectionEquality().hash(genreIds));
 
   @override
   String toString() {
-    return 'GameEntity(id: $id, name: $name, cover: $cover, gameModes: $gameModes, gameKeywords: $gameKeywords, platforms: $platforms, releaseDates: $releaseDates)';
+    return 'GameEntity(id: $id, name: $name, cover: $cover, gameModes: $gameModes, gameKeywords: $gameKeywords, platforms: $platforms, releaseDates: $releaseDates, criticScore: $criticScore, hypes: $hypes, genreIds: $genreIds)';
   }
 }
 
@@ -75,7 +85,10 @@ abstract mixin class $GameEntityCopyWith<$Res> {
       List<GameModeEntity>? gameModes,
       List<GameKeywordEntity>? gameKeywords,
       List<PlatformEntity>? platforms,
-      List<ReleaseDateEntity>? releaseDates});
+      List<ReleaseDateEntity>? releaseDates,
+      double? criticScore,
+      int? hypes,
+      List<int>? genreIds});
 
   $GameCoverEntityCopyWith<$Res> get cover;
 }
@@ -99,6 +112,9 @@ class _$GameEntityCopyWithImpl<$Res> implements $GameEntityCopyWith<$Res> {
     Object? gameKeywords = freezed,
     Object? platforms = freezed,
     Object? releaseDates = freezed,
+    Object? criticScore = freezed,
+    Object? hypes = freezed,
+    Object? genreIds = freezed,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -129,6 +145,18 @@ class _$GameEntityCopyWithImpl<$Res> implements $GameEntityCopyWith<$Res> {
           ? _self.releaseDates
           : releaseDates // ignore: cast_nullable_to_non_nullable
               as List<ReleaseDateEntity>?,
+      criticScore: freezed == criticScore
+          ? _self.criticScore
+          : criticScore // ignore: cast_nullable_to_non_nullable
+              as double?,
+      hypes: freezed == hypes
+          ? _self.hypes
+          : hypes // ignore: cast_nullable_to_non_nullable
+              as int?,
+      genreIds: freezed == genreIds
+          ? _self.genreIds
+          : genreIds // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 
@@ -241,15 +269,27 @@ extension GameEntityPatterns on GameEntity {
             List<GameModeEntity>? gameModes,
             List<GameKeywordEntity>? gameKeywords,
             List<PlatformEntity>? platforms,
-            List<ReleaseDateEntity>? releaseDates)?
+            List<ReleaseDateEntity>? releaseDates,
+            double? criticScore,
+            int? hypes,
+            List<int>? genreIds)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _GameEntity() when $default != null:
-        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
-            _that.gameKeywords, _that.platforms, _that.releaseDates);
+        return $default(
+            _that.id,
+            _that.name,
+            _that.cover,
+            _that.gameModes,
+            _that.gameKeywords,
+            _that.platforms,
+            _that.releaseDates,
+            _that.criticScore,
+            _that.hypes,
+            _that.genreIds);
       case _:
         return orElse();
     }
@@ -277,14 +317,26 @@ extension GameEntityPatterns on GameEntity {
             List<GameModeEntity>? gameModes,
             List<GameKeywordEntity>? gameKeywords,
             List<PlatformEntity>? platforms,
-            List<ReleaseDateEntity>? releaseDates)
+            List<ReleaseDateEntity>? releaseDates,
+            double? criticScore,
+            int? hypes,
+            List<int>? genreIds)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _GameEntity():
-        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
-            _that.gameKeywords, _that.platforms, _that.releaseDates);
+        return $default(
+            _that.id,
+            _that.name,
+            _that.cover,
+            _that.gameModes,
+            _that.gameKeywords,
+            _that.platforms,
+            _that.releaseDates,
+            _that.criticScore,
+            _that.hypes,
+            _that.genreIds);
     }
   }
 
@@ -309,14 +361,26 @@ extension GameEntityPatterns on GameEntity {
             List<GameModeEntity>? gameModes,
             List<GameKeywordEntity>? gameKeywords,
             List<PlatformEntity>? platforms,
-            List<ReleaseDateEntity>? releaseDates)?
+            List<ReleaseDateEntity>? releaseDates,
+            double? criticScore,
+            int? hypes,
+            List<int>? genreIds)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _GameEntity() when $default != null:
-        return $default(_that.id, _that.name, _that.cover, _that.gameModes,
-            _that.gameKeywords, _that.platforms, _that.releaseDates);
+        return $default(
+            _that.id,
+            _that.name,
+            _that.cover,
+            _that.gameModes,
+            _that.gameKeywords,
+            _that.platforms,
+            _that.releaseDates,
+            _that.criticScore,
+            _that.hypes,
+            _that.genreIds);
       case _:
         return null;
     }
@@ -333,11 +397,15 @@ class _GameEntity extends GameEntity {
       final List<GameModeEntity>? gameModes,
       final List<GameKeywordEntity>? gameKeywords,
       final List<PlatformEntity>? platforms,
-      final List<ReleaseDateEntity>? releaseDates})
+      final List<ReleaseDateEntity>? releaseDates,
+      this.criticScore,
+      this.hypes,
+      final List<int>? genreIds})
       : _gameModes = gameModes,
         _gameKeywords = gameKeywords,
         _platforms = platforms,
         _releaseDates = releaseDates,
+        _genreIds = genreIds,
         super._();
 
   @override
@@ -386,6 +454,20 @@ class _GameEntity extends GameEntity {
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  final double? criticScore;
+  @override
+  final int? hypes;
+  final List<int>? _genreIds;
+  @override
+  List<int>? get genreIds {
+    final value = _genreIds;
+    if (value == null) return null;
+    if (_genreIds is EqualUnmodifiableListView) return _genreIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   /// Create a copy of GameEntity
   /// with the given fields replaced by the non-null parameter values.
   @override
@@ -409,7 +491,11 @@ class _GameEntity extends GameEntity {
             const DeepCollectionEquality()
                 .equals(other._platforms, _platforms) &&
             const DeepCollectionEquality()
-                .equals(other._releaseDates, _releaseDates));
+                .equals(other._releaseDates, _releaseDates) &&
+            (identical(other.criticScore, criticScore) ||
+                other.criticScore == criticScore) &&
+            (identical(other.hypes, hypes) || other.hypes == hypes) &&
+            const DeepCollectionEquality().equals(other._genreIds, _genreIds));
   }
 
   @override
@@ -421,11 +507,14 @@ class _GameEntity extends GameEntity {
       const DeepCollectionEquality().hash(_gameModes),
       const DeepCollectionEquality().hash(_gameKeywords),
       const DeepCollectionEquality().hash(_platforms),
-      const DeepCollectionEquality().hash(_releaseDates));
+      const DeepCollectionEquality().hash(_releaseDates),
+      criticScore,
+      hypes,
+      const DeepCollectionEquality().hash(_genreIds));
 
   @override
   String toString() {
-    return 'GameEntity(id: $id, name: $name, cover: $cover, gameModes: $gameModes, gameKeywords: $gameKeywords, platforms: $platforms, releaseDates: $releaseDates)';
+    return 'GameEntity(id: $id, name: $name, cover: $cover, gameModes: $gameModes, gameKeywords: $gameKeywords, platforms: $platforms, releaseDates: $releaseDates, criticScore: $criticScore, hypes: $hypes, genreIds: $genreIds)';
   }
 }
 
@@ -444,7 +533,10 @@ abstract mixin class _$GameEntityCopyWith<$Res>
       List<GameModeEntity>? gameModes,
       List<GameKeywordEntity>? gameKeywords,
       List<PlatformEntity>? platforms,
-      List<ReleaseDateEntity>? releaseDates});
+      List<ReleaseDateEntity>? releaseDates,
+      double? criticScore,
+      int? hypes,
+      List<int>? genreIds});
 
   @override
   $GameCoverEntityCopyWith<$Res> get cover;
@@ -469,6 +561,9 @@ class __$GameEntityCopyWithImpl<$Res> implements _$GameEntityCopyWith<$Res> {
     Object? gameKeywords = freezed,
     Object? platforms = freezed,
     Object? releaseDates = freezed,
+    Object? criticScore = freezed,
+    Object? hypes = freezed,
+    Object? genreIds = freezed,
   }) {
     return _then(_GameEntity(
       id: null == id
@@ -499,6 +594,18 @@ class __$GameEntityCopyWithImpl<$Res> implements _$GameEntityCopyWith<$Res> {
           ? _self._releaseDates
           : releaseDates // ignore: cast_nullable_to_non_nullable
               as List<ReleaseDateEntity>?,
+      criticScore: freezed == criticScore
+          ? _self.criticScore
+          : criticScore // ignore: cast_nullable_to_non_nullable
+              as double?,
+      hypes: freezed == hypes
+          ? _self.hypes
+          : hypes // ignore: cast_nullable_to_non_nullable
+              as int?,
+      genreIds: freezed == genreIds
+          ? _self._genreIds
+          : genreIds // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 

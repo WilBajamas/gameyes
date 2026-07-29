@@ -48,6 +48,13 @@ class SavedGame {
   @Index()
   DateTime? dateModified;
 
+  String? status;
+  double? hoursLogged;
+  double? averageCompletionHours;
+  double? manualProgressPercentage;
+  bool isWishlisted = false;
+  List<int>? genres;
+
   SavedGame({
     this.name,
     this.imageUrl,
@@ -57,6 +64,12 @@ class SavedGame {
     this.dateModified,
     this.platforms,
     this.availablePlatforms,
+    this.status,
+    this.hoursLogged,
+    this.averageCompletionHours,
+    this.manualProgressPercentage,
+    this.isWishlisted = false,
+    this.genres,
   });
 
   TrackerSavedGameEntity toEntity() => TrackerSavedGameEntity(
@@ -68,25 +81,29 @@ class SavedGame {
         dateSaved: dateSaved,
         completed: completed,
         platforms: platforms
-                ?.map((p) => PlatformEntity(
-                      id: p.id ?? 0,
-                      name: p.name ?? '',
-                      abbreviation: p.abbreviation ?? '',
-                      platformLogo: p.logoUrl != null
-                          ? PlatformLogoEntity(url: p.logoUrl)
-                          : null,
-                    ))
+                ?.map(
+                  (p) => PlatformEntity(
+                    id: p.id ?? 0,
+                    name: p.name ?? '',
+                    abbreviation: p.abbreviation ?? '',
+                    platformLogo: p.logoUrl != null
+                        ? PlatformLogoEntity(url: p.logoUrl)
+                        : null,
+                  ),
+                )
                 .toList() ??
             [],
         availablePlatforms: availablePlatforms
-                ?.map((p) => PlatformEntity(
-                      id: p.id ?? 0,
-                      name: p.name ?? '',
-                      abbreviation: p.abbreviation ?? '',
-                      platformLogo: p.logoUrl != null
-                          ? PlatformLogoEntity(url: p.logoUrl)
-                          : null,
-                    ))
+                ?.map(
+                  (p) => PlatformEntity(
+                    id: p.id ?? 0,
+                    name: p.name ?? '',
+                    abbreviation: p.abbreviation ?? '',
+                    platformLogo: p.logoUrl != null
+                        ? PlatformLogoEntity(url: p.logoUrl)
+                        : null,
+                  ),
+                )
                 .toList() ??
             [],
         dateModified: dateModified,

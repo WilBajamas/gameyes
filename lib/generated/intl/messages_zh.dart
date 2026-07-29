@@ -20,7 +20,17 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh';
 
-  static String m0(stepName) =>
+  static String m0(percentage) => "已完成 ${percentage}%";
+
+  static String m1(hours) => "${hours}小时";
+
+  static String m2(logged, average) => "已记录 ${logged}小时，共 ${average}小时";
+
+  static String m3(count) => "还有 ${count} 款正在玩";
+
+  static String m4(hours) => "已游玩 ${hours}小时";
+
+  static String m5(stepName) =>
       "Are you sure you want to remove step ${stepName}? This action cannot be undone";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -29,6 +39,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "A breif description",
     ),
     "about": MessageLookupByLibrary.simpleMessage("关于"),
+    "active": MessageLookupByLibrary.simpleMessage("活跃"),
+    "add_button": MessageLookupByLibrary.simpleMessage("+ 添加"),
+    "add_game_played": MessageLookupByLibrary.simpleMessage("添加一款你玩过的游戏"),
     "add_group_task": MessageLookupByLibrary.simpleMessage("Add Group Task"),
     "add_step": MessageLookupByLibrary.simpleMessage("Add step"),
     "add_task": MessageLookupByLibrary.simpleMessage("Add task"),
@@ -45,7 +58,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "browse": MessageLookupByLibrary.simpleMessage("Browse"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "coming_soon": MessageLookupByLibrary.simpleMessage("即将推出"),
+    "complete_onboarding_steps": MessageLookupByLibrary.simpleMessage(
+      "让我们完成快速入门步骤。",
+    ),
     "completed": MessageLookupByLibrary.simpleMessage("Completed"),
+    "completed_percentage": m0,
+    "critics_choice_title": MessageLookupByLibrary.simpleMessage("媒体选择标题"),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
     "date_added": MessageLookupByLibrary.simpleMessage("Date added"),
     "date_range": MessageLookupByLibrary.simpleMessage("选日期"),
@@ -62,7 +81,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "done": MessageLookupByLibrary.simpleMessage("Done"),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "error_results": MessageLookupByLibrary.simpleMessage("获取结果失败"),
+    "failed_to_load_countdown_game": MessageLookupByLibrary.simpleMessage(
+      "加载倒计时游戏失败",
+    ),
+    "failed_to_load_critics_choice_reviews":
+        MessageLookupByLibrary.simpleMessage("加载媒体选择评测失败"),
+    "failed_to_load_genre_preferences": MessageLookupByLibrary.simpleMessage(
+      "加载类型偏好失败",
+    ),
+    "failed_to_load_library_stats": MessageLookupByLibrary.simpleMessage(
+      "加载库统计信息失败",
+    ),
+    "failed_to_load_weekly_releases": MessageLookupByLibrary.simpleMessage(
+      "加载每周发布失败",
+    ),
+    "failed_to_save_genre_preference": MessageLookupByLibrary.simpleMessage(
+      "保存类型偏好失败",
+    ),
+    "failed_to_skip_genre_preferences": MessageLookupByLibrary.simpleMessage(
+      "跳过类型偏好失败",
+    ),
     "featured": MessageLookupByLibrary.simpleMessage("精选"),
+    "featured_revamp": MessageLookupByLibrary.simpleMessage("精选改版"),
     "featured_screen_title": MessageLookupByLibrary.simpleMessage("游戏天地，等你探索"),
     "featured_subtitle": MessageLookupByLibrary.simpleMessage(
       "Everything in one glance",
@@ -76,13 +116,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "group_task_created": MessageLookupByLibrary.simpleMessage(
       "Group task created",
     ),
+    "hours_abbreviation": m1,
     "improve": MessageLookupByLibrary.simpleMessage("Improve"),
     "inProgress": MessageLookupByLibrary.simpleMessage("In Progress"),
     "keep_it_short": MessageLookupByLibrary.simpleMessage("Keep it short"),
     "last_updated": MessageLookupByLibrary.simpleMessage("Last Updated"),
     "latest_releases": MessageLookupByLibrary.simpleMessage("最新版本"),
+    "loading_game_release_title": MessageLookupByLibrary.simpleMessage(
+      "加载游戏发布标题",
+    ),
+    "loading_game_title_placeholder": MessageLookupByLibrary.simpleMessage(
+      "加载游戏标题",
+    ),
+    "logged_hours_of": m2,
+    "mark_button": MessageLookupByLibrary.simpleMessage("+ 标记"),
+    "mark_playing_now": MessageLookupByLibrary.simpleMessage("标记你现在正在玩的游戏"),
+    "mark_something_playing": MessageLookupByLibrary.simpleMessage(
+      "标记一些游戏为正在玩 →",
+    ),
     "metacritic_score": MessageLookupByLibrary.simpleMessage("综合评分"),
     "missed": MessageLookupByLibrary.simpleMessage("Missed"),
+    "more_playing": m3,
     "most_anticipated": MessageLookupByLibrary.simpleMessage("最期待"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "new_and_trending": MessageLookupByLibrary.simpleMessage("New & Trending"),
@@ -91,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "news": MessageLookupByLibrary.simpleMessage("News"),
     "next": MessageLookupByLibrary.simpleMessage("下一步"),
+    "no_game_in_progress": MessageLookupByLibrary.simpleMessage("目前没有正在进行的游戏"),
     "no_games_saved": MessageLookupByLibrary.simpleMessage("No games saved"),
     "no_games_saved_description": MessageLookupByLibrary.simpleMessage(
       "Bookmark some games from the games or featured sections.",
@@ -103,6 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "no_results_found": MessageLookupByLibrary.simpleMessage("找不到物品"),
     "not_started": MessageLookupByLibrary.simpleMessage("Not started"),
+    "now_playing": MessageLookupByLibrary.simpleMessage("正在玩"),
     "ok": MessageLookupByLibrary.simpleMessage("Ok"),
     "onHold": MessageLookupByLibrary.simpleMessage("On Hold"),
     "onboarding_description_one": MessageLookupByLibrary.simpleMessage(
@@ -119,6 +175,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ordering": MessageLookupByLibrary.simpleMessage("排序"),
     "platforms": MessageLookupByLibrary.simpleMessage("主机选择"),
+    "played_hours": m4,
     "playtime": MessageLookupByLibrary.simpleMessage("Playtime"),
     "please_enter_value": MessageLookupByLibrary.simpleMessage(
       "Please enter a value",
@@ -134,10 +191,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Recently changed",
     ),
     "release_date": MessageLookupByLibrary.simpleMessage("上线日期"),
+    "released_2_days_ago": MessageLookupByLibrary.simpleMessage("2天前发布"),
     "reminder": MessageLookupByLibrary.simpleMessage("Reminder"),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "remove_step": MessageLookupByLibrary.simpleMessage("Remove step"),
-    "remove_step_desc": m0,
+    "remove_step_desc": m5,
     "remove_step_failed": MessageLookupByLibrary.simpleMessage(
       "Failed removing step",
     ),
@@ -166,10 +224,20 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tasks in progress",
     ),
     "tasks_pinned": MessageLookupByLibrary.simpleMessage("Tasks pinned"),
+    "this_week": MessageLookupByLibrary.simpleMessage("本周"),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
     "to": MessageLookupByLibrary.simpleMessage("到"),
     "toBuy": MessageLookupByLibrary.simpleMessage("To Buy"),
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
+    "total_games": MessageLookupByLibrary.simpleMessage("总游戏数"),
     "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),
+    "welcome_to_gameyes": MessageLookupByLibrary.simpleMessage(
+      "欢迎来到 GameYes 🎮",
+    ),
+    "wishlist": MessageLookupByLibrary.simpleMessage("心愿单"),
+    "wishlist_button": MessageLookupByLibrary.simpleMessage("+ 心愿单"),
+    "wishlist_upcoming_game": MessageLookupByLibrary.simpleMessage(
+      "将即将推出的游戏加入心愿单",
+    ),
   };
 }

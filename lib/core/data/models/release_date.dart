@@ -11,6 +11,7 @@ sealed class ReleaseDate with _$ReleaseDate {
   const factory ReleaseDate({
     int? date,
     String? human,
+    int? category,
   }) = _ReleaseDate;
 
   factory ReleaseDate.fromJson(Map<String, dynamic> json) =>

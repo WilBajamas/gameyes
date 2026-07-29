@@ -39,10 +39,28 @@ class _ScrolledNavigationBarState extends State<ScrolledNavigationBar> {
   }
 
   @override
-  Widget build(BuildContext context) => AnimatedContainer(
-        duration: widget.duration,
-        height:
-            _isVisible ? 80 + context.bottomPadding : 0,
-        child: Wrap(children: [widget.child]),
-      );
+  Widget build(BuildContext context) {
+    final double bottomPadding = context.bottomPadding;
+    final double barHeight = 80.0 + bottomPadding;
+
+    final color = context.themeData.navigationBarTheme.backgroundColor ??
+        context.themeData.colorScheme.surfaceContainer;
+
+    return AnimatedContainer(
+      duration: widget.duration,
+      height: _isVisible ? barHeight : 0,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        color: color,
+      ),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: SizedBox(
+          height: barHeight,
+          child: widget.child,
+        ),
+      ),
+    );
+  }
 }
+
