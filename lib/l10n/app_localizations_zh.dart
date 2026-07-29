@@ -321,4 +321,92 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get failed_to_load_library_stats => '加载库统计信息失败';
+
+  @override
+  String get featured_revamp => '精选改版';
+
+  @override
+  String get loading_game_title_placeholder => '加载游戏标题';
+
+  @override
+  String get coming_soon => '即将推出';
+
+  @override
+  String get loading_game_release_title => '加载游戏发布标题';
+
+  @override
+  String get critics_choice_title => '媒体选择标题';
+
+  @override
+  String get released_2_days_ago => '2天前发布';
+
+  @override
+  String get welcome_to_gameyes => '欢迎来到 GameYes 🎮';
+
+  @override
+  String get complete_onboarding_steps => '让我们完成快速入门步骤。';
+
+  @override
+  String get add_game_played => '添加一款你玩过的游戏';
+
+  @override
+  String get add_button => '+ 添加';
+
+  @override
+  String get mark_playing_now => '标记你现在正在玩的游戏';
+
+  @override
+  String get mark_button => '+ 标记';
+
+  @override
+  String get wishlist_upcoming_game => '将即将推出的游戏加入心愿单';
+
+  @override
+  String get wishlist_button => '+ 心愿单';
+
+  @override
+  String get total_games => '总游戏数';
+
+  @override
+  String get wishlist => '心愿单';
+
+  @override
+  String get this_week => '本周';
+
+  @override
+  String get now_playing => '正在玩';
+
+  @override
+  String get no_game_in_progress => '目前没有正在进行的游戏';
+
+  @override
+  String get mark_something_playing => '标记一些游戏为正在玩 →';
+
+  @override
+  String get active => '活跃';
+
+  @override
+  String completed_percentage(String percentage) {
+    return '已完成 $percentage%';
+  }
+
+  @override
+  String logged_hours_of(String logged, String average) {
+    return '已记录 $logged小时，共 $average小时';
+  }
+
+  @override
+  String played_hours(String hours) {
+    return '已游玩 $hours小时';
+  }
+
+  @override
+  String more_playing(String count) {
+    return '还有 $count 款正在玩';
+  }
+
+  @override
+  String hours_abbreviation(String hours) {
+    return '$hours小时';
+  }
 }

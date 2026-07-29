@@ -6,6 +6,7 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured_revamp/domain/repositories/featured_revamp_repository.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 
+// TODO: Refactor this
 class CriticsGridWidget extends StatelessWidget {
   final List<GameEntity> criticsGames;
   final GenrePreferencesEntity? genrePreferencesEntity;

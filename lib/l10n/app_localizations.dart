@@ -715,6 +715,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load library stats'**
   String get failed_to_load_library_stats;
+
+  /// No description provided for @featured_revamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured Revamp'**
+  String get featured_revamp;
+
+  /// No description provided for @loading_game_title_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading Game Title'**
+  String get loading_game_title_placeholder;
+
+  /// No description provided for @coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get coming_soon;
+
+  /// No description provided for @loading_game_release_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading Game Release Title'**
+  String get loading_game_release_title;
+
+  /// No description provided for @critics_choice_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Critics Choice Title'**
+  String get critics_choice_title;
+
+  /// No description provided for @released_2_days_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'Released 2 days ago'**
+  String get released_2_days_ago;
+
+  /// No description provided for @welcome_to_gameyes.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to GameYes 🎮'**
+  String get welcome_to_gameyes;
+
+  /// No description provided for @complete_onboarding_steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s complete your quick onboarding steps.'**
+  String get complete_onboarding_steps;
+
+  /// No description provided for @add_game_played.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a game you\'ve played'**
+  String get add_game_played;
+
+  /// No description provided for @add_button.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Add'**
+  String get add_button;
+
+  /// No description provided for @mark_playing_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark what you\'re playing now'**
+  String get mark_playing_now;
+
+  /// No description provided for @mark_button.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Mark'**
+  String get mark_button;
+
+  /// No description provided for @wishlist_upcoming_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist an upcoming game'**
+  String get wishlist_upcoming_game;
+
+  /// No description provided for @wishlist_button.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Wishlist'**
+  String get wishlist_button;
+
+  /// No description provided for @total_games.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Games'**
+  String get total_games;
+
+  /// No description provided for @wishlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist'**
+  String get wishlist;
+
+  /// No description provided for @this_week.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get this_week;
+
+  /// No description provided for @now_playing.
+  ///
+  /// In en, this message translates to:
+  /// **'Now Playing'**
+  String get now_playing;
+
+  /// No description provided for @no_game_in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'No game in progress'**
+  String get no_game_in_progress;
+
+  /// No description provided for @mark_something_playing.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark something as playing →'**
+  String get mark_something_playing;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @completed_percentage.
+  ///
+  /// In en, this message translates to:
+  /// **'{percentage}% completed'**
+  String completed_percentage(String percentage);
+
+  /// No description provided for @logged_hours_of.
+  ///
+  /// In en, this message translates to:
+  /// **'{logged}h logged of {average}h'**
+  String logged_hours_of(String logged, String average);
+
+  /// No description provided for @played_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h played'**
+  String played_hours(String hours);
+
+  /// No description provided for @more_playing.
+  ///
+  /// In en, this message translates to:
+  /// **'+ {count} more playing'**
+  String more_playing(String count);
+
+  /// No description provided for @hours_abbreviation.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h'**
+  String hours_abbreviation(String hours);
 }
 
 class _AppLocalizationsDelegate

@@ -7,9 +7,10 @@ import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 
 import 'generated/l10n.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
   runApp(MyApp());
-  configureDependencies();
 }
 
 class MyApp extends StatelessWidget {

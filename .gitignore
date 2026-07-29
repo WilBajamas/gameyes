@@ -48,3 +48,6 @@ app.*.map.json
 # Agents
 .agents/
 
+# FVM Version Cache
+.fvm/
+.fvm/flutter_sdk

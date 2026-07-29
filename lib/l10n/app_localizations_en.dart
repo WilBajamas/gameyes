@@ -329,4 +329,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failed_to_load_library_stats => 'Failed to load library stats';
+
+  @override
+  String get featured_revamp => 'Featured Revamp';
+
+  @override
+  String get loading_game_title_placeholder => 'Loading Game Title';
+
+  @override
+  String get coming_soon => 'Coming Soon';
+
+  @override
+  String get loading_game_release_title => 'Loading Game Release Title';
+
+  @override
+  String get critics_choice_title => 'Critics Choice Title';
+
+  @override
+  String get released_2_days_ago => 'Released 2 days ago';
+
+  @override
+  String get welcome_to_gameyes => 'Welcome to GameYes 🎮';
+
+  @override
+  String get complete_onboarding_steps =>
+      'Let\'s complete your quick onboarding steps.';
+
+  @override
+  String get add_game_played => 'Add a game you\'ve played';
+
+  @override
+  String get add_button => '+ Add';
+
+  @override
+  String get mark_playing_now => 'Mark what you\'re playing now';
+
+  @override
+  String get mark_button => '+ Mark';
+
+  @override
+  String get wishlist_upcoming_game => 'Wishlist an upcoming game';
+
+  @override
+  String get wishlist_button => '+ Wishlist';
+
+  @override
+  String get total_games => 'Total Games';
+
+  @override
+  String get wishlist => 'Wishlist';
+
+  @override
+  String get this_week => 'This Week';
+
+  @override
+  String get now_playing => 'Now Playing';
+
+  @override
+  String get no_game_in_progress => 'No game in progress';
+
+  @override
+  String get mark_something_playing => 'Mark something as playing →';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String completed_percentage(String percentage) {
+    return '$percentage% completed';
+  }
+
+  @override
+  String logged_hours_of(String logged, String average) {
+    return '${logged}h logged of ${average}h';
+  }
+
+  @override
+  String played_hours(String hours) {
+    return '${hours}h played';
+  }
+
+  @override
+  String more_playing(String count) {
+    return '+ $count more playing';
+  }
+
+  @override
+  String hours_abbreviation(String hours) {
+    return '${hours}h';
+  }
 }
