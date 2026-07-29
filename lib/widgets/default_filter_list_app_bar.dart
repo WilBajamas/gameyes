@@ -4,10 +4,12 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 class DefaultFilterListAppBar<T> extends StatefulWidget {
   final List<(T, String, IconData?)> filterList;
   final Function(T) selected;
+  final T? initialSelection;
 
   const DefaultFilterListAppBar({
     required this.filterList,
     required this.selected,
+    this.initialSelection,
     super.key,
   });
 
@@ -22,9 +24,17 @@ class _DefaultFilterListAppBarState<T>
 
   @override
   void initState() {
-    _selectedTag = widget.filterList[0].$1;
+    _selectedTag = widget.initialSelection ?? widget.filterList[0].$1;
 
     super.initState();
+  }
+
+  int get _initialIndex {
+    final index = widget.filterList.indexWhere(
+      (filter) => filter.$1 == _selectedTag,
+    );
+
+    return index == -1 ? 0 : index;
   }
 
   void _onItemClicked(int index) {
@@ -41,6 +51,7 @@ class _DefaultFilterListAppBarState<T>
       expandedHeight: kToolbarHeight,
       flexibleSpace: DefaultTabController(
         length: widget.filterList.length,
+        initialIndex: _initialIndex,
         child: TabBar(
           onTap: (index) => _onItemClicked(index),
           tabAlignment: TabAlignment.center,
