@@ -79,6 +79,34 @@
       "problemMatcher": []
     },
     {
+      "label": "run: dev",
+      "detail": "Run the dev flavour (com.questloggd.app.dev)",
+      "type": "shell",
+      "command": "fvm flutter run --flavor dev -t lib/main.dart",
+      "problemMatcher": []
+    },
+    {
+      "label": "run: prod",
+      "detail": "Run the prod flavour (com.questloggd.app)",
+      "type": "shell",
+      "command": "fvm flutter run --flavor prod -t lib/main_prod.dart",
+      "problemMatcher": []
+    },
+    {
+      "label": "build: dev (debug apk)",
+      "detail": "Debug APK for the dev flavour",
+      "type": "shell",
+      "command": "fvm flutter build apk --debug --flavor dev -t lib/main.dart",
+      "problemMatcher": []
+    },
+    {
+      "label": "build: prod (release apk)",
+      "detail": "Release APK for the prod flavour",
+      "type": "shell",
+      "command": "fvm flutter build apk --release --flavor prod -t lib/main_prod.dart",
+      "problemMatcher": []
+    },
+    {
       "label": "check (analyze + test)",
       "detail": "What to run before committing",
       "dependsOrder": "sequence",

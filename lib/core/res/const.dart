@@ -8,6 +8,10 @@ class ConfigConstants {
   static const twitchClientSecret = 'TWITCH_CLIENT_SECRET';
   static const heroTag = 'hero_tag';
   static const enviedFilePath = '../gameyes/secret.env';
+  static const enviedDevFilePath = '../gameyes/dev.env';
+  static const enviedProdFilePath = '../gameyes/prod.env';
+  static const supabaseUrl = 'SUPABASE_URL';
+  static const supabaseAnonKey = 'SUPABASE_ANON_KEY';
 
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
