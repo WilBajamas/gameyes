@@ -1,9 +1,7 @@
 import 'package:gaming_library_assessment_flutter/config/config_envied.dart';
 import 'package:gaming_library_assessment_flutter/config/flavor/flavor.dart';
 
-/// Process-wide, immutable configuration for the running flavour.
-///
-/// Call [initialise] once during startup, before anything reads [instance].
+/// Unable to use `injectable` and `getit` to retrieve environment variables during runtime.
 final class FlavorConfig {
   const FlavorConfig._({
     required this.flavor,
