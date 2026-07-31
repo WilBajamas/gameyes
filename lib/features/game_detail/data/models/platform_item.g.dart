@@ -14,6 +14,4 @@ _PlatformItem _$PlatformItemFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$PlatformItemToJson(_PlatformItem instance) =>
-    <String, dynamic>{
-      'platform': instance.platform,
-    };
+    <String, dynamic>{'platform': instance.platform};

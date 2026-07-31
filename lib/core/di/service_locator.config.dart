@@ -16,6 +16,8 @@ import 'package:gaming_library_assessment_flutter/core/di/network_module.dart'
     as _i420;
 import 'package:gaming_library_assessment_flutter/core/di/storage_module.dart'
     as _i472;
+import 'package:gaming_library_assessment_flutter/core/di/supabase_module.dart'
+    as _i871;
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart'
     as _i190;
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart'
@@ -26,6 +28,12 @@ import 'package:gaming_library_assessment_flutter/core/services/api/twitch_auth_
     as _i641;
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart'
     as _i857;
+import 'package:gaming_library_assessment_flutter/core/services/supabase/i_supabase_health_probe.dart'
+    as _i958;
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connectivity_checker.dart'
+    as _i202;
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_health_probe.dart'
+    as _i887;
 import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart'
     as _i554;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repositories/featured_repository_impl.dart'
@@ -107,140 +115,183 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
+import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 
 extension GetItInjectableX on _i174.GetIt {
-// initializes the registration of main-scope dependencies inside of GetIt
+  // initializes the registration of main-scope dependencies inside of GetIt
   Future<_i174.GetIt> init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
   }) async {
-    final gh = _i526.GetItHelper(
-      this,
-      environment,
-      environmentFilter,
-    );
+    final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final storageModule = _$StorageModule();
+    final supabaseModule = _$SupabaseModule();
     final networkModule = _$NetworkModule();
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => storageModule.prefs,
       preResolve: true,
     );
+    await gh.factoryAsync<_i454.SupabaseClient>(
+      () => supabaseModule.supabaseClient,
+      preResolve: true,
+    );
     gh.factory<_i646.DefaultDioInterceptor>(
-        () => _i646.DefaultDioInterceptor());
+      () => _i646.DefaultDioInterceptor(),
+    );
     gh.singleton<_i1015.AppRouter>(() => _i1015.AppRouter());
     gh.singleton<_i641.TwitchAuthInterceptor>(
-        () => _i641.TwitchAuthInterceptor());
+      () => _i641.TwitchAuthInterceptor(),
+    );
     gh.singleton<_i857.GameLocalStorageService>(
-        () => _i857.GameLocalStorageService());
+      () => _i857.GameLocalStorageService(),
+    );
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
     gh.singleton<_i361.Dio>(
-        () => networkModule.getDioInstance(gh<_i641.TwitchAuthInterceptor>()));
+      () => networkModule.getDioInstance(gh<_i641.TwitchAuthInterceptor>()),
+    );
     gh.singleton<_i35.IgdbApiService>(
-        () => networkModule.getIgdbApiService(gh<_i361.Dio>()));
+      () => networkModule.getIgdbApiService(gh<_i361.Dio>()),
+    );
     gh.singleton<_i54.GameDetailService>(
-        () => networkModule.getGameDetailService(gh<_i361.Dio>()));
-    gh.factory<_i629.TrackerPreferencesDatasource>(() =>
-        _i629.TrackerPreferencesDatasource(gh<_i460.SharedPreferences>()));
-    gh.factory<_i922.TrackerSortRepository>(() =>
-        _i856.TrackerSortRepositoryImpl(
-            gh<_i629.TrackerPreferencesDatasource>()));
+      () => networkModule.getGameDetailService(gh<_i361.Dio>()),
+    );
+    gh.factory<_i629.TrackerPreferencesDatasource>(
+      () => _i629.TrackerPreferencesDatasource(gh<_i460.SharedPreferences>()),
+    );
+    gh.factory<_i922.TrackerSortRepository>(
+      () => _i856.TrackerSortRepositoryImpl(
+        gh<_i629.TrackerPreferencesDatasource>(),
+      ),
+    );
     gh.factory<_i554.FeaturedLocalDatasource>(
-        () => _i554.FeaturedLocalDatasource(
-              gh<_i857.GameLocalStorageService>(),
-              gh<_i460.SharedPreferences>(),
-            ));
+      () => _i554.FeaturedLocalDatasource(
+        gh<_i857.GameLocalStorageService>(),
+        gh<_i460.SharedPreferences>(),
+      ),
+    );
     gh.factory<_i750.GameDetailRemoteDatasource>(
-        () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()));
-    gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>((
-      initialState,
-      _,
-    ) =>
-        _i669.FilterCubit(initialState: initialState));
+      () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()),
+    );
+    gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>(
+      (initialState, _) => _i669.FilterCubit(initialState: initialState),
+    );
     gh.factory<_i944.GameLocalDatasource>(
-        () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()));
-    gh.factory<_i985.FeaturedRepository>(() => _i840.FeaturedRepositoryImpl(
-          gh<_i554.FeaturedLocalDatasource>(),
-          gh<_i35.IgdbApiService>(),
-        ));
+      () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()),
+    );
+    gh.factory<_i958.ISupabaseHealthProbe>(
+      () => _i887.SupabaseHealthProbe(gh<_i454.SupabaseClient>()),
+    );
+    gh.factory<_i985.FeaturedRepository>(
+      () => _i840.FeaturedRepositoryImpl(
+        gh<_i554.FeaturedLocalDatasource>(),
+        gh<_i35.IgdbApiService>(),
+      ),
+    );
     gh.factory<_i671.GetTrackerSortUseCase>(
-        () => _i671.GetTrackerSortUseCase(gh<_i922.TrackerSortRepository>()));
+      () => _i671.GetTrackerSortUseCase(gh<_i922.TrackerSortRepository>()),
+    );
     gh.factory<_i422.SaveTrackerSortUseCase>(
-        () => _i422.SaveTrackerSortUseCase(gh<_i922.TrackerSortRepository>()));
-    gh.factory<_i223.GameDetailRepository>(() => _i366.GameDetailRepositoryImpl(
-          gh<_i750.GameDetailRemoteDatasource>(),
-          gh<_i944.GameLocalDatasource>(),
-        ));
+      () => _i422.SaveTrackerSortUseCase(gh<_i922.TrackerSortRepository>()),
+    );
+    gh.factory<_i223.GameDetailRepository>(
+      () => _i366.GameDetailRepositoryImpl(
+        gh<_i750.GameDetailRemoteDatasource>(),
+        gh<_i944.GameLocalDatasource>(),
+      ),
+    );
     gh.factory<_i621.GamesDataSource>(
-        () => _i621.GamesDataSource(gh<_i35.IgdbApiService>()));
+      () => _i621.GamesDataSource(gh<_i35.IgdbApiService>()),
+    );
     gh.factory<_i781.GetCountdownGameUseCase>(
-        () => _i781.GetCountdownGameUseCase(gh<_i985.FeaturedRepository>()));
+      () => _i781.GetCountdownGameUseCase(gh<_i985.FeaturedRepository>()),
+    );
     gh.factory<_i971.GetCriticsChoiceUseCase>(
-        () => _i971.GetCriticsChoiceUseCase(gh<_i985.FeaturedRepository>()));
+      () => _i971.GetCriticsChoiceUseCase(gh<_i985.FeaturedRepository>()),
+    );
     gh.factory<_i804.GetGenrePreferencesUseCase>(
-        () => _i804.GetGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()));
+      () => _i804.GetGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()),
+    );
     gh.factory<_i851.GetLibrarySnapshotUseCase>(
-        () => _i851.GetLibrarySnapshotUseCase(gh<_i985.FeaturedRepository>()));
+      () => _i851.GetLibrarySnapshotUseCase(gh<_i985.FeaturedRepository>()),
+    );
     gh.factory<_i526.GetOutThisWeekUseCase>(
-        () => _i526.GetOutThisWeekUseCase(gh<_i985.FeaturedRepository>()));
-    gh.factory<_i151.SaveGenrePreferencesUseCase>(() =>
-        _i151.SaveGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()));
+      () => _i526.GetOutThisWeekUseCase(gh<_i985.FeaturedRepository>()),
+    );
+    gh.factory<_i151.SaveGenrePreferencesUseCase>(
+      () => _i151.SaveGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()),
+    );
     gh.factory<_i461.GamesRepository>(
-        () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()));
-    gh.factory<_i426.LibraryStatsCubit>(() => _i426.LibraryStatsCubit(
-          gh<_i851.GetLibrarySnapshotUseCase>(),
-          gh<_i460.SharedPreferences>(),
-        ));
-    gh.factoryParam<_i32.GameDetailCubit, int, dynamic>((
-      id,
-      _,
-    ) =>
-        _i32.GameDetailCubit(
-          id: id,
-          gameDetailRepository: gh<_i223.GameDetailRepository>(),
-        ));
-    gh.factory<_i980.TrackerDetailRepository>(() =>
-        _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()));
+      () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()),
+    );
+    gh.factory<_i426.LibraryStatsCubit>(
+      () => _i426.LibraryStatsCubit(
+        gh<_i851.GetLibrarySnapshotUseCase>(),
+        gh<_i460.SharedPreferences>(),
+      ),
+    );
+    gh.factoryParam<_i32.GameDetailCubit, int, dynamic>(
+      (id, _) => _i32.GameDetailCubit(
+        id: id,
+        gameDetailRepository: gh<_i223.GameDetailRepository>(),
+      ),
+    );
+    gh.factory<_i980.TrackerDetailRepository>(
+      () => _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()),
+    );
     gh.factory<_i443.TrackerRepository>(
-        () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()));
-    gh.factory<_i187.CriticsGridCubit>(() => _i187.CriticsGridCubit(
-          gh<_i804.GetGenrePreferencesUseCase>(),
-          gh<_i971.GetCriticsChoiceUseCase>(),
-          gh<_i151.SaveGenrePreferencesUseCase>(),
-        ));
-    gh.factory<_i208.CountdownReleasesCubit>(() => _i208.CountdownReleasesCubit(
-          gh<_i781.GetCountdownGameUseCase>(),
-          gh<_i526.GetOutThisWeekUseCase>(),
-        ));
-    gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>((
-      task,
-      _,
-    ) =>
-        _i633.TaskCubit(
-          task: task,
-          trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
-        ));
-    gh.factoryParam<_i43.TrackerDetailCubit, _i190.TrackerSavedGameEntity,
-        dynamic>((
-      game,
-      _,
-    ) =>
-        _i43.TrackerDetailCubit(
-          game: game,
-          trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
-        ));
+      () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()),
+    );
+    gh.factory<_i187.CriticsGridCubit>(
+      () => _i187.CriticsGridCubit(
+        gh<_i804.GetGenrePreferencesUseCase>(),
+        gh<_i971.GetCriticsChoiceUseCase>(),
+        gh<_i151.SaveGenrePreferencesUseCase>(),
+      ),
+    );
+    gh.factory<_i202.SupabaseConnectivityChecker>(
+      () => _i202.SupabaseConnectivityChecker(gh<_i958.ISupabaseHealthProbe>()),
+    );
+    gh.factory<_i208.CountdownReleasesCubit>(
+      () => _i208.CountdownReleasesCubit(
+        gh<_i781.GetCountdownGameUseCase>(),
+        gh<_i526.GetOutThisWeekUseCase>(),
+      ),
+    );
+    gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>(
+      (task, _) => _i633.TaskCubit(
+        task: task,
+        trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
+      ),
+    );
+    gh.factoryParam<
+      _i43.TrackerDetailCubit,
+      _i190.TrackerSavedGameEntity,
+      dynamic
+    >(
+      (game, _) => _i43.TrackerDetailCubit(
+        game: game,
+        trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
+      ),
+    );
     gh.factory<_i14.FetchGamesUseCase>(
-        () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()));
-    gh.factory<_i970.TrackerCubit>(() => _i970.TrackerCubit(
-          gh<_i443.TrackerRepository>(),
-          gh<_i422.SaveTrackerSortUseCase>(),
-          gh<_i671.GetTrackerSortUseCase>(),
-        ));
+      () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()),
+    );
+    gh.factory<_i970.TrackerCubit>(
+      () => _i970.TrackerCubit(
+        gh<_i443.TrackerRepository>(),
+        gh<_i422.SaveTrackerSortUseCase>(),
+        gh<_i671.GetTrackerSortUseCase>(),
+      ),
+    );
     gh.factory<_i591.GamesBloc>(
-        () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()));
+      () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()),
+    );
     return this;
   }
 }
 
 class _$StorageModule extends _i472.StorageModule {}
+
+class _$SupabaseModule extends _i871.SupabaseModule {}
 
 class _$NetworkModule extends _i420.NetworkModule {}

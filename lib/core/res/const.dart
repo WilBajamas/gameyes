@@ -35,6 +35,15 @@ class StorageConstants {
   static const trackerSortTagKey = 'tracker_sort_tag';
 }
 
+class SupabaseConstants {
+  /// Sentinel PostgREST path used only by the startup connectivity probe.
+  /// No real relation is ever named this, so the project answering with
+  /// "relation does not exist" still proves it is reachable.
+  static const connectivityProbePath = '__gameyes_connectivity_probe__';
+
+  static const Duration connectivityTimeout = Duration(seconds: 10);
+}
+
 class StringConstants {
   static const emptyStringPlaceholder = '-';
   static const na = 'NA';

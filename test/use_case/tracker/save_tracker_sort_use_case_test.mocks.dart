@@ -36,22 +36,19 @@ class MockTrackerSortRepository extends _i1.Mock
   }
 
   @override
-  _i3.SavedGameFilterTag getSortTag() => (super.noSuchMethod(
-        Invocation.method(
-          #getSortTag,
-          [],
-        ),
-        returnValue: _i3.SavedGameFilterTag.recentlyChanged,
-      ) as _i3.SavedGameFilterTag);
+  _i3.SavedGameFilterTag getSortTag() =>
+      (super.noSuchMethod(
+            Invocation.method(#getSortTag, []),
+            returnValue: _i3.SavedGameFilterTag.recentlyChanged,
+          )
+          as _i3.SavedGameFilterTag);
 
   @override
   _i4.Future<void> saveSortTag(_i3.SavedGameFilterTag? tag) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveSortTag,
-          [tag],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#saveSortTag, [tag]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 }
