@@ -6,7 +6,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.2.5 <4.0.0"
+  sdk: ">=3.9.0 <4.0.0"
 
 isar_version: &isar_version 3.3.2
 
@@ -104,6 +104,9 @@ dependencies:
   # Mocking
   mockito: ^5.6.4
   http_mock_adapter: ^0.6.1
+
+  # Supabase
+  supabase_flutter: ^2.16.0
 
 dev_dependencies:
   flutter_test:

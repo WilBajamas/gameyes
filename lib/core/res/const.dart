@@ -35,6 +35,14 @@ class StorageConstants {
   static const trackerSortTagKey = 'tracker_sort_tag';
 }
 
+class SupabaseConstants {
+  // A made-up name we ask Supabase about, just to see if it replies.
+  // Not a real table.
+  static const connectionPath = 'connectionPath';
+
+  static const Duration connectionTimeout = Duration(seconds: 10);
+}
+
 class StringConstants {
   static const emptyStringPlaceholder = '-';
   static const na = 'NA';
