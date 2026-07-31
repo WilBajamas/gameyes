@@ -28,12 +28,10 @@ import 'package:gaming_library_assessment_flutter/core/services/api/twitch_auth_
     as _i641;
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart'
     as _i857;
-import 'package:gaming_library_assessment_flutter/core/services/supabase/i_supabase_health_probe.dart'
-    as _i958;
-import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connectivity_checker.dart'
-    as _i202;
-import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_health_probe.dart'
-    as _i887;
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connection_checker.dart'
+    as _i656;
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_ping.dart'
+    as _i124;
 import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart'
     as _i554;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repositories/featured_repository_impl.dart'
@@ -169,6 +167,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i460.SharedPreferences>(),
       ),
     );
+    gh.factory<_i124.SupabasePing>(
+      () => _i124.SupabasePing(gh<_i454.SupabaseClient>()),
+    );
     gh.factory<_i750.GameDetailRemoteDatasource>(
       () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()),
     );
@@ -178,8 +179,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i944.GameLocalDatasource>(
       () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()),
     );
-    gh.factory<_i958.ISupabaseHealthProbe>(
-      () => _i887.SupabaseHealthProbe(gh<_i454.SupabaseClient>()),
+    gh.factory<_i656.SupabaseConnectionChecker>(
+      () => _i656.SupabaseConnectionChecker(gh<_i124.SupabasePing>()),
     );
     gh.factory<_i985.FeaturedRepository>(
       () => _i840.FeaturedRepositoryImpl(
@@ -247,9 +248,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i971.GetCriticsChoiceUseCase>(),
         gh<_i151.SaveGenrePreferencesUseCase>(),
       ),
-    );
-    gh.factory<_i202.SupabaseConnectivityChecker>(
-      () => _i202.SupabaseConnectivityChecker(gh<_i958.ISupabaseHealthProbe>()),
     );
     gh.factory<_i208.CountdownReleasesCubit>(
       () => _i208.CountdownReleasesCubit(

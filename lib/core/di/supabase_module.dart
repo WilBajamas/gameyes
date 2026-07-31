@@ -2,9 +2,8 @@ import 'package:gaming_library_assessment_flutter/config/flavor/flavor_config.da
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// The only place in `lib/` allowed to touch the Supabase SDK's initialisation
-/// API or its global instance accessor. Every consumer receives the resulting
-/// [SupabaseClient] by constructor injection.
+// This is the only file that starts up Supabase. Every other part of the app
+// just borrows this same connection instead of starting its own.
 @module
 abstract class SupabaseModule {
   @preResolve
