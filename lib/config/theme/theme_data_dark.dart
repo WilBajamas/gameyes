@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/core/res/color.dart';
+import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+final _tokens = AppTokens.dark;
+final _colors = _tokens.color;
+final _type = _tokens.typography;
+final _radius = _tokens.radius;
 
 final kDarkColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
-  seedColor: ColorPalette.lightPrimaryBlue,
+  seedColor: _colors.accentIndigo,
+  primary: _colors.accentIndigo,
+  onPrimary: _colors.ink,
+  secondary: _colors.accentMagenta,
+  tertiary: _colors.accentLinkCyan,
+  surface: _colors.canvas,
+  onSurface: _colors.ink,
+  surfaceContainer: _colors.surfaceRaised,
+  surfaceContainerHighest: _colors.surfaceRaised,
+  outline: _colors.hairline,
+  error: _colors.error,
+  onError: _colors.ink,
 );
 
 ThemeData buildDarkTheme() {
@@ -16,127 +32,80 @@ ThemeData buildDarkTheme() {
   final filledButtonTheme = FilledButtonThemeData(
     style: const ButtonStyle().copyWith(
       backgroundColor: WidgetStateProperty.all<Color>(
-        kDarkColorScheme.primary,
+        _colors.accentIndigo,
       ),
       foregroundColor: WidgetStateProperty.all<Color>(
-        kDarkColorScheme.surface,
+        _colors.ink,
       ),
     ),
   );
 
-  final textTheme = GoogleFonts.openSansTextTheme(baseTheme.textTheme).copyWith(
-    titleLarge: GoogleFonts.chakraPetch(
-      fontWeight: FontWeight.w600,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.titleLarge,
-    ),
-    titleMedium: GoogleFonts.chakraPetch(
-      fontSize: 18,
-      fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.titleLarge,
-    ),
-    headlineMedium: GoogleFonts.openSans(
-      fontSize: 20,
-      textStyle: baseTheme.textTheme.headlineMedium,
-    ),
-    labelSmall: GoogleFonts.openSans(
-      fontSize: 12,
-      textStyle: baseTheme.textTheme.labelSmall,
-    ),
-    bodySmall: GoogleFonts.openSans(
-      fontSize: 14,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.bodySmall,
-    ),
-    bodyMedium: GoogleFonts.openSans(
-      fontSize: 16,
-      fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.bodyMedium,
-    ),
-    bodyLarge: GoogleFonts.openSans(
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.bodyLarge,
-    ),
-    displaySmall: GoogleFonts.openSans(
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.displaySmall,
-    ),
-    displayMedium: GoogleFonts.chakraPetch(
-      fontSize: 20,
-      fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.displayMedium,
-    ),
-    displayLarge: GoogleFonts.chakraPetch(
-      fontSize: 22,
-      fontWeight: FontWeight.w800,
-      color: kDarkColorScheme.onSurface,
-      textStyle: baseTheme.textTheme.displayLarge,
-    ),
+  final textTheme = GoogleFonts.interTextTheme(baseTheme.textTheme).copyWith(
+    displayLarge: _type.screenTitle.style,
+    headlineMedium: _type.cardHeading.style,
+    titleLarge: _type.cardHeading.style,
+    labelLarge: _type.zoneLabel.style,
+    bodyLarge: _type.body.style,
+    bodyMedium: _type.meta.style,
+    bodySmall: _type.zoneLink.style,
+    labelMedium: _type.pill.style,
+    labelSmall: _type.tabLabel.style,
   );
 
   final navigationBarTheme = NavigationBarThemeData(
-    labelTextStyle: WidgetStateProperty.all(
-      TextStyle(fontSize: 14, color: kDarkColorScheme.onSurface),
-    ),
-    backgroundColor: kDarkColorScheme.primaryContainer,
-    indicatorColor: kDarkColorScheme.onSurface,
+    labelTextStyle: WidgetStateProperty.all(textTheme.labelSmall),
+    backgroundColor: _colors.surfaceTabChrome,
+    indicatorColor: _colors.accentIndigo,
   );
 
   final elevatedButtonTheme = ElevatedButtonThemeData(
     style: const ButtonStyle().copyWith(
       backgroundColor: WidgetStateProperty.all<Color>(
-        kDarkColorScheme.primary,
+        _colors.accentIndigo,
       ),
       foregroundColor: WidgetStateProperty.all<Color>(
-        kDarkColorScheme.surface,
+        _colors.ink,
       ),
       textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
 
-  const iconTheme = IconThemeData(
-    color: Colors.white,
+  final iconTheme = IconThemeData(
+    color: _colors.ink,
   );
 
   final iconButtonTheme = IconButtonThemeData(
     style: ButtonStyle(
       foregroundColor: WidgetStateProperty.all<Color>(
-        Colors.white,
+        _colors.ink,
       ),
     ),
   );
 
   final chipTheme = ChipThemeData(
-    checkmarkColor: kDarkColorScheme.surface,
-    selectedColor: kDarkColorScheme.primary,
-    backgroundColor: kDarkColorScheme.surface,
-    labelStyle: TextStyle(color: kDarkColorScheme.surface),
+    checkmarkColor: _colors.ink,
+    selectedColor: _colors.accentIndigo,
+    backgroundColor: _colors.surfaceRaised,
+    labelStyle: textTheme.labelMedium,
     shape: StadiumBorder(
-      side: const BorderSide().copyWith(color: kDarkColorScheme.primary),
+      side: const BorderSide().copyWith(color: _colors.hairline),
     ),
   );
 
   final inputDecorationTheme = InputDecorationTheme(
-    errorBorder: const OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.red),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: _colors.error),
     ),
-    labelStyle: const TextStyle(color: Colors.grey),
-    suffixIconColor: Colors.grey,
+    labelStyle: textTheme.bodyMedium,
+    suffixIconColor: _colors.ink55,
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(_radius.sm),
     ),
   );
 
   final appBarTheme = const AppBarTheme().copyWith(
-    backgroundColor: kDarkColorScheme.primaryContainer,
-    foregroundColor: kDarkColorScheme.onPrimaryContainer,
+    backgroundColor: _colors.canvas,
+    foregroundColor: _colors.ink,
   );
 
   return baseTheme.copyWith(
@@ -148,7 +117,8 @@ ThemeData buildDarkTheme() {
     iconButtonTheme: iconButtonTheme,
     chipTheme: chipTheme,
     inputDecorationTheme: inputDecorationTheme,
-    scaffoldBackgroundColor: kDarkColorScheme.surface,
+    scaffoldBackgroundColor: _colors.canvas,
     appBarTheme: appBarTheme,
+    extensions: <ThemeExtension<dynamic>>[_tokens],
   );
 }

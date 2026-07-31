@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 
 import 'package:intl/intl.dart';
 
-
 extension ContextExtensions on BuildContext {
   ThemeData get themeData => Theme.of(this);
+  AppTokens get tokens => Theme.of(this).extension<AppTokens>()!;
   double get screenHeight => MediaQuery.of(this).size.height;
   double get screenWidth => MediaQuery.of(this).size.width;
   double get bottomPadding => MediaQuery.of(this).padding.bottom;
@@ -87,4 +88,3 @@ extension ImageUrlResolver on String? {
     return this!.startsWith('//') ? 'https:$this' : this;
   }
 }
-

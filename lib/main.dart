@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: S.delegate.supportedLocales,
       theme: buildTheme(),
       darkTheme: buildDarkTheme(),
+      themeMode: ThemeMode.dark,
       routerConfig: getIt<AppRouter>().config(),
     );
   }
