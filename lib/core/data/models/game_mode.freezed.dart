@@ -14,261 +14,309 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$GameMode {
+  int? get id;
+  String? get name;
 
- int? get id; String? get name;
-/// Create a copy of GameMode
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$GameModeCopyWith<GameMode> get copyWith => _$GameModeCopyWithImpl<GameMode>(this as GameMode, _$identity);
+  /// Create a copy of GameMode
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $GameModeCopyWith<GameMode> get copyWith =>
+      _$GameModeCopyWithImpl<GameMode>(this as GameMode, _$identity);
 
   /// Serializes this GameMode to a JSON map.
   Map<String, dynamic> toJson();
 
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is GameMode &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name));
+  }
 
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameMode&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
-}
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, name);
 
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,id,name);
-
-@override
-String toString() {
-  return 'GameMode(id: $id, name: $name)';
-}
-
-
+  @override
+  String toString() {
+    return 'GameMode(id: $id, name: $name)';
+  }
 }
 
 /// @nodoc
-abstract mixin class $GameModeCopyWith<$Res>  {
-  factory $GameModeCopyWith(GameMode value, $Res Function(GameMode) _then) = _$GameModeCopyWithImpl;
-@useResult
-$Res call({
- int? id, String? name
-});
-
-
-
-
+abstract mixin class $GameModeCopyWith<$Res> {
+  factory $GameModeCopyWith(GameMode value, $Res Function(GameMode) _then) =
+      _$GameModeCopyWithImpl;
+  @useResult
+  $Res call({int? id, String? name});
 }
+
 /// @nodoc
-class _$GameModeCopyWithImpl<$Res>
-    implements $GameModeCopyWith<$Res> {
+class _$GameModeCopyWithImpl<$Res> implements $GameModeCopyWith<$Res> {
   _$GameModeCopyWithImpl(this._self, this._then);
 
   final GameMode _self;
   final $Res Function(GameMode) _then;
 
-/// Create a copy of GameMode
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,}) {
-  return _then(_self.copyWith(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,
-  ));
+  /// Create a copy of GameMode
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = freezed,
+    Object? name = freezed,
+  }) {
+    return _then(_self.copyWith(
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
-
-}
-
 
 /// Adds pattern-matching-related methods to [GameMode].
 extension GameModePatterns on GameMode {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GameMode value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _GameMode() when $default != null:
-return $default(_that);case _:
-  return orElse();
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_GameMode value)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _GameMode() when $default != null:
+        return $default(_that);
+      case _:
+        return orElse();
+    }
+  }
 
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GameMode value)  $default,){
-final _that = this;
-switch (_that) {
-case _GameMode():
-return $default(_that);}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_GameMode value) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _GameMode():
+        return $default(_that);
+    }
+  }
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GameMode value)?  $default,){
-final _that = this;
-switch (_that) {
-case _GameMode() when $default != null:
-return $default(_that);case _:
-  return null;
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
 
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_GameMode value)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _GameMode() when $default != null:
+        return $default(_that);
+      case _:
+        return null;
+    }
+  }
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _GameMode() when $default != null:
-return $default(_that.id,_that.name);case _:
-  return orElse();
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
 
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(int? id, String? name)? $default, {
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _GameMode() when $default != null:
+        return $default(_that.id, _that.name);
+      case _:
+        return orElse();
+    }
+  }
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name)  $default,) {final _that = this;
-switch (_that) {
-case _GameMode():
-return $default(_that.id,_that.name);}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name)?  $default,) {final _that = this;
-switch (_that) {
-case _GameMode() when $default != null:
-return $default(_that.id,_that.name);case _:
-  return null;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(int? id, String? name) $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _GameMode():
+        return $default(_that.id, _that.name);
+    }
+  }
 
-}
-}
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
 
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(int? id, String? name)? $default,
+  ) {
+    final _that = this;
+    switch (_that) {
+      case _GameMode() when $default != null:
+        return $default(_that.id, _that.name);
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc
 @JsonSerializable()
-
 class _GameMode extends GameMode {
-  const _GameMode({this.id, this.name}): super._();
-  factory _GameMode.fromJson(Map<String, dynamic> json) => _$GameModeFromJson(json);
+  const _GameMode({this.id, this.name}) : super._();
+  factory _GameMode.fromJson(Map<String, dynamic> json) =>
+      _$GameModeFromJson(json);
 
-@override final  int? id;
-@override final  String? name;
+  @override
+  final int? id;
+  @override
+  final String? name;
 
-/// Create a copy of GameMode
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$GameModeCopyWith<_GameMode> get copyWith => __$GameModeCopyWithImpl<_GameMode>(this, _$identity);
+  /// Create a copy of GameMode
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$GameModeCopyWith<_GameMode> get copyWith =>
+      __$GameModeCopyWithImpl<_GameMode>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$GameModeToJson(this, );
-}
+  @override
+  Map<String, dynamic> toJson() {
+    return _$GameModeToJson(
+      this,
+    );
+  }
 
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameMode&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
-}
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _GameMode &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name));
+  }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,id,name);
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, name);
 
-@override
-String toString() {
-  return 'GameMode(id: $id, name: $name)';
-}
-
-
+  @override
+  String toString() {
+    return 'GameMode(id: $id, name: $name)';
+  }
 }
 
 /// @nodoc
-abstract mixin class _$GameModeCopyWith<$Res> implements $GameModeCopyWith<$Res> {
-  factory _$GameModeCopyWith(_GameMode value, $Res Function(_GameMode) _then) = __$GameModeCopyWithImpl;
-@override @useResult
-$Res call({
- int? id, String? name
-});
-
-
-
-
+abstract mixin class _$GameModeCopyWith<$Res>
+    implements $GameModeCopyWith<$Res> {
+  factory _$GameModeCopyWith(_GameMode value, $Res Function(_GameMode) _then) =
+      __$GameModeCopyWithImpl;
+  @override
+  @useResult
+  $Res call({int? id, String? name});
 }
+
 /// @nodoc
-class __$GameModeCopyWithImpl<$Res>
-    implements _$GameModeCopyWith<$Res> {
+class __$GameModeCopyWithImpl<$Res> implements _$GameModeCopyWith<$Res> {
   __$GameModeCopyWithImpl(this._self, this._then);
 
   final _GameMode _self;
   final $Res Function(_GameMode) _then;
 
-/// Create a copy of GameMode
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,}) {
-  return _then(_GameMode(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,
-  ));
-}
-
-
+  /// Create a copy of GameMode
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = freezed,
+    Object? name = freezed,
+  }) {
+    return _then(_GameMode(
+      id: freezed == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      name: freezed == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 // dart format on

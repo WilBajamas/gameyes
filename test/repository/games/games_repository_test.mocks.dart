@@ -31,8 +31,13 @@ import 'package:mockito/src/dummies.dart' as _i6;
 
 class _FakeIgdbApiService_0 extends _i1.SmartFake
     implements _i2.IgdbApiService {
-  _FakeIgdbApiService_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+  _FakeIgdbApiService_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
 }
 
 /// A class which mocks [GamesDataSource].
@@ -44,15 +49,13 @@ class MockGamesDataSource extends _i1.Mock implements _i3.GamesDataSource {
   }
 
   @override
-  _i2.IgdbApiService get igdbApiService =>
-      (super.noSuchMethod(
-            Invocation.getter(#igdbApiService),
-            returnValue: _FakeIgdbApiService_0(
-              this,
-              Invocation.getter(#igdbApiService),
-            ),
-          )
-          as _i2.IgdbApiService);
+  _i2.IgdbApiService get igdbApiService => (super.noSuchMethod(
+        Invocation.getter(#igdbApiService),
+        returnValue: _FakeIgdbApiService_0(
+          this,
+          Invocation.getter(#igdbApiService),
+        ),
+      ) as _i2.IgdbApiService);
 
   @override
   _i4.Future<_i5.GamesModel> fetchDatasourceGames({
@@ -65,7 +68,26 @@ class MockGamesDataSource extends _i1.Mock implements _i3.GamesDataSource {
     String? genres,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#fetchDatasourceGames, [], {
+        Invocation.method(
+          #fetchDatasourceGames,
+          [],
+          {
+            #page: page,
+            #pageSize: pageSize,
+            #searchTerm: searchTerm,
+            #dateRange: dateRange,
+            #orderings: orderings,
+            #platforms: platforms,
+            #genres: genres,
+          },
+        ),
+        returnValue:
+            _i4.Future<_i5.GamesModel>.value(_i6.dummyValue<_i5.GamesModel>(
+          this,
+          Invocation.method(
+            #fetchDatasourceGames,
+            [],
+            {
               #page: page,
               #pageSize: pageSize,
               #searchTerm: searchTerm,
@@ -73,21 +95,8 @@ class MockGamesDataSource extends _i1.Mock implements _i3.GamesDataSource {
               #orderings: orderings,
               #platforms: platforms,
               #genres: genres,
-            }),
-            returnValue: _i4.Future<_i5.GamesModel>.value(
-              _i6.dummyValue<_i5.GamesModel>(
-                this,
-                Invocation.method(#fetchDatasourceGames, [], {
-                  #page: page,
-                  #pageSize: pageSize,
-                  #searchTerm: searchTerm,
-                  #dateRange: dateRange,
-                  #orderings: orderings,
-                  #platforms: platforms,
-                  #genres: genres,
-                }),
-              ),
-            ),
-          )
-          as _i4.Future<_i5.GamesModel>);
+            },
+          ),
+        )),
+      ) as _i4.Future<_i5.GamesModel>);
 }

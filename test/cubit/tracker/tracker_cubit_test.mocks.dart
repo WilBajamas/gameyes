@@ -43,12 +43,13 @@ class MockTrackerRepository extends _i1.Mock implements _i2.TrackerRepository {
   @override
   _i3.Future<List<_i4.TrackerSavedGameEntity>> getSavedGames() =>
       (super.noSuchMethod(
-            Invocation.method(#getSavedGames, []),
-            returnValue: _i3.Future<List<_i4.TrackerSavedGameEntity>>.value(
-              <_i4.TrackerSavedGameEntity>[],
-            ),
-          )
-          as _i3.Future<List<_i4.TrackerSavedGameEntity>>);
+        Invocation.method(
+          #getSavedGames,
+          [],
+        ),
+        returnValue: _i3.Future<List<_i4.TrackerSavedGameEntity>>.value(
+            <_i4.TrackerSavedGameEntity>[]),
+      ) as _i3.Future<List<_i4.TrackerSavedGameEntity>>);
 
   @override
   _i3.Stream<List<_i4.TrackerSavedGameEntity>> savedGamesStream(
@@ -56,29 +57,36 @@ class MockTrackerRepository extends _i1.Mock implements _i2.TrackerRepository {
     String? searchTerm,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#savedGamesStream, [tag, searchTerm]),
-            returnValue: _i3.Stream<List<_i4.TrackerSavedGameEntity>>.empty(),
-          )
-          as _i3.Stream<List<_i4.TrackerSavedGameEntity>>);
+        Invocation.method(
+          #savedGamesStream,
+          [
+            tag,
+            searchTerm,
+          ],
+        ),
+        returnValue: _i3.Stream<List<_i4.TrackerSavedGameEntity>>.empty(),
+      ) as _i3.Stream<List<_i4.TrackerSavedGameEntity>>);
 
   @override
   _i3.Stream<List<_i4.TrackerSavedGameEntity>> searchGamesStream(
-    String? term,
-  ) =>
+          String? term) =>
       (super.noSuchMethod(
-            Invocation.method(#searchGamesStream, [term]),
-            returnValue: _i3.Stream<List<_i4.TrackerSavedGameEntity>>.empty(),
-          )
-          as _i3.Stream<List<_i4.TrackerSavedGameEntity>>);
+        Invocation.method(
+          #searchGamesStream,
+          [term],
+        ),
+        returnValue: _i3.Stream<List<_i4.TrackerSavedGameEntity>>.empty(),
+      ) as _i3.Stream<List<_i4.TrackerSavedGameEntity>>);
 
   @override
-  _i3.Future<void> removeSavedGame(int? id) =>
-      (super.noSuchMethod(
-            Invocation.method(#removeSavedGame, [id]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> removeSavedGame(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #removeSavedGame,
+          [id],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
 
 /// A class which mocks [GetTrackerSortUseCase].
@@ -91,12 +99,13 @@ class MockGetTrackerSortUseCase extends _i1.Mock
   }
 
   @override
-  _i5.SavedGameFilterTag call() =>
-      (super.noSuchMethod(
-            Invocation.method(#call, []),
-            returnValue: _i5.SavedGameFilterTag.recentlyChanged,
-          )
-          as _i5.SavedGameFilterTag);
+  _i5.SavedGameFilterTag call() => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+        ),
+        returnValue: _i5.SavedGameFilterTag.recentlyChanged,
+      ) as _i5.SavedGameFilterTag);
 }
 
 /// A class which mocks [SaveTrackerSortUseCase].
@@ -109,11 +118,12 @@ class MockSaveTrackerSortUseCase extends _i1.Mock
   }
 
   @override
-  _i3.Future<void> call(_i5.SavedGameFilterTag? tag) =>
-      (super.noSuchMethod(
-            Invocation.method(#call, [tag]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> call(_i5.SavedGameFilterTag? tag) => (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [tag],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

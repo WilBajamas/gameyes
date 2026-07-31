@@ -32,8 +32,16 @@ const SavedGameTaskSchema = CollectionSchema(
       name: r'description',
       type: IsarType.string,
     ),
-    r'gameId': PropertySchema(id: 3, name: r'gameId', type: IsarType.long),
-    r'pinned': PropertySchema(id: 4, name: r'pinned', type: IsarType.bool),
+    r'gameId': PropertySchema(
+      id: 3,
+      name: r'gameId',
+      type: IsarType.long,
+    ),
+    r'pinned': PropertySchema(
+      id: 4,
+      name: r'pinned',
+      type: IsarType.bool,
+    ),
     r'savedGameId': PropertySchema(
       id: 5,
       name: r'savedGameId',
@@ -48,7 +56,6 @@ const SavedGameTaskSchema = CollectionSchema(
       id: 7,
       name: r'steps',
       type: IsarType.objectList,
-
       target: r'TaskStep',
     ),
     r'timeToComplete': PropertySchema(
@@ -56,9 +63,12 @@ const SavedGameTaskSchema = CollectionSchema(
       name: r'timeToComplete',
       type: IsarType.string,
     ),
-    r'title': PropertySchema(id: 9, name: r'title', type: IsarType.string),
+    r'title': PropertySchema(
+      id: 9,
+      name: r'title',
+      type: IsarType.string,
+    )
   },
-
   estimateSize: _savedGameTaskEstimateSize,
   serialize: _savedGameTaskSerialize,
   deserialize: _savedGameTaskDeserialize,
@@ -72,10 +82,9 @@ const SavedGameTaskSchema = CollectionSchema(
       target: r'GroupTask',
       single: true,
       linkName: r'tasks',
-    ),
+    )
   },
   embeddedSchemas: {r'TaskStep': TaskStepSchema},
-
   getId: _savedGameTaskGetId,
   getLinks: _savedGameTaskGetLinks,
   attach: _savedGameTaskAttach,
@@ -194,12 +203,11 @@ P _savedGameTaskDeserializeProp<P>(
       return (reader.readBool(offset)) as P;
     case 7:
       return (reader.readObjectList<TaskStep>(
-            offset,
-            TaskStepSchema.deserialize,
-            allOffsets,
-            TaskStep(),
-          ))
-          as P;
+        offset,
+        TaskStepSchema.deserialize,
+        allOffsets,
+        TaskStep(),
+      )) as P;
     case 8:
       return (reader.readStringOrNull(offset)) as P;
     case 9:
@@ -218,17 +226,10 @@ List<IsarLinkBase<dynamic>> _savedGameTaskGetLinks(SavedGameTask object) {
 }
 
 void _savedGameTaskAttach(
-  IsarCollection<dynamic> col,
-  Id id,
-  SavedGameTask object,
-) {
+    IsarCollection<dynamic> col, Id id, SavedGameTask object) {
   object.id = id;
-  object.groupTask.attach(
-    col,
-    col.isar.collection<GroupTask>(),
-    r'groupTask',
-    id,
-  );
+  object.groupTask
+      .attach(col, col.isar.collection<GroupTask>(), r'groupTask', id);
 }
 
 extension SavedGameTaskQueryWhereSort
@@ -243,16 +244,17 @@ extension SavedGameTaskQueryWhereSort
 extension SavedGameTaskQueryWhere
     on QueryBuilder<SavedGameTask, SavedGameTask, QWhereClause> {
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idEqualTo(
-    Id id,
-  ) {
+      Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idNotEqualTo(
-    Id id,
-  ) {
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -275,9 +277,8 @@ extension SavedGameTaskQueryWhere
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idGreaterThan(
-    Id id, {
-    bool include = false,
-  }) {
+      Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -286,9 +287,8 @@ extension SavedGameTaskQueryWhere
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterWhereClause> idLessThan(
-    Id id, {
-    bool include = false,
-  }) {
+      Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -303,14 +303,12 @@ extension SavedGameTaskQueryWhere
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.between(
-          lower: lowerId,
-          includeLower: includeLower,
-          upper: upperId,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -318,156 +316,155 @@ extension SavedGameTaskQueryWhere
 extension SavedGameTaskQueryFilter
     on QueryBuilder<SavedGameTask, SavedGameTask, QFilterCondition> {
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  completedIsNull() {
+      completedIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'completed'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'completed',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  completedIsNotNull() {
+      completedIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'completed'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'completed',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  completedEqualTo(bool? value) {
+      completedEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'completed', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'completed',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  currentStepIndexEqualTo(int value) {
+      currentStepIndexEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'currentStepIndex', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'currentStepIndex',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  currentStepIndexGreaterThan(int value, {bool include = false}) {
+      currentStepIndexGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'currentStepIndex',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'currentStepIndex',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  currentStepIndexLessThan(int value, {bool include = false}) {
+      currentStepIndexLessThan(
+    int value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'currentStepIndex',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'currentStepIndex',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  currentStepIndexBetween(
+      currentStepIndexBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'currentStepIndex',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'currentStepIndex',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionIsNull() {
+      descriptionIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'description'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'description',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionIsNotNull() {
+      descriptionIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'description'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'description',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionEqualTo(String? value, {bool caseSensitive = true}) {
+      descriptionEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'description',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionGreaterThan(
+      descriptionGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'description',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionLessThan(
+      descriptionLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'description',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionBetween(
+      descriptionBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -475,182 +472,182 @@ extension SavedGameTaskQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'description',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'description',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionStartsWith(String value, {bool caseSensitive = true}) {
+      descriptionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'description',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionEndsWith(String value, {bool caseSensitive = true}) {
+      descriptionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'description',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionContains(String value, {bool caseSensitive = true}) {
+      descriptionContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'description',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionMatches(String pattern, {bool caseSensitive = true}) {
+      descriptionMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'description',
-          wildcard: pattern,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'description',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionIsEmpty() {
+      descriptionIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'description', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: '',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  descriptionIsNotEmpty() {
+      descriptionIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'description', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'description',
+        value: '',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  gameIdIsNull() {
+      gameIdIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'gameId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'gameId',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  gameIdIsNotNull() {
+      gameIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'gameId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'gameId',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  gameIdEqualTo(int? value) {
+      gameIdEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'gameId', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'gameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  gameIdGreaterThan(int? value, {bool include = false}) {
+      gameIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'gameId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'gameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  gameIdLessThan(int? value, {bool include = false}) {
+      gameIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'gameId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'gameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  gameIdBetween(
+      gameIdBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'gameId',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'gameId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition> idEqualTo(
-    Id value,
-  ) {
+      Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'id', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  idGreaterThan(Id value, {bool include = false}) {
+      idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
@@ -659,13 +656,11 @@ extension SavedGameTaskQueryFilter
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
@@ -676,182 +671,219 @@ extension SavedGameTaskQueryFilter
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'id',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  pinnedIsNull() {
+      pinnedIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'pinned'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'pinned',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  pinnedIsNotNull() {
+      pinnedIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'pinned'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'pinned',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  pinnedEqualTo(bool? value) {
+      pinnedEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'pinned', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'pinned',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  savedGameIdIsNull() {
+      savedGameIdIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'savedGameId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'savedGameId',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  savedGameIdIsNotNull() {
+      savedGameIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'savedGameId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'savedGameId',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  savedGameIdEqualTo(int? value) {
+      savedGameIdEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'savedGameId', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'savedGameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  savedGameIdGreaterThan(int? value, {bool include = false}) {
+      savedGameIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'savedGameId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'savedGameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  savedGameIdLessThan(int? value, {bool include = false}) {
+      savedGameIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'savedGameId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'savedGameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  savedGameIdBetween(
+      savedGameIdBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'savedGameId',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'savedGameId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      setReminderEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'setReminder',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'steps',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'steps',
+      ));
+    });
+  }
+
+  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
+      stepsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'steps',
+        length,
+        true,
+        length,
+        true,
       );
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  setReminderEqualTo(bool value) {
+      stepsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'setReminder', value: value),
+      return query.listLength(
+        r'steps',
+        0,
+        true,
+        0,
+        true,
       );
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsIsNull() {
+      stepsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'steps'),
+      return query.listLength(
+        r'steps',
+        0,
+        false,
+        999999,
+        true,
       );
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsIsNotNull() {
+      stepsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'steps'),
+      return query.listLength(
+        r'steps',
+        0,
+        true,
+        length,
+        include,
       );
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsLengthEqualTo(int length) {
+      stepsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(r'steps', length, true, length, true);
+      return query.listLength(
+        r'steps',
+        length,
+        include,
+        999999,
+        true,
+      );
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(r'steps', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(r'steps', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsLengthLessThan(int length, {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(r'steps', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsLengthGreaterThan(int length, {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(r'steps', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsLengthBetween(
+      stepsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -869,74 +901,71 @@ extension SavedGameTaskQueryFilter
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteIsNull() {
+      timeToCompleteIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'timeToComplete'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'timeToComplete',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteIsNotNull() {
+      timeToCompleteIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'timeToComplete'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'timeToComplete',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteEqualTo(String? value, {bool caseSensitive = true}) {
+      timeToCompleteEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'timeToComplete',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'timeToComplete',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteGreaterThan(
+      timeToCompleteGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'timeToComplete',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'timeToComplete',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteLessThan(
+      timeToCompleteLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'timeToComplete',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'timeToComplete',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteBetween(
+      timeToCompleteBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -944,158 +973,153 @@ extension SavedGameTaskQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'timeToComplete',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'timeToComplete',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteStartsWith(String value, {bool caseSensitive = true}) {
+      timeToCompleteStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'timeToComplete',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'timeToComplete',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteEndsWith(String value, {bool caseSensitive = true}) {
+      timeToCompleteEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'timeToComplete',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'timeToComplete',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteContains(String value, {bool caseSensitive = true}) {
+      timeToCompleteContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'timeToComplete',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'timeToComplete',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteMatches(String pattern, {bool caseSensitive = true}) {
+      timeToCompleteMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'timeToComplete',
-          wildcard: pattern,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'timeToComplete',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteIsEmpty() {
+      timeToCompleteIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'timeToComplete', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'timeToComplete',
+        value: '',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  timeToCompleteIsNotEmpty() {
+      timeToCompleteIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'timeToComplete', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'timeToComplete',
+        value: '',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleIsNull() {
+      titleIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'title'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'title',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleIsNotNull() {
+      titleIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'title'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'title',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleEqualTo(String? value, {bool caseSensitive = true}) {
+      titleEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'title',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleGreaterThan(
+      titleGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'title',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleLessThan(
+      titleLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'title',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleBetween(
+      titleBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1103,86 +1127,84 @@ extension SavedGameTaskQueryFilter
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'title',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'title',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleStartsWith(String value, {bool caseSensitive = true}) {
+      titleStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'title',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleEndsWith(String value, {bool caseSensitive = true}) {
+      titleEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'title',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleContains(String value, {bool caseSensitive = true}) {
+      titleContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'title',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleMatches(String pattern, {bool caseSensitive = true}) {
+      titleMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'title',
-          wildcard: pattern,
-          caseSensitive: caseSensitive,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'title',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleIsEmpty() {
+      titleIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'title', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'title',
+        value: '',
+      ));
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  titleIsNotEmpty() {
+      titleIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'title', value: ''),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'title',
+        value: '',
+      ));
     });
   }
 }
@@ -1190,7 +1212,7 @@ extension SavedGameTaskQueryFilter
 extension SavedGameTaskQueryObject
     on QueryBuilder<SavedGameTask, SavedGameTask, QFilterCondition> {
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  stepsElement(FilterQuery<TaskStep> q) {
+      stepsElement(FilterQuery<TaskStep> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'steps');
     });
@@ -1200,15 +1222,14 @@ extension SavedGameTaskQueryObject
 extension SavedGameTaskQueryLinks
     on QueryBuilder<SavedGameTask, SavedGameTask, QFilterCondition> {
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition> groupTask(
-    FilterQuery<GroupTask> q,
-  ) {
+      FilterQuery<GroupTask> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'groupTask');
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterFilterCondition>
-  groupTaskIsNull() {
+      groupTaskIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'groupTask', 0, true, 0, true);
     });
@@ -1224,21 +1245,21 @@ extension SavedGameTaskQuerySortBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortByCompletedDesc() {
+      sortByCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.desc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortByCurrentStepIndex() {
+      sortByCurrentStepIndex() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentStepIndex', Sort.asc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortByCurrentStepIndexDesc() {
+      sortByCurrentStepIndexDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentStepIndex', Sort.desc);
     });
@@ -1251,7 +1272,7 @@ extension SavedGameTaskQuerySortBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortByDescriptionDesc() {
+      sortByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.desc);
     });
@@ -1288,7 +1309,7 @@ extension SavedGameTaskQuerySortBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortBySavedGameIdDesc() {
+      sortBySavedGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'savedGameId', Sort.desc);
     });
@@ -1301,21 +1322,21 @@ extension SavedGameTaskQuerySortBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortBySetReminderDesc() {
+      sortBySetReminderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'setReminder', Sort.desc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortByTimeToComplete() {
+      sortByTimeToComplete() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.asc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  sortByTimeToCompleteDesc() {
+      sortByTimeToCompleteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.desc);
     });
@@ -1343,21 +1364,21 @@ extension SavedGameTaskQuerySortThenBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenByCompletedDesc() {
+      thenByCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'completed', Sort.desc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenByCurrentStepIndex() {
+      thenByCurrentStepIndex() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentStepIndex', Sort.asc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenByCurrentStepIndexDesc() {
+      thenByCurrentStepIndexDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentStepIndex', Sort.desc);
     });
@@ -1370,7 +1391,7 @@ extension SavedGameTaskQuerySortThenBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenByDescriptionDesc() {
+      thenByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.desc);
     });
@@ -1419,7 +1440,7 @@ extension SavedGameTaskQuerySortThenBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenBySavedGameIdDesc() {
+      thenBySavedGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'savedGameId', Sort.desc);
     });
@@ -1432,21 +1453,21 @@ extension SavedGameTaskQuerySortThenBy
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenBySetReminderDesc() {
+      thenBySetReminderDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'setReminder', Sort.desc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenByTimeToComplete() {
+      thenByTimeToComplete() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.asc);
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QAfterSortBy>
-  thenByTimeToCompleteDesc() {
+      thenByTimeToCompleteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timeToComplete', Sort.desc);
     });
@@ -1474,15 +1495,14 @@ extension SavedGameTaskQueryWhereDistinct
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
-  distinctByCurrentStepIndex() {
+      distinctByCurrentStepIndex() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'currentStepIndex');
     });
   }
 
-  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByDescription({
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByDescription(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
     });
@@ -1501,32 +1521,29 @@ extension SavedGameTaskQueryWhereDistinct
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
-  distinctBySavedGameId() {
+      distinctBySavedGameId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'savedGameId');
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
-  distinctBySetReminder() {
+      distinctBySetReminder() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'setReminder');
     });
   }
 
   QueryBuilder<SavedGameTask, SavedGameTask, QDistinct>
-  distinctByTimeToComplete({bool caseSensitive = true}) {
+      distinctByTimeToComplete({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(
-        r'timeToComplete',
-        caseSensitive: caseSensitive,
-      );
+      return query.addDistinctBy(r'timeToComplete',
+          caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByTitle({
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<SavedGameTask, SavedGameTask, QDistinct> distinctByTitle(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
     });
@@ -1548,7 +1565,7 @@ extension SavedGameTaskQueryProperty
   }
 
   QueryBuilder<SavedGameTask, int, QQueryOperations>
-  currentStepIndexProperty() {
+      currentStepIndexProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'currentStepIndex');
     });
@@ -1585,14 +1602,14 @@ extension SavedGameTaskQueryProperty
   }
 
   QueryBuilder<SavedGameTask, List<TaskStep>?, QQueryOperations>
-  stepsProperty() {
+      stepsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'steps');
     });
   }
 
   QueryBuilder<SavedGameTask, String?, QQueryOperations>
-  timeToCompleteProperty() {
+      timeToCompleteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'timeToComplete');
     });

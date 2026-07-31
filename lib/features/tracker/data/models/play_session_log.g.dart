@@ -17,7 +17,11 @@ const PlaySessionLogSchema = CollectionSchema(
   name: r'PlaySessionLog',
   id: 7432748903214683029,
   properties: {
-    r'gameId': PropertySchema(id: 0, name: r'gameId', type: IsarType.long),
+    r'gameId': PropertySchema(
+      id: 0,
+      name: r'gameId',
+      type: IsarType.long,
+    ),
     r'hoursPlayed': PropertySchema(
       id: 1,
       name: r'hoursPlayed',
@@ -27,9 +31,8 @@ const PlaySessionLogSchema = CollectionSchema(
       id: 2,
       name: r'timestamp',
       type: IsarType.dateTime,
-    ),
+    )
   },
-
   estimateSize: _playSessionLogEstimateSize,
   serialize: _playSessionLogSerialize,
   deserialize: _playSessionLogDeserialize,
@@ -46,7 +49,7 @@ const PlaySessionLogSchema = CollectionSchema(
           name: r'gameId',
           type: IndexType.value,
           caseSensitive: false,
-        ),
+        )
       ],
     ),
     r'timestamp': IndexSchema(
@@ -59,13 +62,12 @@ const PlaySessionLogSchema = CollectionSchema(
           name: r'timestamp',
           type: IndexType.value,
           caseSensitive: false,
-        ),
+        )
       ],
-    ),
+    )
   },
   links: {},
   embeddedSchemas: {},
-
   getId: _playSessionLogGetId,
   getLinks: _playSessionLogGetLinks,
   attach: _playSessionLogAttach,
@@ -134,10 +136,7 @@ List<IsarLinkBase<dynamic>> _playSessionLogGetLinks(PlaySessionLog object) {
 }
 
 void _playSessionLogAttach(
-  IsarCollection<dynamic> col,
-  Id id,
-  PlaySessionLog object,
-) {
+    IsarCollection<dynamic> col, Id id, PlaySessionLog object) {
   object.id = id;
 }
 
@@ -169,16 +168,17 @@ extension PlaySessionLogQueryWhereSort
 extension PlaySessionLogQueryWhere
     on QueryBuilder<PlaySessionLog, PlaySessionLog, QWhereClause> {
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause> idEqualTo(
-    Id id,
-  ) {
+      Id id) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause> idNotEqualTo(
-    Id id,
-  ) {
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -201,9 +201,8 @@ extension PlaySessionLogQueryWhere
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause> idGreaterThan(
-    Id id, {
-    bool include = false,
-  }) {
+      Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
@@ -212,9 +211,8 @@ extension PlaySessionLogQueryWhere
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause> idLessThan(
-    Id id, {
-    bool include = false,
-  }) {
+      Id id,
+      {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
@@ -229,118 +227,109 @@ extension PlaySessionLogQueryWhere
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.between(
-          lower: lowerId,
-          includeLower: includeLower,
-          upper: upperId,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  gameIdIsNull() {
+      gameIdIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.equalTo(indexName: r'gameId', value: [null]),
-      );
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'gameId',
+        value: [null],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  gameIdIsNotNull() {
+      gameIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'gameId',
-          lower: [null],
-          includeLower: false,
-          upper: [],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'gameId',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause> gameIdEqualTo(
-    int? gameId,
-  ) {
+      int? gameId) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.equalTo(indexName: r'gameId', value: [gameId]),
-      );
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'gameId',
+        value: [gameId],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  gameIdNotEqualTo(int? gameId) {
+      gameIdNotEqualTo(int? gameId) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'gameId',
-                lower: [],
-                upper: [gameId],
-                includeUpper: false,
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'gameId',
-                lower: [gameId],
-                includeLower: false,
-                upper: [],
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gameId',
+              lower: [],
+              upper: [gameId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gameId',
+              lower: [gameId],
+              includeLower: false,
+              upper: [],
+            ));
       } else {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'gameId',
-                lower: [gameId],
-                includeLower: false,
-                upper: [],
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'gameId',
-                lower: [],
-                upper: [gameId],
-                includeUpper: false,
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gameId',
+              lower: [gameId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'gameId',
+              lower: [],
+              upper: [gameId],
+              includeUpper: false,
+            ));
       }
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  gameIdGreaterThan(int? gameId, {bool include = false}) {
+      gameIdGreaterThan(
+    int? gameId, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'gameId',
-          lower: [gameId],
-          includeLower: include,
-          upper: [],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'gameId',
+        lower: [gameId],
+        includeLower: include,
+        upper: [],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  gameIdLessThan(int? gameId, {bool include = false}) {
+      gameIdLessThan(
+    int? gameId, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'gameId',
-          lower: [],
-          upper: [gameId],
-          includeUpper: include,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'gameId',
+        lower: [],
+        upper: [gameId],
+        includeUpper: include,
+      ));
     });
   }
 
@@ -351,138 +340,128 @@ extension PlaySessionLogQueryWhere
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'gameId',
-          lower: [lowerGameId],
-          includeLower: includeLower,
-          upper: [upperGameId],
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'gameId',
+        lower: [lowerGameId],
+        includeLower: includeLower,
+        upper: [upperGameId],
+        includeUpper: includeUpper,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  timestampIsNull() {
+      timestampIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.equalTo(indexName: r'timestamp', value: [null]),
-      );
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'timestamp',
+        value: [null],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  timestampIsNotNull() {
+      timestampIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'timestamp',
-          lower: [null],
-          includeLower: false,
-          upper: [],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'timestamp',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  timestampEqualTo(DateTime? timestamp) {
+      timestampEqualTo(DateTime? timestamp) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.equalTo(indexName: r'timestamp', value: [timestamp]),
-      );
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'timestamp',
+        value: [timestamp],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  timestampNotEqualTo(DateTime? timestamp) {
+      timestampNotEqualTo(DateTime? timestamp) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'timestamp',
-                lower: [],
-                upper: [timestamp],
-                includeUpper: false,
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'timestamp',
-                lower: [timestamp],
-                includeLower: false,
-                upper: [],
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'timestamp',
+              lower: [],
+              upper: [timestamp],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'timestamp',
+              lower: [timestamp],
+              includeLower: false,
+              upper: [],
+            ));
       } else {
         return query
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'timestamp',
-                lower: [timestamp],
-                includeLower: false,
-                upper: [],
-              ),
-            )
-            .addWhereClause(
-              IndexWhereClause.between(
-                indexName: r'timestamp',
-                lower: [],
-                upper: [timestamp],
-                includeUpper: false,
-              ),
-            );
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'timestamp',
+              lower: [timestamp],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'timestamp',
+              lower: [],
+              upper: [timestamp],
+              includeUpper: false,
+            ));
       }
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  timestampGreaterThan(DateTime? timestamp, {bool include = false}) {
+      timestampGreaterThan(
+    DateTime? timestamp, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'timestamp',
-          lower: [timestamp],
-          includeLower: include,
-          upper: [],
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'timestamp',
+        lower: [timestamp],
+        includeLower: include,
+        upper: [],
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  timestampLessThan(DateTime? timestamp, {bool include = false}) {
+      timestampLessThan(
+    DateTime? timestamp, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'timestamp',
-          lower: [],
-          upper: [timestamp],
-          includeUpper: include,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'timestamp',
+        lower: [],
+        upper: [timestamp],
+        includeUpper: include,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterWhereClause>
-  timestampBetween(
+      timestampBetween(
     DateTime? lowerTimestamp,
     DateTime? upperTimestamp, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'timestamp',
-          lower: [lowerTimestamp],
-          includeLower: includeLower,
-          upper: [upperTimestamp],
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'timestamp',
+        lower: [lowerTimestamp],
+        includeLower: includeLower,
+        upper: [upperTimestamp],
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -490,150 +469,145 @@ extension PlaySessionLogQueryWhere
 extension PlaySessionLogQueryFilter
     on QueryBuilder<PlaySessionLog, PlaySessionLog, QFilterCondition> {
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  gameIdIsNull() {
+      gameIdIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'gameId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'gameId',
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  gameIdIsNotNull() {
+      gameIdIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'gameId'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'gameId',
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  gameIdEqualTo(int? value) {
+      gameIdEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'gameId', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'gameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  gameIdGreaterThan(int? value, {bool include = false}) {
+      gameIdGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'gameId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'gameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  gameIdLessThan(int? value, {bool include = false}) {
+      gameIdLessThan(
+    int? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'gameId',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'gameId',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  gameIdBetween(
+      gameIdBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'gameId',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'gameId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  hoursPlayedIsNull() {
+      hoursPlayedIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'hoursPlayed'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'hoursPlayed',
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  hoursPlayedIsNotNull() {
+      hoursPlayedIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'hoursPlayed'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'hoursPlayed',
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  hoursPlayedEqualTo(double? value, {double epsilon = Query.epsilon}) {
+      hoursPlayedEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'hoursPlayed',
-          value: value,
-
-          epsilon: epsilon,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hoursPlayed',
+        value: value,
+        epsilon: epsilon,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  hoursPlayedGreaterThan(
+      hoursPlayedGreaterThan(
     double? value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'hoursPlayed',
-          value: value,
-
-          epsilon: epsilon,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hoursPlayed',
+        value: value,
+        epsilon: epsilon,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  hoursPlayedLessThan(
+      hoursPlayedLessThan(
     double? value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'hoursPlayed',
-          value: value,
-
-          epsilon: epsilon,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hoursPlayed',
+        value: value,
+        epsilon: epsilon,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  hoursPlayedBetween(
+      hoursPlayedBetween(
     double? lower,
     double? upper, {
     bool includeLower = true,
@@ -641,53 +615,52 @@ extension PlaySessionLogQueryFilter
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'hoursPlayed',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-
-          epsilon: epsilon,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hoursPlayed',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition> idEqualTo(
-    Id value,
-  ) {
+      Id value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'id', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  idGreaterThan(Id value, {bool include = false}) {
+      idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  idLessThan(Id value, {bool include = false}) {
+      idLessThan(
+    Id value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
     });
   }
 
@@ -698,88 +671,87 @@ extension PlaySessionLogQueryFilter
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'id',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  timestampIsNull() {
+      timestampIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'timestamp'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'timestamp',
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  timestampIsNotNull() {
+      timestampIsNotNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'timestamp'),
-      );
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'timestamp',
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  timestampEqualTo(DateTime? value) {
+      timestampEqualTo(DateTime? value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'timestamp', value: value),
-      );
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'timestamp',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  timestampGreaterThan(DateTime? value, {bool include = false}) {
+      timestampGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'timestamp',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'timestamp',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  timestampLessThan(DateTime? value, {bool include = false}) {
+      timestampLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'timestamp',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'timestamp',
+        value: value,
+      ));
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterFilterCondition>
-  timestampBetween(
+      timestampBetween(
     DateTime? lower,
     DateTime? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'timestamp',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'timestamp',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -799,21 +771,21 @@ extension PlaySessionLogQuerySortBy
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  sortByGameIdDesc() {
+      sortByGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.desc);
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  sortByHoursPlayed() {
+      sortByHoursPlayed() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hoursPlayed', Sort.asc);
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  sortByHoursPlayedDesc() {
+      sortByHoursPlayedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hoursPlayed', Sort.desc);
     });
@@ -826,7 +798,7 @@ extension PlaySessionLogQuerySortBy
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  sortByTimestampDesc() {
+      sortByTimestampDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timestamp', Sort.desc);
     });
@@ -842,21 +814,21 @@ extension PlaySessionLogQuerySortThenBy
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  thenByGameIdDesc() {
+      thenByGameIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'gameId', Sort.desc);
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  thenByHoursPlayed() {
+      thenByHoursPlayed() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hoursPlayed', Sort.asc);
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  thenByHoursPlayedDesc() {
+      thenByHoursPlayedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'hoursPlayed', Sort.desc);
     });
@@ -881,7 +853,7 @@ extension PlaySessionLogQuerySortThenBy
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QAfterSortBy>
-  thenByTimestampDesc() {
+      thenByTimestampDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'timestamp', Sort.desc);
     });
@@ -897,14 +869,14 @@ extension PlaySessionLogQueryWhereDistinct
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QDistinct>
-  distinctByHoursPlayed() {
+      distinctByHoursPlayed() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'hoursPlayed');
     });
   }
 
   QueryBuilder<PlaySessionLog, PlaySessionLog, QDistinct>
-  distinctByTimestamp() {
+      distinctByTimestamp() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'timestamp');
     });
@@ -926,14 +898,14 @@ extension PlaySessionLogQueryProperty
   }
 
   QueryBuilder<PlaySessionLog, double?, QQueryOperations>
-  hoursPlayedProperty() {
+      hoursPlayedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hoursPlayed');
     });
   }
 
   QueryBuilder<PlaySessionLog, DateTime?, QQueryOperations>
-  timestampProperty() {
+      timestampProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'timestamp');
     });

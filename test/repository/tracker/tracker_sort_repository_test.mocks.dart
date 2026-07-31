@@ -34,11 +34,12 @@ class MockTrackerPreferencesDatasource extends _i1.Mock
   }
 
   @override
-  _i3.Future<void> writeSortTagName(String? name) =>
-      (super.noSuchMethod(
-            Invocation.method(#writeSortTagName, [name]),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> writeSortTagName(String? name) => (super.noSuchMethod(
+        Invocation.method(
+          #writeSortTagName,
+          [name],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

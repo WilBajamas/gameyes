@@ -55,7 +55,27 @@ class MockFetchGamesUseCase extends _i1.Mock implements _i2.FetchGamesUseCase {
     bool? ascending = false,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#call, [], {
+        Invocation.method(
+          #call,
+          [],
+          {
+            #page: page,
+            #searchTerm: searchTerm,
+            #dateFrom: dateFrom,
+            #dateTo: dateTo,
+            #platforms: platforms,
+            #genres: genres,
+            #ordering: ordering,
+            #ascending: ascending,
+          },
+        ),
+        returnValue: _i3.Future<_i4.Result<_i5.GameListEntity>>.value(
+            _i9.dummyValue<_i4.Result<_i5.GameListEntity>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+            {
               #page: page,
               #searchTerm: searchTerm,
               #dateFrom: dateFrom,
@@ -64,22 +84,8 @@ class MockFetchGamesUseCase extends _i1.Mock implements _i2.FetchGamesUseCase {
               #genres: genres,
               #ordering: ordering,
               #ascending: ascending,
-            }),
-            returnValue: _i3.Future<_i4.Result<_i5.GameListEntity>>.value(
-              _i9.dummyValue<_i4.Result<_i5.GameListEntity>>(
-                this,
-                Invocation.method(#call, [], {
-                  #page: page,
-                  #searchTerm: searchTerm,
-                  #dateFrom: dateFrom,
-                  #dateTo: dateTo,
-                  #platforms: platforms,
-                  #genres: genres,
-                  #ordering: ordering,
-                  #ascending: ascending,
-                }),
-              ),
-            ),
-          )
-          as _i3.Future<_i4.Result<_i5.GameListEntity>>);
+            },
+          ),
+        )),
+      ) as _i3.Future<_i4.Result<_i5.GameListEntity>>);
 }

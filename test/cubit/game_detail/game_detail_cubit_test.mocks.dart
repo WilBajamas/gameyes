@@ -41,43 +41,56 @@ class MockGameDetailRepository extends _i1.Mock
   }
 
   @override
-  _i3.Future<_i4.Result<_i5.GameDetailEntity>> fetchGameDetail({
-    required int? id,
-  }) =>
+  _i3.Future<_i4.Result<_i5.GameDetailEntity>> fetchGameDetail(
+          {required int? id}) =>
       (super.noSuchMethod(
-            Invocation.method(#fetchGameDetail, [], {#id: id}),
-            returnValue: _i3.Future<_i4.Result<_i5.GameDetailEntity>>.value(
-              _i6.dummyValue<_i4.Result<_i5.GameDetailEntity>>(
-                this,
-                Invocation.method(#fetchGameDetail, [], {#id: id}),
-              ),
-            ),
-          )
-          as _i3.Future<_i4.Result<_i5.GameDetailEntity>>);
+        Invocation.method(
+          #fetchGameDetail,
+          [],
+          {#id: id},
+        ),
+        returnValue: _i3.Future<_i4.Result<_i5.GameDetailEntity>>.value(
+            _i6.dummyValue<_i4.Result<_i5.GameDetailEntity>>(
+          this,
+          Invocation.method(
+            #fetchGameDetail,
+            [],
+            {#id: id},
+          ),
+        )),
+      ) as _i3.Future<_i4.Result<_i5.GameDetailEntity>>);
 
   @override
   _i3.Future<void> saveGame({required _i7.SavedGame? game}) =>
       (super.noSuchMethod(
-            Invocation.method(#saveGame, [], {#game: game}),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+        Invocation.method(
+          #saveGame,
+          [],
+          {#game: game},
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> unsaveGame({required int? id}) =>
-      (super.noSuchMethod(
-            Invocation.method(#unsaveGame, [], {#id: id}),
-            returnValue: _i3.Future<void>.value(),
-            returnValueForMissingStub: _i3.Future<void>.value(),
-          )
-          as _i3.Future<void>);
+  _i3.Future<void> unsaveGame({required int? id}) => (super.noSuchMethod(
+        Invocation.method(
+          #unsaveGame,
+          [],
+          {#id: id},
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 
   @override
   _i3.Future<_i7.SavedGame?> getSavedGame({required int? id}) =>
       (super.noSuchMethod(
-            Invocation.method(#getSavedGame, [], {#id: id}),
-            returnValue: _i3.Future<_i7.SavedGame?>.value(),
-          )
-          as _i3.Future<_i7.SavedGame?>);
+        Invocation.method(
+          #getSavedGame,
+          [],
+          {#id: id},
+        ),
+        returnValue: _i3.Future<_i7.SavedGame?>.value(),
+      ) as _i3.Future<_i7.SavedGame?>);
 }
