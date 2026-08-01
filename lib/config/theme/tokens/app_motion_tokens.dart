@@ -39,12 +39,10 @@ class AppMotionTokens {
     screenTransitionCurve: Cubic(0.16, 1, 0.3, 1),
   );
 
-  /// Whether the user has asked for less motion (an accessibility setting).
+  /// Whether the user has asked for less motion (accessibility setting).
   bool isReduced(BuildContext context) =>
       MediaQuery.maybeOf(context)?.disableAnimations ?? false;
 
-  // Returns the given duration, or zero if the user wants reduced motion.
-  // Always use this instead of checking the accessibility setting directly.
   Duration resolve(BuildContext context, Duration duration) =>
       isReduced(context) ? Duration.zero : duration;
 
