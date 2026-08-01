@@ -62,11 +62,11 @@ android {
         dev {
             dimension 'env'
             applicationIdSuffix '.dev'
-            manifestPlaceholders = [appName: 'QuestLoggd Dev']
+            manifestPlaceholders = [appName: 'QuestLoggd Dev', authCallbackScheme: 'com.questloggd.app.dev']
         }
         prod {
             dimension 'env'
-            manifestPlaceholders = [appName: 'QuestLoggd']
+            manifestPlaceholders = [appName: 'QuestLoggd', authCallbackScheme: 'com.questloggd.app']
         }
     }
 

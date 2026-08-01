@@ -7,3 +7,4 @@ ErrorType get mockResponseError => const ResponseError(
       message: 'test response error message',
       statusCode: 401,
     );
+ErrorType get mockSignInCancelledError => const ErrorType.signInCancelled();
