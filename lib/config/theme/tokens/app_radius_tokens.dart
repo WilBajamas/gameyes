@@ -2,10 +2,9 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 
-/// The six-step radius scale, plus the one directional hero shape.
-///
-/// The one-off radii flagged in the screen specs as pending promotion — 20,
-/// 5, 38 and 44 — are deliberately absent from the scale.
+// The six rounded-corner sizes used across the app, plus one special shape
+// for the hero image. A few odd corner sizes from early designs (20, 5, 38,
+// 44) are deliberately not included here.
 @immutable
 class AppRadiusTokens {
   const AppRadiusTokens({
@@ -29,8 +28,8 @@ class AppRadiusTokens {
   final double full;
 
   // ** Shape
-  /// The directional hero radius: square top, 88 on both bottom corners.
-  /// A shape, not a seventh ladder entry.
+  /// Square top corners, rounded bottom corners (88). Kept separate from
+  /// the six sizes above since it's a one-off shape, not part of the scale.
   final BorderRadius heroShape;
 
   static const AppRadiusTokens dark = AppRadiusTokens(

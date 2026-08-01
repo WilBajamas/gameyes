@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_status_tokens.dart';
 
-// The ink ramp is pure white at six opacities. Separation on onyx is a
-// lightness step, never a hue shift. Declared privately here so that the
-// hairline token and the status fills reference the same values rather than
-// repeating the literals.
 const Color _ink = Color.fromRGBO(255, 255, 255, 1);
 const Color _ink70 = Color.fromRGBO(255, 255, 255, 0.7);
 const Color _ink55 = Color.fromRGBO(255, 255, 255, 0.55);
@@ -12,17 +8,13 @@ const Color _ink24 = Color.fromRGBO(255, 255, 255, 0.24);
 const Color _ink12 = Color.fromRGBO(255, 255, 255, 0.12);
 const Color _ink08 = Color.fromRGBO(255, 255, 255, 0.08);
 
-// LOCAL — pending promotion into the QuestLoggd design system
 const Color _statusViolet = Color(0xFF7D4EE0);
 
 const Color _accentIndigo = Color(0xFF5865F2);
 const Color _accentMagenta = Color(0xFFEC48BD);
 const Color _accentLinkCyan = Color(0xFF00B0F4);
 
-/// Every colour the app is allowed to paint with.
-///
-/// The design system's `--surface-raised` `#1e2353` is deliberately not
-/// tokenised: it is unusable on the onyx canvas.
+// Every color the app is allowed to use.
 @immutable
 class AppColorTokens {
   const AppColorTokens({
@@ -60,22 +52,10 @@ class AppColorTokens {
   // ** Accents
   final Color accentIndigo;
   final Color accentMagenta;
-
-  /// LOCAL — pending promotion into the QuestLoggd design system
   final Color accentLinkCyan;
-
-  // ** Local additions
-  /// LOCAL — pending promotion into the QuestLoggd design system.
-  /// Rationed: one green serving the CTA, the 2px focus ring and the
-  /// critic-score badge, always paired with [inkDark].
   final Color green;
-
-  /// LOCAL — pending promotion into the QuestLoggd design system.
-  /// The label ink that [green] is always paired with.
   final Color inkDark;
 
-  /// LOCAL — pending promotion into the QuestLoggd design system.
-  /// A status hue only — never a surface, never a general accent.
   final Color statusViolet;
 
   // ** Ink ramp — pure white at six opacities
@@ -86,24 +66,16 @@ class AppColorTokens {
   final Color ink12;
   final Color ink08;
 
-  /// Resolves to the same value as [ink12].
   final Color hairline;
-
-  // ** Error ramp — named as error, never as "red" or "danger accent",
-  // so that "red means failure only" stays legible at the call site.
-  /// LOCAL — pending promotion into the QuestLoggd design system
   final Color error;
 
-  /// LOCAL — pending promotion into the QuestLoggd design system
   final Color errorStrong;
-
-  /// LOCAL — pending promotion into the QuestLoggd design system
   final Color errorInk;
 
-  /// LOCAL — pending promotion into the QuestLoggd design system
+  /// Not yet in the official design system.
   final Color errorLine;
 
-  /// LOCAL — pending promotion into the QuestLoggd design system
+  /// Not yet in the official design system.
   final Color errorTint;
 
   // ** Status set
@@ -227,11 +199,7 @@ class AppColorTokens {
         b.surfaceIndigoPanel,
         t,
       )!,
-      surfaceTabChrome: Color.lerp(
-        a.surfaceTabChrome,
-        b.surfaceTabChrome,
-        t,
-      )!,
+      surfaceTabChrome: Color.lerp(a.surfaceTabChrome, b.surfaceTabChrome, t)!,
       accentIndigo: Color.lerp(a.accentIndigo, b.accentIndigo, t)!,
       accentMagenta: Color.lerp(a.accentMagenta, b.accentMagenta, t)!,
       accentLinkCyan: Color.lerp(a.accentLinkCyan, b.accentLinkCyan, t)!,

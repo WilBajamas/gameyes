@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_color_tokens.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// A text style paired with its casing intent.
-///
-/// A [TextStyle] cannot upper-case a string, so the token carries the intent
-/// and the transform rather than leaving each call site to know the rule.
+// A text style bundled with whether it should show in capital letters. Text
+// styles alone can't capitalize text, so this carries that instruction along
+// with it.
 @immutable
 class AppTextToken {
   const AppTextToken({
@@ -16,7 +15,7 @@ class AppTextToken {
   final TextStyle style;
   final bool uppercase;
 
-  /// Returns [value] cased the way this token is specified to render it.
+  // Capitalizes the text if this style calls for it.
   String format(String value) => uppercase ? value.toUpperCase() : value;
 
   AppTextToken copyWith({
@@ -37,12 +36,8 @@ class AppTextToken {
   }
 }
 
-/// The eight-step type scale.
-///
-/// The display face is Space Grotesk at w700; the body and UI face is Inter
-/// at w400 and w500. Both are served by the `google_fonts` package already in
-/// the project — no asset is vendored and no dependency is added. No body or
-/// UI style carries a weight strictly between w500 and w700.
+// The eight text styles used across the app. Headings use Space Grotesk
+// (bold), body and UI text use Inter (regular or medium weight).
 @immutable
 class AppTypeTokens {
   const AppTypeTokens({
@@ -65,7 +60,8 @@ class AppTypeTokens {
   final AppTextToken pill;
   final AppTextToken tabLabel;
 
-  /// `final`, not `const`, because `GoogleFonts.*` is a function call.
+  // Not "const" because building these calls a function, not just plain
+  // values.
   static final AppTypeTokens dark = AppTypeTokens(
     screenTitle: AppTextToken(
       style: GoogleFonts.spaceGrotesk(

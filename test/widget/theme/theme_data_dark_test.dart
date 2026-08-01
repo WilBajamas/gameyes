@@ -233,14 +233,11 @@ void main() {
   });
 }
 
-/// Builds both themes once, inside a guarded zone.
-///
-/// `buildTheme()` and `buildDarkTheme()` resolve their faces through
-/// `GoogleFonts`, which cannot load a font in a test environment — there is
-/// no bundled font asset and no network — and rethrows that failure on a
-/// future nobody listens to. Building here sends that unhandled error to
-/// this zone's handler instead of failing an unrelated test, and every test
-/// below reads the same built instances.
+// Fonts can't actually load in a test environment (no network, no bundled
+// files), and that failure happens in the background where nothing's
+// watching for it - so without this wrapper it would silently crash a
+// totally unrelated test. This catches it safely instead, and every test
+// below reuses these same built themes.
 Future<({ThemeData light, ThemeData dark})> _buildThemes() {
   final completer = Completer<({ThemeData light, ThemeData dark})>();
 

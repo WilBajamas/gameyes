@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// How a status is painted.
-///
-/// [filled] means the status colour is the fill itself; [tinted] means the
-/// status colour sits on top of [AppStatusToken.fill].
 enum StatusTreatment { filled, tinted }
 
-/// One status's presentation: its hue, the surface it sits on, and which of
-/// the two treatments it uses.
-///
-/// The filled-versus-tinted distinction lives here rather than being
-/// re-derived from the status key at each call site.
+// One status's look: its color, the background it sits on, and whether
+// it's filled or tinted.
 @immutable
 class AppStatusToken {
   const AppStatusToken({

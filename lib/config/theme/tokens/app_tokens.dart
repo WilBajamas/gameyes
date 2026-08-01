@@ -4,11 +4,8 @@ import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_motion
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_radius_tokens.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_type_tokens.dart';
 
-/// The single theme extension carrying every design token.
-///
-/// Resolved with `context.tokens`. Adding light mode later is one more
-/// static instance plus a `themeMode` change — no new type, no change to the
-/// lookup call shape, no change to any consumer.
+// One place for the whole app to read its colors, fonts, spacing and
+// animation timing. Read it with `context.tokens`.
 @immutable
 class AppTokens extends ThemeExtension<AppTokens> {
   const AppTokens({
@@ -20,21 +17,16 @@ class AppTokens extends ThemeExtension<AppTokens> {
 
   final AppColorTokens color;
 
-  /// The type scale.
-  ///
-  /// Named `typography` rather than `type` because [ThemeExtension] already
-  /// declares `Object get type`, which [ThemeData] uses as this extension's
-  /// key in its extensions map. A field named `type` would override it and
-  /// make `Theme.of(context).extension<AppTokens>()` resolve to null.
+  // Called "typography" instead of "type" because Flutter's theme system
+  // already uses the word "type" internally - naming it that would have
+  // broken the lookup silently.
   final AppTypeTokens typography;
 
   final AppRadiusTokens radius;
   final AppMotionTokens motion;
 
-  /// The only named instance authored in this run.
-  ///
-  /// `final`, not `const`, because [AppTypeTokens.dark] is built from
-  /// `GoogleFonts.*` function calls.
+  // Not "const" because building the fonts below calls a function, not just
+  // plain values.
   static final AppTokens dark = AppTokens(
     color: AppColorTokens.dark,
     typography: AppTypeTokens.dark,

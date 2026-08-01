@@ -424,13 +424,10 @@ void main() {
   });
 }
 
-/// Resolves [AppTokens.dark] once, inside a guarded zone.
-///
-/// The type tokens are built with `GoogleFonts`, which cannot load a font in
-/// a test environment — there is no bundled font asset and no network — and
-/// rethrows that failure on a future nobody listens to. Resolving here sends
-/// that unhandled error to this zone's handler instead of failing an
-/// unrelated test. Every later read of `AppTokens.dark` is a field read.
+// Fonts can't actually load in a test environment (no network, no bundled
+// files), and that failure happens in the background where nothing's
+// watching for it - so without this wrapper it would silently crash a
+// totally unrelated test. This catches it safely instead.
 Future<AppTokens> _resolveTokens() {
   final completer = Completer<AppTokens>();
 
