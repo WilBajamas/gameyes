@@ -16,6 +16,10 @@ sealed class ErrorType with _$ErrorType {
   const factory ErrorType.sendTimeout() = SendTimeout;
   const factory ErrorType.unknown() = UnknownError;
 
+  // The person closed the sign-in page without finishing. That is not a
+  // network or provider problem, so it needs its own kind of error.
+  const factory ErrorType.signInCancelled() = SignInCancelled;
+
   factory ErrorType.dioError({
     required DioException exception,
   }) {

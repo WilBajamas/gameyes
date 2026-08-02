@@ -32,6 +32,18 @@ import 'package:gaming_library_assessment_flutter/core/services/supabase/supabas
     as _i656;
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_ping.dart'
     as _i124;
+import 'package:gaming_library_assessment_flutter/features/auth/data/datasources/auth_datasource.dart'
+    as _i445;
+import 'package:gaming_library_assessment_flutter/features/auth/data/repositories/auth_repository_impl.dart'
+    as _i202;
+import 'package:gaming_library_assessment_flutter/features/auth/domain/repositories/auth_repository.dart'
+    as _i615;
+import 'package:gaming_library_assessment_flutter/features/auth/domain/use_cases/observe_auth_status_use_case.dart'
+    as _i595;
+import 'package:gaming_library_assessment_flutter/features/auth/domain/use_cases/sign_in_use_case.dart'
+    as _i403;
+import 'package:gaming_library_assessment_flutter/features/auth/domain/use_cases/sign_out_use_case.dart'
+    as _i1024;
 import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart'
     as _i554;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repositories/featured_repository_impl.dart'
@@ -170,11 +182,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i124.SupabasePing>(
       () => _i124.SupabasePing(gh<_i454.SupabaseClient>()),
     );
+    gh.factory<_i445.AuthDatasource>(
+      () => _i445.AuthDatasource(gh<_i454.SupabaseClient>()),
+    );
     gh.factory<_i750.GameDetailRemoteDatasource>(
       () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()),
     );
     gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>(
       (initialState, _) => _i669.FilterCubit(initialState: initialState),
+    );
+    gh.factory<_i615.AuthRepository>(
+      () => _i202.AuthRepositoryImpl(gh<_i445.AuthDatasource>()),
     );
     gh.factory<_i944.GameLocalDatasource>(
       () => _i944.GameLocalDatasource(gh<_i857.GameLocalStorageService>()),
@@ -223,6 +241,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i461.GamesRepository>(
       () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()),
+    );
+    gh.factory<_i595.ObserveAuthStatusUseCase>(
+      () => _i595.ObserveAuthStatusUseCase(gh<_i615.AuthRepository>()),
+    );
+    gh.factory<_i403.SignInUseCase>(
+      () => _i403.SignInUseCase(gh<_i615.AuthRepository>()),
+    );
+    gh.factory<_i1024.SignOutUseCase>(
+      () => _i1024.SignOutUseCase(gh<_i615.AuthRepository>()),
     );
     gh.factory<_i426.LibraryStatsCubit>(
       () => _i426.LibraryStatsCubit(

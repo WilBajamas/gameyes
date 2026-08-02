@@ -1,5 +1,6 @@
 import 'package:gaming_library_assessment_flutter/config/config_envied.dart';
 import 'package:gaming_library_assessment_flutter/config/flavor/flavor.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 
 /// Unable to use `injectable` and `getit` to retrieve environment variables during runtime.
 final class FlavorConfig {
@@ -7,11 +8,13 @@ final class FlavorConfig {
     required this.flavor,
     required this.supabaseUrl,
     required this.supabaseAnonKey,
+    required this.authRedirectUrl,
   });
 
   final Flavor flavor;
   final String supabaseUrl;
   final String supabaseAnonKey;
+  final String authRedirectUrl;
 
   static FlavorConfig? _instance;
 
@@ -21,11 +24,13 @@ final class FlavorConfig {
           flavor: flavor,
           supabaseUrl: EnvDev.supabaseUrl,
           supabaseAnonKey: EnvDev.supabaseAnonKey,
+          authRedirectUrl: SupabaseConstants.devAuthRedirectUrl,
         ),
       Flavor.prod => FlavorConfig._(
           flavor: flavor,
           supabaseUrl: EnvProd.supabaseUrl,
           supabaseAnonKey: EnvProd.supabaseAnonKey,
+          authRedirectUrl: SupabaseConstants.prodAuthRedirectUrl,
         ),
     };
   }
