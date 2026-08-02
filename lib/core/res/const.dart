@@ -42,8 +42,8 @@ class SupabaseConstants {
 
   static const Duration connectionTimeout = Duration(seconds: 10);
 
-  // the sign-in page sends the person back to once they approve.
-  // Each build / env has its own address so both can be installed side by side.
+  // Where the sign-in page sends the person back to once they approve.
+  // Each build has its own address so both can be installed side by side.
   static const devAuthRedirectUrl = 'com.questloggd.app.dev://login-callback';
   static const prodAuthRedirectUrl = 'com.questloggd.app://login-callback';
 }
