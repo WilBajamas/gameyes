@@ -1,0 +1,12 @@
+# Flutter (re)writes its own plugin-registration files with LF endings,
+# while this repo is core.autocrlf=true (CRLF). Every `flutter pub get` /
+# build therefore leaves these tracked files showing as modified with an
+# empty content diff. Pin them to LF so git checks them out the way
+# Flutter writes them.
+**/generated_plugin_registrant.cc   text eol=lf
+**/generated_plugin_registrant.h    text eol=lf
+**/generated_plugins.cmake          text eol=lf
+**/GeneratedPluginRegistrant.swift  text eol=lf
+**/GeneratedPluginRegistrant.java   text eol=lf
+**/GeneratedPluginRegistrant.h      text eol=lf
+**/GeneratedPluginRegistrant.m      text eol=lf
