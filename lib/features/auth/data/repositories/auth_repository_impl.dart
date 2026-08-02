@@ -21,8 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final opened = await _datasource.signInWithOAuth(_toSupabase(provider));
       if (!opened) {
-        // The sign-in page never opened or was closed again, so the person
-        // simply did not finish. Nothing about the session has changed.
+        // user did not finish the sign in process
         return Failure(const ErrorType.signInCancelled());
       }
       return Success(null);
@@ -47,8 +46,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<AuthStatusEntity> get authStatusChanges async* {
-    // Tell whoever just started listening where things stand right now, so
-    // they do not have to wait for the next sign-in or sign-out to happen.
+    // notify listeners on status changes,
+    // so they do not have to wait for the next sign-in or sign-out to happen.
     yield _statusFromSession(_datasource.currentSession);
     yield* _datasource.authStateChanges.transform(
       StreamTransformer<AuthState, AuthStatusEntity>.fromHandlers(
@@ -63,15 +62,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   OAuthProvider _toSupabase(SignInProvider provider) => switch (provider) {
-        SignInProvider.discord => OAuthProvider.discord,
-        SignInProvider.google => OAuthProvider.google,
-      };
+    SignInProvider.discord => OAuthProvider.discord,
+    SignInProvider.google => OAuthProvider.google,
+  };
 
   ErrorType _fromAuthException(AuthException e) => ErrorType.responseError(
-        message: e.message,
-        error: e.code,
-        statusCode: int.tryParse(e.statusCode ?? ''),
-      );
+    message: e.message,
+    error: e.code,
+    statusCode: int.tryParse(e.statusCode ?? ''),
+  );
 
   AuthStatusEntity _statusFromSession(Session? session) => session == null
       ? const AuthStatusEntity.signedOut()
@@ -89,8 +88,9 @@ class AuthRepositoryImpl implements AuthRepository {
         AuthChangeEvent.userUpdated ||
         // ignore: deprecated_member_use
         AuthChangeEvent.userDeleted ||
-        AuthChangeEvent.mfaChallengeVerified =>
-          _statusFromSession(state.session),
+        AuthChangeEvent.mfaChallengeVerified => _statusFromSession(
+          state.session,
+        ),
       };
 
   AuthenticatedUserEntity _userFrom(User user) {
