@@ -48,13 +48,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Stream<AuthStatusEntity> get authStatusChanges async* {
     // notify listeners on status changes,
     // so they do not have to wait for the next sign-in or sign-out to happen.
+    // signIn/signOut only start the request; this stream says how it turned out.
     yield _statusFromSession(_datasource.currentSession);
     yield* _datasource.authStateChanges.transform(
       StreamTransformer<AuthState, AuthStatusEntity>.fromHandlers(
         handleData: (state, sink) => sink.add(_statusFromAuthState(state)),
-        // A saved sign-in that Supabase could not restore arrives here as a
-        // failure. Treat it as simply being signed out rather than letting
-        // the listener deal with an error or wait forever.
+        // Sometimes Supabase tries to restore an old saved session on app startup.
+        // If that fails, it reports an error. We treat it as simply signed out.
+        // So we treat this failure as just signed out - users can continue on the app freely.
         handleError: (error, stackTrace, sink) =>
             sink.add(const AuthStatusEntity.signedOut()),
       ),
@@ -86,6 +87,7 @@ class AuthRepositoryImpl implements AuthRepository {
         AuthChangeEvent.signedIn ||
         AuthChangeEvent.tokenRefreshed ||
         AuthChangeEvent.userUpdated ||
+        /// [AuthChangeEvent.userDeleted] is deprecated in supabase package
         // ignore: deprecated_member_use
         AuthChangeEvent.userDeleted ||
         AuthChangeEvent.mfaChallengeVerified => _statusFromSession(
