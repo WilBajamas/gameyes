@@ -42,7 +42,7 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 /// [_i1.BrowseScreen]
 class BrowseRoute extends _i12.PageRouteInfo<void> {
   const BrowseRoute({List<_i12.PageRouteInfo>? children})
-      : super(BrowseRoute.name, initialChildren: children);
+    : super(BrowseRoute.name, initialChildren: children);
 
   static const String name = 'BrowseRoute';
 
@@ -58,7 +58,7 @@ class BrowseRoute extends _i12.PageRouteInfo<void> {
 /// [_i2.FeaturedScreen]
 class FeaturedRoute extends _i12.PageRouteInfo<void> {
   const FeaturedRoute({List<_i12.PageRouteInfo>? children})
-      : super(FeaturedRoute.name, initialChildren: children);
+    : super(FeaturedRoute.name, initialChildren: children);
 
   static const String name = 'FeaturedRoute';
 
@@ -78,10 +78,10 @@ class GameDetailRoute extends _i12.PageRouteInfo<GameDetailRouteArgs> {
     (int, String, String?)? gameExtra,
     List<_i12.PageRouteInfo>? children,
   }) : super(
-          GameDetailRoute.name,
-          args: GameDetailRouteArgs(key: key, gameExtra: gameExtra),
-          initialChildren: children,
-        );
+         GameDetailRoute.name,
+         args: GameDetailRouteArgs(key: key, gameExtra: gameExtra),
+         initialChildren: children,
+       );
 
   static const String name = 'GameDetailRoute';
 
@@ -123,7 +123,7 @@ class GameDetailRouteArgs {
 /// [_i4.GamesScreen]
 class GamesRoute extends _i12.PageRouteInfo<void> {
   const GamesRoute({List<_i12.PageRouteInfo>? children})
-      : super(GamesRoute.name, initialChildren: children);
+    : super(GamesRoute.name, initialChildren: children);
 
   static const String name = 'GamesRoute';
 
@@ -139,7 +139,7 @@ class GamesRoute extends _i12.PageRouteInfo<void> {
 /// [_i5.HomeScreen]
 class HomeRoute extends _i12.PageRouteInfo<void> {
   const HomeRoute({List<_i12.PageRouteInfo>? children})
-      : super(HomeRoute.name, initialChildren: children);
+    : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
@@ -159,10 +159,10 @@ class ImageRouteView extends _i12.PageRouteInfo<ImageRouteViewArgs> {
     required (List<String?>, int) pageViewInfo,
     List<_i12.PageRouteInfo>? children,
   }) : super(
-          ImageRouteView.name,
-          args: ImageRouteViewArgs(key: key, pageViewInfo: pageViewInfo),
-          initialChildren: children,
-        );
+         ImageRouteView.name,
+         args: ImageRouteViewArgs(key: key, pageViewInfo: pageViewInfo),
+         initialChildren: children,
+       );
 
   static const String name = 'ImageRouteView';
 
@@ -202,7 +202,7 @@ class ImageRouteViewArgs {
 /// [_i7.OnboardingScreen]
 class OnboardingRoute extends _i12.PageRouteInfo<void> {
   const OnboardingRoute({List<_i12.PageRouteInfo>? children})
-      : super(OnboardingRoute.name, initialChildren: children);
+    : super(OnboardingRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingRoute';
 
@@ -218,7 +218,7 @@ class OnboardingRoute extends _i12.PageRouteInfo<void> {
 /// [_i8.SettingsScreen]
 class SettingsRoute extends _i12.PageRouteInfo<void> {
   const SettingsRoute({List<_i12.PageRouteInfo>? children})
-      : super(SettingsRoute.name, initialChildren: children);
+    : super(SettingsRoute.name, initialChildren: children);
 
   static const String name = 'SettingsRoute';
 
@@ -239,10 +239,10 @@ class TaskDetailRoute extends _i12.PageRouteInfo<TaskDetailRouteArgs> {
     _i13.Key? key,
     List<_i12.PageRouteInfo>? children,
   }) : super(
-          TaskDetailRoute.name,
-          args: TaskDetailRouteArgs(taskId: taskId, task: task, key: key),
-          initialChildren: children,
-        );
+         TaskDetailRoute.name,
+         args: TaskDetailRouteArgs(taskId: taskId, task: task, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'TaskDetailRoute';
 
@@ -295,10 +295,10 @@ class TrackerGameDetailRoute
     _i13.Key? key,
     List<_i12.PageRouteInfo>? children,
   }) : super(
-          TrackerGameDetailRoute.name,
-          args: TrackerGameDetailRouteArgs(game: game, key: key),
-          initialChildren: children,
-        );
+         TrackerGameDetailRoute.name,
+         args: TrackerGameDetailRouteArgs(game: game, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'TrackerGameDetailRoute';
 
@@ -338,11 +338,11 @@ class TrackerGameDetailRouteArgs {
 /// [_i11.TrackerScreen]
 class TrackerRoute extends _i12.PageRouteInfo<TrackerRouteArgs> {
   TrackerRoute({_i13.Key? key, List<_i12.PageRouteInfo>? children})
-      : super(
-          TrackerRoute.name,
-          args: TrackerRouteArgs(key: key),
-          initialChildren: children,
-        );
+    : super(
+        TrackerRoute.name,
+        args: TrackerRouteArgs(key: key),
+        initialChildren: children,
+      );
 
   static const String name = 'TrackerRoute';
 

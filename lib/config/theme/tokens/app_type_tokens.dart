@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_color_tokens.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// A text style bundled with whether it should show in capital letters. Text
-// styles alone can't capitalize text, so this carries that instruction along
-// with it.
+// A text style bundled with whether it should show in capital letters.
 @immutable
 class AppTextToken {
-  const AppTextToken({
-    required this.style,
-    required this.uppercase,
-  });
+  const AppTextToken({required this.style, required this.uppercase});
 
   final TextStyle style;
   final bool uppercase;
@@ -18,10 +13,7 @@ class AppTextToken {
   // Capitalizes the text if this style calls for it.
   String format(String value) => uppercase ? value.toUpperCase() : value;
 
-  AppTextToken copyWith({
-    TextStyle? style,
-    bool? uppercase,
-  }) {
+  AppTextToken copyWith({TextStyle? style, bool? uppercase}) {
     return AppTextToken(
       style: style ?? this.style,
       uppercase: uppercase ?? this.uppercase,
@@ -36,8 +28,6 @@ class AppTextToken {
   }
 }
 
-// The eight text styles used across the app. Headings use Space Grotesk
-// (bold), body and UI text use Inter (regular or medium weight).
 @immutable
 class AppTypeTokens {
   const AppTypeTokens({
@@ -49,6 +39,13 @@ class AppTypeTokens {
     required this.zoneLink,
     required this.pill,
     required this.tabLabel,
+    required this.welcomeHeadline,
+    required this.countdownFigure,
+    required this.panelTitle,
+    required this.countdownColon,
+    required this.statFigure,
+    required this.caption,
+    required this.microLabel,
   });
 
   final AppTextToken screenTitle;
@@ -59,9 +56,14 @@ class AppTypeTokens {
   final AppTextToken zoneLink;
   final AppTextToken pill;
   final AppTextToken tabLabel;
+  final AppTextToken welcomeHeadline;
+  final AppTextToken countdownFigure;
+  final AppTextToken panelTitle;
+  final AppTextToken countdownColon;
+  final AppTextToken statFigure;
+  final AppTextToken caption;
+  final AppTextToken microLabel;
 
-  // Not "const" because building these calls a function, not just plain
-  // values.
   static final AppTypeTokens dark = AppTypeTokens(
     screenTitle: AppTextToken(
       style: GoogleFonts.spaceGrotesk(
@@ -91,7 +93,7 @@ class AppTypeTokens {
       style: GoogleFonts.inter(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        height: 1.5,
+        height: 1.45,
       ),
       uppercase: false,
     ),
@@ -121,11 +123,68 @@ class AppTypeTokens {
       uppercase: true,
     ),
     tabLabel: AppTextToken(
+      style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w500),
+      uppercase: false,
+    ),
+    welcomeHeadline: AppTextToken(
+      style: GoogleFonts.spaceGrotesk(
+        fontSize: 34,
+        fontWeight: FontWeight.w700,
+        height: 1.02,
+        letterSpacing: -0.34,
+        color: AppColorTokens.dark.ink,
+      ),
+      uppercase: true,
+    ),
+    countdownFigure: AppTextToken(
+      style: GoogleFonts.spaceGrotesk(
+        fontSize: 30,
+        fontWeight: FontWeight.w700,
+        color: AppColorTokens.dark.ink,
+      ),
+      uppercase: false,
+    ),
+    panelTitle: AppTextToken(
+      style: GoogleFonts.spaceGrotesk(
+        fontSize: 26,
+        fontWeight: FontWeight.w700,
+        color: AppColorTokens.dark.ink,
+      ),
+      uppercase: false,
+    ),
+    countdownColon: AppTextToken(
+      style: GoogleFonts.spaceGrotesk(
+        fontSize: 22,
+        fontWeight: FontWeight.w400,
+        color: AppColorTokens.dark.countdownColon,
+      ),
+      uppercase: false,
+    ),
+    statFigure: AppTextToken(
+      style: GoogleFonts.spaceGrotesk(
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+        height: 1.1,
+        color: AppColorTokens.dark.ink,
+      ),
+      uppercase: false,
+    ),
+    caption: AppTextToken(
+      style: GoogleFonts.inter(
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+        color: AppColorTokens.dark.ink55,
+      ),
+      uppercase: false,
+    ),
+    microLabel: AppTextToken(
       style: GoogleFonts.inter(
         fontSize: 10,
         fontWeight: FontWeight.w500,
+        letterSpacing: 1,
+        color: AppColorTokens.dark.ink70,
       ),
-      uppercase: false,
+      uppercase: true,
     ),
   );
 
@@ -138,6 +197,13 @@ class AppTypeTokens {
     AppTextToken? zoneLink,
     AppTextToken? pill,
     AppTextToken? tabLabel,
+    AppTextToken? welcomeHeadline,
+    AppTextToken? countdownFigure,
+    AppTextToken? panelTitle,
+    AppTextToken? countdownColon,
+    AppTextToken? statFigure,
+    AppTextToken? caption,
+    AppTextToken? microLabel,
   }) {
     return AppTypeTokens(
       screenTitle: screenTitle ?? this.screenTitle,
@@ -148,6 +214,13 @@ class AppTypeTokens {
       zoneLink: zoneLink ?? this.zoneLink,
       pill: pill ?? this.pill,
       tabLabel: tabLabel ?? this.tabLabel,
+      welcomeHeadline: welcomeHeadline ?? this.welcomeHeadline,
+      countdownFigure: countdownFigure ?? this.countdownFigure,
+      panelTitle: panelTitle ?? this.panelTitle,
+      countdownColon: countdownColon ?? this.countdownColon,
+      statFigure: statFigure ?? this.statFigure,
+      caption: caption ?? this.caption,
+      microLabel: microLabel ?? this.microLabel,
     );
   }
 
@@ -161,6 +234,21 @@ class AppTypeTokens {
       zoneLink: AppTextToken.lerp(a.zoneLink, b.zoneLink, t),
       pill: AppTextToken.lerp(a.pill, b.pill, t),
       tabLabel: AppTextToken.lerp(a.tabLabel, b.tabLabel, t),
+      welcomeHeadline: AppTextToken.lerp(
+        a.welcomeHeadline,
+        b.welcomeHeadline,
+        t,
+      ),
+      countdownFigure: AppTextToken.lerp(
+        a.countdownFigure,
+        b.countdownFigure,
+        t,
+      ),
+      panelTitle: AppTextToken.lerp(a.panelTitle, b.panelTitle, t),
+      countdownColon: AppTextToken.lerp(a.countdownColon, b.countdownColon, t),
+      statFigure: AppTextToken.lerp(a.statFigure, b.statFigure, t),
+      caption: AppTextToken.lerp(a.caption, b.caption, t),
+      microLabel: AppTextToken.lerp(a.microLabel, b.microLabel, t),
     );
   }
 }

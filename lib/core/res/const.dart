@@ -24,9 +24,6 @@ class PathConstants {
 }
 
 class AssetConstants {
-  static const onboardingAnimation1 = 'onboarding_anim_1.json';
-  static const onboardingAnimation2 = 'onboarding_anim_2.json';
-  static const onboardingAnimation3 = 'onboarding_anim_3.json';
   static const error404 = 'error_404.png';
 }
 

@@ -96,6 +96,8 @@ import 'package:gaming_library_assessment_flutter/features/games/services/igdb_a
     as _i35;
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart'
     as _i1017;
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_cubit.dart'
+    as _i403;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
     as _i944;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/tracker_preferences_datasource.dart'
@@ -164,6 +166,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i54.GameDetailService>(
       () => networkModule.getGameDetailService(gh<_i361.Dio>()),
+    );
+    gh.factory<_i403.WelcomeCubit>(
+      () => _i403.WelcomeCubit(gh<_i460.SharedPreferences>()),
     );
     gh.factory<_i629.TrackerPreferencesDatasource>(
       () => _i629.TrackerPreferencesDatasource(gh<_i460.SharedPreferences>()),

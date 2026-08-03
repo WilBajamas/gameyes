@@ -2,13 +2,12 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 
-// The six rounded-corner sizes used across the app, plus one special shape
-// for the hero image. A few odd corner sizes from early designs (20, 5, 38,
-// 44) are deliberately not included here.
+// The six rounded-corner sizes used across the app.
 @immutable
 class AppRadiusTokens {
   const AppRadiusTokens({
     required this.xs,
+    required this.mini,
     required this.sm,
     required this.lg,
     required this.xl,
@@ -19,6 +18,7 @@ class AppRadiusTokens {
 
   // ** Scale
   final double xs;
+  final double mini;
   final double sm;
   final double lg;
   final double xl;
@@ -28,12 +28,11 @@ class AppRadiusTokens {
   final double full;
 
   // ** Shape
-  /// Square top corners, rounded bottom corners (88). Kept separate from
-  /// the six sizes above since it's a one-off shape, not part of the scale.
   final BorderRadius heroShape;
 
   static const AppRadiusTokens dark = AppRadiusTokens(
     xs: 6,
+    mini: 5,
     sm: 12,
     lg: 16,
     xl: 40,
@@ -47,6 +46,7 @@ class AppRadiusTokens {
 
   AppRadiusTokens copyWith({
     double? xs,
+    double? mini,
     double? sm,
     double? lg,
     double? xl,
@@ -56,6 +56,7 @@ class AppRadiusTokens {
   }) {
     return AppRadiusTokens(
       xs: xs ?? this.xs,
+      mini: mini ?? this.mini,
       sm: sm ?? this.sm,
       lg: lg ?? this.lg,
       xl: xl ?? this.xl,
@@ -68,6 +69,7 @@ class AppRadiusTokens {
   static AppRadiusTokens lerp(AppRadiusTokens a, AppRadiusTokens b, double t) {
     return AppRadiusTokens(
       xs: lerpDouble(a.xs, b.xs, t)!,
+      mini: lerpDouble(a.mini, b.mini, t)!,
       sm: lerpDouble(a.sm, b.sm, t)!,
       lg: lerpDouble(a.lg, b.lg, t)!,
       xl: lerpDouble(a.xl, b.xl, t)!,

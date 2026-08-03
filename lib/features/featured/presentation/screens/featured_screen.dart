@@ -80,9 +80,7 @@ class _FeaturedViewState extends State<FeaturedView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.current.featured),
-      ),
+      appBar: AppBar(title: Text(S.current.featured)),
       body: RefreshIndicator(
         onRefresh: () => _refreshData(silent: false),
         child: SingleChildScrollView(
@@ -116,9 +114,7 @@ class _YouSection extends StatelessWidget {
                 state.snapshot == null)) {
           return const SizedBox(
             height: 150,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+            child: Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -165,7 +161,8 @@ class _RightNowSection extends StatelessWidget {
 
         return BlocBuilder<CountdownReleasesCubit, CountdownReleasesState>(
           builder: (context, state) {
-            final isLoading = state.status == CountdownReleasesStatus.loading &&
+            final isLoading =
+                state.status == CountdownReleasesStatus.loading &&
                 state.countdownGame == null &&
                 state.outThisWeekGames.isEmpty;
 
@@ -211,8 +208,9 @@ class _RightNowSection extends StatelessWidget {
               isComingSoonLabel: state.isComingSoonLabel,
               localLibraryGameIds: ownedIds,
               onGameClick: (id, name, imageUrl) {
-                context.router
-                    .push(GameDetailRoute(gameExtra: (id, name, imageUrl)));
+                context.router.push(
+                  GameDetailRoute(gameExtra: (id, name, imageUrl)),
+                );
               },
             );
           },
@@ -233,7 +231,8 @@ class _DiscoverSection extends StatelessWidget {
 
         return BlocBuilder<CriticsGridCubit, CriticsGridState>(
           builder: (context, state) {
-            final isLoading = state.status == CriticsGridStatus.loading &&
+            final isLoading =
+                state.status == CriticsGridStatus.loading &&
                 state.criticsGames.isEmpty;
 
             if (state.status == CriticsGridStatus.failed) {
@@ -276,8 +275,9 @@ class _DiscoverSection extends StatelessWidget {
                 context.read<CriticsGridCubit>().skipGenrePreferences();
               },
               onGameClick: (id, name, imageUrl) {
-                context.router
-                    .push(GameDetailRoute(gameExtra: (id, name, imageUrl)));
+                context.router.push(
+                  GameDetailRoute(gameExtra: (id, name, imageUrl)),
+                );
               },
             );
           },
