@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.dart';
-import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
@@ -131,7 +129,6 @@ Future<void> _pumpWelcome(
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
 
-  final router = AppRouter();
   await tester.pumpWidget(
     MediaQuery(
       data: MediaQueryData(
@@ -139,13 +136,12 @@ Future<void> _pumpWelcome(
         textScaler: TextScaler.linear(textScaleFactor),
         disableAnimations: disableAnimations,
       ),
-      child: MaterialApp.router(
+      child: MaterialApp(
         theme: buildDarkTheme(),
-        routerConfig: router.config(),
+        home: const OnboardingScreen(),
       ),
     ),
   );
-  router.replaceAll([const OnboardingRoute()]);
   await tester.pumpAndSettle();
   expect(find.byType(OnboardingScreen), findsOneWidget);
 }
