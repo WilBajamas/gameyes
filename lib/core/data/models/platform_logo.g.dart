@@ -7,11 +7,7 @@ part of 'platform_logo.dart';
 // **************************************************************************
 
 _PlatformLogo _$PlatformLogoFromJson(Map<String, dynamic> json) =>
-    _PlatformLogo(
-      url: json['url'] as String?,
-    );
+    _PlatformLogo(url: json['url'] as String?);
 
 Map<String, dynamic> _$PlatformLogoToJson(_PlatformLogo instance) =>
-    <String, dynamic>{
-      'url': instance.url,
-    };
+    <String, dynamic>{'url': instance.url};

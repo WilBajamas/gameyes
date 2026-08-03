@@ -21,6 +21,7 @@ class AppColorTokens {
     required this.canvas,
     required this.surfaceRaised,
     required this.surfaceIndigoPanel,
+    required this.surfaceMagentaPanel,
     required this.surfaceTabChrome,
     required this.accentIndigo,
     required this.accentMagenta,
@@ -34,6 +35,14 @@ class AppColorTokens {
     required this.ink24,
     required this.ink12,
     required this.ink08,
+    required this.keyArtWash,
+    required this.coverWash,
+    required this.ambientNeutral,
+    required this.ambientAccent,
+    required this.glass30,
+    required this.glass32,
+    required this.glass34,
+    required this.countdownColon,
     required this.hairline,
     required this.error,
     required this.errorStrong,
@@ -47,6 +56,7 @@ class AppColorTokens {
   final Color canvas;
   final Color surfaceRaised;
   final Color surfaceIndigoPanel;
+  final Color surfaceMagentaPanel;
   final Color surfaceTabChrome;
 
   // ** Accents
@@ -65,6 +75,14 @@ class AppColorTokens {
   final Color ink24;
   final Color ink12;
   final Color ink08;
+  final Color keyArtWash;
+  final Color coverWash;
+  final Color ambientNeutral;
+  final Color ambientAccent;
+  final Color glass30;
+  final Color glass32;
+  final Color glass34;
+  final Color countdownColon;
 
   final Color hairline;
   final Color error;
@@ -85,11 +103,12 @@ class AppColorTokens {
     canvas: Color(0xFF23272A),
     surfaceRaised: Color(0xFF2F333C),
     surfaceIndigoPanel: Color(0xFF2F3782),
+    surfaceMagentaPanel: Color(0xFF8A2F86),
     surfaceTabChrome: Color(0xFF2E3236),
     accentIndigo: _accentIndigo,
     accentMagenta: _accentMagenta,
     accentLinkCyan: _accentLinkCyan,
-    green: Color(0xFF4CAF50),
+    green: Color(0xFF35ED7E),
     inkDark: Color(0xFF000000),
     statusViolet: _statusViolet,
     ink: _ink,
@@ -98,6 +117,14 @@ class AppColorTokens {
     ink24: _ink24,
     ink12: _ink12,
     ink08: _ink08,
+    keyArtWash: Color.fromRGBO(30, 20, 64, 0.5),
+    coverWash: Color.fromRGBO(10, 13, 58, 0.42),
+    ambientNeutral: Color.fromRGBO(255, 255, 255, 0.09),
+    ambientAccent: Color.fromRGBO(236, 72, 189, 0.2),
+    glass30: Color.fromRGBO(0, 0, 0, 0.3),
+    glass32: Color.fromRGBO(0, 0, 0, 0.32),
+    glass34: Color.fromRGBO(0, 0, 0, 0.34),
+    countdownColon: Color.fromRGBO(255, 255, 255, 0.4),
     hairline: _ink12,
     error: Color(0xFFF8443C),
     errorStrong: Color(0xFFD92D20),
@@ -142,6 +169,7 @@ class AppColorTokens {
     Color? canvas,
     Color? surfaceRaised,
     Color? surfaceIndigoPanel,
+    Color? surfaceMagentaPanel,
     Color? surfaceTabChrome,
     Color? accentIndigo,
     Color? accentMagenta,
@@ -155,6 +183,14 @@ class AppColorTokens {
     Color? ink24,
     Color? ink12,
     Color? ink08,
+    Color? keyArtWash,
+    Color? coverWash,
+    Color? ambientNeutral,
+    Color? ambientAccent,
+    Color? glass30,
+    Color? glass32,
+    Color? glass34,
+    Color? countdownColon,
     Color? hairline,
     Color? error,
     Color? errorStrong,
@@ -167,6 +203,7 @@ class AppColorTokens {
       canvas: canvas ?? this.canvas,
       surfaceRaised: surfaceRaised ?? this.surfaceRaised,
       surfaceIndigoPanel: surfaceIndigoPanel ?? this.surfaceIndigoPanel,
+      surfaceMagentaPanel: surfaceMagentaPanel ?? this.surfaceMagentaPanel,
       surfaceTabChrome: surfaceTabChrome ?? this.surfaceTabChrome,
       accentIndigo: accentIndigo ?? this.accentIndigo,
       accentMagenta: accentMagenta ?? this.accentMagenta,
@@ -180,6 +217,14 @@ class AppColorTokens {
       ink24: ink24 ?? this.ink24,
       ink12: ink12 ?? this.ink12,
       ink08: ink08 ?? this.ink08,
+      keyArtWash: keyArtWash ?? this.keyArtWash,
+      coverWash: coverWash ?? this.coverWash,
+      ambientNeutral: ambientNeutral ?? this.ambientNeutral,
+      ambientAccent: ambientAccent ?? this.ambientAccent,
+      glass30: glass30 ?? this.glass30,
+      glass32: glass32 ?? this.glass32,
+      glass34: glass34 ?? this.glass34,
+      countdownColon: countdownColon ?? this.countdownColon,
       hairline: hairline ?? this.hairline,
       error: error ?? this.error,
       errorStrong: errorStrong ?? this.errorStrong,
@@ -199,6 +244,11 @@ class AppColorTokens {
         b.surfaceIndigoPanel,
         t,
       )!,
+      surfaceMagentaPanel: Color.lerp(
+        a.surfaceMagentaPanel,
+        b.surfaceMagentaPanel,
+        t,
+      )!,
       surfaceTabChrome: Color.lerp(a.surfaceTabChrome, b.surfaceTabChrome, t)!,
       accentIndigo: Color.lerp(a.accentIndigo, b.accentIndigo, t)!,
       accentMagenta: Color.lerp(a.accentMagenta, b.accentMagenta, t)!,
@@ -212,6 +262,14 @@ class AppColorTokens {
       ink24: Color.lerp(a.ink24, b.ink24, t)!,
       ink12: Color.lerp(a.ink12, b.ink12, t)!,
       ink08: Color.lerp(a.ink08, b.ink08, t)!,
+      keyArtWash: Color.lerp(a.keyArtWash, b.keyArtWash, t)!,
+      coverWash: Color.lerp(a.coverWash, b.coverWash, t)!,
+      ambientNeutral: Color.lerp(a.ambientNeutral, b.ambientNeutral, t)!,
+      ambientAccent: Color.lerp(a.ambientAccent, b.ambientAccent, t)!,
+      glass30: Color.lerp(a.glass30, b.glass30, t)!,
+      glass32: Color.lerp(a.glass32, b.glass32, t)!,
+      glass34: Color.lerp(a.glass34, b.glass34, t)!,
+      countdownColon: Color.lerp(a.countdownColon, b.countdownColon, t)!,
       hairline: Color.lerp(a.hairline, b.hairline, t)!,
       error: Color.lerp(a.error, b.error, t)!,
       errorStrong: Color.lerp(a.errorStrong, b.errorStrong, t)!,

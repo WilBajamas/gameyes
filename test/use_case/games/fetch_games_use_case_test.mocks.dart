@@ -47,33 +47,27 @@ class MockGamesRepository extends _i1.Mock implements _i2.GamesRepository {
     String? ordering,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #fetchGames,
-          [],
-          {
-            #page: page,
-            #searchTerm: searchTerm,
-            #dateRange: dateRange,
-            #platforms: platforms,
-            #genres: genres,
-            #ordering: ordering,
-          },
-        ),
-        returnValue: _i3.Future<_i4.Result<_i5.GameListEntity>>.value(
-            _i6.dummyValue<_i4.Result<_i5.GameListEntity>>(
-          this,
-          Invocation.method(
-            #fetchGames,
-            [],
-            {
+            Invocation.method(#fetchGames, [], {
               #page: page,
               #searchTerm: searchTerm,
               #dateRange: dateRange,
               #platforms: platforms,
               #genres: genres,
               #ordering: ordering,
-            },
-          ),
-        )),
-      ) as _i3.Future<_i4.Result<_i5.GameListEntity>>);
+            }),
+            returnValue: _i3.Future<_i4.Result<_i5.GameListEntity>>.value(
+              _i6.dummyValue<_i4.Result<_i5.GameListEntity>>(
+                this,
+                Invocation.method(#fetchGames, [], {
+                  #page: page,
+                  #searchTerm: searchTerm,
+                  #dateRange: dateRange,
+                  #platforms: platforms,
+                  #genres: genres,
+                  #ordering: ordering,
+                }),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<_i5.GameListEntity>>);
 }

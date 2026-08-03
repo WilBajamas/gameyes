@@ -40,13 +40,14 @@ void main() {
       expect(darkTheme.extension<AppTokens>(), isA<AppTokens>());
     });
 
-    test('should expose all four token groups when the extension resolves', () {
+    test('should expose all five token groups when the extension resolves', () {
       final tokens = darkTheme.extension<AppTokens>()!;
 
       expect(tokens.color, isNotNull);
       expect(tokens.typography, isNotNull);
       expect(tokens.radius, isNotNull);
       expect(tokens.motion, isNotNull);
+      expect(tokens.effect, isNotNull);
     });
   });
 
@@ -55,17 +56,18 @@ void main() {
       expect(darkTheme.scaffoldBackgroundColor, colors.canvas);
     });
 
-    test(
-        'should resolve primary to indigo and not green when the theme is '
+    test('should resolve primary to indigo and not green when the theme is '
         'built', () {
       expect(darkTheme.colorScheme.primary, colors.accentIndigo);
       expect(darkTheme.colorScheme.primary, isNot(colors.green));
     });
 
-    test('should resolve surface to the canvas token when the theme is built',
-        () {
-      expect(darkTheme.colorScheme.surface, colors.canvas);
-    });
+    test(
+      'should resolve surface to the canvas token when the theme is built',
+      () {
+        expect(darkTheme.colorScheme.surface, colors.canvas);
+      },
+    );
 
     test('should drop the retired cyan seed when the theme is built', () {
       const retiredCyanSeed = Color(0xFF4CC9F0);
@@ -76,8 +78,7 @@ void main() {
       expect(darkTheme.scaffoldBackgroundColor, isNot(retiredCyanSeed));
     });
 
-    test(
-        'should re-point the remaining scheme roles at tokens when the '
+    test('should re-point the remaining scheme roles at tokens when the '
         'theme is built', () {
       final scheme = darkTheme.colorScheme;
 
@@ -90,8 +91,7 @@ void main() {
   });
 
   group('buildDarkTheme — text theme', () {
-    test(
-        'should resolve the display face to Space Grotesk when the theme is '
+    test('should resolve the display face to Space Grotesk when the theme is '
         'built', () {
       expect(
         darkTheme.textTheme.displayLarge?.fontFamily,
@@ -133,8 +133,7 @@ void main() {
   });
 
   group('AppTokens resolution from the widget tree', () {
-    testWidgets(
-        'should resolve a non-null AppTokens when read from a '
+    testWidgets('should resolve a non-null AppTokens when read from a '
         'descendant of the app root', (tester) async {
       AppTokens? resolved;
 
@@ -154,8 +153,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets(
-        'should still resolve AppTokens when the device reports '
+    testWidgets('should still resolve AppTokens when the device reports '
         'light platform brightness', (tester) async {
       tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
       addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
@@ -185,8 +183,7 @@ void main() {
   });
 
   group('Reduced motion', () {
-    testWidgets(
-        'should collapse a duration to zero when animations are '
+    testWidgets('should collapse a duration to zero when animations are '
         'disabled', (tester) async {
       Duration? resolved;
 
@@ -208,8 +205,9 @@ void main() {
       expect(resolved, Duration.zero);
     });
 
-    testWidgets('should keep the duration when animations are not disabled',
-        (tester) async {
+    testWidgets('should keep the duration when animations are not disabled', (
+      tester,
+    ) async {
       Duration? resolved;
 
       await tester.pumpWidget(
@@ -241,14 +239,11 @@ void main() {
 Future<({ThemeData light, ThemeData dark})> _buildThemes() {
   final completer = Completer<({ThemeData light, ThemeData dark})>();
 
-  runZonedGuarded<Future<void>>(
-    () async {
-      final themes = (light: buildTheme(), dark: buildDarkTheme());
-      await Future<void>.delayed(const Duration(milliseconds: 250));
-      completer.complete(themes);
-    },
-    (error, stack) {},
-  );
+  runZonedGuarded<Future<void>>(() async {
+    final themes = (light: buildTheme(), dark: buildDarkTheme());
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    completer.complete(themes);
+  }, (error, stack) {});
 
   return completer.future;
 }

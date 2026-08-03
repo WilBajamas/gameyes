@@ -46,45 +46,38 @@ class MockGameLocalDatasource extends _i1.Mock
   @override
   _i3.Future<void> saveGame({required _i4.SavedGame? game}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveGame,
-          [],
-          {#game: game},
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#saveGame, [], {#game: game}),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> unsaveGame({required int? id}) => (super.noSuchMethod(
-        Invocation.method(
-          #unsaveGame,
-          [],
-          {#id: id},
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> unsaveGame({required int? id}) =>
+      (super.noSuchMethod(
+            Invocation.method(#unsaveGame, [], {#id: id}),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<_i4.SavedGame?> getSavedGame({required int? id}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getSavedGame,
-          [],
-          {#id: id},
-        ),
-        returnValue: _i3.Future<_i4.SavedGame?>.value(),
-      ) as _i3.Future<_i4.SavedGame?>);
+            Invocation.method(#getSavedGame, [], {#id: id}),
+            returnValue: _i3.Future<_i4.SavedGame?>.value(),
+          )
+          as _i3.Future<_i4.SavedGame?>);
 
   @override
-  _i3.Future<List<_i4.SavedGame?>> getSavedGames() => (super.noSuchMethod(
-        Invocation.method(
-          #getSavedGames,
-          [],
-        ),
-        returnValue: _i3.Future<List<_i4.SavedGame?>>.value(<_i4.SavedGame?>[]),
-      ) as _i3.Future<List<_i4.SavedGame?>>);
+  _i3.Future<List<_i4.SavedGame?>> getSavedGames() =>
+      (super.noSuchMethod(
+            Invocation.method(#getSavedGames, []),
+            returnValue: _i3.Future<List<_i4.SavedGame?>>.value(
+              <_i4.SavedGame?>[],
+            ),
+          )
+          as _i3.Future<List<_i4.SavedGame?>>);
 
   @override
   _i3.Stream<List<_i4.SavedGame>> listenToSavedGames(
@@ -92,25 +85,18 @@ class MockGameLocalDatasource extends _i1.Mock
     String? searchTerm,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #listenToSavedGames,
-          [
-            tag,
-            searchTerm,
-          ],
-        ),
-        returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
-      ) as _i3.Stream<List<_i4.SavedGame>>);
+            Invocation.method(#listenToSavedGames, [tag, searchTerm]),
+            returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
+          )
+          as _i3.Stream<List<_i4.SavedGame>>);
 
   @override
   _i3.Stream<List<_i4.SavedGame>> listenToSearchSavedGames(String? term) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #listenToSearchSavedGames,
-          [term],
-        ),
-        returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
-      ) as _i3.Stream<List<_i4.SavedGame>>);
+            Invocation.method(#listenToSearchSavedGames, [term]),
+            returnValue: _i3.Stream<List<_i4.SavedGame>>.empty(),
+          )
+          as _i3.Stream<List<_i4.SavedGame>>);
 
   @override
   _i3.Future<void> setPlatform({
@@ -118,17 +104,14 @@ class MockGameLocalDatasource extends _i1.Mock
     required int? savedGameId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setPlatform,
-          [],
-          {
-            #platform: platform,
-            #savedGameId: savedGameId,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#setPlatform, [], {
+              #platform: platform,
+              #savedGameId: savedGameId,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> createGroupTask({
@@ -137,40 +120,33 @@ class MockGameLocalDatasource extends _i1.Mock
     required int? id,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createGroupTask,
-          [],
-          {
-            #title: title,
-            #description: description,
-            #id: id,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#createGroupTask, [], {
+              #title: title,
+              #description: description,
+              #id: id,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Stream<_i4.SavedGame?> listenToSavedGame({required int? savedGameId}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #listenToSavedGame,
-          [],
-          {#savedGameId: savedGameId},
-        ),
-        returnValue: _i3.Stream<_i4.SavedGame?>.empty(),
-      ) as _i3.Stream<_i4.SavedGame?>);
+            Invocation.method(#listenToSavedGame, [], {
+              #savedGameId: savedGameId,
+            }),
+            returnValue: _i3.Stream<_i4.SavedGame?>.empty(),
+          )
+          as _i3.Stream<_i4.SavedGame?>);
 
   @override
   _i3.Stream<_i7.SavedGameTask?> listenToTask({required int? taskId}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #listenToTask,
-          [],
-          {#taskId: taskId},
-        ),
-        returnValue: _i3.Stream<_i7.SavedGameTask?>.empty(),
-      ) as _i3.Stream<_i7.SavedGameTask?>);
+            Invocation.method(#listenToTask, [], {#taskId: taskId}),
+            returnValue: _i3.Stream<_i7.SavedGameTask?>.empty(),
+          )
+          as _i3.Stream<_i7.SavedGameTask?>);
 
   @override
   _i3.Future<void> removeGroupTask({
@@ -178,17 +154,14 @@ class MockGameLocalDatasource extends _i1.Mock
     required int? groupTaskId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #removeGroupTask,
-          [],
-          {
-            #savedGameId: savedGameId,
-            #groupTaskId: groupTaskId,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#removeGroupTask, [], {
+              #savedGameId: savedGameId,
+              #groupTaskId: groupTaskId,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> createTaskInGroup({
@@ -196,17 +169,14 @@ class MockGameLocalDatasource extends _i1.Mock
     required int? savedGameId,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createTaskInGroup,
-          [],
-          {
-            #groupTaskId: groupTaskId,
-            #savedGameId: savedGameId,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#createTaskInGroup, [], {
+              #groupTaskId: groupTaskId,
+              #savedGameId: savedGameId,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> addStep({
@@ -214,17 +184,11 @@ class MockGameLocalDatasource extends _i1.Mock
     required _i8.TaskStep? step,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #addStep,
-          [],
-          {
-            #taskId: taskId,
-            #step: step,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#addStep, [], {#taskId: taskId, #step: step}),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<bool> removeStep({
@@ -232,16 +196,10 @@ class MockGameLocalDatasource extends _i1.Mock
     required _i8.TaskStep? step,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #removeStep,
-          [],
-          {
-            #taskId: taskId,
-            #step: step,
-          },
-        ),
-        returnValue: _i3.Future<bool>.value(false),
-      ) as _i3.Future<bool>);
+            Invocation.method(#removeStep, [], {#taskId: taskId, #step: step}),
+            returnValue: _i3.Future<bool>.value(false),
+          )
+          as _i3.Future<bool>);
 
   @override
   _i3.Future<void> editStep({
@@ -253,21 +211,18 @@ class MockGameLocalDatasource extends _i1.Mock
     String? image,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #editStep,
-          [],
-          {
-            #taskId: taskId,
-            #stepId: stepId,
-            #title: title,
-            #description: description,
-            #stepNumber: stepNumber,
-            #image: image,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#editStep, [], {
+              #taskId: taskId,
+              #stepId: stepId,
+              #title: title,
+              #description: description,
+              #stepNumber: stepNumber,
+              #image: image,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> changeCurrentStep({
@@ -275,15 +230,12 @@ class MockGameLocalDatasource extends _i1.Mock
     required int? stepIndex,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #changeCurrentStep,
-          [],
-          {
-            #taskId: taskId,
-            #stepIndex: stepIndex,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#changeCurrentStep, [], {
+              #taskId: taskId,
+              #stepIndex: stepIndex,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

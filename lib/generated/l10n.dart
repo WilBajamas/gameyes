@@ -1058,6 +1058,125 @@ class S {
       args: [hours],
     );
   }
+  /// `Get started`
+  String get get_started =>
+      Intl.message('Get started', name: 'get_started', desc: '', args: []);
+
+  /// `Playing`
+  String get playing =>
+      Intl.message('Playing', name: 'playing', desc: '', args: []);
+
+  /// `Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.`
+  String get welcome_body_one => Intl.message(
+        'Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.',
+        name: 'welcome_body_one',
+        desc: '',
+        args: [],
+      );
+
+  /// `Track what you are waiting on and see the countdown to every release you care about.`
+  String get welcome_body_two => Intl.message(
+        'Track what you are waiting on and see the countdown to every release you care about.',
+        name: 'welcome_body_two',
+        desc: '',
+        args: [],
+      );
+
+  /// `Your library`
+  String get welcome_chip_one => Intl.message(
+        'Your library',
+        name: 'welcome_chip_one',
+        desc: '',
+        args: [],
+      );
+
+  /// `Wishlisted · PS5`
+  String get welcome_chip_two => Intl.message(
+        'Wishlisted · PS5',
+        name: 'welcome_chip_two',
+        desc: '',
+        args: [],
+      );
+
+  /// `NEON VESPER`
+  String get welcome_countdown_title => Intl.message(
+        'NEON VESPER',
+        name: 'welcome_countdown_title',
+        desc: '',
+        args: [],
+      );
+
+  /// `Days`
+  String get welcome_countdown_days => Intl.message(
+        'Days',
+        name: 'welcome_countdown_days',
+        desc: '',
+        args: [],
+      );
+
+  /// `Hrs`
+  String get welcome_countdown_hours => Intl.message(
+        'Hrs',
+        name: 'welcome_countdown_hours',
+        desc: '',
+        args: [],
+      );
+
+  /// `Min`
+  String get welcome_countdown_minutes => Intl.message(
+        'Min',
+        name: 'welcome_countdown_minutes',
+        desc: '',
+        args: [],
+      );
+
+  /// `TRACK EVERY GAME YOU'VE EVER TOUCHED`
+  String get welcome_headline_one => Intl.message(
+        "TRACK EVERY GAME YOU'VE EVER TOUCHED",
+        name: 'welcome_headline_one',
+        desc: '',
+        args: [],
+      );
+
+  /// `AND KNOW WHAT DROPS NEXT`
+  String get welcome_headline_two => Intl.message(
+        'AND KNOW WHAT DROPS NEXT',
+        name: 'welcome_headline_two',
+        desc: '',
+        args: [],
+      );
+
+  /// `2.4M games tracked so far.`
+  String get welcome_social_proof => Intl.message(
+        '2.4M games tracked so far.',
+        name: 'welcome_social_proof',
+        desc: '',
+        args: [],
+      );
+
+  /// `Tracked`
+  String get welcome_stat_tracked => Intl.message(
+        'Tracked',
+        name: 'welcome_stat_tracked',
+        desc: '',
+        args: [],
+      );
+
+  /// `Hours`
+  String get welcome_stat_hours => Intl.message(
+        'Hours',
+        name: 'welcome_stat_hours',
+        desc: '',
+        args: [],
+      );
+
+  /// `Playing`
+  String get welcome_stat_playing => Intl.message(
+        'Playing',
+        name: 'welcome_stat_playing',
+        desc: '',
+        args: [],
+      );
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

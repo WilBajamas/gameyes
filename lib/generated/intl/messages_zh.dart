@@ -239,5 +239,31 @@ class MessageLookup extends MessageLookupByLibrary {
     "wishlist_upcoming_game": MessageLookupByLibrary.simpleMessage(
       "将即将推出的游戏加入心愿单",
     ),
+    "get_started": MessageLookupByLibrary.simpleMessage("开始使用"),
+    "playing": MessageLookupByLibrary.simpleMessage("在玩"),
+    "welcome_body_one": MessageLookupByLibrary.simpleMessage(
+      "你打通的、弃坑的、积灰的游戏，全都在一处 —— 312 款还是 3 款都一样。",
+    ),
+    "welcome_body_two": MessageLookupByLibrary.simpleMessage(
+      "追踪你在等的游戏，看着倒计时一天一天逼近每一个发售日。",
+    ),
+    "welcome_chip_one": MessageLookupByLibrary.simpleMessage("你的游戏库"),
+    "welcome_chip_two": MessageLookupByLibrary.simpleMessage("已心愿 · PS5"),
+    "welcome_countdown_days": MessageLookupByLibrary.simpleMessage("天"),
+    "welcome_countdown_hours": MessageLookupByLibrary.simpleMessage("时"),
+    "welcome_countdown_minutes": MessageLookupByLibrary.simpleMessage("分"),
+    "welcome_countdown_title": MessageLookupByLibrary.simpleMessage("NEON VESPER"),
+    "welcome_headline_one": MessageLookupByLibrary.simpleMessage(
+      "追踪你玩过的每一款游戏",
+    ),
+    "welcome_headline_two": MessageLookupByLibrary.simpleMessage(
+      "抢先知道下一款大作",
+    ),
+    "welcome_social_proof": MessageLookupByLibrary.simpleMessage(
+      "已追踪 240 万款游戏。",
+    ),
+    "welcome_stat_hours": MessageLookupByLibrary.simpleMessage("小时"),
+    "welcome_stat_playing": MessageLookupByLibrary.simpleMessage("在玩"),
+    "welcome_stat_tracked": MessageLookupByLibrary.simpleMessage("已追踪"),
   };
 }

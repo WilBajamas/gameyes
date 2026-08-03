@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_color_tokens.dart';
+import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_effect_tokens.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_motion_tokens.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_radius_tokens.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_type_tokens.dart';
@@ -13,25 +14,23 @@ class AppTokens extends ThemeExtension<AppTokens> {
     required this.typography,
     required this.radius,
     required this.motion,
+    required this.effect,
   });
 
   final AppColorTokens color;
 
-  // Called "typography" instead of "type" because Flutter's theme system
-  // already uses the word "type" internally - naming it that would have
-  // broken the lookup silently.
   final AppTypeTokens typography;
 
   final AppRadiusTokens radius;
   final AppMotionTokens motion;
+  final AppEffectTokens effect;
 
-  // Not "const" because building the fonts below calls a function, not just
-  // plain values.
   static final AppTokens dark = AppTokens(
     color: AppColorTokens.dark,
     typography: AppTypeTokens.dark,
     radius: AppRadiusTokens.dark,
     motion: AppMotionTokens.dark,
+    effect: AppEffectTokens.dark,
   );
 
   @override
@@ -40,12 +39,14 @@ class AppTokens extends ThemeExtension<AppTokens> {
     AppTypeTokens? typography,
     AppRadiusTokens? radius,
     AppMotionTokens? motion,
+    AppEffectTokens? effect,
   }) {
     return AppTokens(
       color: color ?? this.color,
       typography: typography ?? this.typography,
       radius: radius ?? this.radius,
       motion: motion ?? this.motion,
+      effect: effect ?? this.effect,
     );
   }
 
@@ -58,6 +59,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
       typography: AppTypeTokens.lerp(typography, other.typography, t),
       radius: AppRadiusTokens.lerp(radius, other.radius, t),
       motion: AppMotionTokens.lerp(motion, other.motion, t),
+      effect: AppEffectTokens.lerp(effect, other.effect, t),
     );
   }
 }

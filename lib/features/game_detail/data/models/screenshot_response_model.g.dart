@@ -7,15 +7,13 @@ part of 'screenshot_response_model.dart';
 // **************************************************************************
 
 _ScreenshotResponseModel _$ScreenshotResponseModelFromJson(
-        Map<String, dynamic> json) =>
-    _ScreenshotResponseModel(
-      results: (json['results'] as List<dynamic>)
-          .map((e) => Screenshot.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+  Map<String, dynamic> json,
+) => _ScreenshotResponseModel(
+  results: (json['results'] as List<dynamic>)
+      .map((e) => Screenshot.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
 
 Map<String, dynamic> _$ScreenshotResponseModelToJson(
-        _ScreenshotResponseModel instance) =>
-    <String, dynamic>{
-      'results': instance.results,
-    };
+  _ScreenshotResponseModel instance,
+) => <String, dynamic>{'results': instance.results};
