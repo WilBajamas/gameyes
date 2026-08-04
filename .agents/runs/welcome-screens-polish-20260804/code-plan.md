@@ -161,8 +161,6 @@ class _WelcomeViewState extends State<_WelcomeView> {
         child: MultiBlocListener(
           listeners: [
             BlocListener<WelcomeCubit, WelcomeState>(
-              listenWhen: (previous, current) =>
-                  previous.status != current.status,
               listener: (context, state) {
                 if (state.status == WelcomeStatus.finished) {
                   context.replaceRoute(const AuthRoute());
@@ -170,7 +168,6 @@ class _WelcomeViewState extends State<_WelcomeView> {
               },
             ),
             BlocListener<WelcomeCubit, WelcomeState>(
-              listenWhen: (previous, current) => previous.step != current.step,
               listener: _followStep,
             ),
           ],

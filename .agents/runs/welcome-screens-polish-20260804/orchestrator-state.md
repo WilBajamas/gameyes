@@ -3,7 +3,25 @@ Feature: Welcome screens polish + global system UI convention (item 6.2)
 Run ID: welcome-screens-polish-20260804
 Run folder: .agents/runs/welcome-screens-polish-20260804/
 Started: 2026-08-04
-Current phase: DEV
+Current phase: QA
+Phase 4B round 2: complete — listenWhen convention added to
+  project-conventions.md, verified directly against the working tree
+  (correctly scoped, matches file style, no other file touched).
+Phase 4B: APPROVED (round 2, pre-approved by human contingent on the doc add).
+Dev commit: dad05648212ea00119fe915bf666e2d7e36a546c — verified via `git log`/
+  `git show --stat` to contain exactly diff-summary.md's file list.
+Phase 4 (Dev, first pass): complete, uncommitted — diff-summary.md written,
+  Commit: PENDING, all 23 criteria satisfied, no deviations, no self-corrections.
+Phase 4B (human code-review gate), round 1: REVISE — human asked to remove the
+  redundant `listenWhen` on both `BlocListener`s in onboarding_screen.dart
+  (each is already guarded correctly inside its own listener body: the status
+  listener by `if (state.status == WelcomeStatus.finished)`, the step listener
+  by `_followStep`'s own `if (_controller.page?.round() == target) return;` —
+  listenWhen was pure optimization, not required for correctness), plus doc
+  updates only where the removed detail is actually described (code-plan.md
+  embeds the old listenWhen code, ~line 164/173) — human explicitly asked not
+  to touch docs that don't need it, to avoid re-duplicating content just
+  cleaned up. Does not consume a QA cycle (revise is pre-QA).
 Phase 2 (Tech Lead): complete — tdd.md, task-brief.md, code-plan.md written.
   Open questions: NONE. Testing mode: smoke. 7 files modified + 1 new test file.
   All 5 design-gate items resolved with a decision + provisional value (see

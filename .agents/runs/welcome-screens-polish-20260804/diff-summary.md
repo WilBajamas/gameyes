@@ -2,7 +2,7 @@
 Source: Ticket `W1-6.2R` — "Welcome screens polish + global system UI convention (item 6.2)"
 Date: 2026-08-04
 Branch: claude/welcome-screens-polish-resume-una4wt
-Commit: PENDING — awaiting Phase 4B human review, revision round 2
+Commit: dad05648212ea00119fe915bf666e2d7e36a546c
 
 ## Revision round 1 (Phase 4B code review)
 
