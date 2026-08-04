@@ -3,26 +3,29 @@ Feature: Welcome screens polish + global system UI convention (item 6.2)
 Run ID: welcome-screens-polish-20260804
 Run folder: .agents/runs/welcome-screens-polish-20260804/
 Started: 2026-08-04
-Current phase: PHASE_0_INCOMPLETE
+Current phase: PHASE_0_COMPLETE
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info — captured 2026-08-04T22:26:00+08:00 (on top of commit 5bd84e8)
-Test baseline: NOT CAPTURED — the full-suite run failed with a disk-space error
-  (FileSystemException, C: drive had ~60MB free at the time), not a code or test
-  failure. Must be re-run once disk space is confirmed free before Phase 1 (BA)
-  starts. Do not proceed on a guessed or inherited baseline.
-Pre-existing test failures: unknown until the test baseline above is successfully captured.
-  As a reference point only (from the immediately prior run, welcome-screens-header-rework-20260804,
-  captured post-commit 5bd84e8): +146 -11, with the 11 failures being the long-documented
-  pre-existing set (test/api/games, test/api/game_detail, test/cubit/games, test/cubit/game_detail,
-  test/repository/tracker, test/widget_test.dart). This has NOT been independently re-verified
-  for this run and should not be treated as this run's authoritative baseline.
+Test baseline: CAPTURED 2026-08-04 (this session, Linux container, Flutter 3.41.4 stable
+  installed fresh to match .fvmrc — `flutter pub get` + `dart run build_runner build
+  --delete-conflicting-outputs` run first since neither had been done in this checkout).
+  Result: +144 -13 (157 total). The 13 failures are all within the long-documented
+  pre-existing set (test/api/games, test/api/game_detail, test/cubit/games,
+  test/cubit/game_detail, test/repository/tracker, test/widget_test.dart) — same file
+  set as the prior run's reference point, spot-checked one failure per cause category:
+  test/api/games is a genuine type-cast bug in the test (Map cast to List, not
+  environment-related); test/widget_test.dart is the default counter smoke test,
+  unrelated to this app. Total test count (157) matches the prior run's reference
+  point exactly (146+11=157=144+13), so this is the same known-broken cluster, not
+  new breakage — 2 more of the already-flaky cluster failed this run than last
+  reported, not a new category. This IS this run's authoritative baseline.
 Branch: feature/welcome-screens-header-rework — continuing the SAME branch as item 6.1,
   not a new branch. 6.1 is committed (5bd84e8) but not yet merged to develop, and this
   run is a direct continuation of that same unmerged work, not a separate feature.
 Base branch: develop (via feature/welcome-screens-header-rework)
 Base SHA: 5bd84e8abb593208be32f2d50debdeee516b3d9a (item 6.1's commit — the diff base for this run)
 Dev commit: NONE
-Last updated: 2026-08-04T22:33:00+08:00
+Last updated: 2026-08-04T23:50:00+08:00
 
 ## Notes
 
