@@ -24,6 +24,13 @@ BlocProvider(
 Reactive-boundary placement (lowest subtree, no passthrough views) lives in
 `flutter-arch.md § Reactive boundary convention` — not restated here.
 
+Don't add `listenWhen` to a `BlocListener` just as a reflex. If the listener
+body already guards the condition itself (e.g. `if (state.someField == X)`
+before the side effect), a matching `listenWhen` is redundant — skip it. Only
+add `listenWhen` when it changes behavior: it skips real work (e.g. an
+imperative call that isn't otherwise idempotent), or it's the sole guard
+against the unwanted call.
+
 ---
 
 ## Status-driven UI rendering pattern
@@ -283,6 +290,29 @@ semantics match the requirement.
 Rules for fragment placement (`presentation/widgets/` vs. `lib/widgets/`), the
 ban on Widget-returning helpers, and routing directly to a reusable page instead
 of a passthrough screen all live in `flutter-arch.md` — not restated here.
+
+---
+
+## System bars and SafeArea
+
+Every screen's body is wrapped in `SafeArea` — `Scaffold(body: SafeArea(child: ...))`.
+No screen lays content under the status bar, the system navigation bar, or a display
+cutout.
+
+The system UI overlay style is a single global default, set once in `bootstrap.dart`
+before `runApp` and never overridden per screen or inside a `build` method:
+transparent status bar, system navigation bar matching `AppColorTokens.canvas`,
+transparent divider, light icons on both. The colour comes from the token, never a
+literal.
+
+On Android 15 and above the platform ignores the two colour fields and draws the app
+edge to edge. The intended appearance still holds because the app's own scaffold
+background is the canvas colour — so never add an opaque bar of your own to compensate,
+and never suppress edge-to-edge drawing.
+
+A screen that wants a different treatment (for example a hero bleeding under a
+transparent status bar via `SafeArea(top: false)`) is a deviation that needs a recorded
+decision, not a free choice.
 
 ---
 

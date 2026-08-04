@@ -6,3 +6,9 @@ class WelcomeAssetConstants {
   static const heroTwoBackground =
       '${PathConstants.imagePath}welcome-2-header-bg.png';
 }
+
+class WelcomeLayoutConstants {
+  static const double heroHeightOne = 240;
+  static const double heroHeightTwo = 216;
+  static const double heroContentPadding = 24;
+}

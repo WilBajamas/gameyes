@@ -53,7 +53,7 @@ The hero is a full-bleed colour field with a **directional bottom radius**
 
 | | Screen 1 | Screen 2 |
 |---|---|---|
-| Height | `flex: 0 0 400px` (item 6.1/6.2: being reduced, see run notes) | `flex: 0 0 356px` (item 6.1/6.2: being reduced, see run notes) |
+| Height | `240px` | `216px` |
 | Fill | `#2f3782` (indigo step above canvas) | `#8a2f86` (magenta step) — item 6.1 replaced with a background image on screen 2 only |
 | Content | Fanned cover tiles + stat bar | Key art + title + countdown — item 6.1 replaced both with flat PNG content |
 

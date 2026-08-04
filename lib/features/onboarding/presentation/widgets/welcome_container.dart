@@ -45,7 +45,9 @@ class WelcomeContainer extends StatelessWidget {
                   24,
                   isFirstStep ? 28 : 24,
                   24,
-                  24 + context.bottomPadding,
+                  // SafeArea now owns the bottom system inset, so adding it
+                  // here again would double-count it.
+                  24,
                 ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(minWidth: double.infinity),

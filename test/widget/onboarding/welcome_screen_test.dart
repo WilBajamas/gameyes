@@ -9,7 +9,9 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/const.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_container.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
+import 'package:gaming_library_assessment_flutter/widgets/primary_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mockito/annotations.dart';
@@ -47,11 +49,12 @@ void main() {
   ) async {
     await _pumpWelcome(tester);
 
+    final page = _page(S.current.welcome_headline_one);
     expect(find.text(S.current.welcome_headline_one), findsOneWidget);
     expect(find.text(S.current.welcome_body_one), findsOneWidget);
-    expect(_countDots(tester, 22), 1);
-    expect(_countDots(tester, 5), 1);
-    expect(_countGreen(tester), 1);
+    expect(_countDots(tester, page, 22), 1);
+    expect(_countDots(tester, page, 5), 1);
+    expect(_countGreen(tester, page), 1);
   });
 
   testWidgets('shows the first hero art once and no background image', (
@@ -59,8 +62,18 @@ void main() {
   ) async {
     await _pumpWelcome(tester);
 
-    expect(_assetImage(WelcomeAssetConstants.heroOne), findsOneWidget);
-    expect(find.byType(Image), findsOneWidget);
+    final page = _page(S.current.welcome_headline_one);
+    expect(
+      find.descendant(
+        of: page,
+        matching: _assetImage(WelcomeAssetConstants.heroOne),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: page, matching: find.byType(Image)),
+      findsOneWidget,
+    );
   });
 
   testWidgets('moves to the second step without writing the seen flag', (
@@ -71,12 +84,16 @@ void main() {
     await tester.tap(find.text(S.current.next));
     await tester.pumpAndSettle();
 
+    final page = _page(S.current.welcome_headline_two);
     expect(find.text(S.current.welcome_headline_two), findsOneWidget);
     expect(find.text(S.current.welcome_body_two), findsOneWidget);
-    expect(find.text(S.current.skip), findsNothing);
-    expect(_countDots(tester, 22), 1);
-    expect(_countDots(tester, 5), 1);
-    expect(_countGreen(tester), 1);
+    expect(
+      find.descendant(of: page, matching: find.text(S.current.skip)),
+      findsNothing,
+    );
+    expect(_countDots(tester, page, 22), 1);
+    expect(_countDots(tester, page, 5), 1);
+    expect(_countGreen(tester, page), 1);
     verifyNever(preferences.setBool(StorageConstants.firstUseKey, true));
   });
 
@@ -88,12 +105,28 @@ void main() {
     await tester.tap(find.text(S.current.next));
     await tester.pumpAndSettle();
 
-    expect(_assetImage(WelcomeAssetConstants.heroTwo), findsOneWidget);
+    final page = _page(S.current.welcome_headline_two);
     expect(
-      _assetImage(WelcomeAssetConstants.heroTwoBackground),
+      find.descendant(
+        of: page,
+        matching: _assetImage(WelcomeAssetConstants.heroTwo),
+      ),
       findsOneWidget,
     );
-    expect(_assetImage(WelcomeAssetConstants.heroOne), findsNothing);
+    expect(
+      find.descendant(
+        of: page,
+        matching: _assetImage(WelcomeAssetConstants.heroTwoBackground),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: page,
+        matching: _assetImage(WelcomeAssetConstants.heroOne),
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets('writes the seen flag when Skip exits the first step', (
@@ -134,16 +167,71 @@ void main() {
     );
   });
 
-  testWidgets('collapses the switcher duration when motion is reduced', (
+  testWidgets(
+    'moves to the second step when swiped forward without writing the '
+    'seen flag',
+    (tester) async {
+      await _pumpWelcome(tester);
+
+      await _swipe(tester, forward: true);
+
+      expect(_page(S.current.welcome_headline_two), findsOneWidget);
+      verifyNever(preferences.setBool(StorageConstants.firstUseKey, true));
+    },
+  );
+
+  testWidgets('returns to the first step when swiped backward', (tester) async {
+    await _pumpWelcome(tester);
+
+    await _swipe(tester, forward: true);
+    await _swipe(tester, forward: false);
+
+    expect(_page(S.current.welcome_headline_one), findsOneWidget);
+  });
+
+  testWidgets('keeps the first page dot active while a drag is held', (
     tester,
   ) async {
+    await _pumpWelcome(tester);
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byType(PageView)),
+    );
+    await gesture.moveBy(const Offset(-100, 0));
+    await tester.pump();
+
+    final page = _page(S.current.welcome_headline_one);
+    expect(_countDots(tester, page, 22), 1);
+    expect(_countDots(tester, page, 5), 1);
+
+    await gesture.up();
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('changes page instantly when motion is reduced', (tester) async {
     await _pumpWelcome(tester, disableAnimations: true);
 
-    final switcher = tester.widget<AnimatedSwitcher>(
-      find.byType(AnimatedSwitcher),
-    );
+    await tester.tap(find.text(S.current.next));
+    await tester.pump();
 
-    expect(switcher.duration, Duration.zero);
+    expect(_page(S.current.welcome_headline_two), findsOneWidget);
+  });
+
+  testWidgets('keeps the action row off the bottom system inset', (
+    tester,
+  ) async {
+    const bottomInset = 40.0;
+    await _pumpWelcome(tester, bottomInset: bottomInset);
+
+    final page = _page(S.current.welcome_headline_one);
+    final actionBottom = tester
+        .getBottomLeft(
+          find.descendant(of: page, matching: find.byType(PrimaryButton)),
+        )
+        .dy;
+    final safeAreaBottom = 844.0 - bottomInset;
+
+    expect(safeAreaBottom - actionBottom, 24);
   });
 
   testWidgets('does not overflow on a short viewport with larger text', (
@@ -169,6 +257,7 @@ Future<void> _pumpWelcome(
   Size size = const Size(390, 844),
   double textScaleFactor = 1,
   bool disableAnimations = false,
+  double bottomInset = 0,
   StackRouter? router,
 }) async {
   await tester.binding.setSurfaceSize(size);
@@ -179,6 +268,7 @@ Future<void> _pumpWelcome(
       size: size,
       textScaler: TextScaler.linear(textScaleFactor),
       disableAnimations: disableAnimations,
+      padding: EdgeInsets.only(bottom: bottomInset),
     ),
     child: MaterialApp(theme: buildDarkTheme(), home: const OnboardingScreen()),
   );
@@ -191,16 +281,35 @@ Future<void> _pumpWelcome(
   expect(find.byType(OnboardingScreen), findsOneWidget);
 }
 
-int _countDots(WidgetTester tester, double width) {
+Future<void> _swipe(WidgetTester tester, {required bool forward}) async {
+  await tester.drag(find.byType(PageView), Offset(forward ? -400 : 400, 0));
+  await tester.pumpAndSettle();
+}
+
+// The `WelcomeContainer` ancestor of a page's own headline — used to scope
+// widget counts to the visible page, since the paging viewport may keep the
+// offscreen page mounted.
+Finder _page(String headline) {
+  return find.ancestor(
+    of: find.text(headline),
+    matching: find.byType(WelcomeContainer),
+  );
+}
+
+int _countDots(WidgetTester tester, Finder page, double width) {
   return tester
-      .widgetList<Container>(find.byType(Container))
+      .widgetList<Container>(
+        find.descendant(of: page, matching: find.byType(Container)),
+      )
       .where((container) => container.constraints?.maxWidth == width)
       .length;
 }
 
-int _countGreen(WidgetTester tester) {
+int _countGreen(WidgetTester tester, Finder page) {
   return tester
-      .widgetList<Container>(find.byType(Container))
+      .widgetList<Container>(
+        find.descendant(of: page, matching: find.byType(Container)),
+      )
       .where(
         (container) =>
             container.decoration is BoxDecoration &&

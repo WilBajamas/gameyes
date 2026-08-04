@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/const.dart';
 
 /// Rounded panel at the top of a welcome screen
 class WelcomeHero extends StatelessWidget {
@@ -28,10 +29,17 @@ class WelcomeHero extends StatelessWidget {
               fit: BoxFit.cover,
               excludeFromSemantics: true,
             ),
-          Image.asset(
-            contentAsset,
-            fit: BoxFit.contain,
-            excludeFromSemantics: true,
+          // Only the content art is inset; the fill and background still
+          // reach the panel's edges.
+          Padding(
+            padding: const EdgeInsets.all(
+              WelcomeLayoutConstants.heroContentPadding,
+            ),
+            child: Image.asset(
+              contentAsset,
+              fit: BoxFit.contain,
+              excludeFromSemantics: true,
+            ),
           ),
         ],
       ),
