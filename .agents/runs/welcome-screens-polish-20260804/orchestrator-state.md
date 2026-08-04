@@ -3,7 +3,14 @@ Feature: Welcome screens polish + global system UI convention (item 6.2)
 Run ID: welcome-screens-polish-20260804
 Run folder: .agents/runs/welcome-screens-polish-20260804/
 Started: 2026-08-04
-Current phase: PHASE_1_IN_PROGRESS
+Current phase: TECH_LEAD
+Phase 1 (BA): complete — tech-ac.md (23 criteria, [W1-6.2R.1]-[W1-6.2R.23]),
+  ambiguities.md CRITICAL: NONE, 9 assumptions, 5 items flagged for the Phase 3
+  human design gate with provisional values (padding 24px, heights 240/216,
+  full SafeArea vs. status-bar-bleed tension, per-page vs. hoisted dot
+  indicator, short-screen give-back tuning). No escalation — proceeding to
+  Tech Lead per pipeline (these aren't CRITICAL ambiguities, they surface at
+  Phase 3 as design calls).
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info — captured 2026-08-04T22:26:00+08:00 (on top of commit 5bd84e8)
 Test baseline: CAPTURED 2026-08-04 (this session, Linux container, Flutter 3.41.4 stable
