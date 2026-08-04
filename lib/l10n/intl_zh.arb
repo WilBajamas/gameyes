@@ -18,6 +18,25 @@
   "welcome_countdown_hours": "时",
   "welcome_countdown_minutes": "分",
   "get_started": "开始使用",
+  "auth_title": "登录",
+  "auth_lead": "登录以同步你的游戏库和发售追踪。",
+  "continue_with_discord": "使用 Discord 继续",
+  "continue_with_google": "使用 Google 继续",
+  "auth_signing_in": "正在使用 {provider} 登录",
+  "@auth_signing_in": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "auth_sign_in_error": "无法登录，请重试。",
+  "auth_scope_reassurance": "现在只需登录，接下来我们会帮你完成设置。",
+  "auth_legal_prefix": "继续即表示你同意我们的",
+  "auth_terms": "条款",
+  "auth_legal_middle": "并知悉我们的",
+  "auth_privacy": "隐私政策",
+  "auth_legal_suffix": "。",
   "playing": "在玩",
   "featured": "精选",
   "games": "游戏",

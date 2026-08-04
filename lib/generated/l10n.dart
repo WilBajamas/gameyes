@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -64,36 +65,6 @@ class S {
     );
   }
 
-  /// `Stay informed of new game releases and news.`
-  String get onboarding_description_one {
-    return Intl.message(
-      'Stay informed of new game releases and news.',
-      name: 'onboarding_description_one',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Find more information about your favourite games.`
-  String get onboarding_description_two {
-    return Intl.message(
-      'Find more information about your favourite games.',
-      name: 'onboarding_description_two',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Make a savelist of anticipated upcoming games.`
-  String get onboarding_description_three {
-    return Intl.message(
-      'Make a savelist of anticipated upcoming games.',
-      name: 'onboarding_description_three',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Next`
   String get next {
     return Intl.message('Next', name: 'next', desc: '', args: []);
@@ -102,6 +73,261 @@ class S {
   /// `Skip`
   String get skip {
     return Intl.message('Skip', name: 'skip', desc: '', args: []);
+  }
+
+  /// `TRACK EVERY GAME YOU'VE EVER TOUCHED`
+  String get welcome_headline_one {
+    return Intl.message(
+      'TRACK EVERY GAME YOU\'VE EVER TOUCHED',
+      name: 'welcome_headline_one',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.`
+  String get welcome_body_one {
+    return Intl.message(
+      'Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.',
+      name: 'welcome_body_one',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AND KNOW WHAT DROPS NEXT`
+  String get welcome_headline_two {
+    return Intl.message(
+      'AND KNOW WHAT DROPS NEXT',
+      name: 'welcome_headline_two',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Track what you are waiting on and see the countdown to every release you care about.`
+  String get welcome_body_two {
+    return Intl.message(
+      'Track what you are waiting on and see the countdown to every release you care about.',
+      name: 'welcome_body_two',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your library`
+  String get welcome_chip_one {
+    return Intl.message(
+      'Your library',
+      name: 'welcome_chip_one',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wishlisted · PS5`
+  String get welcome_chip_two {
+    return Intl.message(
+      'Wishlisted · PS5',
+      name: 'welcome_chip_two',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tracked`
+  String get welcome_stat_tracked {
+    return Intl.message(
+      'Tracked',
+      name: 'welcome_stat_tracked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hours`
+  String get welcome_stat_hours {
+    return Intl.message(
+      'Hours',
+      name: 'welcome_stat_hours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Playing`
+  String get welcome_stat_playing {
+    return Intl.message(
+      'Playing',
+      name: 'welcome_stat_playing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2.4M games tracked so far.`
+  String get welcome_social_proof {
+    return Intl.message(
+      '2.4M games tracked so far.',
+      name: 'welcome_social_proof',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NEON VESPER`
+  String get welcome_countdown_title {
+    return Intl.message(
+      'NEON VESPER',
+      name: 'welcome_countdown_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Days`
+  String get welcome_countdown_days {
+    return Intl.message(
+      'Days',
+      name: 'welcome_countdown_days',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hrs`
+  String get welcome_countdown_hours {
+    return Intl.message(
+      'Hrs',
+      name: 'welcome_countdown_hours',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min`
+  String get welcome_countdown_minutes {
+    return Intl.message(
+      'Min',
+      name: 'welcome_countdown_minutes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get started`
+  String get get_started {
+    return Intl.message('Get started', name: 'get_started', desc: '', args: []);
+  }
+
+  /// `Sign in`
+  String get auth_title {
+    return Intl.message('Sign in', name: 'auth_title', desc: '', args: []);
+  }
+
+  /// `Sign in to keep your library and release tracking in sync.`
+  String get auth_lead {
+    return Intl.message(
+      'Sign in to keep your library and release tracking in sync.',
+      name: 'auth_lead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue with Discord`
+  String get continue_with_discord {
+    return Intl.message(
+      'Continue with Discord',
+      name: 'continue_with_discord',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue with Google`
+  String get continue_with_google {
+    return Intl.message(
+      'Continue with Google',
+      name: 'continue_with_google',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signing in with {provider}`
+  String auth_signing_in(String provider) {
+    return Intl.message(
+      'Signing in with $provider',
+      name: 'auth_signing_in',
+      desc: '',
+      args: [provider],
+    );
+  }
+
+  /// `We couldn't sign you in. Please try again.`
+  String get auth_sign_in_error {
+    return Intl.message(
+      'We couldn\'t sign you in. Please try again.',
+      name: 'auth_sign_in_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just sign in for now — we'll help you set things up next.`
+  String get auth_scope_reassurance {
+    return Intl.message(
+      'Just sign in for now — we\'ll help you set things up next.',
+      name: 'auth_scope_reassurance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By continuing, you agree to our `
+  String get auth_legal_prefix {
+    return Intl.message(
+      'By continuing, you agree to our ',
+      name: 'auth_legal_prefix',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms`
+  String get auth_terms {
+    return Intl.message('Terms', name: 'auth_terms', desc: '', args: []);
+  }
+
+  /// ` and acknowledge our `
+  String get auth_legal_middle {
+    return Intl.message(
+      ' and acknowledge our ',
+      name: 'auth_legal_middle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get auth_privacy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'auth_privacy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `.`
+  String get auth_legal_suffix {
+    return Intl.message('.', name: 'auth_legal_suffix', desc: '', args: []);
+  }
+
+  /// `Playing`
+  String get playing {
+    return Intl.message('Playing', name: 'playing', desc: '', args: []);
   }
 
   /// `Featured`
@@ -839,16 +1065,6 @@ class S {
     );
   }
 
-  /// `Featured Revamp`
-  String get featured_revamp {
-    return Intl.message(
-      'Featured Revamp',
-      name: 'featured_revamp',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Loading Game Title`
   String get loading_game_title_placeholder {
     return Intl.message(
@@ -1058,125 +1274,6 @@ class S {
       args: [hours],
     );
   }
-  /// `Get started`
-  String get get_started =>
-      Intl.message('Get started', name: 'get_started', desc: '', args: []);
-
-  /// `Playing`
-  String get playing =>
-      Intl.message('Playing', name: 'playing', desc: '', args: []);
-
-  /// `Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.`
-  String get welcome_body_one => Intl.message(
-        'Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.',
-        name: 'welcome_body_one',
-        desc: '',
-        args: [],
-      );
-
-  /// `Track what you are waiting on and see the countdown to every release you care about.`
-  String get welcome_body_two => Intl.message(
-        'Track what you are waiting on and see the countdown to every release you care about.',
-        name: 'welcome_body_two',
-        desc: '',
-        args: [],
-      );
-
-  /// `Your library`
-  String get welcome_chip_one => Intl.message(
-        'Your library',
-        name: 'welcome_chip_one',
-        desc: '',
-        args: [],
-      );
-
-  /// `Wishlisted · PS5`
-  String get welcome_chip_two => Intl.message(
-        'Wishlisted · PS5',
-        name: 'welcome_chip_two',
-        desc: '',
-        args: [],
-      );
-
-  /// `NEON VESPER`
-  String get welcome_countdown_title => Intl.message(
-        'NEON VESPER',
-        name: 'welcome_countdown_title',
-        desc: '',
-        args: [],
-      );
-
-  /// `Days`
-  String get welcome_countdown_days => Intl.message(
-        'Days',
-        name: 'welcome_countdown_days',
-        desc: '',
-        args: [],
-      );
-
-  /// `Hrs`
-  String get welcome_countdown_hours => Intl.message(
-        'Hrs',
-        name: 'welcome_countdown_hours',
-        desc: '',
-        args: [],
-      );
-
-  /// `Min`
-  String get welcome_countdown_minutes => Intl.message(
-        'Min',
-        name: 'welcome_countdown_minutes',
-        desc: '',
-        args: [],
-      );
-
-  /// `TRACK EVERY GAME YOU'VE EVER TOUCHED`
-  String get welcome_headline_one => Intl.message(
-        "TRACK EVERY GAME YOU'VE EVER TOUCHED",
-        name: 'welcome_headline_one',
-        desc: '',
-        args: [],
-      );
-
-  /// `AND KNOW WHAT DROPS NEXT`
-  String get welcome_headline_two => Intl.message(
-        'AND KNOW WHAT DROPS NEXT',
-        name: 'welcome_headline_two',
-        desc: '',
-        args: [],
-      );
-
-  /// `2.4M games tracked so far.`
-  String get welcome_social_proof => Intl.message(
-        '2.4M games tracked so far.',
-        name: 'welcome_social_proof',
-        desc: '',
-        args: [],
-      );
-
-  /// `Tracked`
-  String get welcome_stat_tracked => Intl.message(
-        'Tracked',
-        name: 'welcome_stat_tracked',
-        desc: '',
-        args: [],
-      );
-
-  /// `Hours`
-  String get welcome_stat_hours => Intl.message(
-        'Hours',
-        name: 'welcome_stat_hours',
-        desc: '',
-        args: [],
-      );
-
-  /// `Playing`
-  String get welcome_stat_playing => Intl.message(
-        'Playing',
-        name: 'welcome_stat_playing',
-        desc: '',
-        args: [],
-      );
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

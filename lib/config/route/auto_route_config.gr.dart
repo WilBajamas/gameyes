@@ -9,74 +9,141 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i12;
-import 'package:flutter/material.dart' as _i13;
+import 'package:auto_route/auto_route.dart' as _i14;
+import 'package:flutter/material.dart' as _i15;
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart'
-    as _i15;
+    as _i17;
 import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_task_entity.dart'
-    as _i14;
-import 'package:gaming_library_assessment_flutter/features/browse/presentation/screens/browse_screen.dart'
-    as _i1;
-import 'package:gaming_library_assessment_flutter/features/featured/presentation/screens/featured_screen.dart'
+    as _i16;
+import 'package:gaming_library_assessment_flutter/features/auth/presentation/screens/auth_screen.dart'
     as _i2;
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/browse/presentation/screens/browse_screen.dart'
     as _i3;
-import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/image_page_view.dart'
-    as _i6;
-import 'package:gaming_library_assessment_flutter/features/games/presentation/screens/games_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/featured/presentation/screens/featured_screen.dart'
     as _i4;
-import 'package:gaming_library_assessment_flutter/features/home/presentation/screens/home_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/game_detail_screen.dart'
     as _i5;
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/onboarding_screen.dart'
-    as _i7;
-import 'package:gaming_library_assessment_flutter/features/settings/presentation/screens/settings_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/screens/image_page_view.dart'
     as _i8;
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/task_detail_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/games/presentation/screens/games_screen.dart'
+    as _i6;
+import 'package:gaming_library_assessment_flutter/features/home/presentation/screens/home_screen.dart'
+    as _i7;
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/onboarding_screen.dart'
     as _i9;
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_game_detail_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/settings/presentation/screens/settings_screen.dart'
     as _i10;
-import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_screen.dart'
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/task_detail_screen.dart'
     as _i11;
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_game_detail_screen.dart'
+    as _i12;
+import 'package:gaming_library_assessment_flutter/features/tracker/presentation/screens/tracker_screen.dart'
+    as _i13;
+import 'package:gaming_library_assessment_flutter/widgets/app_web_view.dart'
+    as _i1;
 
 /// generated route for
-/// [_i1.BrowseScreen]
-class BrowseRoute extends _i12.PageRouteInfo<void> {
-  const BrowseRoute({List<_i12.PageRouteInfo>? children})
+/// [_i1.AppWebView]
+class AppWebViewRoute extends _i14.PageRouteInfo<AppWebViewRouteArgs> {
+  AppWebViewRoute({
+    _i15.Key? key,
+    required Uri url,
+    List<_i14.PageRouteInfo>? children,
+  }) : super(
+         AppWebViewRoute.name,
+         args: AppWebViewRouteArgs(key: key, url: url),
+         initialChildren: children,
+       );
+
+  static const String name = 'AppWebViewRoute';
+
+  static _i14.PageInfo page = _i14.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AppWebViewRouteArgs>();
+      return _i1.AppWebView(key: args.key, url: args.url);
+    },
+  );
+}
+
+class AppWebViewRouteArgs {
+  const AppWebViewRouteArgs({this.key, required this.url});
+
+  final _i15.Key? key;
+
+  final Uri url;
+
+  @override
+  String toString() {
+    return 'AppWebViewRouteArgs{key: $key, url: $url}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AppWebViewRouteArgs) return false;
+    return key == other.key && url == other.url;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ url.hashCode;
+}
+
+/// generated route for
+/// [_i2.AuthScreen]
+class AuthRoute extends _i14.PageRouteInfo<void> {
+  const AuthRoute({List<_i14.PageRouteInfo>? children})
+    : super(AuthRoute.name, initialChildren: children);
+
+  static const String name = 'AuthRoute';
+
+  static _i14.PageInfo page = _i14.PageInfo(
+    name,
+    builder: (data) {
+      return const _i2.AuthScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [_i3.BrowseScreen]
+class BrowseRoute extends _i14.PageRouteInfo<void> {
+  const BrowseRoute({List<_i14.PageRouteInfo>? children})
     : super(BrowseRoute.name, initialChildren: children);
 
   static const String name = 'BrowseRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i1.BrowseScreen();
+      return const _i3.BrowseScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i2.FeaturedScreen]
-class FeaturedRoute extends _i12.PageRouteInfo<void> {
-  const FeaturedRoute({List<_i12.PageRouteInfo>? children})
+/// [_i4.FeaturedScreen]
+class FeaturedRoute extends _i14.PageRouteInfo<void> {
+  const FeaturedRoute({List<_i14.PageRouteInfo>? children})
     : super(FeaturedRoute.name, initialChildren: children);
 
   static const String name = 'FeaturedRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i2.FeaturedScreen();
+      return const _i4.FeaturedScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i3.GameDetailScreen]
-class GameDetailRoute extends _i12.PageRouteInfo<GameDetailRouteArgs> {
+/// [_i5.GameDetailScreen]
+class GameDetailRoute extends _i14.PageRouteInfo<GameDetailRouteArgs> {
   GameDetailRoute({
-    _i13.Key? key,
+    _i15.Key? key,
     (int, String, String?)? gameExtra,
-    List<_i12.PageRouteInfo>? children,
+    List<_i14.PageRouteInfo>? children,
   }) : super(
          GameDetailRoute.name,
          args: GameDetailRouteArgs(key: key, gameExtra: gameExtra),
@@ -85,13 +152,13 @@ class GameDetailRoute extends _i12.PageRouteInfo<GameDetailRouteArgs> {
 
   static const String name = 'GameDetailRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GameDetailRouteArgs>(
         orElse: () => const GameDetailRouteArgs(),
       );
-      return _i3.GameDetailScreen(key: args.key, gameExtra: args.gameExtra);
+      return _i5.GameDetailScreen(key: args.key, gameExtra: args.gameExtra);
     },
   );
 }
@@ -99,7 +166,7 @@ class GameDetailRoute extends _i12.PageRouteInfo<GameDetailRouteArgs> {
 class GameDetailRouteArgs {
   const GameDetailRouteArgs({this.key, this.gameExtra});
 
-  final _i13.Key? key;
+  final _i15.Key? key;
 
   final (int, String, String?)? gameExtra;
 
@@ -120,44 +187,44 @@ class GameDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i4.GamesScreen]
-class GamesRoute extends _i12.PageRouteInfo<void> {
-  const GamesRoute({List<_i12.PageRouteInfo>? children})
+/// [_i6.GamesScreen]
+class GamesRoute extends _i14.PageRouteInfo<void> {
+  const GamesRoute({List<_i14.PageRouteInfo>? children})
     : super(GamesRoute.name, initialChildren: children);
 
   static const String name = 'GamesRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i4.GamesScreen();
+      return const _i6.GamesScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i5.HomeScreen]
-class HomeRoute extends _i12.PageRouteInfo<void> {
-  const HomeRoute({List<_i12.PageRouteInfo>? children})
+/// [_i7.HomeScreen]
+class HomeRoute extends _i14.PageRouteInfo<void> {
+  const HomeRoute({List<_i14.PageRouteInfo>? children})
     : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i5.HomeScreen();
+      return const _i7.HomeScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i6.ImagePageView]
-class ImageRouteView extends _i12.PageRouteInfo<ImageRouteViewArgs> {
+/// [_i8.ImagePageView]
+class ImageRouteView extends _i14.PageRouteInfo<ImageRouteViewArgs> {
   ImageRouteView({
-    _i13.Key? key,
+    _i15.Key? key,
     required (List<String?>, int) pageViewInfo,
-    List<_i12.PageRouteInfo>? children,
+    List<_i14.PageRouteInfo>? children,
   }) : super(
          ImageRouteView.name,
          args: ImageRouteViewArgs(key: key, pageViewInfo: pageViewInfo),
@@ -166,11 +233,11 @@ class ImageRouteView extends _i12.PageRouteInfo<ImageRouteViewArgs> {
 
   static const String name = 'ImageRouteView';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ImageRouteViewArgs>();
-      return _i6.ImagePageView(key: args.key, pageViewInfo: args.pageViewInfo);
+      return _i8.ImagePageView(key: args.key, pageViewInfo: args.pageViewInfo);
     },
   );
 }
@@ -178,7 +245,7 @@ class ImageRouteView extends _i12.PageRouteInfo<ImageRouteViewArgs> {
 class ImageRouteViewArgs {
   const ImageRouteViewArgs({this.key, required this.pageViewInfo});
 
-  final _i13.Key? key;
+  final _i15.Key? key;
 
   final (List<String?>, int) pageViewInfo;
 
@@ -199,45 +266,45 @@ class ImageRouteViewArgs {
 }
 
 /// generated route for
-/// [_i7.OnboardingScreen]
-class OnboardingRoute extends _i12.PageRouteInfo<void> {
-  const OnboardingRoute({List<_i12.PageRouteInfo>? children})
+/// [_i9.OnboardingScreen]
+class OnboardingRoute extends _i14.PageRouteInfo<void> {
+  const OnboardingRoute({List<_i14.PageRouteInfo>? children})
     : super(OnboardingRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i7.OnboardingScreen();
+      return const _i9.OnboardingScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i8.SettingsScreen]
-class SettingsRoute extends _i12.PageRouteInfo<void> {
-  const SettingsRoute({List<_i12.PageRouteInfo>? children})
+/// [_i10.SettingsScreen]
+class SettingsRoute extends _i14.PageRouteInfo<void> {
+  const SettingsRoute({List<_i14.PageRouteInfo>? children})
     : super(SettingsRoute.name, initialChildren: children);
 
   static const String name = 'SettingsRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i8.SettingsScreen();
+      return const _i10.SettingsScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i9.TaskDetailScreen]
-class TaskDetailRoute extends _i12.PageRouteInfo<TaskDetailRouteArgs> {
+/// [_i11.TaskDetailScreen]
+class TaskDetailRoute extends _i14.PageRouteInfo<TaskDetailRouteArgs> {
   TaskDetailRoute({
     int? taskId,
-    _i14.TrackerTaskEntity? task,
-    _i13.Key? key,
-    List<_i12.PageRouteInfo>? children,
+    _i16.TrackerTaskEntity? task,
+    _i15.Key? key,
+    List<_i14.PageRouteInfo>? children,
   }) : super(
          TaskDetailRoute.name,
          args: TaskDetailRouteArgs(taskId: taskId, task: task, key: key),
@@ -246,13 +313,13 @@ class TaskDetailRoute extends _i12.PageRouteInfo<TaskDetailRouteArgs> {
 
   static const String name = 'TaskDetailRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TaskDetailRouteArgs>(
         orElse: () => const TaskDetailRouteArgs(),
       );
-      return _i9.TaskDetailScreen(
+      return _i11.TaskDetailScreen(
         taskId: args.taskId,
         task: args.task,
         key: args.key,
@@ -266,9 +333,9 @@ class TaskDetailRouteArgs {
 
   final int? taskId;
 
-  final _i14.TrackerTaskEntity? task;
+  final _i16.TrackerTaskEntity? task;
 
-  final _i13.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {
@@ -287,13 +354,13 @@ class TaskDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i10.TrackerGameDetailScreen]
+/// [_i12.TrackerGameDetailScreen]
 class TrackerGameDetailRoute
-    extends _i12.PageRouteInfo<TrackerGameDetailRouteArgs> {
+    extends _i14.PageRouteInfo<TrackerGameDetailRouteArgs> {
   TrackerGameDetailRoute({
-    required _i15.TrackerSavedGameEntity game,
-    _i13.Key? key,
-    List<_i12.PageRouteInfo>? children,
+    required _i17.TrackerSavedGameEntity game,
+    _i15.Key? key,
+    List<_i14.PageRouteInfo>? children,
   }) : super(
          TrackerGameDetailRoute.name,
          args: TrackerGameDetailRouteArgs(game: game, key: key),
@@ -302,11 +369,11 @@ class TrackerGameDetailRoute
 
   static const String name = 'TrackerGameDetailRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TrackerGameDetailRouteArgs>();
-      return _i10.TrackerGameDetailScreen(game: args.game, key: args.key);
+      return _i12.TrackerGameDetailScreen(game: args.game, key: args.key);
     },
   );
 }
@@ -314,9 +381,9 @@ class TrackerGameDetailRoute
 class TrackerGameDetailRouteArgs {
   const TrackerGameDetailRouteArgs({required this.game, this.key});
 
-  final _i15.TrackerSavedGameEntity game;
+  final _i17.TrackerSavedGameEntity game;
 
-  final _i13.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {
@@ -335,9 +402,9 @@ class TrackerGameDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i11.TrackerScreen]
-class TrackerRoute extends _i12.PageRouteInfo<TrackerRouteArgs> {
-  TrackerRoute({_i13.Key? key, List<_i12.PageRouteInfo>? children})
+/// [_i13.TrackerScreen]
+class TrackerRoute extends _i14.PageRouteInfo<TrackerRouteArgs> {
+  TrackerRoute({_i15.Key? key, List<_i14.PageRouteInfo>? children})
     : super(
         TrackerRoute.name,
         args: TrackerRouteArgs(key: key),
@@ -346,13 +413,13 @@ class TrackerRoute extends _i12.PageRouteInfo<TrackerRouteArgs> {
 
   static const String name = 'TrackerRoute';
 
-  static _i12.PageInfo page = _i12.PageInfo(
+  static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TrackerRouteArgs>(
         orElse: () => const TrackerRouteArgs(),
       );
-      return _i11.TrackerScreen(key: args.key);
+      return _i13.TrackerScreen(key: args.key);
     },
   );
 }
@@ -360,7 +427,7 @@ class TrackerRoute extends _i12.PageRouteInfo<TrackerRouteArgs> {
 class TrackerRouteArgs {
   const TrackerRouteArgs({this.key});
 
-  final _i13.Key? key;
+  final _i15.Key? key;
 
   @override
   String toString() {

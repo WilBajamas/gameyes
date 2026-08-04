@@ -74,6 +74,9 @@ dependencies:
   # Flutter animation
   flutter_animate: ^4.5.2
 
+  # WebView
+  webview_flutter: ^4.14.1
+
   # Slidable
   flutter_slidable: ^4.0.3
 

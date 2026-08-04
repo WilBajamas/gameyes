@@ -37,7 +37,7 @@ class _WelcomeView extends StatelessWidget {
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
         if (state.status == WelcomeStatus.finished) {
-          context.replaceRoute(HomeRoute());
+          context.replaceRoute(const AuthRoute());
         }
       },
       child: BlocBuilder<WelcomeCubit, WelcomeState>(
