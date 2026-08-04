@@ -18,6 +18,25 @@
   "welcome_countdown_hours": "Hrs",
   "welcome_countdown_minutes": "Min",
   "get_started": "Get started",
+  "auth_title": "Sign in",
+  "auth_lead": "Sign in to keep your library and release tracking in sync.",
+  "continue_with_discord": "Continue with Discord",
+  "continue_with_google": "Continue with Google",
+  "auth_signing_in": "Signing in with {provider}",
+  "@auth_signing_in": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "auth_sign_in_error": "We couldn't sign you in. Please try again.",
+  "auth_scope_reassurance": "Just sign in for now — we'll help you set things up next.",
+  "auth_legal_prefix": "By continuing, you agree to our ",
+  "auth_terms": "Terms",
+  "auth_legal_middle": " and acknowledge our ",
+  "auth_privacy": "Privacy Policy",
+  "auth_legal_suffix": ".",
   "playing": "Playing",
   "featured": "Featured",
   "games": "Games",

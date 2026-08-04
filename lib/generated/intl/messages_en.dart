@@ -20,17 +20,19 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(percentage) => "${percentage}% completed";
+  static String m0(provider) => "Signing in with ${provider}";
 
-  static String m1(hours) => "${hours}h";
+  static String m1(percentage) => "${percentage}% completed";
 
-  static String m2(logged, average) => "${logged}h logged of ${average}h";
+  static String m2(hours) => "${hours}h";
 
-  static String m3(count) => "+ ${count} more playing";
+  static String m3(logged, average) => "${logged}h logged of ${average}h";
 
-  static String m4(hours) => "${hours}h played";
+  static String m4(count) => "+ ${count} more playing";
 
-  static String m5(stepName) =>
+  static String m5(hours) => "${hours}h played";
+
+  static String m6(stepName) =>
       "Are you sure you want to remove step ${stepName}? This action cannot be undone";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -53,6 +55,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "app_title": MessageLookupByLibrary.simpleMessage(
       "Gaming Library Assessment",
     ),
+    "auth_lead": MessageLookupByLibrary.simpleMessage(
+      "Sign in to keep your library and release tracking in sync.",
+    ),
+    "auth_legal_middle": MessageLookupByLibrary.simpleMessage(
+      " and acknowledge our ",
+    ),
+    "auth_legal_prefix": MessageLookupByLibrary.simpleMessage(
+      "By continuing, you agree to our ",
+    ),
+    "auth_legal_suffix": MessageLookupByLibrary.simpleMessage("."),
+    "auth_privacy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+    "auth_scope_reassurance": MessageLookupByLibrary.simpleMessage(
+      "Just sign in for now — we\'ll help you set things up next.",
+    ),
+    "auth_sign_in_error": MessageLookupByLibrary.simpleMessage(
+      "We couldn\'t sign you in. Please try again.",
+    ),
+    "auth_signing_in": m0,
+    "auth_terms": MessageLookupByLibrary.simpleMessage("Terms"),
+    "auth_title": MessageLookupByLibrary.simpleMessage("Sign in"),
     "back": MessageLookupByLibrary.simpleMessage("Back"),
     "best_metacritic": MessageLookupByLibrary.simpleMessage("Best Metacritic"),
     "best_of_the_year": MessageLookupByLibrary.simpleMessage(
@@ -65,7 +87,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Let\'s complete your quick onboarding steps.",
     ),
     "completed": MessageLookupByLibrary.simpleMessage("Completed"),
-    "completed_percentage": m0,
+    "completed_percentage": m1,
+    "continue_with_discord": MessageLookupByLibrary.simpleMessage(
+      "Continue with Discord",
+    ),
+    "continue_with_google": MessageLookupByLibrary.simpleMessage(
+      "Continue with Google",
+    ),
     "critics_choice_title": MessageLookupByLibrary.simpleMessage(
       "Critics Choice Title",
     ),
@@ -110,7 +138,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Failed to skip genre preferences",
     ),
     "featured": MessageLookupByLibrary.simpleMessage("Featured"),
-    "featured_revamp": MessageLookupByLibrary.simpleMessage("Featured Revamp"),
     "featured_screen_title": MessageLookupByLibrary.simpleMessage(
       "Check out our featured lists of games, from most anticipated to the latest releases.",
     ),
@@ -123,10 +150,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "Search for your favourite games here",
     ),
     "genre": MessageLookupByLibrary.simpleMessage("Genre"),
+    "get_started": MessageLookupByLibrary.simpleMessage("Get started"),
     "group_task_created": MessageLookupByLibrary.simpleMessage(
       "Group task created",
     ),
-    "hours_abbreviation": m1,
+    "hours_abbreviation": m2,
     "improve": MessageLookupByLibrary.simpleMessage("Improve"),
     "inProgress": MessageLookupByLibrary.simpleMessage("In Progress"),
     "keep_it_short": MessageLookupByLibrary.simpleMessage("Keep it short"),
@@ -138,7 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_game_title_placeholder": MessageLookupByLibrary.simpleMessage(
       "Loading Game Title",
     ),
-    "logged_hours_of": m2,
+    "logged_hours_of": m3,
     "mark_button": MessageLookupByLibrary.simpleMessage("+ Mark"),
     "mark_playing_now": MessageLookupByLibrary.simpleMessage(
       "Mark what you\'re playing now",
@@ -150,7 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Metacritic score",
     ),
     "missed": MessageLookupByLibrary.simpleMessage("Missed"),
-    "more_playing": m3,
+    "more_playing": m4,
     "most_anticipated": MessageLookupByLibrary.simpleMessage(
       "Most Anticipated",
     ),
@@ -181,21 +209,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "now_playing": MessageLookupByLibrary.simpleMessage("Now Playing"),
     "ok": MessageLookupByLibrary.simpleMessage("Ok"),
     "onHold": MessageLookupByLibrary.simpleMessage("On Hold"),
-    "onboarding_description_one": MessageLookupByLibrary.simpleMessage(
-      "Stay informed of new game releases and news.",
-    ),
-    "onboarding_description_three": MessageLookupByLibrary.simpleMessage(
-      "Make a savelist of anticipated upcoming games.",
-    ),
-    "onboarding_description_two": MessageLookupByLibrary.simpleMessage(
-      "Find more information about your favourite games.",
-    ),
     "only_10_group_tasks_allowed": MessageLookupByLibrary.simpleMessage(
       "Only a maximum of 10 group tasks are allowed.",
     ),
     "ordering": MessageLookupByLibrary.simpleMessage("Ordering"),
     "platforms": MessageLookupByLibrary.simpleMessage("Platforms"),
-    "played_hours": m4,
+    "played_hours": m5,
+    "playing": MessageLookupByLibrary.simpleMessage("Playing"),
     "playtime": MessageLookupByLibrary.simpleMessage("Playtime"),
     "please_enter_value": MessageLookupByLibrary.simpleMessage(
       "Please enter a value",
@@ -217,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reminder": MessageLookupByLibrary.simpleMessage("Reminder"),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "remove_step": MessageLookupByLibrary.simpleMessage("Remove step"),
-    "remove_step_desc": m5,
+    "remove_step_desc": m6,
     "remove_step_failed": MessageLookupByLibrary.simpleMessage(
       "Failed removing step",
     ),
@@ -253,16 +273,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
     "total_games": MessageLookupByLibrary.simpleMessage("Total Games"),
     "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),
-    "welcome_to_gameyes": MessageLookupByLibrary.simpleMessage(
-      "Welcome to GameYes 🎮",
-    ),
-    "wishlist": MessageLookupByLibrary.simpleMessage("Wishlist"),
-    "wishlist_button": MessageLookupByLibrary.simpleMessage("+ Wishlist"),
-    "wishlist_upcoming_game": MessageLookupByLibrary.simpleMessage(
-      "Wishlist an upcoming game",
-    ),
-    "get_started": MessageLookupByLibrary.simpleMessage("Get started"),
-    "playing": MessageLookupByLibrary.simpleMessage("Playing"),
     "welcome_body_one": MessageLookupByLibrary.simpleMessage(
       "Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.",
     ),
@@ -270,13 +280,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Track what you are waiting on and see the countdown to every release you care about.",
     ),
     "welcome_chip_one": MessageLookupByLibrary.simpleMessage("Your library"),
-    "welcome_chip_two": MessageLookupByLibrary.simpleMessage("Wishlisted · PS5"),
+    "welcome_chip_two": MessageLookupByLibrary.simpleMessage(
+      "Wishlisted · PS5",
+    ),
     "welcome_countdown_days": MessageLookupByLibrary.simpleMessage("Days"),
     "welcome_countdown_hours": MessageLookupByLibrary.simpleMessage("Hrs"),
     "welcome_countdown_minutes": MessageLookupByLibrary.simpleMessage("Min"),
-    "welcome_countdown_title": MessageLookupByLibrary.simpleMessage("NEON VESPER"),
+    "welcome_countdown_title": MessageLookupByLibrary.simpleMessage(
+      "NEON VESPER",
+    ),
     "welcome_headline_one": MessageLookupByLibrary.simpleMessage(
-      "TRACK EVERY GAME YOU'VE EVER TOUCHED",
+      "TRACK EVERY GAME YOU\'VE EVER TOUCHED",
     ),
     "welcome_headline_two": MessageLookupByLibrary.simpleMessage(
       "AND KNOW WHAT DROPS NEXT",
@@ -287,5 +301,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome_stat_hours": MessageLookupByLibrary.simpleMessage("Hours"),
     "welcome_stat_playing": MessageLookupByLibrary.simpleMessage("Playing"),
     "welcome_stat_tracked": MessageLookupByLibrary.simpleMessage("Tracked"),
+    "welcome_to_gameyes": MessageLookupByLibrary.simpleMessage(
+      "Welcome to GameYes 🎮",
+    ),
+    "wishlist": MessageLookupByLibrary.simpleMessage("Wishlist"),
+    "wishlist_button": MessageLookupByLibrary.simpleMessage("+ Wishlist"),
+    "wishlist_upcoming_game": MessageLookupByLibrary.simpleMessage(
+      "Wishlist an upcoming game",
+    ),
   };
 }
