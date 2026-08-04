@@ -55,14 +55,9 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Gaming Library Assessment`
+  /// `QuestLoggd`
   String get app_title {
-    return Intl.message(
-      'Gaming Library Assessment',
-      name: 'app_title',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('QuestLoggd', name: 'app_title', desc: '', args: []);
   }
 
   /// `Next`

@@ -50,9 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "all_time_top_100": MessageLookupByLibrary.simpleMessage(
       "All time top 100",
     ),
-    "app_title": MessageLookupByLibrary.simpleMessage(
-      "Gaming Library Assessment",
-    ),
+    "app_title": MessageLookupByLibrary.simpleMessage("QuestLoggd"),
     "auth_lead": MessageLookupByLibrary.simpleMessage("登录以同步你的游戏库和发售追踪。"),
     "auth_legal_middle": MessageLookupByLibrary.simpleMessage("并知悉我们的"),
     "auth_legal_prefix": MessageLookupByLibrary.simpleMessage("继续即表示你同意我们的"),
