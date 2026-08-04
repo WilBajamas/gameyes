@@ -3,7 +3,11 @@ Feature: Welcome screens polish + global system UI convention (item 6.2)
 Run ID: welcome-screens-polish-20260804
 Run folder: .agents/runs/welcome-screens-polish-20260804/
 Started: 2026-08-04
-Current phase: TECH_LEAD
+Current phase: PHASE_3_HUMAN_GATE — awaiting human review of code-plan.md
+Phase 2 (Tech Lead): complete — tdd.md, task-brief.md, code-plan.md written.
+  Open questions: NONE. Testing mode: smoke. 7 files modified + 1 new test file.
+  All 5 design-gate items resolved with a decision + provisional value (see
+  tdd.md ## Design-gate decisions), not left open.
 Phase 1 (BA): complete — tech-ac.md (23 criteria, [W1-6.2R.1]-[W1-6.2R.23]),
   ambiguities.md CRITICAL: NONE, 9 assumptions, 5 items flagged for the Phase 3
   human design gate with provisional values (padding 24px, heights 240/216,
