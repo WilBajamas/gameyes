@@ -1,0 +1,502 @@
+# Handover — QuestLoggd
+
+Written 2026-07-29. Last updated 2026-08-03: items 2, 4, 5 and 6 are complete.
+Item 6 was merged to `develop` via PR #20. Its QA retry was explicitly waived by
+the human after the focused analyzer/test-harness correction.
+
+---
+
+## Current update — 2026-08-03
+
+The older item-6 status notes below are superseded by this update.
+
+- `welcome-screens-20260802` is `COMPLETE` and merged to `develop` via PR #20.
+- Welcome screens were committed as `ab62ef2` (`feat: add welcome screens`), then
+  the focused analyzer/test-harness correction was committed as `dc7c768`.
+- The working tree was clean when the run was closed. The feature branch was
+  subsequently pushed and merged through PR #20.
+- The human approved the current refactor and explicitly waived the QA retry after
+  QA/tooling commands timed out without diagnostics. Treat the run as passed by
+  human decision, not as a clean automated QA result.
+- The welcome widget test now pumps `OnboardingScreen` directly with mocked
+  preferences, avoiding `OnboardingGuard`; `analysis_options.yaml` excludes all
+  generated Dart outputs.
+- Next work: manually verify the two welcome screens when convenient. Week 1
+  item 7 (auth screen) is the recommended next feature.
+
+### Next-session prompt
+
+```text
+Resume QuestLoggd after the completed welcome-screens run.
+
+First read:
+- .agents/handover.md
+- .agents/runs/welcome-screens-20260802/orchestrator-state.md
+
+Use only skills under .codex/skills/ (never .agents/skills/).
+
+Current state:
+- Branch: feature/welcome-screens
+- Welcome screens run: COMPLETE
+- Commits: ab62ef2 (welcome screens), dc7c768 (focused analyzer/test correction)
+- The run passed by explicit human QA-waiver after Flutter analyze/test commands
+  timed out without diagnostics. Do not claim automated QA is green.
+- Preserve all existing onboarding/widget refactors. Do not reset, revert, or
+  reformat user changes.
+
+If continuing delivery, first inspect git status and let the human decide whether
+to push/open a PR. If starting new work, begin Week 1 item 7 (auth screen) through
+the existing orchestration pipeline; do not reuse or overwrite the item-6 run.
+```
+
+---
+
+## What this project is now
+
+The app is being rebuilt as **QuestLoggd**, a game library and backlog tracker.
+The product brief, design conventions and per-screen specs live in
+`.agents/references/`. Read `questloggd-design-product-brief.md` first, then
+`roadmap-deferred.md` — the second one records every decision consciously put
+aside and is the fastest way to understand why the plan looks the way it does.
+
+**Current phase: week 1 foundations.** The checklist is
+`.agents/week-1-task-briefs.md`, which is **ephemeral — delete it when week 1 is
+done.** Target is a TestFlight-equivalent Android beta around week 4.
+
+**Hard constraints, both recorded in `project-conventions.md`:**
+- **Android only.** Windows machine, no Mac, no iPhone. iOS cannot be built or
+  verified. Agents must never write acceptance criteria that require iOS.
+- **Account required**, one-tap social. Discord and Google. No Apple (iOS-gated),
+  no Twitch (deferred).
+
+---
+
+## Where the pipeline stands
+
+`/orchestrate` → BA → Tech Lead → **human gate (now presents `code-plan.md`,
+see below)** → Dev → **human code review gate** → QA.
+
+**Five runs complete (pending manual checks where relevant).**
+
+1. **2026-07-29/30 — tracker sort persistence.** PASS pending manual, 0
+   escalations. Verified on device, merged to `develop`.
+2. **2026-07-30/31 — build flavours.** PASS pending manual, 1 escalation.
+   Merged to `develop`.
+3. **2026-07-31 — design token layer (week 1 item 4).** PASS pending manual.
+   Run folder `design-token-layer-20260731` (since removed — run complete,
+   evidence retired). Merged to `develop` via **PR #17** on 2026-08-02.
+4. **2026-07-31 — Supabase client + DI (week 1 item 2).** PASS pending manual,
+   manually verified on device 2026-08-01. Run folder `supabase-client-di-20260731`
+   (since removed — run complete, evidence retired). Merged to `develop` via
+   **PR #16**.
+5. **2026-08-02 — auth domain and data layer (week 1 item 5).** Stalled mid-review
+   for part of this session (see git history around commits `e0c9e39`–`b35278c`
+   for the full story), then resolved: human review at the Phase 4B gate
+   extracted the user-mapping code into its own file and settled the
+   comment/formatting deviations, baselines re-verified clean, QA ran clean —
+   PASS, no manual checks outstanding, Android debug build verified directly
+   rather than left to a human. Run folder `auth-domain-data-layer-20260802`.
+   Merged to `develop` via **PR #19**.
+
+**One run is active.**
+
+6. **2026-08-02/03 — welcome screens (week 1 item 6).** Run folder
+   `welcome-screens-20260802`. The BA pass is complete, all four critical
+   ambiguities were resolved by the human, and the Tech Lead produced
+   `tech-ac.md`, `ambiguities.md`, `tdd.md`, `task-brief.md`, and `code-plan.md`.
+   `tdd.md ## Open questions` is `None`. The run is paused at
+   **Phase 3 — HUMAN_GATE**, waiting for the human to review the code plan and
+   choose **Approved**, **Revise**, or **Abort**. The Dev Agent has not run,
+   `Dev commit` is `NONE`, and there is no `diff-summary.md` or `qa-report.md`
+   for this run yet.
+
+**Items 2, 4 and 5 are done and merged.**
+
+**Proven across these runs:** the Phase 4B code review gate (twice now caught
+real issues no agent raised — a design issue in run 2, and a build_runner
+over-generation problem in run 4, see below), the escalation write/route/clear
+lifecycle, the BA revise loop, and QA's FAIL verdict.
+
+**Still unproven:** the QA→Dev retry route and the two-cycle cap. QA has never
+failed for a reason that re-running the Dev Agent would fix. Also unproven as
+of this writing: the new two-pass Dev Agent commit flow (see below) — item 5
+predates it and was grandfathered under the old rule, so no run has exercised
+it end-to-end yet.
+
+**Repo state — verified 2026-08-03:**
+
+- `develop` has both the design-token-layer and Supabase client/DI work
+  (PR #16, PR #17)
+- `develop` now also has item 5 (auth domain/data layer, PR #19).
+- Current branch is `feature/welcome-screens` at
+  `fb70662e173d38f115f732e9eb35cfc982405f35`, exactly even with `develop`.
+  The working tree has no item-6 implementation changes. This clean state is
+  expected because the run stopped before the Dev phase.
+- Flutter pinned to **3.41.4** via `.fvmrc`; system Flutter matches
+- Two build flavours, `dev` and `prod`. App IDs `com.questloggd.app` and
+  `com.questloggd.app.dev`; labels `QuestLoggd` and `QuestLoggd Dev`
+- `dev.env` exists with real Supabase dev values. `prod.env` does not — the prod
+  Supabase project is deferred, so prod resolves placeholders. **Manually
+  verified 2026-08-01: dev flavour reaches Supabase, prod flavour correctly
+  reports unreachable, app reaches first frame either way.**
+
+---
+
+## Item 5 — resolved 2026-08-02
+
+Was stalled at the Phase 4B human code review gate for part of this session —
+a manual out-of-pipeline commit (`e0c9e39`) had reformatted two files with a
+newer, disagreeing `dart format` and shortened three review comments in a way
+that didn't hold up against `project-conventions.md`'s comment rule. Resolved
+in conversation: the reformatting and two of the three comment shortenings
+were reverted to keep the branch on one style; the `_userFrom` mapping method
+was pulled out of `auth_repository_impl.dart` into its own file,
+`lib/features/auth/data/mappers/authenticated_user_mapper.dart`, as a Dart
+extension on Supabase's `User` type, per human request at the review gate.
+`orchestrator-state.md` was updated by hand to record the Phase 4B approval
+and deviation sign-offs (it does not update itself — see the standing rule
+under "What the pipeline does now" below). QA then ran clean: PASS, 0
+escalations, no manual checklist left over — the Android debug build was
+verified directly (`flutter build apk --debug --flavor dev`) rather than
+deferred to a human. Full detail in `qa-report.md` under the run folder.
+Merged to `develop` via **PR #19**.
+
+---
+
+## Pipeline process changes made 2026-08-02 (apply from the next Dev Agent
+## invocation onward — item 5 predates both and was grandfathered)
+
+**1. Tech Lead now also writes `code-plan.md`.** A Dart code skeleton
+(signatures, class/enum/freezed shapes, bodies sketched only where the logic
+needs a reviewer's eye) for every file in the task brief's allowlist. This is
+now what gets presented in full at the Phase 3 human gate, replacing the
+prose `## Implementation plan` — the human asked for something they could
+review as code rather than a wall of step-by-step text. `task-brief.md`
+itself is unchanged and stays the Dev Agent's actual instructions.
+Documented in `.claude/skills/tech-lead-agent/SKILL.md` and
+`.claude/skills/orchestrate/SKILL.md`.
+
+**2. The Dev Agent no longer commits on its first pass.** It writes code,
+tests, and `diff-summary.md` (with `Commit: PENDING`), then halts with the
+change sitting uncommitted in the working tree. The Phase 4B gate now reviews
+`git status --short` / `git diff` against the **working tree**, not a commit
+range. Only after the human approves does the orchestrator re-spawn the Dev
+Agent a second time with an explicit "commit now" instruction, which is the
+only point at which it runs the Commit protocol. Rationale: committing before
+review meant the human was reading history instead of the actual thing being
+decided on. Documented in the same two skill files.
+
+**Both changes apply going forward. Item 5 was already committed under the
+old single-pass rule before this decision was made** — the human explicitly
+chose to leave `3c51fb0` as-is rather than uncommit and redo the review, so
+this run finishes under the old rule (see "Item 5 — current state" above).
+
+---
+
+## Old run folders were deleted 2026-08-02
+
+`build-flavours-20260730`, `design-token-layer-20260731`,
+`supabase-client-di-20260731`, and `tracker-sort-persistence-20260729` were
+all `COMPLETE` with no open escalations, so they were removed to keep
+`.agents/runs/` to just the active run. References to them in this file and
+in `week-1-task-briefs.md` were updated to say "evidence retired" rather than
+pointing at dead paths. The retained run folders are
+`auth-domain-data-layer-20260802/` and the active
+`welcome-screens-20260802/` run.
+
+---
+
+**Where things live:**
+
+- `.claude/skills/` — the five skills. Invocable as slash commands.
+- `.agents/references/` — product brief, design conventions, per-screen specs,
+  project conventions, deferred roadmap
+- `.agents/runs/<run-id>/` — one folder per pipeline run
+- **Both `.agents/` and `.claude/` are git-ignored.** Your entire product
+  specification is therefore outside version control and unbacked by git. Worth
+  moving `references/` into a tracked folder while it is still cheap.
+
+---
+
+## New this round: comment and naming conventions (added 2026-08-01)
+
+While building item 2 (Supabase), a round of direct back-and-forth review
+produced two new sections in `project-conventions.md`, applied retroactively to
+both the Supabase files and the design-token files:
+
+- **Comments — plain English only.** No jargon, no restating what the code
+  already says, no framework/pattern names unless unavoidable. Refrain from
+  obvious comments entirely — an enum with self-explanatory values or a class
+  whose method names already say what it does needs no comment. Developers can
+  read the implementation.
+- **Naming — simple English only.** Class, variable, constant and string names
+  read as plain English. No invented compound jargon terms
+  (`ISupabaseHealthProbe`), no placeholder-looking values
+  (`__gameyes_connectivity_probe__`).
+
+**Update:** folded into `.claude/skills/dev-agent/SKILL.md` as of 2026-08-02
+(a `## Comments and naming` section, wired into step 2 and reinforced in
+"What NOT to do"). Item 5 was built under the updated skill and needed no
+retroactive comment/naming pass from the Dev Agent itself — see "Item 5 —
+current state" above for the one place a **human**, not the Dev Agent, later
+shortened three comments outside the pipeline.
+
+Also decided in the same pass: prefer a **concrete class over a single-
+implementation interface** unless a second implementation is actually coming
+(dropped `ISupabaseHealthProbe`, kept `SupabasePing` concrete) — Mockito can
+mock concrete classes directly as long as they are not `final`/`sealed`/`base`,
+so the interface bought nothing.
+
+---
+
+## Two pipeline defects found in run 2, not yet fixed
+
+**QA has no verdict for "the commit is fine, the environment isn't."** Run 2
+failed because a git-tracked template, `dev.env.example`, held a real Supabase
+credential in the working tree — never committed, but one `git add -A` from it.
+The Dev Agent could not have caused or fixed that. The skill treats FAIL as "code
+is wrong, Dev retries", so the orchestrator recorded it as an escalation and left
+`QA cycles used` at 0 instead. Correct outcome, but not what the skill says. It
+needs a fifth verdict — BLOCKED, or similar.
+
+**Line-ending churn is handled inconsistently.** `build_runner` rewrites ~17
+tracked generated files with LF endings and an empty content diff. Some Dev
+Agent runs restore them with `git checkout --`, others leave them dirty. The
+skill is silent, so it is coin-flip behaviour. Pick one and write it down. Week
+1 item 11 is meant to fix this properly with `.gitattributes`.
+
+---
+
+## New gotcha found in run 4 (item 2, Supabase): build_runner can genuinely corrupt unrelated generated files, not just churn line endings
+
+This is **distinct from the line-ending gotcha above** and more serious. Twice
+during item 2's work, `dart run build_runner build --delete-conflicting-outputs`
+rewrote ~17–35 unrelated generated files project-wide with genuinely degraded
+formatting — 700+ character single lines, real content change, not an empty
+diff. Root cause not fully pinned down (freezed version was unchanged in
+`pubspec.lock` both times), but the symptom is reliable.
+
+**How to tell the two apart:** run `git diff --stat` on the touched files.
+
+- Harmless line-ending noise → **empty diff, only mode/eol markers change.**
+  Safe to `git checkout --` at will.
+- This new variant → **real insertions/deletions show up in the stat**, even
+  though the file's actual meaning didn't change. `dart format` on the file
+  reports "0 changed" because it respects the file's own `// dart format off`
+  marker, so it can't be fixed retroactively — the only fix is reverting to the
+  last known-good committed version.
+
+**Fix used both times:** at the Phase 4B gate, reject with "revise" and instruct
+the Dev Agent to `git checkout <last-good-ref> -- <path>` on every generated
+file not genuinely needed by the task, keeping only what the task actually
+touches (e.g. `service_locator.config.dart` plus new/renamed test mocks),
+re-verify baselines, and create a **new** commit — never amend. Reduced an
+86-file/+13434/-17378 diffstat down to 16 files both times this happened.
+
+---
+
+## Gotchas that will bite
+
+### 1. Localisation cannot be generated by an agent
+
+The `S` class in `lib/generated/l10n.dart` comes from the **Flutter Intl IDE
+plugin**. There is no CLI for it — `intl_utils` is not a dependency, and
+`flutter gen-l10n` belongs to a different system that was removed from this
+project on 2026-07-29.
+
+So an agent that adds a user-facing string **cannot make the code compile.** The
+skills tell it to add the key to both `.arb` files, use `S.current.[key]`, then
+stop and flag it rather than hand-write the accessor. A human must open the IDE
+and let the plugin regenerate.
+
+**Pick features that need few or no new strings where possible** — items 5 and
+2 both avoided this deliberately.
+
+Pending cleanup: `lib/generated/l10n.dart` and `messages_*.dart` still carry a
+dead `featured_revamp` getter. Harmless. It disappears on the next IDE regen.
+
+### 2. Code generation is mandatory and easy to get wrong
+
+freezed, json_serializable, retrofit, injectable, isar, auto_route, and mockito
+all generate code. An annotated file **will not analyze clean until the generator
+has run** — that is expected state, not a failure.
+
+```
+dart run build_runner build --delete-conflicting-outputs
+```
+
+Test mocks (`@GenerateMocks`) need this too, so test files will not compile until
+build_runner has run over them.
+
+**Never include generated files in a bulk rename.** This caused a real bug on
+2026-07-29: a `sed` pass across `lib/**/*.dart` renamed a key inside the
+generated l10n lookup table, producing a duplicate map key. Valid Dart, compiled
+fine, and the later entry silently won — so a tab label rendered the wrong
+string. `build_runner` repairs its own output, but the IDE-generated l10n files
+cannot be regenerated from the CLI, so that damage had to be undone with
+`git checkout`. The dev-agent skill now has a rename guard; do not work around it.
+
+**Also see "New gotcha found in run 4" above** — a second, more serious form of
+generated-file damage beyond line-ending churn.
+
+### 3. The test suite is not green
+
+**11 tests fail on a clean checkout of `develop`** and always have. Verified
+against a pristine worktree at HEAD — they are not caused by recent work. The
+pass count has since risen as tracker, theme and Supabase tests were added; the
+failing eleven are unchanged.
+
+- `test/api/games/`, `test/api/game_detail/` — type-cast errors in fixtures
+- `test/cubit/games/`, `test/cubit/game_detail/` — related
+- `test/repository/tracker/`
+- `test/widget_test.dart` — the default Flutter counter template test
+
+QA scopes its test run to files in the task-brief allowlist, so these should not
+block a run. But **"all tests pass" is not this repo's baseline** — do not read
+a red suite as evidence the pipeline broke something. Phase 0 records a fresh
+test baseline (`Test baseline` / `Pre-existing test failures`) at the start of
+every run; the Tech Lead quotes it verbatim rather than asserting green, and
+both Dev and QA agents check a failure against that baseline before treating it
+as theirs.
+
+Worth fixing separately. Not part of a pipeline test run.
+
+### 4. fvm vs. bare commands — unresolved
+
+The project pins Flutter 3.41.4 via `.fvmrc`, and `.vscode/tasks.json` uses
+`fvm ...` for everything. **The skills still say bare `dart` / `flutter`.**
+
+Right now this is harmless — the system Flutter is also 3.41.4. It stops being
+harmless the moment they diverge, at which point an agent regenerates code with
+the wrong SDK.
+
+Complication: `fvm` is on the PATH in PowerShell but **not** in Git Bash. So
+prefixing the skills with `fvm` also pins agents to one shell.
+
+Options: put `fvm` on the Bash PATH and prefix everything; or leave bare and have
+the agent verify `flutter --version` matches `.fvmrc` before generating.
+Undecided.
+
+### 5. Test folder layout
+
+`testing-conventions.md` says tests are grouped **by layer** —
+`test/cubit/[feature]/`, `test/use_case/[feature]/`, `test/repository/[feature]/`,
+`test/api/[feature]/`, `test/widget/[feature]/`. Never mirrored from `lib/`.
+
+Known debt: `test/features/featured/` violates this. It came from the original
+featured_revamp build and was moved, not restructured. Do not copy that shape.
+Only unit and widget tests — **never golden tests.**
+
+### 6. Line endings
+
+The repo is `core.autocrlf=true`. Tools that rewrite files wholesale (`sed -i`)
+flip CRLF to LF on every file they touch, even ones they do not change, which
+turns `git status` into hundreds of phantom modifications. `git diff` shows the
+truth — an empty diff means content is unchanged and the file can be restored
+with `git checkout --`. See also the "New gotcha found in run 4" section above
+for the more dangerous, non-empty-diff variant.
+
+### 7. `injectable`'s `@preResolve` factory is structurally, not just conventionally, a singleton
+
+Confirmed by reading `injectable`'s actual package source
+(`get_it_helper.dart`): a `@preResolve` async `@module` provider is called
+exactly once, then `get_it` re-registers it via `factory(() => instance, ...)`.
+So every later resolve of that type returns the same instance, even though the
+registration is technically a "factory". This is what guarantees
+`SupabaseClient` and `SharedPreferences` are each a true single instance across
+the whole app, without needing `@singleton` or `@lazySingleton`.
+
+---
+
+## What the pipeline does now
+
+Worth knowing before you watch it run:
+
+- **Phase 0** refuses to start on a dirty tree, creates `feature/<slug>`, and
+  records an analyzer baseline and a **test baseline** (see gotcha #3 above).
+- **Artifacts** live in `.agents/runs/<run-id>/` — one folder per run. Nothing
+  lands in the repo root any more.
+- **There are two mandatory human gates.** Phase 3 approves the *task brief* — no
+  code is written before you clear it. Phase 4B approves the *code* — no QA cycle
+  runs before you clear that one. Phase 4B presents a diffstat and the
+  `git diff` command rather than pasting the diff, and it folds the Dev Agent's
+  deviation sign-off into itself so you are not stopped twice for one change.
+  Sending code back at 4B does not consume a QA cycle, and you may do it as many
+  times as you like. **Always check the diffstat file count before approving** —
+  a much larger-than-expected file count is the first sign of the build_runner
+  over-generation gotcha (see above).
+- **The Dev agent makes exactly one commit**, checks its own file list against
+  the allowlist first, and never pushes. Commit messages are short, with **no AI
+  signature**.
+- **QA checks scope against `git diff`**, not against the Dev agent's self-report.
+  It has four verdicts: PASS (must cite file/line or test as evidence), FAIL,
+  PARTIAL, and **MANUAL** for anything that needs the app running — visual
+  states, shimmer, scroll position, offline behaviour. MANUAL does not fail the
+  run but produces a checklist you must work through.
+- **Escalations** are a live signal, not a log. They carry a `Run:` stamp and are
+  cleared by the orchestrator when resolved, with the resolution recorded under
+  `## Escalation history` in `orchestrator-state.md`.
+- Two QA cycles maximum, then it halts and asks you.
+- `orchestrator-state.md` needs to be kept current by hand if you make any
+  commits or approvals outside the pipeline's own flow (e.g. a manual fix after
+  QA) — it does not update itself retroactively. Check `Current phase`,
+  `Dev commit`, `Code review outcomes` and `Deviation approvals` are accurate
+  before treating a run as closed.
+
+---
+
+## What's next
+
+**Resume item 6 at the Phase 3 human approval gate. Do not restart BA or Tech
+Lead, and do not begin a new run.**
+
+- Read `.agents/runs/welcome-screens-20260802/orchestrator-state.md` first.
+- Present `tdd.md ## Feature summary`, `task-brief.md ## Testing mode`, the full
+  `task-brief.md ## File allowlist`, and `code-plan.md` in full for human review.
+- Wait for an explicit **Approved**, **Revise**, or **Abort** decision.
+- On **Approved**, continue to the Dev phase using the existing run folder and
+  branch. The implementation replaces the old three-page Lottie onboarding
+  with the planned two-screen welcome flow and keeps the existing `first_use`
+  seen flag and `/onboarding` route.
+- The current plan adds and removes localisation keys. After implementation, a
+  human must regenerate the Flutter Intl output from the IDE before the branch
+  can compile; this is an expected manual step, not a defect.
+
+- **Item 6 — welcome screens** and **item 7 — auth screen** are what actually
+  consume item 5's use cases; item 5 alone wires nothing into the UI. Item 7
+  needs `SignInUseCase` / `ObserveAuthStatusUseCase` from item 5, which exist
+  and are tested but unused until then — expected at this stage.
+- **0.3 (Discord app)** and **0.4/0.6 (Google + Supabase provider config)**
+  are deferred as of 2026-08-02, human's choice, no blocker cited (see
+  `week-1-task-briefs.md`). Item 5's code path for both providers is built
+  and unit-tested regardless; manual end-to-end sign-in verification is
+  blocked until at least one of these lands.
+- Deferred to item 10 (Sentry): what the user sees if Supabase is unreachable
+  at startup. Right now the connectivity check only logs and never surfaces UI
+  — that's intentional for now, not a bug.
+
+---
+
+## What is NOT in week 1
+
+Guarding against scope creep, since several of these feel adjacent:
+
+- The component library — week 2. Only the token layer lands now.
+- Library, Home, Search, Game Detail — weeks 3 and 4.
+- Custom lists beyond the schema stub — deferred Pro feature.
+- Light theme — deferred. Structure for it, do not build it.
+- Subscriptions and RevenueCat — month 2–3. Only the nullable `tier` column now.
+- Moderation and reporting — gated on user-generated content.
+- The `tracker` → `library` migration — week 3, and it needs the Library design
+  spec first.
+
+---
+
+## Open decisions that could block
+
+- [ ] **Game Detail hero ramp hue** — flagged inline in
+      `game-detail-design-conventions.md` §2. Blocks the Game Detail hero in week 3,
+      not week 1.
+- [ ] **Library design spec** — needed before week 3. The biggest screen, no spec,
+      and the brief flags the hard part: it must work at 3 games and at 300.
+- [ ] **Search design spec** — needed before week 4.

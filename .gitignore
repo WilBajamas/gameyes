@@ -45,11 +45,6 @@ app.*.map.json
 /android/app/release
 /android/build/reports/problems/problems-report.html
 
-# Agents
-.agents/
-.claude/
-.codex/
-
 # FVM Version Cache
 .fvm/
 .fvm/flutter_sdk
