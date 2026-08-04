@@ -54,7 +54,7 @@ class _AuthContent extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(child: LogoPlaceholder(width: 80, height: 80)),
+              const Center(child: LogoPlaceholder(width: 88, height: 88)),
               const SizedBox(height: 32),
               Text(
                 tokens.typography.welcomeHeadline.format(S.current.auth_title),
