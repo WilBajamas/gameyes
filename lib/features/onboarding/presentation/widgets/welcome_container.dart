@@ -1,38 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_state.dart';
-import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
-import 'package:gaming_library_assessment_flutter/widgets/glass_surface_widget.dart';
 
 class WelcomeContainer extends StatelessWidget {
   const WelcomeContainer({
     super.key,
     required this.step,
-    required this.heroContent,
+    required this.heroHeight,
+    required this.hero,
+    required this.headline,
+    required this.body,
     required this.actions,
-    this.socialProof,
   });
 
+  /// Which progress dot reads as active.
   final WelcomeStep step;
-  final Widget heroContent;
+  final double heroHeight;
+  final Widget hero;
+  final String headline;
+  final String body;
   final Widget actions;
-  final Widget? socialProof;
 
   @override
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final colors = tokens.color;
+    // Only the first screen differs in rhythm; every later screen shares the
+    // second screen's spacing.
     final isFirstStep = step == WelcomeStep.one;
-    final heroHeight = isFirstStep ? 400.0 : 356.0;
-    final headline = isFirstStep
-        ? S.current.welcome_headline_one
-        : S.current.welcome_headline_two;
-    final body = isFirstStep
-        ? S.current.welcome_body_one
-        : S.current.welcome_body_two;
-    final chip = isFirstStep
-        ? S.current.welcome_chip_one
-        : S.current.welcome_chip_two;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -42,80 +37,7 @@ class WelcomeContainer extends StatelessWidget {
         final resolvedHeroHeight = heroHeight - shortfall;
         return Column(
           children: [
-            SizedBox(
-              height: resolvedHeroHeight,
-              child: ClipRRect(
-                borderRadius: tokens.radius.heroShape,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    ColoredBox(
-                      color: isFirstStep
-                          ? colors.surfaceIndigoPanel
-                          : colors.surfaceMagentaPanel,
-                    ),
-                    Positioned(
-                      left: -42,
-                      top: 114,
-                      child: Container(
-                        width: 156,
-                        height: 156,
-                        decoration: BoxDecoration(
-                          color: colors.ambientNeutral,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: -58,
-                      top: 12,
-                      child: Container(
-                        width: 180,
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: colors.ambientAccent,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 24,
-                      top: 54,
-                      child: GlassSurface(
-                        fill: colors.glass34,
-                        borderRadius: BorderRadius.circular(tokens.radius.pill),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 7,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                isFirstStep
-                                    ? Icons.library_books_outlined
-                                    : Icons.favorite_border,
-                                size: 13,
-                                color: colors.ink,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                tokens.typography.pill.format(chip),
-                                style: tokens.typography.pill.style.copyWith(
-                                  color: colors.ink,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(child: heroContent),
-                  ],
-                ),
-              ),
-            ),
+            SizedBox(height: resolvedHeroHeight, child: hero),
             Expanded(
               child: SingleChildScrollView(
                 reverse: true,
@@ -130,10 +52,6 @@ class WelcomeContainer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (socialProof != null) ...[
-                        socialProof!,
-                        const SizedBox(height: 18),
-                      ],
                       Row(
                         children: [
                           Container(

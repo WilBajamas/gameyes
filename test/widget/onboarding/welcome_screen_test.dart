@@ -6,6 +6,7 @@ import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.d
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/const.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
@@ -53,6 +54,15 @@ void main() {
     expect(_countGreen(tester), 1);
   });
 
+  testWidgets('shows the first hero art once and no background image', (
+    tester,
+  ) async {
+    await _pumpWelcome(tester);
+
+    expect(_assetImage(WelcomeAssetConstants.heroOne), findsOneWidget);
+    expect(find.byType(Image), findsOneWidget);
+  });
+
   testWidgets('moves to the second step without writing the seen flag', (
     tester,
   ) async {
@@ -68,6 +78,22 @@ void main() {
     expect(_countDots(tester, 5), 1);
     expect(_countGreen(tester), 1);
     verifyNever(preferences.setBool(StorageConstants.firstUseKey, true));
+  });
+
+  testWidgets('shows the second hero art and its background once each', (
+    tester,
+  ) async {
+    await _pumpWelcome(tester);
+
+    await tester.tap(find.text(S.current.next));
+    await tester.pumpAndSettle();
+
+    expect(_assetImage(WelcomeAssetConstants.heroTwo), findsOneWidget);
+    expect(
+      _assetImage(WelcomeAssetConstants.heroTwoBackground),
+      findsOneWidget,
+    );
+    expect(_assetImage(WelcomeAssetConstants.heroOne), findsNothing);
   });
 
   testWidgets('writes the seen flag when Skip exits the first step', (
@@ -130,6 +156,11 @@ void main() {
     );
 
     expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text(S.current.next));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
   });
 }
 
@@ -177,4 +208,13 @@ int _countGreen(WidgetTester tester) {
                 AppTokens.dark.color.green,
       )
       .length;
+}
+
+Finder _assetImage(String assetName) {
+  return find.byWidgetPredicate(
+    (widget) =>
+        widget is Image &&
+        widget.image is AssetImage &&
+        (widget.image as AssetImage).assetName == assetName,
+  );
 }

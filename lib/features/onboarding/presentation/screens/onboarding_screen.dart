@@ -4,13 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/const.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_state.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/cover_tile.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_container.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_key_art.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_hero.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_skip_text.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_stat_pill.dart';
 import 'package:gaming_library_assessment_flutter/widgets/primary_button.dart';
 
 import '../../../../generated/l10n.dart';
@@ -77,49 +76,13 @@ class _WelcomeStepOne extends StatelessWidget {
   Widget build(BuildContext context) {
     return WelcomeContainer(
       step: WelcomeStep.one,
-      heroContent: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            left: 38,
-            bottom: 96,
-            child: Transform.rotate(
-              angle: -0.157,
-              child: const CoverTile(width: 100, height: 134),
-            ),
-          ),
-          Positioned(
-            right: 34,
-            bottom: 88,
-            child: Transform.rotate(
-              angle: 0.175,
-              child: const CoverTile(width: 100, height: 134),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 112,
-            child: Center(
-              child: Transform.rotate(
-                angle: 0.035,
-                child: const CoverTile(
-                  width: 124,
-                  height: 166,
-                  showsPlaying: true,
-                  hasFloatShadow: true,
-                ),
-              ),
-            ),
-          ),
-          const Positioned(
-            left: 24,
-            right: 24,
-            bottom: 34,
-            child: WelcomeStatPill(),
-          ),
-        ],
+      heroHeight: 400,
+      hero: WelcomeHero(
+        contentAsset: WelcomeAssetConstants.heroOne,
+        backgroundColor: context.tokens.color.surfaceIndigoPanel,
       ),
+      headline: S.current.welcome_headline_one,
+      body: S.current.welcome_body_one,
       actions: Row(
         children: [
           Expanded(
@@ -146,53 +109,17 @@ class _WelcomeStepTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return WelcomeContainer(
       step: WelcomeStep.two,
-      heroContent: const WelcomeKeyArt(),
-      socialProof: const _WelcomeSocialProof(),
+      heroHeight: 356,
+      hero: const WelcomeHero(
+        contentAsset: WelcomeAssetConstants.heroTwo,
+        backgroundAsset: WelcomeAssetConstants.heroTwoBackground,
+      ),
+      headline: S.current.welcome_headline_two,
+      body: S.current.welcome_body_two,
       actions: PrimaryButton(
         label: S.current.get_started,
         onPressed: context.read<WelcomeCubit>().finish,
       ),
-    );
-  }
-}
-
-class _WelcomeSocialProof extends StatelessWidget {
-  const _WelcomeSocialProof();
-
-  @override
-  Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    return Row(
-      children: [
-        SizedBox(
-          width: 62,
-          height: 34,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: const [
-              Positioned(
-                left: 0,
-                child: CoverTile(width: 26, height: 34, mini: true),
-              ),
-              Positioned(
-                left: 18,
-                child: CoverTile(width: 26, height: 34, mini: true),
-              ),
-              Positioned(
-                left: 36,
-                child: CoverTile(width: 26, height: 34, mini: true),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            S.current.welcome_social_proof,
-            style: tokens.typography.caption.style,
-          ),
-        ),
-      ],
     );
   }
 }
