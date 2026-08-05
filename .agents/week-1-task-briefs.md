@@ -330,10 +330,21 @@ query shapes without shipping a new build.
 Then update the Flutter side to call the function instead of IGDB directly. That
 part **is** a pipeline run — split it.
 
-- [ ] Edge Function written and deployed to dev
+- [ ] Edge Function written and deployed to dev. **Written 2026-08-05**,
+      `supabase/functions/igdb-proxy/index.ts` — matches today's two
+      real endpoints exactly (`games`, `release_dates`, both used by
+      `igdb_api_service.dart` and `game_detail_service.dart`), mirrors the
+      client's existing token-fetch-and-retry-once-on-401 behaviour
+      (`twitch_auth_interceptor.dart`), and takes zero external imports (so
+      there's nothing for Supabase's own deploy step to fetch). Verified with
+      Deno's test runner against a mocked Twitch/IGDB (5/5 passing) — fmt,
+      lint and type-check all clean. **Not yet deployed** — no Supabase CLI
+      or project credentials in this sandbox; see `handover.md` for the
+      deploy steps and secrets to set.
 - [ ] Flutter client repointed [PIPELINE]
 - [ ] IGDB credentials removed from the client build entirely
-- [ ] Deployed to prod
+- [ ] Deployed to prod. Blocked — no prod Supabase project exists yet (0.1b,
+      still deferred).
 
 ### 10 — Sentry [PIPELINE]
 

@@ -1,14 +1,79 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-05 (third update that day): item 3
-(database schema and RLS) has its migration files written and locally proven,
-but **not yet applied to the real dev project or verified on-device** — see
-below for exactly what's left and how to do it. Items 2, 4, 5, 6 (with 6.1 and
-6.2, both now manually confirmed), 7 and 8 are all complete and merged.
+Written 2026-07-29. Last updated 2026-08-05 (fourth update that day): items 1
+and 1a were already shipped, just never ticked. Item 3 (database schema and
+RLS) has its migration files written and locally proven, but **not yet applied
+to the real dev project or verified on-device**. Item 9's Edge Function is
+written and locally proven, but **not yet deployed**. See below for both —
+exactly what's left and how to do it. Items 2, 4, 5, 6 (with 6.1 and 6.2, both
+now manually confirmed), 7 and 8 are all complete and merged.
 
 ---
 
-## Current update — 2026-08-05 (third update: item 3 in progress)
+## Current update — 2026-08-05 (fourth update: item 9 in progress)
+
+**Not a pipeline run** — item 9's Edge Function half is `[MANUAL-CODE]`,
+written and committed directly to `claude/questloggd-week1-item3-rls-x334sm`
+(same branch as item 3 — no new branch was cut for this).
+
+### What's done
+- **`supabase/functions/igdb-proxy/index.ts`.** Proxies the app's two real
+  IGDB endpoints (`games`, `release_dates` — confirmed by grepping
+  `igdb_api_service.dart` and `game_detail_service.dart`, nothing else exists
+  today) behind a Supabase Edge Function, so `TWITCH_CLIENT_ID`/
+  `TWITCH_CLIENT_SECRET` become function secrets instead of shipping in the
+  client build. Mirrors `twitch_auth_interceptor.dart`'s existing behaviour
+  server-side: fetch a Twitch app token via `client_credentials`, cache it
+  for as long as the function instance stays warm, retry once on a 401.
+  Endpoint name is checked against an allow-list (`games`/`release_dates`
+  only) rather than proxying any IGDB path. Takes zero external imports on
+  purpose — nothing for Supabase's own deploy step to fetch, and it sidesteps
+  `jsr.io` being unreachable from this sandbox (see below).
+- **Relies on Supabase's own `verify_jwt`** (the platform default) to reject
+  callers without a valid Supabase auth token, rather than reimplementing
+  that check in the function — do not deploy this with `--no-verify-jwt`.
+- **Proved it locally**: installed Deno 2.9.4 from GitHub releases directly
+  (`deno.land`'s own install script is blocked by this sandbox's egress
+  policy, same as `fvm.app` was for Flutter — GitHub itself isn't). 5 tests
+  in `index.test.ts` mock `fetch` for both Twitch and IGDB and cover: a
+  request is forwarded with the right headers/body and IGDB's response comes
+  back untouched, an endpoint outside the allow-list is rejected, a missing
+  query is rejected, non-POST is rejected, and a 401 triggers exactly one
+  token refresh and retry. `deno fmt --check`, `deno lint` and
+  `deno check` are all clean.
+
+### What's NOT done — needs the human
+1. **Set the function secrets and deploy to the real `questloggd-dev`
+   project.** No Supabase CLI or project credentials exist in this sandbox.
+   From the repo root, with the Supabase CLI installed and logged in:
+   ```
+   supabase link --project-ref <dev-project-ref>
+   supabase secrets set TWITCH_CLIENT_ID=<value> TWITCH_CLIENT_SECRET=<value>
+   supabase functions deploy igdb-proxy
+   ```
+   (Same `TWITCH_CLIENT_ID`/`TWITCH_CLIENT_SECRET` values already in
+   `secret.env` from item 0.5 — just pasted into Supabase instead of the app.)
+2. **Smoke-test it once deployed**, using a real Supabase anon or user JWT
+   (the anon key from `dev.env` works since `verify_jwt` just checks the
+   token is valid, not who it belongs to):
+   ```
+   curl -X POST https://<project-ref>.supabase.co/functions/v1/igdb-proxy \
+     -H "Authorization: Bearer <anon-or-user-jwt>" \
+     -H "Content-Type: application/json" \
+     -d '{"endpoint":"games","query":"fields name; limit 5;"}'
+   ```
+   Expect a JSON array of games back. A 401 means the JWT wasn't accepted; a
+   502 means the Twitch/IGDB leg itself failed (check the secrets).
+3. **The rest of item 9 is out of scope for this session on purpose**:
+   repointing the Flutter client to call this function instead of IGDB
+   directly is explicitly marked `[PIPELINE]` in `week-1-task-briefs.md` —
+   run it through `/orchestrate` as its own run once step 1 above is done.
+   Removing the IGDB credentials from the client build and deploying to prod
+   both follow from that pipeline run.
+
+---
+
+## Older update — 2026-08-05 (third update: item 3 in progress)
 
 **Not a pipeline run** — item 3 is `[MANUAL-CODE]`, written and committed
 directly to `claude/questloggd-week1-item3-rls-x334sm`.
