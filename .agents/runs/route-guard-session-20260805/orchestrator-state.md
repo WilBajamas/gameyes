@@ -59,4 +59,9 @@ NONE
   → `AuthStatusListener` (class, file, test file, all references);
   `SessionNavigator._pendingRoutes` → `_pendingRoutesStore`. Recorded in
   `code-plan.md ## Approved feedback delta`. `AuthGuard._pendingRoutes` left
-  unaligned, flagged for a possible follow-up. Re-presented to the human.
+  unaligned, flagged for a possible follow-up — **superseded by round 2 below.**
+2026-08-05 Round 2 — REVISE (naming only, no design change): the human took up
+  round 1's flag, so `AuthGuard._pendingRoutes` → `_pendingRoutesStore` as well.
+  Both classes now match. Recorded under `code-plan.md ## Approved feedback
+  delta ### Round 2`. `task-brief.md` and `tdd.md` needed no edit — neither names
+  the guard's private field. Re-presented to the human.

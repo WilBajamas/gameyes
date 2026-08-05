@@ -96,11 +96,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @singleton
 class AuthGuard extends AutoRouteGuard {
-  AuthGuard(this._authStatus, this._preferences, this._pendingRoutes);
+  AuthGuard(this._authStatus, this._preferences, this._pendingRoutesStore);
 
   final AuthStatusListener _authStatus;
   final SharedPreferences _preferences;
-  final PendingRouteStore _pendingRoutes;
+  final PendingRouteStore _pendingRoutesStore;
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
@@ -111,7 +111,7 @@ class AuthGuard extends AutoRouteGuard {
 
     // Remember where they were going before sending them away, so signing in
     // can put them back on it - arguments and all.
-    _pendingRoutes.remember(resolver.route.toPageRouteInfo());
+    _pendingRoutesStore.remember(resolver.route.toPageRouteInfo());
     resolver.next(false);
 
     final seenWelcome =
@@ -321,8 +321,11 @@ flag.
 
 ## Approved feedback delta
 
-Product Owner review, Phase 3 human design gate, 2026-08-05. Naming only — no
-design, scope or acceptance-criteria change.
+Product Owner review at the Phase 3 human design gate. Naming only in both
+rounds — no design, scope or acceptance-criteria change. Where this section
+conflicts with anything above it, or with `task-brief.md`, this section wins.
+
+### Round 1 — 2026-08-05
 
 - Rename the class `AuthStatusWatcher` to `AuthStatusListener`, and its file
   from `lib/config/route/auth_status_watcher.dart` to
@@ -336,14 +339,22 @@ design, scope or acceptance-criteria change.
   `_authStatus` — it still reads correctly.
 - Rename `SessionNavigator`'s field `_pendingRoutes` to `_pendingRoutesStore`
   (constructor parameter, field and its one use site).
-- Not acted on, flagged for later: `AuthGuard` declares its own field named
-  `_pendingRoutes`. The Product Owner asked only about `SessionNavigator`, so
-  the guard's field keeps its current name; the two could be aligned in a
-  follow-up if consistency is wanted.
-- The rest of the design is unchanged and stays approved: guard scope,
-  deep-link resume, deletion of `onboarding_guard.dart`, the fail-closed
-  default and notify-only-on-change.
+- Left unaligned at the time — **superseded by round 2 below**: `AuthGuard`
+  declared its own field named `_pendingRoutes`, which round 1 did not rename
+  because the Product Owner had asked only about `SessionNavigator`.
 
-The renames above are also applied in place throughout this file, in
-`task-brief.md`'s file allowlist and implementation plan, and in `tdd.md`, so
-no stale filename reaches the Dev Agent.
+### Round 2 — 2026-08-05
+
+- Rename `AuthGuard`'s field `_pendingRoutes` to `_pendingRoutesStore` —
+  constructor parameter, field declaration, and its one use site in
+  `onNavigation`. This closes the inconsistency round 1 flagged: `AuthGuard`
+  and `SessionNavigator` now both hold `PendingRouteStore` in a field named
+  `_pendingRoutesStore`. A private field only — no class, type, file or test
+  name changes with it.
+- Nothing else changes. The design stays as approved: guard scope, deep-link
+  resume, deletion of `onboarding_guard.dart`, the fail-closed default and
+  notify-only-on-change.
+
+Both rounds' renames are applied in place throughout this file. `task-brief.md`
+and `tdd.md` carry round 1's class, file and test names; neither of them names
+`AuthGuard`'s private field at all, so round 2 required no edit there.
