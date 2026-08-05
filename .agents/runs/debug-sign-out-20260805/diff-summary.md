@@ -55,3 +55,28 @@ W1-8.1-AC10: satisfied — the cubit's `switch` on `Result<void>` has exactly tw
 W1-8.1-AC11: satisfied — a new `signOut()` call always emits `loading` with `error: null` first, clearing any prior `failed` state; covered by both test files' retry cases.
 W1-8.1-AC12: not fully verifiable yet — both keys are in both `.arb` files and every string uses `S.current.[key]`, satisfying the code-level requirement, but the branch does not compile until the human IDE regeneration happens (pre-authorised, see deviation 1).
 W1-8.1-AC13: satisfied — the app bar, `ScrollController` wiring, physics and existing placeholder sliver are unchanged in content and behaviour (only `dart format` whitespace touched two of those lines, see deviation 2); no other Settings content changed.
+
+## Revision round 1 (2026-08-05)
+
+Human review of `1ed6c7e` found two failing tests in
+`test/widget/settings/settings_screen_test.dart` once localisation regeneration
+(`914ab26`) let the file compile: `find.text('Settings')` matched both the app
+bar title (`S.current.settings`) and the pre-existing placeholder
+`Center(child: Text('Settings'))`, so `findsOneWidget` failed for two tests.
+
+**Fix (test-only):** in the two affected `expect` calls, replaced
+`find.text('Settings')` with `find.widgetWithText(Center, 'Settings')` to scope
+the finder to the specific placeholder widget it's meant to check, rather than
+the ambiguous bare string. No production file changed; the placeholder text and
+the app bar title are both untouched, keeping AC13 intact.
+
+Verification:
+- `flutter test test/widget/settings/settings_screen_test.dart`: 6/6 passed.
+- `flutter test test/cubit/auth/sign_out_cubit_test.dart`: 6/6 passed (still green).
+- `flutter test` (full suite): 186 passed / 13 failed — the 13 are the
+  long-standing pre-existing set (`test/api/games`, `test/api/game_detail`,
+  `test/cubit/games`, `test/cubit/game_detail`, `test/repository/tracker`,
+  `test/widget_test.dart`).
+- `flutter analyze`: 38 issues / 0 errors / 2 warnings / 36 info — unchanged.
+
+Commit (revision round 1): <pending>

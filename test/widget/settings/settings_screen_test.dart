@@ -48,7 +48,7 @@ void main() {
       await _pumpSettings(tester, router);
 
       expect(find.text(S.current.auth_sign_out), findsOneWidget);
-      expect(find.text('Settings'), findsOneWidget);
+      expect(find.widgetWithText(Center, 'Settings'), findsOneWidget);
     },
   );
 
@@ -92,7 +92,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(S.current.auth_sign_out_error), findsOneWidget);
-    expect(find.text('Settings'), findsOneWidget);
+    expect(find.widgetWithText(Center, 'Settings'), findsOneWidget);
     expect(find.byType(SnackBar), findsNothing);
     expect(find.byType(Dialog), findsNothing);
   });
