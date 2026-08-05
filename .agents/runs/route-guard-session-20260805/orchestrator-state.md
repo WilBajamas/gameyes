@@ -3,7 +3,7 @@ Feature: Route guard and session (week 1 item 8)
 Run ID: route-guard-session-20260805
 Run folder: .agents/runs/route-guard-session-20260805/
 Started: 2026-08-05
-Current phase: HUMAN_GATE (revise round 1 applied, re-presenting)
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +148 -13 (161 total) — captured 2026-08-05
@@ -65,3 +65,11 @@ NONE
   Both classes now match. Recorded under `code-plan.md ## Approved feedback
   delta ### Round 2`. `task-brief.md` and `tdd.md` needed no edit — neither names
   the guard's private field. Re-presented to the human.
+2026-08-05 Round 3 — **APPROVED.** Human approved the code plan as amended by
+  rounds 1 and 2. Two items deliberately left as-is at their choice: (a)
+  `task-brief.md` Step 3 does not restate `AuthGuard`'s field name — the Dev
+  Agent takes it from `code-plan.md` and the delta, which is authoritative;
+  (b) the cold-start race (fail-closed default vs. Supabase's async session
+  replay, which could briefly show the sign-in screen on a cold start with a
+  valid session) is **deferred to a QA manual check**, not designed away.
+  Advanced to Phase 4 (Dev, first pass — no commit).
