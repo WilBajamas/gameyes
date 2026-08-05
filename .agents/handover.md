@@ -1,16 +1,43 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-05 (fourth update that day): items 1
-and 1a were already shipped, just never ticked. Item 3 (database schema and
-RLS) has its migration files written and locally proven, but **not yet applied
-to the real dev project or verified on-device**. Item 9's Edge Function is
-written and locally proven, but **not yet deployed**. See below for both —
-exactly what's left and how to do it. Items 2, 4, 5, 6 (with 6.1 and 6.2, both
-now manually confirmed), 7 and 8 are all complete and merged.
+Written 2026-07-29. Last updated 2026-08-05 (fifth update that day): item 9's
+Edge Function half is **deployed to dev and confirmed working** — the app
+successfully called it and got real game data back. Items 1 and 1a were
+already shipped, just never ticked. Item 3 (database schema and RLS) has its
+migration files written and locally proven, but **still not yet applied to the
+real dev project or verified on-device** — that part hasn't moved since the
+third update. Items 2, 4, 5, 6 (with 6.1 and 6.2, both now manually
+confirmed), 7 and 8 are all complete and merged.
 
 ---
 
-## Current update — 2026-08-05 (fourth update: item 9 in progress)
+## Current update — 2026-08-05 (fifth update: item 9's Edge Function deployed and confirmed)
+
+Deployed through the Supabase dashboard (no CLI — the human didn't want to
+install one), and confirmed working from the real app, not just curl (curl
+didn't work for the human; cause not chased down since the app-side test
+worked and answered the question that mattered).
+
+- Secrets (`TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`) set via **Project
+  Settings → Edge Functions → Secrets**.
+- Function created via **Edge Functions → Deploy a new function → via
+  Editor**, pasting in `supabase/functions/igdb-proxy/index.ts` verbatim,
+  `verify_jwt` left at its default (on).
+- Confirmed working with a temporary debug button added to the Settings
+  screen: `getIt<SupabaseClient>().functions.invoke('igdb-proxy', body:
+  {'endpoint': 'games', 'query': 'fields name; limit 5;'})`, result shown in
+  a dialog. Returned real game names on-device. **That button has been
+  removed again** — `git diff` against the commit before it was added is
+  empty, so `settings_screen.dart` is back to exactly what it was.
+
+Item 9's remaining boxes are unchanged from the fourth update: repointing the
+Flutter client is explicitly `[PIPELINE]` in `week-1-task-briefs.md`, run it
+through `/orchestrate` as its own run; removing the IGDB credentials from the
+client build and deploying to prod both follow from that run.
+
+---
+
+## Older update — 2026-08-05 (fourth update: item 9 written, not yet deployed)
 
 **Not a pipeline run** — item 9's Edge Function half is `[MANUAL-CODE]`,
 written and committed directly to `claude/questloggd-week1-item3-rls-x334sm`

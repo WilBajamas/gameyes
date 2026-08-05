@@ -330,17 +330,20 @@ query shapes without shipping a new build.
 Then update the Flutter side to call the function instead of IGDB directly. That
 part **is** a pipeline run — split it.
 
-- [ ] Edge Function written and deployed to dev. **Written 2026-08-05**,
-      `supabase/functions/igdb-proxy/index.ts` — matches today's two
-      real endpoints exactly (`games`, `release_dates`, both used by
+- [x] Edge Function written and deployed to dev. **2026-08-05.**
+      `supabase/functions/igdb-proxy/index.ts` — matches the two real
+      endpoints exactly (`games`, `release_dates`, both used by
       `igdb_api_service.dart` and `game_detail_service.dart`), mirrors the
       client's existing token-fetch-and-retry-once-on-401 behaviour
-      (`twitch_auth_interceptor.dart`), and takes zero external imports (so
-      there's nothing for Supabase's own deploy step to fetch). Verified with
-      Deno's test runner against a mocked Twitch/IGDB (5/5 passing) — fmt,
-      lint and type-check all clean. **Not yet deployed** — no Supabase CLI
-      or project credentials in this sandbox; see `handover.md` for the
-      deploy steps and secrets to set.
+      (`twitch_auth_interceptor.dart`), and takes zero external imports.
+      Verified with Deno's test runner against a mocked Twitch/IGDB
+      (5/5 passing) — fmt, lint and type-check all clean. Deployed to
+      `questloggd-dev` through the dashboard (no CLI), secrets set, and
+      smoke-tested from the real signed-in app via a temporary
+      `supabase.functions.invoke('igdb-proxy', ...)` button on Settings —
+      returned real game data. That button has been removed again
+      (`settings_screen.dart` is back to byte-identical with before it
+      was added).
 - [ ] Flutter client repointed [PIPELINE]
 - [ ] IGDB credentials removed from the client build entirely
 - [ ] Deployed to prod. Blocked — no prod Supabase project exists yet (0.1b,
