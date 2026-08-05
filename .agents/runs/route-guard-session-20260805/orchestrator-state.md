@@ -3,7 +3,7 @@ Feature: Route guard and session (week 1 item 8)
 Run ID: route-guard-session-20260805
 Run folder: .agents/runs/route-guard-session-20260805/
 Started: 2026-08-05
-Current phase: HUMAN_GATE
+Current phase: HUMAN_GATE (revise round 1 applied, re-presenting)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +148 -13 (161 total) — captured 2026-08-05
@@ -53,3 +53,10 @@ NONE
 
 ## Code review outcomes
 NONE
+
+## Phase 3 gate rounds
+2026-08-05 Round 1 — REVISE (naming only, no design change): `AuthStatusWatcher`
+  → `AuthStatusListener` (class, file, test file, all references);
+  `SessionNavigator._pendingRoutes` → `_pendingRoutesStore`. Recorded in
+  `code-plan.md ## Approved feedback delta`. `AuthGuard._pendingRoutes` left
+  unaligned, flagged for a possible follow-up. Re-presented to the human.

@@ -3,6 +3,10 @@ Source: W1-8 — `tech-ac.md` (BA Agent 1.0), as amended by `decisions.md`
 DECISION-1 and DECISION-2
 Date: 2026-08-05
 
+Naming updated 2026-08-05 per `code-plan.md ## Approved feedback delta`
+(`AuthStatusWatcher` → `AuthStatusListener` and its file/test names). That
+section is authoritative on any conflict.
+
 ## Context
 
 Adds one auth guard to the router plus the small session plumbing it needs, so
@@ -22,8 +26,8 @@ app, so every branch gets a unit test.
 ### CREATE NEW
 lib/config/route/pending_route_store.dart — in-memory record of the route a
   blocked navigation was heading to.
-lib/config/route/auth_status_watcher.dart — app-lifetime `ChangeNotifier` owning
-  the single auth-status subscription and the synchronous signed-in flag.
+lib/config/route/auth_status_listener.dart — app-lifetime `ChangeNotifier`
+  owning the single auth-status subscription and the synchronous signed-in flag.
 lib/config/route/guards/auth_guard.dart — the `AutoRouteGuard`: allow, or record
   and redirect to sign-in / welcome.
 lib/config/route/session_navigator.dart — moves the user off the sign-in flow to
@@ -36,14 +40,15 @@ lib/config/route/auto_route_config.dart — inject `AuthGuard`, apply it to `/` 
   the four content routes, drop `OnboardingGuard`.
 lib/config/route/guards/onboarding_guard.dart — **delete this file**; its
   decision is subsumed by `AuthGuard` (see `tdd.md ## Reuse decisions`).
-lib/bootstrap.dart — start the watcher and the session navigator before
-  `runApp`.
-lib/main.dart — pass the watcher to `config(reevaluateListenable:)`.
+lib/bootstrap.dart — start the auth status listener and the session navigator
+  before `runApp`.
+lib/main.dart — pass the auth status listener to
+  `config(reevaluateListenable:)`.
 
 ### TEST FILES
 test/cubit/auth/pending_route_store_test.dart — remembering, overwriting and
   taking the pending route.
-test/cubit/auth/auth_status_watcher_test.dart — default before any emission,
+test/cubit/auth/auth_status_listener_test.dart — default before any emission,
   one subscription, mapping of each emission, error handling, when it notifies.
 test/cubit/auth/auth_guard_test.dart — the guard's four branches and what it
   records and replaces.
@@ -61,16 +66,16 @@ Step 1: Create `lib/config/route/pending_route_store.dart` — `@singleton` clas
 holding one nullable `PageRouteInfo`; `remember(route)` overwrites
 unconditionally, `take()` returns and clears in one call. No persistence.
 
-Step 2: Create `lib/config/route/auth_status_watcher.dart` — `@singleton`
-`ChangeNotifier` taking `ObserveAuthStatusUseCase`. Field defaults to not signed
-in. `start()` subscribes once and returns early if a subscription already
-exists. Map each emission with an exhaustive `switch` on `AuthStatusEntity`
-(`AuthSignedIn` / `AuthSignedOut`); the subscription's `onError` is handled as
-signed out. Notify listeners **only when the flag changes value**. Cancel the
-subscription in `dispose()`.
+Step 2: Create `lib/config/route/auth_status_listener.dart` — `@singleton`
+`ChangeNotifier` named `AuthStatusListener`, taking `ObserveAuthStatusUseCase`.
+Field defaults to not signed in. `start()` subscribes once and returns early if
+a subscription already exists. Map each emission with an exhaustive `switch` on
+`AuthStatusEntity` (`AuthSignedIn` / `AuthSignedOut`); the subscription's
+`onError` is handled as signed out. Notify listeners **only when the flag
+changes value**. Cancel the subscription in `dispose()`.
 
 Step 3: Create `lib/config/route/guards/auth_guard.dart` — `@singleton` class
-extending `AutoRouteGuard`, constructor-injected with `AuthStatusWatcher`,
+extending `AutoRouteGuard`, constructor-injected with `AuthStatusListener`,
 `SharedPreferences` and `PendingRouteStore`. Synchronous `onNavigation`: if
 signed in, `resolver.next()` and return — do not touch the store and do not use
 `overrideNext`. Otherwise `remember(resolver.route.toPageRouteInfo())`,
@@ -84,8 +89,9 @@ Step 4: Modify `lib/core/res/const.dart` — add `auth = '/auth'`,
 alone, including the ones whose values no longer match the route table.
 
 Step 5: Create `lib/config/route/session_navigator.dart` — `@singleton` taking
-`AuthStatusWatcher`, `PendingRouteStore` and `AppRouter`. `start()` registers a
-listener on the watcher. In the handler: return unless signed in; return unless
+`AuthStatusListener`, `PendingRouteStore` and `AppRouter`; hold the store in a
+field named `_pendingRoutesStore`. `start()` registers a listener on the auth
+status listener. In the handler: return unless signed in; return unless
 `AppRouter.currentPath` is in the open-paths set; otherwise
 `replaceAll([store.take() ?? const HomeRoute()])`. Pass `HomeRoute` no children
 so the tab shell keeps its existing default tab.
@@ -101,11 +107,11 @@ Step 7: Delete `lib/config/route/guards/onboarding_guard.dart`. Confirm first
 that `auto_route_config.dart` is its only remaining reference.
 
 Step 8: Modify `lib/bootstrap.dart` — after `configureDependencies()`, call
-`start()` on `AuthStatusWatcher` and then on `SessionNavigator`, before
+`start()` on `AuthStatusListener` and then on `SessionNavigator`, before
 `runApp`. Neither call is awaited; do not block startup on an auth emission.
 
 Step 9: Modify `lib/main.dart` — pass
-`reevaluateListenable: getIt<AuthStatusWatcher>()` to
+`reevaluateListenable: getIt<AuthStatusListener>()` to
 `getIt<AppRouter>().config()`. `main_prod.dart` reuses `MyApp`; leave it alone.
 
 Generation checkpoint: run `dart run build_runner build
@@ -115,7 +121,7 @@ Both regenerated files are an expected part of the diff.
 
 Step 10: Create `test/cubit/auth/pending_route_store_test.dart`.
 
-Step 11: Create `test/cubit/auth/auth_status_watcher_test.dart` — mock
+Step 11: Create `test/cubit/auth/auth_status_listener_test.dart` — mock
 `ObserveAuthStatusUseCase` via `@GenerateMocks`, drive it with a
 `StreamController`.
 
@@ -173,9 +179,9 @@ IDs in scope: W1-8-AC01 through W1-8-AC20 (all twenty).
   reason, exhaustive `switch` on sealed types with no `default:`, constants only
   inside the `*Constants` classes.
 - Comments per `execution.md` and `project-conventions.md`: plain English, only
-  where the reason is not obvious. The two that earn their place are why the
-  watcher notifies only on a change, and why the guard records before it
-  redirects. Do not doc-comment every field.
+  where the reason is not obvious. The two that earn their place are why
+  `AuthStatusListener` notifies only on a change, and why the guard records
+  before it redirects. Do not doc-comment every field.
 - `execution.md`: only unit and widget tests, **never a golden test**. Do not
   weaken or delete an existing test to make the suite pass.
 - Do not restructure `lib/core/`, do not change how DI, routing or theming work

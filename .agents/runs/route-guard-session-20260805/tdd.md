@@ -3,22 +3,26 @@ Source: W1-8 — `tech-ac.md` (BA Agent 1.0), as amended by `decisions.md`
 DECISION-1 and DECISION-2
 Date: 2026-08-05
 
+Naming updated 2026-08-05 per `code-plan.md ## Approved feedback delta`
+(`AuthStatusWatcher` → `AuthStatusListener` and its file/test names). That
+section is authoritative on any conflict.
+
 ## Feature summary
 
 The router gains one `AutoRouteGuard` (`AuthGuard`) applied to `/` and the four
 root-level content routes. The guard reads a synchronously-available auth status
-from an app-lifetime `ChangeNotifier` (`AuthStatusWatcher`) that owns the single
+from an app-lifetime `ChangeNotifier` (`AuthStatusListener`) that owns the single
 subscription to the existing `ObserveAuthStatusUseCase` stream, and reads the
 existing `first_use` flag from the already-injected `SharedPreferences`. A
 blocked navigation is recorded in an in-memory `PendingRouteStore` as a
 `PageRouteInfo` (which carries args, path params and query params) and the stack
-is replaced with `/auth` or `/onboarding`. The watcher is handed to auto_route as
-`config(reevaluateListenable: ...)`, so a signed-out emission re-runs the guards
-on the live stack with no restart. A `SessionNavigator` listens to the same
-watcher and handles the signed-in direction: when the app is sitting on an
-unguarded sign-in-flow path it replaces the stack with the pending route, or with
-the tab shell when nothing is pending. No new package, no new screen, no new
-localisation key.
+is replaced with `/auth` or `/onboarding`. The listener is handed to auto_route
+as `config(reevaluateListenable: ...)`, so a signed-out emission re-runs the
+guards on the live stack with no restart. A `SessionNavigator` listens to the
+same `AuthStatusListener` and handles the signed-in direction: when the app is
+sitting on an unguarded sign-in-flow path it replaces the stack with the pending
+route, or with the tab shell when nothing is pending. No new package, no new
+screen, no new localisation key.
 
 ## Layer map
 
@@ -29,22 +33,22 @@ UI-widget layer work.
 
 [W1-8-AC01]: routing (route table), routing (guard)
 [W1-8-AC02]: routing (route table — assert absence of guard)
-[W1-8-AC03]: routing (guard), state (watcher)
-[W1-8-AC04]: routing (guard), state (watcher), storage (SharedPreferences read)
-[W1-8-AC05]: routing (guard), state (watcher), storage (SharedPreferences read)
+[W1-8-AC03]: routing (guard), state (auth status listener)
+[W1-8-AC04]: routing (guard), state (auth status listener), storage (SharedPreferences read)
+[W1-8-AC05]: routing (guard), state (auth status listener), storage (SharedPreferences read)
 [W1-8-AC06]: routing (route table — OnboardingGuard removal), routing (guard)
-[W1-8-AC07]: state (watcher default + synchronous read), routing (guard)
+[W1-8-AC07]: state (auth status listener default + synchronous read), routing (guard)
 [W1-8-AC08]: routing (guard), state (pending route store)
 [W1-8-AC09]: routing (guard), routing (route table), state (pending route store)
 [W1-8-AC10]: state (session navigator), state (pending route store)
 [W1-8-AC11]: state (session navigator), routing (generated `HomeRoute`)
 [W1-8-AC12]: state (pending route store lifetime)
-[W1-8-AC13]: state (watcher), startup (bootstrap)
-[W1-8-AC14]: state (watcher), startup (`reevaluateListenable`), routing (guard)
+[W1-8-AC13]: state (auth status listener), startup (bootstrap)
+[W1-8-AC14]: state (auth status listener), startup (`reevaluateListenable`), routing (guard)
 [W1-8-AC15]: routing (guard — stack replace), state (session navigator — stack replace)
-[W1-8-AC16]: routing (route table — no guards on the three open routes), state (watcher de-dupe)
-[W1-8-AC17]: state (watcher de-dupe), state (session navigator path check)
-[W1-8-AC18]: state (watcher — stream values and `onError` only)
+[W1-8-AC16]: routing (route table — no guards on the three open routes), state (auth status listener de-dupe)
+[W1-8-AC17]: state (auth status listener de-dupe), state (session navigator path check)
+[W1-8-AC18]: state (auth status listener — stream values and `onError` only)
 [W1-8-AC19]: none — satisfied by adding nothing (no snackbar, no `.arb` change)
 [W1-8-AC20]: routing (route table — paths, children, order, initial untouched)
 
@@ -87,7 +91,7 @@ screen is on top. None of them is provided into the widget tree, so the
 screen-scoped `BlocProvider` convention in `project-conventions.md` is not
 displaced.
 
-AuthStatusWatcher (create) — `lib/config/route/auth_status_watcher.dart` —
+AuthStatusListener (create) — `lib/config/route/auth_status_listener.dart` —
 scope: global (W1-8-AC13) — extends `ChangeNotifier`, annotated `@singleton`.
   Depends on: `ObserveAuthStatusUseCase` (constructor injection).
   State: one `bool` — signed in or not — defaulting to **not signed in** before
@@ -117,12 +121,13 @@ base.
 
 SessionNavigator (create) — `lib/config/route/session_navigator.dart` —
 scope: global (W1-8-AC10, W1-8-AC11) — annotated `@singleton`.
-  Depends on: `AuthStatusWatcher`, `PendingRouteStore`, `AppRouter`.
-  `start()` adds itself as a listener on the watcher; called from
+  Depends on: `AuthStatusListener`, `PendingRouteStore` (held in a field named
+  `_pendingRoutesStore`), `AppRouter`.
+  `start()` adds itself as a listener on `AuthStatusListener`; called from
   `bootstrap.dart`. This is the signed-in direction that DECISION-2 put in
-  scope, and it is deliberately *not* inside the watcher: `AppRouter` already
-  depends on `AuthGuard` which depends on the watcher, so a watcher that knew
-  about the router would close a dependency cycle in the DI graph.
+  scope, and it is deliberately *not* inside `AuthStatusListener`: `AppRouter`
+  already depends on `AuthGuard` which depends on the listener, so a listener
+  that knew about the router would close a dependency cycle in the DI graph.
   On notification: ignores anything but signed-in; then ignores the emission
   unless `AppRouter.currentPath` is one of the three open paths
   (`/onboarding`, `/auth`, `/legal`) — that single condition is what makes a
@@ -140,7 +145,7 @@ scope: global (W1-8-AC10, W1-8-AC11) — annotated `@singleton`.
 
 AuthGuard (create) — `lib/config/route/guards/auth_guard.dart` — annotated
 `@singleton`, extends `AutoRouteGuard`.
-  Depends on: `AuthStatusWatcher`, `SharedPreferences`, `PendingRouteStore` —
+  Depends on: `AuthStatusListener`, `SharedPreferences`, `PendingRouteStore` —
   all constructor-injected. It does **not** call `getIt` internally, unlike the
   `OnboardingGuard` it replaces; `AppRouter` takes the guard through its own
   constructor instead, which is what `flutter-arch.md` requires and what makes
@@ -173,14 +178,14 @@ its only reference is the `guards:` entry being replaced.
 
 ## Startup wiring
 
-bootstrap.dart (modify) — starts `AuthStatusWatcher` then `SessionNavigator`
+bootstrap.dart (modify) — starts `AuthStatusListener` then `SessionNavigator`
 before `runApp`, next to the existing `SupabaseConnectionChecker` line. Starting
 the subscription before the first frame gives the first emission a good chance
 to land before the router resolves the initial route; W1-8-AC07's fail-closed
 default is what covers the case where it does not.
 
 main.dart (modify) — `getIt<AppRouter>().config()` gains
-`reevaluateListenable: getIt<AuthStatusWatcher>()`. This is the whole of the
+`reevaluateListenable: getIt<AuthStatusListener>()`. This is the whole of the
 reactive redirect: auto_route calls `reevaluateGuards()` on every notification,
 which re-runs `AuthGuard` against the live stack (W1-8-AC13, W1-8-AC14). A stack
 made only of open routes has no guards to re-run, so nothing moves (W1-8-AC16).

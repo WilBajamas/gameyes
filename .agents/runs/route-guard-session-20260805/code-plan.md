@@ -4,7 +4,8 @@ DECISION-1 and DECISION-2
 Date: 2026-08-05
 
 Skeletons only. Where `task-brief.md` and this file disagree, `task-brief.md`
-wins.
+wins — except for `## Approved feedback delta` at the foot of this file, which
+wins over both.
 
 ## CREATE NEW
 
@@ -30,7 +31,7 @@ class PendingRouteStore {
 }
 ```
 
-### lib/config/route/auth_status_watcher.dart
+### lib/config/route/auth_status_listener.dart
 
 ```dart
 import 'dart:async';
@@ -41,8 +42,8 @@ import 'package:gaming_library_assessment_flutter/features/auth/domain/use_cases
 import 'package:injectable/injectable.dart';
 
 @singleton
-class AuthStatusWatcher extends ChangeNotifier {
-  AuthStatusWatcher(this._observeAuthStatus);
+class AuthStatusListener extends ChangeNotifier {
+  AuthStatusListener(this._observeAuthStatus);
 
   final ObserveAuthStatusUseCase _observeAuthStatus;
   StreamSubscription<AuthStatusEntity>? _subscription;
@@ -86,7 +87,7 @@ class AuthStatusWatcher extends ChangeNotifier {
 
 ```dart
 import 'package:auto_route/auto_route.dart';
-import 'package:gaming_library_assessment_flutter/config/route/auth_status_watcher.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auth_status_listener.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/config/route/pending_route_store.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
@@ -97,7 +98,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthGuard extends AutoRouteGuard {
   AuthGuard(this._authStatus, this._preferences, this._pendingRoutes);
 
-  final AuthStatusWatcher _authStatus;
+  final AuthStatusListener _authStatus;
   final SharedPreferences _preferences;
   final PendingRouteStore _pendingRoutes;
 
@@ -125,7 +126,7 @@ class AuthGuard extends AutoRouteGuard {
 ### lib/config/route/session_navigator.dart
 
 ```dart
-import 'package:gaming_library_assessment_flutter/config/route/auth_status_watcher.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auth_status_listener.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/config/route/pending_route_store.dart';
@@ -134,10 +135,10 @@ import 'package:injectable/injectable.dart';
 
 @singleton
 class SessionNavigator {
-  SessionNavigator(this._authStatus, this._pendingRoutes, this._router);
+  SessionNavigator(this._authStatus, this._pendingRoutesStore, this._router);
 
-  final AuthStatusWatcher _authStatus;
-  final PendingRouteStore _pendingRoutes;
+  final AuthStatusListener _authStatus;
+  final PendingRouteStore _pendingRoutesStore;
   final AppRouter _router;
 
   void start() => _authStatus.addListener(_onAuthStatusChanged);
@@ -148,7 +149,7 @@ class SessionNavigator {
     // waiting on the welcome or sign-in screens is moved along.
     if (!RouteConstants.openPaths.contains(_router.currentPath)) return;
 
-    _router.replaceAll([_pendingRoutes.take() ?? const HomeRoute()]);
+    _router.replaceAll([_pendingRoutesStore.take() ?? const HomeRoute()]);
   }
 }
 ```
@@ -239,7 +240,7 @@ gets wrong today.
   await configureDependencies();
   // Start listening for sign-in and sign-out before the first screen is
   // built, so the router knows where the person stands as early as it can.
-  getIt<AuthStatusWatcher>().start();
+  getIt<AuthStatusListener>().start();
   getIt<SessionNavigator>().start();
   unawaited(getIt<SupabaseConnectionChecker>().check());
   runApp(app);
@@ -249,7 +250,7 @@ gets wrong today.
 
 ```dart
       routerConfig: getIt<AppRouter>().config(
-        reevaluateListenable: getIt<AuthStatusWatcher>(),
+        reevaluateListenable: getIt<AuthStatusListener>(),
       ),
 ```
 
@@ -265,7 +266,7 @@ gets wrong today.
 - `'should return null on a second take when the route was already taken'` —
   `take()` clears. [W1-8-AC10]
 
-### test/cubit/auth/auth_status_watcher_test.dart
+### test/cubit/auth/auth_status_listener_test.dart
 `@GenerateMocks([ObserveAuthStatusUseCase])`, driven by a `StreamController`.
 - `'should report signed out when no status has been emitted yet'` — the
   fail-closed default. [W1-8-AC07]
@@ -302,7 +303,7 @@ flag.
 
 ### test/cubit/auth/session_navigator_test.dart
 `@GenerateMocks([AppRouter])`, `currentPath` stubbed, a real
-`AuthStatusWatcher` fed by a `StreamController`.
+`AuthStatusListener` fed by a `StreamController`.
 - `'should navigate to the pending route when a signed-in status arrives on the
   auth path'` — and the record is cleared afterwards. [W1-8-AC10]
 - `'should navigate to the tab shell when a signed-in status arrives with no
@@ -317,3 +318,32 @@ flag.
   [W1-8-AC17]
 - `'should replace the stack rather than push when it navigates'` —
   `replaceAll`, never `push`. [W1-8-AC15]
+
+## Approved feedback delta
+
+Product Owner review, Phase 3 human design gate, 2026-08-05. Naming only — no
+design, scope or acceptance-criteria change.
+
+- Rename the class `AuthStatusWatcher` to `AuthStatusListener`, and its file
+  from `lib/config/route/auth_status_watcher.dart` to
+  `lib/config/route/auth_status_listener.dart`.
+- Rename its test file from `test/cubit/auth/auth_status_watcher_test.dart` to
+  `test/cubit/auth/auth_status_listener_test.dart`.
+- Every reference follows the rename: the `AuthGuard` and `SessionNavigator`
+  fields' type and imports, `bootstrap.dart`'s `getIt<AuthStatusListener>()`,
+  `main.dart`'s `reevaluateListenable: getIt<AuthStatusListener>()`, and the
+  prose in `tdd.md` and `task-brief.md`. The fields holding it keep the name
+  `_authStatus` — it still reads correctly.
+- Rename `SessionNavigator`'s field `_pendingRoutes` to `_pendingRoutesStore`
+  (constructor parameter, field and its one use site).
+- Not acted on, flagged for later: `AuthGuard` declares its own field named
+  `_pendingRoutes`. The Product Owner asked only about `SessionNavigator`, so
+  the guard's field keeps its current name; the two could be aligned in a
+  follow-up if consistency is wanted.
+- The rest of the design is unchanged and stays approved: guard scope,
+  deep-link resume, deletion of `onboarding_guard.dart`, the fail-closed
+  default and notify-only-on-change.
+
+The renames above are also applied in place throughout this file, in
+`task-brief.md`'s file allowlist and implementation plan, and in `tdd.md`, so
+no stale filename reaches the Dev Agent.
