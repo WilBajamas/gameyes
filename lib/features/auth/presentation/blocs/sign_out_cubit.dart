@@ -17,8 +17,7 @@ class SignOutCubit extends Cubit<SignOutState> {
     emit(const SignOutState(status: SignOutStatus.loading));
 
     final result = await _signOut();
-    // Signing out can send the person back to the sign-in screen before this
-    // call comes back, taking the settings screen and this object with it.
+    // The redirect can dispose this screen before the call comes back.
     if (isClosed) return;
 
     switch (result) {

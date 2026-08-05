@@ -413,3 +413,21 @@ Mac is available — see `roadmap-deferred.md`.
 - Always use `DefaultCachedNetworkImage` for remote images — never `Image.network`
 - Pagination state uses two enums — never collapse them into one status
 - Pull-to-refresh only shown when `status == success`
+
+
+## Provisional UI — the Settings sign-out control (2026-08-05)
+
+`lib/features/settings/presentation/widgets/sign_out_section.dart` is **test
+scaffolding that stayed**. It exists because four of week 1 item 8's manual
+checks could not be run without a sign-out trigger, and the app needs a sign-out
+before beta regardless — so it was built properly rather than hacked in.
+
+**Its visual design is not official.** It borrows the sign-in provider row's
+anatomy for want of any Settings design spec. Do not treat it as the pattern for
+future Settings rows, and do not cite it as precedent. Placement, wording, a
+possible confirmation step, and grouping under an account section are all open —
+see `roadmap-deferred.md`.
+
+The behaviour, by contrast, is settled and should be preserved: the tap performs
+no navigation. The auth guard and `AuthStatusListener` from item 8 move the user;
+adding navigation here would race that mechanism.

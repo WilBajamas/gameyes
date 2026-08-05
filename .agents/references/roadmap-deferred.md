@@ -410,3 +410,44 @@ on device (the user's session token). Both are wanted, for different jobs.
 holds the credential at all. That deletes the key-extraction problem, centralises
 caching, and stops per-user rate limiting. Roughly a day of work — and it is
 week-1 scope, not deferred.
+
+---
+
+### Email + password sign-in, and switching accounts — RAISED 2026-08-05, not scheduled
+Found by the Product Owner while testing week 1 item 8's sign-out.
+
+**There is no way to sign in as a different account.** Discord and Google both
+sign you straight back into whichever account the provider has active, without
+ever asking for credentials, so a sign-out followed by a sign-in returns the
+same user. Nothing in the app can force the provider to prompt.
+
+Two consequences worth knowing now:
+
+- **Multi-account testing is not possible** with the current providers alone.
+  Anything needing two real accounts — the cross-account RLS denial check in
+  week 1 item 3, for one — cannot be verified without a second device, a second
+  browser profile, or signing out of the provider itself at OS level.
+- **Email + password auth is likely needed**, and sooner than "some day". It is
+  the only sign-in method the app can fully control, and the natural fix for
+  both account switching and test-account creation.
+
+Not scheduled and not costed. Deliberately not folded into week 1 — it is a new
+provider with its own screens, validation, password reset and email
+verification, none of which the current auth work covers. Note that
+`sign_in_provider.dart` and the repository were built to take extra providers
+without reshaping, so the data/domain side should absorb it cheaply; the
+presentation side is the real work.
+
+An interim option if only provider prompting is wanted: Supabase's OAuth calls
+accept query parameters that ask the provider to re-prompt for an account
+(`prompt=select_account` for Google, `prompt=consent` for Discord). Cheaper than
+a new provider and worth testing before committing to email/password.
+
+### Sign-out UI/UX — PROVISIONAL, needs a real design pass
+Shipped 2026-08-05 in run `debug-sign-out-20260805` so that four of week 1 item
+8's manual checks could be run at all. **The component is deliberately kept, the
+visual design is not signed off.** It reuses the sign-in provider row's anatomy
+(52px, `surfaceRaised`, `radius.sm`, centred label) because that was the only
+precedent available, and Settings has no design spec of its own. Placement,
+wording, whether a confirmation step is wanted, and whether sign-out belongs in
+a grouped account section are all open. Revisit when Settings gets a real spec.

@@ -1,8 +1,10 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-05: items 2, 4, 5, 6 (plus its two
-follow-ups, 6.1 and 6.2) and 7 are complete. **Item 8 (route guard and
-session) is next.**
+Written 2026-07-29. Last updated 2026-08-05 (second update that day): items 2,
+4, 5, 6 (with 6.1 and 6.2), 7 and **8 are complete**, plus an unplanned
+sign-out follow-up. Item 8 and the follow-up are **QA PASS but unmerged**, both
+on `claude/questloggd-week1-item8-sosqs6`. **Stage 0 is now fully unblocked —
+Discord and Google are live on Supabase dev.**
 
 ---
 
@@ -44,6 +46,56 @@ process notes still apply.
 - **Next: item 8, route guard and session** (`.agents/week-1-task-briefs.md`
   item 8) — auth-state-driven `auto_route` guard, no pipeline run started yet.
 
+### Item 8 shipped, plus an unplanned follow-up (2026-08-05)
+
+Both on branch `claude/questloggd-week1-item8-sosqs6`, **QA PASS, not merged** —
+merging to `develop` is the human's call.
+
+- **Item 8 — route guard and session.** Run `route-guard-session-20260805`.
+  `AuthGuard` on `/` and the four content routes, fed by an `AuthStatusListener`
+  that is also auto_route's `reevaluateListenable`; `PendingRouteStore` +
+  `SessionNavigator` resume a blocked route after sign-in. `OnboardingGuard` was
+  deleted, its decision folded in. 13 of 13 attempted device checks passed.
+  URL deep-link entry checks are **deferred** — Android has no `VIEW` intent
+  filter for app routes, so links cannot be delivered at all yet.
+- **Sign-out control on Settings.** Run `debug-sign-out-20260805`. Existed
+  because four of item 8's checks needed a sign-out trigger and none existed.
+  QA PASS, 8 of 8 device checks. **Its UI/UX is provisional — see below.**
+
+**Three known gaps, none blocking, none fixed:**
+
+1. **Item 8's AC12 test is a duplicate** of the AC10 test and never simulates
+   the onboarding hop. Test-quality gap, not a behaviour gap.
+2. **No loading state during OAuth sign-in.** `sign_in_cubit.dart` emits idle as
+   soon as the browser opens, not when sign-in completes, so the user returns to
+   a blank sign-in screen until `SessionNavigator` moves them. Item 7's gap,
+   found during item 8's checks.
+3. **A mid-session sign-out resumes to the tab shell, not the screen you were
+   on.** Within spec — resume was only ever promised for the blocked-navigation
+   case — but worth knowing. Cause and a possible enhancement are in item 8's
+   `qa-report.md`.
+
+### The sign-out control's design is NOT signed off
+
+Recorded in `project-conventions.md` and `roadmap-deferred.md`, repeated here
+because it is the thing most likely to be mistaken for settled: the Settings
+sign-out row is **test scaffolding that was built properly and kept**. It
+borrows the sign-in provider row's anatomy purely because Settings has no design
+spec. Placement, wording, a possible confirmation step, and grouping under an
+account section are all open. **Do not cite it as precedent for future Settings
+rows.** Its *behaviour* — the tap performs no navigation, the guard moves the
+user — is settled and should be preserved.
+
+### No way to sign in as a different account
+
+Raised by the Product Owner 2026-08-05. Discord and Google both sign you
+straight back into the provider's active account without prompting, so
+sign-out → sign-in returns the same user. This blocks any test needing two real
+accounts — **including week 1 item 3's cross-account RLS denial check**. Email +
+password auth is the likely fix and is not scheduled; a cheaper interim is
+passing a re-prompt query parameter to the provider. Written up in
+`roadmap-deferred.md`.
+
 ### Phase 4B is now review-after-push (decided 2026-08-05, during item 8)
 
 **This reverses process change 2 from 2026-08-02** (the two-pass Dev Agent),
@@ -71,6 +123,43 @@ worded single-thread adaptation, not a mirror of `.claude/`. The two now
 disagree about Phase 4B.
 
 ### Next-session prompt
+
+```text
+Resume QuestLoggd. Item 8 (route guard and session) and an unplanned sign-out
+follow-up are both done and QA PASS, but UNMERGED — both sit on branch
+claude/questloggd-week1-item8-sosqs6. Read .agents/handover.md's top section
+first; it is current as of the second 2026-08-05 update.
+
+Before anything else:
+- Check `git status` is clean. `.agents/`, `.claude/` and `.codex/` are tracked.
+- No Flutter in a fresh container. Install 3.41.4 to match .fvmrc, then
+  `flutter pub get` and `dart run build_runner build --delete-conflicting-outputs`
+  before trusting any baseline.
+
+First decision for the human: merge the two completed runs to `develop`, or keep
+building on that branch. Nothing else should start until that is settled.
+
+Then week 1 item 3 (database schema and RLS) is the next checklist item — but
+read the handover's "No way to sign in as a different account" note first: its
+cross-account denial check cannot be verified with Discord/Google alone.
+
+Smaller follow-ups, all recorded, none blocking, pick up when convenient:
+- Item 8's AC12 test duplicates the AC10 test and never simulates the
+  onboarding hop.
+- No loading state while OAuth sign-in is in flight (item 7's gap).
+- The Settings sign-out control's visual design is provisional, not signed off.
+- Android has no VIEW intent filter for app routes, so URL deep links cannot be
+  delivered; four of item 8's manual checks are deferred on that.
+
+Still outstanding from earlier runs, never done:
+- On-device check of the system nav bar colour (item 6.2).
+- 3 visual checks from item 6.1.
+
+Note: `.codex/` was deliberately left on the OLD Phase 4B rule and now disagrees
+with `.claude/`.
+```
+
+### Superseded next-session prompt (2026-08-05, first update)
 
 ```text
 Resume QuestLoggd. Items through 7 are done (see handover.md's 2026-08-05
@@ -393,20 +482,34 @@ re-verify baselines, and create a **new** commit — never amend. Reduced an
 
 ## Gotchas that will bite
 
-### 1. Localisation cannot be generated by an agent
+### 1. Localisation — ~~cannot be generated by an agent~~ **CORRECTED 2026-08-05**
 
-The `S` class in `lib/generated/l10n.dart` comes from the **Flutter Intl IDE
-plugin**. There is no CLI for it — `intl_utils` is not a dependency, and
-`flutter gen-l10n` belongs to a different system that was removed from this
-project on 2026-07-29.
+**This gotcha was wrong, and it cost real design decisions.** For weeks it told
+every run to avoid user-facing strings on the premise that only the IDE could
+regenerate the `S` class. Items 2 and 5 were deliberately scoped around it.
 
-So an agent that adds a user-facing string **cannot make the code compile.** The
-skills tell it to add the key to both `.arb` files, use `S.current.[key]`, then
-stop and flag it rather than hand-write the accessor. A human must open the IDE
-and let the plugin regenerate.
+`intl_utils` **is** the generator the Flutter Intl IDE plugin wraps, and
+`pubspec.yaml` already carries the `flutter_intl: enabled: true` config it
+reads. It runs perfectly well from the command line:
 
-**Pick features that need few or no new strings where possible** — items 5 and
-2 both avoided this deliberately.
+```
+dart pub global activate intl_utils
+dart pub global run intl_utils:generate
+```
+
+Verified 2026-08-05 during the sign-out run: it generated two new accessors,
+left the analyzer at baseline (38 issues, 0 errors), and needed no IDE. It is
+not a dependency in `pubspec.yaml` — that part of the old note was true — but
+`pub global activate` does not require it to be.
+
+One thing to expect: it regenerates strictly from the `.arb` files, so **any
+getter whose key was deleted disappears.** That first run removed 10 dead
+getters (`welcome_chip_*`, `welcome_stat_*`, `welcome_countdown_*`,
+`welcome_social_proof`) left behind by item 6.1, plus the `featured_revamp` one
+this file used to mention. Correct behaviour — but check the removals are
+genuinely unreferenced before committing, exactly as was done there.
+
+**Adding a user-facing string is no longer a reason to reshape a feature.**
 
 Pending cleanup: `lib/generated/l10n.dart` and `messages_*.dart` still carry a
 dead `featured_revamp` getter. Harmless. It disappears on the next IDE regen.

@@ -44,9 +44,6 @@ class _SignOutButton extends StatelessWidget {
             height: 52,
             width: double.infinity,
             child: DecoratedBox(
-              // Same raised action row as the sign-in provider buttons.
-              // Signing out destroys nothing, so it is not styled as
-              // destructive.
               decoration: BoxDecoration(
                 color: tokens.color.surfaceRaised,
                 borderRadius: BorderRadius.circular(tokens.radius.sm),
