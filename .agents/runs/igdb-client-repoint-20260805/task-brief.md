@@ -10,24 +10,24 @@ direct-to-IGDB stack, so no Twitch or IGDB credential ships in the client.
 
 ## Testing mode
 
-`coverage` — Rule applied: shared utility used by 3+ features (`IgdbProxyService`
+`coverage` — Rule applied: shared utility used by 3+ features (`SupabaseIgdbService`
 is consumed by games, game_detail and featured). Justification: it also carries the
 timeout and array-decode logic that three acceptance criteria turn on.
 
 ## File allowlist
 
 ### CREATE NEW
-lib/core/services/supabase/igdb_proxy_client.dart — thin wrapper that invokes the `igdb-proxy` function and returns its reply untouched
-lib/core/services/api/igdb_proxy_service.dart — applies the 30s timeout and decodes the returned JSON array into models
+lib/core/services/supabase/supabase_igdb_client.dart — thin wrapper that invokes the `igdb-proxy` function and returns its reply untouched
+lib/core/services/api/supabase_igdb_service.dart — applies the 30s timeout and decodes the returned JSON array into models
 
 ### MODIFY EXISTING
 lib/core/res/const.dart — add `IgdbProxyConstants`; delete `twitchClientId` and `twitchClientSecret`
 lib/config/config_envied.dart — delete the `twitchClientId` and `twitchClientSecret` fields
 lib/core/data/models/error.dart — add an `ErrorType.functionError` factory next to `dioError`
 lib/core/data/datasource/base_repository_mixin.dart — add one `on FunctionException` branch to `fetchData`
-lib/features/games/data/datasources/games_datasource.dart — inject `IgdbProxyService`; query building unchanged
-lib/features/game_detail/data/datasources/game_detail_datasource.dart — inject `IgdbProxyService`; query building unchanged
-lib/features/featured/data/repositories/featured_repository_impl.dart — inject `IgdbProxyService`; five call sites, nothing else
+lib/features/games/data/datasources/games_datasource.dart — inject `SupabaseIgdbService`; query building unchanged
+lib/features/game_detail/data/datasources/game_detail_datasource.dart — inject `SupabaseIgdbService`; query building unchanged
+lib/features/featured/data/repositories/featured_repository_impl.dart — inject `SupabaseIgdbService`; five call sites, nothing else
 
 ### DELETE
 lib/features/games/services/igdb_api_service.dart — Retrofit IGDB service (delete its generated `.g.dart` with it)
@@ -70,13 +70,13 @@ Step 4: `lib/core/data/datasource/base_repository_mixin.dart` — add one
 `Failure(ErrorType.functionError(...))`. Leave the `DioException` branch and the
 generic `catch` exactly as they are.
 
-Step 5: create `lib/core/services/supabase/igdb_proxy_client.dart` — `@injectable`
-`IgdbProxyClient`, injecting `SupabaseClient`, with a single
+Step 5: create `lib/core/services/supabase/supabase_igdb_client.dart` —
+`@injectable` `SupabaseIgdbClient`, injecting `SupabaseClient`, with a single
 `invoke({required String endpoint, required String query})` returning the
 `FunctionResponse.data` untouched. No decoding, no error handling, no timeout here.
 
-Step 6: create `lib/core/services/api/igdb_proxy_service.dart` — `@injectable`
-`IgdbProxyService`, injecting `IgdbProxyClient`, with `fetchGames`,
+Step 6: create `lib/core/services/api/supabase_igdb_service.dart` — `@injectable`
+`SupabaseIgdbService`, injecting `SupabaseIgdbClient`, with `fetchGames`,
 `fetchReleaseDates` and the generic `fetchList`. `fetchList` applies
 `IgdbProxyConstants.requestTimeout`, throws a `FormatException` if the reply is not
 a list, and maps each element through the supplied `fromJson`.
@@ -86,16 +86,16 @@ the envied output without the Twitch fields, the freezed error model, and the DI
 config with the two new classes.
 
 Step 8: `lib/features/games/data/datasources/games_datasource.dart` — swap the
-injected `IgdbApiService` for `IgdbProxyService` and call `fetchGames(...)` with the
-built query. Do not touch the `IGDBQueryBuilder` chain, the search/sort branch, the
-offset arithmetic or the `GamesModel(count: 0, ...)` wrapper.
+injected `IgdbApiService` for `SupabaseIgdbService` and call `fetchGames(...)` with
+the built query. Do not touch the `IGDBQueryBuilder` chain, the search/sort branch,
+the offset arithmetic or the `GamesModel(count: 0, ...)` wrapper.
 
 Step 9: `lib/features/game_detail/data/datasources/game_detail_datasource.dart` —
-swap to `IgdbProxyService` and call `fetchList<GameDetailModel>` with the `games`
+swap to `SupabaseIgdbService` and call `fetchList<GameDetailModel>` with the `games`
 endpoint and `GameDetailModel.fromJson`. Keep `response.first` as is.
 
 Step 10: `lib/features/featured/data/repositories/featured_repository_impl.dart` —
-swap the injected `IgdbApiService` for `IgdbProxyService` and change the five
+swap the injected `IgdbApiService` for `SupabaseIgdbService` and change the five
 `fetchGames(query)` call sites to the new service. Do not touch `_gameFields`, the
 queries, the sorting, the fallbacks or the `catch` blocks.
 
@@ -118,9 +118,9 @@ Step 16: `test/mocks/release_date_mock.dart` (new), plus additions to
 `test/mocks/error_mock.dart` — raw JSON array fixtures for each model and a
 `FunctionException` fixture. Getters, not `final`, per `testing-conventions.md`.
 
-Step 17: rewrite `test/api/games/games_test.dart` — mock `IgdbProxyClient`, use the
-real `IgdbProxyService` and real `GamesDataSource`. Delete the `DioAdapter` setup
-and both existing Dio tests.
+Step 17: rewrite `test/api/games/games_test.dart` — mock `SupabaseIgdbClient`, use
+the real `SupabaseIgdbService` and real `GamesDataSource`. Delete the `DioAdapter`
+setup and both existing Dio tests.
 
 Step 18: rewrite `test/api/game_detail/game_detail_test.dart` — same shape, with the
 real `GameDetailRemoteDatasource`. Delete the `DioAdapter` setup and both existing
@@ -156,8 +156,12 @@ directly.
 
 ## Constraints
 
+- Class naming for the two new classes is fixed by
+  `code-plan.md ## Approved feedback delta` (Phase 3 human decision):
+  `SupabaseIgdbClient` and `SupabaseIgdbService`. `tdd.md` still shows the old
+  `IgdbProxyClient` / `IgdbProxyService` names; the delta wins.
 - Clean Architecture, 3 layers per feature; `lib/core/` must never import from
-  `lib/features/`. That is why `IgdbProxyService` exposes a generic `fetchList`
+  `lib/features/`. That is why `SupabaseIgdbService` exposes a generic `fetchList`
   rather than a `fetchGameDetail` method.
 - DI is GetIt + injectable. Annotate and regenerate; never edit
   `service_locator.config.dart` by hand, and never call `getIt<T>()` inside a

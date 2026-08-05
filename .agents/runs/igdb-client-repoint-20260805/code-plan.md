@@ -5,7 +5,7 @@ Date: 2026-08-05
 
 ## CREATE NEW
 
-### lib/core/services/supabase/igdb_proxy_client.dart
+### lib/core/services/supabase/supabase_igdb_client.dart
 
 ```dart
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
@@ -16,8 +16,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 // with. It stays this thin so tests can stand in for Supabase without reaching
 // the network.
 @injectable
-class IgdbProxyClient {
-  const IgdbProxyClient(this._client);
+class SupabaseIgdbClient {
+  const SupabaseIgdbClient(this._client);
 
   final SupabaseClient _client;
 
@@ -35,20 +35,20 @@ class IgdbProxyClient {
 }
 ```
 
-### lib/core/services/api/igdb_proxy_service.dart
+### lib/core/services/api/supabase_igdb_service.dart
 
 ```dart
 import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/release_date.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/core/services/supabase/igdb_proxy_client.dart';
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class IgdbProxyService {
-  const IgdbProxyService(this._client);
+class SupabaseIgdbService {
+  const SupabaseIgdbService(this._client);
 
-  final IgdbProxyClient _client;
+  final SupabaseIgdbClient _client;
 
   Future<List<Game>> fetchGames(String query) => fetchList(
         endpoint: IgdbProxyConstants.gamesEndpoint,
@@ -98,7 +98,8 @@ class ConfigConstants {
   ...
 }
 
-// ...added alongside the other constant classes:
+// ...added alongside the other constant classes. Keeps the IgdbProxy name
+// because it describes the deployed function's contract, not the Dart classes:
 class IgdbProxyConstants {
   static const functionName = 'igdb-proxy';
   static const gamesEndpoint = 'games';
@@ -168,9 +169,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 ```dart
 @injectable
 class GamesDataSource {
-  final IgdbProxyService igdbProxyService;
+  final SupabaseIgdbService supabaseIgdbService;
 
-  const GamesDataSource(this.igdbProxyService);
+  const GamesDataSource(this.supabaseIgdbService);
 
   Future<GamesModel> fetchDatasourceGames({ /* unchanged */ }) async {
     final queryBuilder = IGDBQueryBuilder()      // unchanged
@@ -179,7 +180,7 @@ class GamesDataSource {
         .offset((page - 1) * pageSize);          // unchanged
     // search / sort branch unchanged
 
-    final response = await igdbProxyService.fetchGames(queryBuilder.build());
+    final response = await supabaseIgdbService.fetchGames(queryBuilder.build());
 
     return GamesModel(
       count: 0,
@@ -194,9 +195,9 @@ class GamesDataSource {
 ```dart
 @injectable
 class GameDetailRemoteDatasource {
-  final IgdbProxyService _igdbProxyService;
+  final SupabaseIgdbService _supabaseIgdbService;
 
-  GameDetailRemoteDatasource(this._igdbProxyService);
+  GameDetailRemoteDatasource(this._supabaseIgdbService);
 
   Future<GameDetailModel> fetchGameDetail({required int id}) async {
     final query = IGDBQueryBuilder()             // unchanged
@@ -205,7 +206,7 @@ class GameDetailRemoteDatasource {
         .limit(1)
         .build();
 
-    final response = await _igdbProxyService.fetchList<GameDetailModel>(
+    final response = await _supabaseIgdbService.fetchList<GameDetailModel>(
       endpoint: IgdbProxyConstants.gamesEndpoint,
       query: query,
       fromJson: GameDetailModel.fromJson,
@@ -224,17 +225,17 @@ class FeaturedRepositoryImpl
     with BaseRepositoryMixin
     implements FeaturedRepository {
   final FeaturedLocalDatasource _localDatasource;
-  final IgdbProxyService _igdbProxyService;
+  final SupabaseIgdbService _supabaseIgdbService;
 
   FeaturedRepositoryImpl(
     this._localDatasource,
-    this._igdbProxyService,
+    this._supabaseIgdbService,
   );
 
   // _gameFields, every IGDBQueryBuilder chain, the sorting, the 7-then-14 day
   // retry, the critics top-up and every catch block stay exactly as they are.
   // Only the five call sites change, all in this shape:
-  //   final games = await _igdbProxyService.fetchGames(query);
+  //   final games = await _supabaseIgdbService.fetchGames(query);
 }
 ```
 
@@ -254,16 +255,16 @@ class FeaturedRepositoryImpl
 ### test/mocks/error_mock.dart
 - adds `mockFunctionException` — `FunctionException(status: 502, details: {'error': ...})`
 
-### test/api/games/games_test.dart (rewrite — mocks `IgdbProxyClient`, real `IgdbProxyService` and real `GamesDataSource`)
+### test/api/games/games_test.dart (rewrite — mocks `SupabaseIgdbClient`, real `SupabaseIgdbService` and real `GamesDataSource`)
 - `'should send the games endpoint and the built query to the proxy when fetching games'` — captures the `invoke` arguments and asserts the endpoint is `games` and the query string matches the builder output exactly
 - `'should send a search query with no sort clause when a search term is given'` — the search-suppresses-sort rule and the offset arithmetic survive the swap
 - `'should return GamesModel with count 0 and decoded games when the proxy returns a JSON array'` — decoding a bare array into `List<Game>`
 - `'should throw when the proxy reply is not a JSON array'` — never a silently empty list
 - `'should throw FunctionException when the proxy call fails'` — the failure reaches the repository
-- `'should send the release dates endpoint and decode into ReleaseDate when fetching release dates'` — `IgdbProxyService.fetchReleaseDates`
+- `'should send the release dates endpoint and decode into ReleaseDate when fetching release dates'` — `SupabaseIgdbService.fetchReleaseDates`
 - `'should fail rather than hang when the proxy does not answer within 30 seconds'` — `testWidgets` with a never-completing stub and `tester.pump(const Duration(seconds: 31))`, same shape as `supabase_connection_checker_test.dart`
 
-### test/api/game_detail/game_detail_test.dart (rewrite — mocks `IgdbProxyClient`, real `IgdbProxyService` and real `GameDetailRemoteDatasource`)
+### test/api/game_detail/game_detail_test.dart (rewrite — mocks `SupabaseIgdbClient`, real `SupabaseIgdbService` and real `GameDetailRemoteDatasource`)
 - `'should send the games endpoint and the id query to the proxy when fetching game detail'` — asserts endpoint `games` and the `where id = N` query
 - `'should return the first decoded GameDetailModel when the proxy returns a JSON array'`
 - `'should throw when the proxy returns an empty array'` — the pre-existing rough edge is preserved, not fixed
@@ -271,3 +272,47 @@ class FeaturedRepositoryImpl
 
 ### test/repository/games/games_repository_test.dart (one appended case; existing cases untouched)
 - `'should return Failure carrying the proxy status code and message when the datasource throws FunctionException'`
+
+## Approved feedback delta
+
+Naming-only revision from the Phase 3 gate. Nothing about the design, layering,
+signatures, testing mode or step order changes. Where this delta conflicts with
+`tdd.md` or with any surviving mention elsewhere, this delta wins.
+
+- `IgdbProxyClient` is renamed `SupabaseIgdbClient`, and its file
+  `lib/core/services/supabase/igdb_proxy_client.dart` is renamed
+  `lib/core/services/supabase/supabase_igdb_client.dart`.
+- `IgdbProxyService` is renamed `SupabaseIgdbService`, and its file
+  `lib/core/services/api/igdb_proxy_service.dart` is renamed
+  `lib/core/services/api/supabase_igdb_service.dart`.
+- Reason: neither old name signalled that this is the Supabase-routed path that
+  replaces the direct-to-IGDB Retrofit stack. `Supabase`-first also matches the
+  existing `SupabasePing` / `SupabaseConnectionChecker` naming in
+  `lib/core/services/supabase/`.
+- Both classes carry `Supabase`, not just the client: `SupabaseIgdbService` is
+  the type named in seven constructor fields and call sites across games,
+  game_detail and featured, so it is where the at-a-glance signal has to live.
+  `SupabaseIgdbClient` reads as the raw `functions.invoke` seam; the service
+  reads as the decoding layer consuming it.
+- Constructor field names follow: `igdbProxyService` → `supabaseIgdbService` in
+  `GamesDataSource`, `_igdbProxyService` → `_supabaseIgdbService` in
+  `GameDetailRemoteDatasource` and `FeaturedRepositoryImpl`. The service's own
+  field for the client stays `_client`.
+- Folders do not change. The client stays under
+  `lib/core/services/supabase/`, the service stays under
+  `lib/core/services/api/`. Only the two filenames change.
+- `IgdbProxyConstants` in `lib/core/res/const.dart` keeps its name — it
+  describes the deployed `igdb-proxy` function's contract (function name,
+  endpoint names, timeout), not the Dart classes, and `functionName` stays the
+  literal `'igdb-proxy'`.
+- `tdd.md` still uses the old names throughout, and so do the `tdd.md`
+  filenames and the `## Feature summary`, `## Data layer ### Services`,
+  `## Reuse decisions` and `## Constraints` mentions. It was deliberately not
+  rewritten; read the names from this delta.
+- `task-brief.md` has been updated in place for the two allowlist paths and for
+  every step and constraint that named the old classes or files, so the Dev
+  Agent's file allowlist is correct as written.
+- Test files, test paths and mock file names are unchanged; only the mocked
+  type in `test/api/games/games_test.dart` and
+  `test/api/game_detail/game_detail_test.dart` becomes `SupabaseIgdbClient`
+  (so `@GenerateMocks([SupabaseIgdbClient])`, regenerated `*.mocks.dart`).
