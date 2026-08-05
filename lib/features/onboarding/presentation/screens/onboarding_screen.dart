@@ -4,13 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/const.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_state.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/cover_tile.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_container.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_key_art.dart';
+import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_hero.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_skip_text.dart';
-import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/widgets/welcome_stat_pill.dart';
 import 'package:gaming_library_assessment_flutter/widgets/primary_button.dart';
 
 import '../../../../generated/l10n.dart';
@@ -28,98 +27,106 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-class _WelcomeView extends StatelessWidget {
+class _WelcomeView extends StatefulWidget {
   const _WelcomeView();
 
   @override
+  State<_WelcomeView> createState() => _WelcomeViewState();
+}
+
+class _WelcomeViewState extends State<_WelcomeView> {
+  final PageController _controller = PageController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  // Only a settled page moves the step. A partial drag snaps back and never
+  // reports a change, and neither call writes anything to storage.
+  void _onPageSettled(int index) {
+    final cubit = context.read<WelcomeCubit>();
+    if (index == 0) {
+      cubit.back();
+    } else {
+      cubit.next();
+    }
+  }
+
+  void _followStep(BuildContext context, WelcomeState state) {
+    if (!_controller.hasClients) return;
+    final target = state.step == WelcomeStep.one ? 0 : 1;
+    // A swipe moves the page first and the step second; animating again
+    // here would fight the gesture that caused it.
+    if (_controller.page?.round() == target) return;
+
+    final motion = context.tokens.motion;
+    final duration = motion.resolve(context, motion.screenTransition);
+    if (duration == Duration.zero) {
+      _controller.jumpToPage(target);
+    } else {
+      _controller.animateToPage(
+        target,
+        duration: duration,
+        curve: motion.screenTransitionCurve,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocListener<WelcomeCubit, WelcomeState>(
-      listenWhen: (previous, current) => previous.status != current.status,
-      listener: (context, state) {
-        if (state.status == WelcomeStatus.finished) {
-          context.replaceRoute(const AuthRoute());
-        }
-      },
-      child: BlocBuilder<WelcomeCubit, WelcomeState>(
-        builder: (context, state) {
-          final tokens = context.tokens;
-          return Scaffold(
-            body: PopScope(
-              canPop: state.step == WelcomeStep.one,
-              onPopInvokedWithResult: (didPop, _) {
-                if (!didPop && state.step == WelcomeStep.two) {
-                  context.read<WelcomeCubit>().back();
+    return Scaffold(
+      body: SafeArea(
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<WelcomeCubit, WelcomeState>(
+              listener: (context, state) {
+                if (state.status == WelcomeStatus.finished) {
+                  context.replaceRoute(const AuthRoute());
                 }
               },
-              child: AnimatedSwitcher(
-                duration: tokens.motion.resolve(
-                  context,
-                  tokens.motion.screenTransition,
-                ),
-                switchInCurve: tokens.motion.screenTransitionCurve,
-                switchOutCurve: tokens.motion.screenTransitionCurve,
-                child: state.step == WelcomeStep.one
-                    ? const _WelcomeStepOne(key: ValueKey(WelcomeStep.one))
-                    : const _WelcomeStepTwo(key: ValueKey(WelcomeStep.two)),
-              ),
             ),
-          );
-        },
+            BlocListener<WelcomeCubit, WelcomeState>(listener: _followStep),
+          ],
+          child: BlocSelector<WelcomeCubit, WelcomeState, WelcomeStep>(
+            selector: (state) => state.step,
+            builder: (context, step) {
+              return PopScope(
+                canPop: step == WelcomeStep.one,
+                onPopInvokedWithResult: (didPop, _) {
+                  if (!didPop && step == WelcomeStep.two) {
+                    context.read<WelcomeCubit>().back();
+                  }
+                },
+                child: PageView(
+                  controller: _controller,
+                  onPageChanged: _onPageSettled,
+                  children: const [_WelcomeStepOne(), _WelcomeStepTwo()],
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
 }
 
 class _WelcomeStepOne extends StatelessWidget {
-  const _WelcomeStepOne({super.key});
+  const _WelcomeStepOne();
 
   @override
   Widget build(BuildContext context) {
     return WelcomeContainer(
       step: WelcomeStep.one,
-      heroContent: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            left: 38,
-            bottom: 96,
-            child: Transform.rotate(
-              angle: -0.157,
-              child: const CoverTile(width: 100, height: 134),
-            ),
-          ),
-          Positioned(
-            right: 34,
-            bottom: 88,
-            child: Transform.rotate(
-              angle: 0.175,
-              child: const CoverTile(width: 100, height: 134),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 112,
-            child: Center(
-              child: Transform.rotate(
-                angle: 0.035,
-                child: const CoverTile(
-                  width: 124,
-                  height: 166,
-                  showsPlaying: true,
-                  hasFloatShadow: true,
-                ),
-              ),
-            ),
-          ),
-          const Positioned(
-            left: 24,
-            right: 24,
-            bottom: 34,
-            child: WelcomeStatPill(),
-          ),
-        ],
+      heroHeight: WelcomeLayoutConstants.heroHeightOne,
+      hero: WelcomeHero(
+        contentAsset: WelcomeAssetConstants.heroOne,
+        backgroundColor: context.tokens.color.surfaceIndigoPanel,
       ),
+      headline: S.current.welcome_headline_one,
+      body: S.current.welcome_body_one,
       actions: Row(
         children: [
           Expanded(
@@ -140,59 +147,23 @@ class _WelcomeStepOne extends StatelessWidget {
 }
 
 class _WelcomeStepTwo extends StatelessWidget {
-  const _WelcomeStepTwo({super.key});
+  const _WelcomeStepTwo();
 
   @override
   Widget build(BuildContext context) {
     return WelcomeContainer(
       step: WelcomeStep.two,
-      heroContent: const WelcomeKeyArt(),
-      socialProof: const _WelcomeSocialProof(),
+      heroHeight: WelcomeLayoutConstants.heroHeightTwo,
+      hero: const WelcomeHero(
+        contentAsset: WelcomeAssetConstants.heroTwo,
+        backgroundAsset: WelcomeAssetConstants.heroTwoBackground,
+      ),
+      headline: S.current.welcome_headline_two,
+      body: S.current.welcome_body_two,
       actions: PrimaryButton(
         label: S.current.get_started,
         onPressed: context.read<WelcomeCubit>().finish,
       ),
-    );
-  }
-}
-
-class _WelcomeSocialProof extends StatelessWidget {
-  const _WelcomeSocialProof();
-
-  @override
-  Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    return Row(
-      children: [
-        SizedBox(
-          width: 62,
-          height: 34,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: const [
-              Positioned(
-                left: 0,
-                child: CoverTile(width: 26, height: 34, mini: true),
-              ),
-              Positioned(
-                left: 18,
-                child: CoverTile(width: 26, height: 34, mini: true),
-              ),
-              Positioned(
-                left: 36,
-                child: CoverTile(width: 26, height: 34, mini: true),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            S.current.welcome_social_proof,
-            style: tokens.typography.caption.style,
-          ),
-        ),
-      ],
     );
   }
 }

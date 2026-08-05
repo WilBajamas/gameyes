@@ -23,6 +23,7 @@ class PathConstants {
   static const imagePath = 'assets/images/';
 }
 
+/// Asset filenames used across the whole app - not for specific feature
 class AssetConstants {
   static const error404 = 'error_404.png';
 }
