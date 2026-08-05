@@ -238,6 +238,15 @@ library itself stays in week 2.
       analyzer/test-harness correction was accepted under a human-authorized QA
       retry waiver after Flutter tooling timed out without diagnostics. Manual
       visual verification of both welcome screens remains recommended.
+      **Superseded twice since,** both riding on the same branch and merged to
+      `develop` together via **PR #23** on 2026-08-05 (neither had a separate
+      PR — item 6.1 sat committed-but-unmerged until 6.2 caught up to it):
+      item 6.1 (2026-08-04) replaced both heroes' composed-widget content with
+      flat PNG art. Item 6.2 (2026-08-05) padded the hero art, reduced hero
+      height to ~1/3 screen, added `SafeArea` plus a new app-wide system-bar
+      convention, and made the two screens swipeable via `PageView`. Run
+      folder `welcome-screens-polish-20260804`. QA pass pending one on-device
+      manual check (system nav bar colour) — see that run's `qa-report.md`.
 
 ### 7 — Auth screen [PIPELINE]
 
@@ -258,7 +267,15 @@ library itself stays in week 2.
 > The 88px app mark has no asset yet and stays a dashed placeholder through beta. Failed sign-in uses the error conventions from the
 > component brief, per section, never a full-page error.
 
-- [ ] Done
+- [x] Done. Merged to `develop` via **PR #21** ("implement auth screen and
+      auth services"), predates this checklist file's last true edit — this
+      box was simply never ticked until now. `auth_screen.dart`,
+      `sign_in_cubit.dart`/`sign_in_state.dart`, `legal_footer.dart`,
+      `provider_action_button.dart` all shipped. One deviation from spec:
+      provider marks shipped as `assets/icons/discord-logo.png` /
+      `google-logo.png` rather than the SVGs this brief describes, so
+      `flutter_svg` was never added — `Image.asset` renders them instead. Not
+      re-litigated here; if it matters, confirm with whoever approved PR #21.
 
 ### 8 — Route guard and session [PIPELINE]
 

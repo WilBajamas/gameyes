@@ -1,12 +1,79 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-03: items 2, 4, 5 and 6 are complete.
-Item 6 was merged to `develop` via PR #20. Its QA retry was explicitly waived by
-the human after the focused analyzer/test-harness correction.
+Written 2026-07-29. Last updated 2026-08-05: items 2, 4, 5, 6 (plus its two
+follow-ups, 6.1 and 6.2) and 7 are complete. **Item 8 (route guard and
+session) is next.**
 
 ---
 
-## Current update — 2026-08-03
+## Current update — 2026-08-05
+
+The 2026-08-03 update below is superseded by this one for status; its
+process notes still apply.
+
+- **`.agents/`, `.claude/`, and `.codex/` are no longer git-ignored.** They
+  were un-ignored and pushed straight to `develop` (commit `e9740b9`) on
+  2026-08-04, then a parallel branch reconstructed the same paths from
+  session memory before that push was known about. The two histories
+  diverged and were reconciled in the PR #23 merge (below) — `develop`'s
+  originals won for `handover.md` (this file), `roadmap-deferred.md`, and
+  this checklist; the actively-maintained welcome-screen docs
+  (`project-conventions.md`, `onboarding-welcome-design-spec.md`) kept the
+  branch's newer versions. **Any older note in this file claiming these
+  folders are git-ignored is now wrong** — see "Where things live" below,
+  also corrected.
+- **Item 7 (auth screen) was done all along** — merged via PR #21 before this
+  update's session even started. `week-1-task-briefs.md`'s checkbox just
+  never got ticked. See that file for the one shipped deviation (PNG marks,
+  not SVG).
+- **Items 6.1 and 6.2** (welcome-screen header rework, then padding/height/
+  `SafeArea`/swipe polish) are both done, riding the same branch, merged to
+  `develop` together via **PR #23** on 2026-08-05. Run folder
+  `welcome-screens-polish-20260804/`. QA passed with one outstanding
+  on-device manual check: confirm the system navigation bar reads as canvas
+  `#23272A` on a real Android device (API 34 and 35+ if both are available) —
+  see that run's `qa-report.md ## Manual verification required`.
+  Also still outstanding, carried over from 6.1 and never done: 3 manual
+  visual checks on the flat-PNG hero rework itself.
+- **New standing convention, recorded in `project-conventions.md`:** every
+  screen wraps its body in `SafeArea`, and the app sets one global
+  `SystemUiOverlayStyle` at bootstrap (transparent status bar, nav bar
+  matching `AppColorTokens.canvas`) rather than per-screen. Also recorded:
+  don't add a `BlocListener`'s `listenWhen` when the listener body already
+  guards the same condition itself.
+- **Next: item 8, route guard and session** (`.agents/week-1-task-briefs.md`
+  item 8) — auth-state-driven `auto_route` guard, no pipeline run started yet.
+
+### Next-session prompt
+
+```text
+Resume QuestLoggd. Items through 7 are done (see handover.md's 2026-08-05
+update for what shipped and why item 7's checkbox was stale). Next is week 1
+item 8 — route guard and session — see .agents/week-1-task-briefs.md item 8
+for the full spec.
+
+First read:
+- .agents/handover.md (this file, top section)
+- .agents/week-1-task-briefs.md item 8
+
+Before starting: `.agents/`, `.claude/`, `.codex/` are git-tracked now, not
+ignored — check `git status` is clean before doing anything else, same as
+any other tracked path.
+
+Two things still outstanding, not blocking item 8 but worth doing when
+convenient:
+- On-device manual check for item 6.2 (system nav bar colour) — see
+  `.agents/runs/welcome-screens-polish-20260804/qa-report.md`.
+- 3 manual visual checks left over from item 6.1, never done.
+
+Start item 8 through the normal `/orchestrate` pipeline — feed it the spec
+from week-1-task-briefs.md item 8 as the source request. New run, new
+branch off `develop`.
+```
+
+---
+
+## Older update — 2026-08-03
 
 The older item-6 status notes below are superseded by this update.
 
@@ -98,7 +165,11 @@ see below)** → Dev → **human code review gate** → QA.
    rather than left to a human. Run folder `auth-domain-data-layer-20260802`.
    Merged to `develop` via **PR #19**.
 
-**One run is active.**
+**Stale as of 2026-08-05 — item 6 finished and two more runs shipped after
+it.** See the "Current update — 2026-08-05" section at the top of this file
+for items 6 (+ its 6.1/6.2 follow-ups) and 7. Item 8 is next; no run started.
+The paragraph below (6, "one run is active") is left as historical record of
+where things stood on 2026-08-03, not current state.
 
 6. **2026-08-02/03 — welcome screens (week 1 item 6).** Run folder
    `welcome-screens-20260802`. The BA pass is complete, all four critical
@@ -212,9 +283,9 @@ pointing at dead paths. The retained run folders are
 - `.agents/references/` — product brief, design conventions, per-screen specs,
   project conventions, deferred roadmap
 - `.agents/runs/<run-id>/` — one folder per pipeline run
-- **Both `.agents/` and `.claude/` are git-ignored.** Your entire product
-  specification is therefore outside version control and unbacked by git. Worth
-  moving `references/` into a tracked folder while it is still cheap.
+- **`.agents/`, `.claude/`, and `.codex/` are git-tracked**, as of 2026-08-04
+  (see the 2026-08-05 update at the top of this file). No longer the risk
+  this note used to warn about.
 
 ---
 
@@ -447,8 +518,14 @@ Worth knowing before you watch it run:
 
 ## What's next
 
-**Resume item 6 at the Phase 3 human approval gate. Do not restart BA or Tech
-Lead, and do not begin a new run.**
+**Stale below this line as of 2026-08-05 — items 6/6.1/6.2 and 7 are all
+done. Start item 8 (route guard and session) through a normal `/orchestrate`
+run.** See the "Current update — 2026-08-05" section at the top of this file
+for what shipped and the next-session prompt to use verbatim.
+
+The bullets below (item 6's Phase-3-resume instructions) are left as
+historical record of 2026-08-03's state, not current instructions — do not
+follow them.
 
 - Read `.agents/runs/welcome-screens-20260802/orchestrator-state.md` first.
 - Present `tdd.md ## Feature summary`, `task-brief.md ## Testing mode`, the full
@@ -462,15 +539,14 @@ Lead, and do not begin a new run.**
   human must regenerate the Flutter Intl output from the IDE before the branch
   can compile; this is an expected manual step, not a defect.
 
-- **Item 6 — welcome screens** and **item 7 — auth screen** are what actually
-  consume item 5's use cases; item 5 alone wires nothing into the UI. Item 7
-  needs `SignInUseCase` / `ObserveAuthStatusUseCase` from item 5, which exist
-  and are tested but unused until then — expected at this stage.
+Still accurate, not superseded:
+
 - **0.3 (Discord app)** and **0.4/0.6 (Google + Supabase provider config)**
-  are deferred as of 2026-08-02, human's choice, no blocker cited (see
-  `week-1-task-briefs.md`). Item 5's code path for both providers is built
-  and unit-tested regardless; manual end-to-end sign-in verification is
-  blocked until at least one of these lands.
+  are deferred, human's choice, no blocker cited (see `week-1-task-briefs.md`).
+  Item 5's code path for both providers is built and unit-tested regardless;
+  manual end-to-end sign-in verification is blocked until at least one of
+  these lands. Item 8's guard reacts to the auth state stream either way —
+  it doesn't need a real provider configured to be built and tested.
 - Deferred to item 10 (Sentry): what the user sees if Supabase is unreachable
   at startup. Right now the connectivity check only logs and never surfaces UI
   — that's intentional for now, not a bug.
