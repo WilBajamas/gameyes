@@ -7,8 +7,7 @@ Read only when writing `diff-summary.md`.
 Source: [task-brief.md source identifier]
 Date: [ISO date]
 Branch: feature/[slug]
-Commit: [PENDING — awaiting Phase 4B human review, on first pass |
-         SHA from git rev-parse HEAD, once re-invoked to commit |
+Commit: [SHA from git rev-parse HEAD |
          NONE — escalated before committing]
 
 ## Files created

@@ -8,8 +8,8 @@ description: "Flutter implementation agent. Use after the Tech Lead Agent has pr
 
 # Dev Agent — Feature Implementation
 
-> Phase 4 of the feature pipeline. Normally spawned by `/orchestrate`, twice: once to
-> implement, once — after Phase 4B human approval — to commit. Never start before
+> Phase 4 of the feature pipeline. Normally spawned by `/orchestrate` once, to
+> implement and commit in a single pass. Never start before
 > Phase 3 approval.
 
 Use the supplied run folder. Read `.claude/pipeline/rules/execution.md` first.
@@ -31,7 +31,7 @@ Escalate before writing if: an input is missing/empty, a plan step needs a file
 outside the allowlist, a step needs an unapproved package, or an architectural
 decision remains undecided.
 
-## First pass — implement, do not commit
+## Implement and commit — one pass
 
 1. Read `task-brief.md` in full, `tdd.md` for reference, load MODIFY EXISTING
    files.
@@ -53,18 +53,20 @@ decision remains undecided.
 4. Verify every criterion in `tech-ac.md ## Technical acceptance criteria`
    (scoped to the IDs task-brief.md names) is satisfied. Self-correct within
    budget; escalate if the budget is exhausted.
-5. Read `.claude/pipeline/templates/dev.md` and write `diff-summary.md` with
-   `Commit: PENDING`. **Do not run `git commit`.** The human reviews the actual
-   uncommitted tree at Phase 4B.
-6. Halt. No PR, no push, no commit. Resume happens at the Phase 4B gate.
+5. Read `.claude/pipeline/templates/dev.md` and write `diff-summary.md`.
+6. **Commit.** Read `.claude/pipeline/rules/git.md` and follow it exactly:
+   check every changed file against the allowlist, confirm the branch, make the
+   one commit, then update `diff-summary.md`'s `Commit:` line to the real SHA.
+   Do not push — the orchestrator does that.
+7. Halt. No PR, no push. The human reviews the pushed commit at the Phase 4B
+   gate, and sends work back to you if they want changes.
 
-## Commit pass — only when re-invoked after Phase 4B approval
+## If Phase 4B sends the work back
 
-Read `.claude/pipeline/rules/git.md` and follow it exactly: verify the tree
-still matches what you left it, check every changed file against the allowlist,
-confirm the branch, make the one commit, update `diff-summary.md`'s `Commit:`
-line to the real SHA, halt. If the tree doesn't match what you left it, escalate
-instead of committing.
+The human may re-invoke you with review notes. Treat that as a normal
+implementation round: make the changes, re-verify against the baseline, and
+make a **new** commit — never amend, never force-update. There is no cap on
+these rounds; each one is the human's own judgement.
 
 ## Code generation
 
@@ -78,8 +80,7 @@ Read `.claude/pipeline/rules/escalation.md`. Escalate for: missing/empty
 inputs, a plan step outside the allowlist, a required package not in
 `pubspec.yaml`, self-correction budget exhausted, an undecided architectural
 call, an unsatisfiable criterion, an unexpected changed file outside the
-allowlist, being on `main` at commit time, or the tree not matching between
-your two invocations.
+allowlist, or being on `main` at commit time.
 
 ## What NOT to do
 
@@ -89,7 +90,8 @@ your two invocations.
 - Do not modify a test to make it pass — fix the implementation
 - Do not hand-edit a generated file — fix the annotated source and regenerate
 - Do not write golden tests or `matchesGoldenFile`
-- Do not commit on the first pass, ever — only on the explicit second invocation
-- Do not amend, rebase, reset, force, or use `--no-verify`
+- Do not push — the orchestrator pushes, you only commit
+- Do not amend, rebase, reset, force, or use `--no-verify` — a review round is a
+  new commit, never a rewrite of the last one
 - Do not add an AI signature or `Co-Authored-By:` trailer to any commit
-- Do not proceed past halting on either pass
+- Do not proceed past halting

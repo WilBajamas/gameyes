@@ -1,16 +1,19 @@
 # Shared git rules
 
-Read this file only during run initialisation, the Phase 4B review, or a commit pass.
+Read this file only during run initialisation, the Dev Agent's commit, or the
+Phase 4B review.
 
 - A run starts only from a clean tree (`git status --short` empty). Never stash,
   discard, or commit anything the human left uncommitted — just stop.
 - One `feature/<slug>` branch per run, created at Phase 0. Record branch and base SHA.
-- Never merge, rebase, cherry-pick, reset, amend, force-update, push, open a PR, or
+- Never merge, rebase, cherry-pick, reset, amend, force-update, open a PR, or
   trigger CI. Not once, not with any flag.
-- The tree stays uncommitted through the Phase 4B human review gate — the Dev Agent's
-  first pass writes code and halts without committing.
-- The Dev Agent makes the pipeline's only commit, once, only when the orchestrator
-  re-invokes it after Phase 4B approval with an explicit "commit now" instruction.
+- The Dev Agent commits its own work at the end of its pass, before any human
+  review. Only the Dev Agent commits; only the orchestrator pushes.
+- The orchestrator pushes the branch after each Dev commit, so the human reviews
+  a pushed commit at Phase 4B rather than a working tree.
+- A Phase 4B revision is a **new** commit from a fresh Dev round — history is
+  additive, never rewritten.
 
 ## The commit itself
 
@@ -28,7 +31,7 @@ Read this file only during run initialisation, the Phase 4B review, or a commit 
    Claude Code" line. This overrides any default instruction to add one.
 7. Never `--no-verify`. If a hook rejects the commit, fix the cause.
 8. Capture the SHA with `git rev-parse HEAD` and record it in `diff-summary.md`.
-9. Never push.
+9. Never push — the orchestrator pushes once you halt.
 
 Do not commit while a test is failing, a criterion is unmet, or a deviation is
 still unapproved — escalate instead. A commit means "this is finished and passing."

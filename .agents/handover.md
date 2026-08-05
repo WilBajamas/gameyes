@@ -44,6 +44,32 @@ process notes still apply.
 - **Next: item 8, route guard and session** (`.agents/week-1-task-briefs.md`
   item 8) — auth-state-driven `auto_route` guard, no pipeline run started yet.
 
+### Phase 4B is now review-after-push (decided 2026-08-05, during item 8)
+
+**This reverses process change 2 from 2026-08-02** (the two-pass Dev Agent),
+at the human's request, mid-run. The new flow:
+
+- **The Dev Agent implements and commits in a single pass.** No
+  `Commit: PENDING`, no halting on an uncommitted tree.
+- **The orchestrator pushes the branch straight after that commit**, so the
+  Phase 4B gate reviews a pushed commit (`git show --stat <sha>`) rather than a
+  working tree. Rationale from the human: the diffs are simply easier to read
+  that way, on GitHub rather than through the agent.
+- **Phase 4B revisions go back to the Dev Agent, not the Tech Lead.** A
+  code-level change is Dev's to make; only an explicitly wrong *design* goes
+  back to Phase 2. Saves a full Tech Lead round-trip.
+- **A revision is a new commit on top.** Never amend, never force-update —
+  history stays additive.
+- Phase 4B is still a mandatory stop. Pushed does not mean approved, and QA
+  still does not run until the human clears it.
+
+Updated in `.claude/skills/orchestrate/SKILL.md`,
+`.claude/skills/dev-agent/SKILL.md`, `.claude/pipeline/rules/git.md` and
+`.claude/pipeline/templates/dev.md`. **`.codex/` was deliberately left on the
+old rule** — the human asked for it to be left alone, and it is a separately
+worded single-thread adaptation, not a mirror of `.claude/`. The two now
+disagree about Phase 4B.
+
 ### Next-session prompt
 
 ```text
@@ -247,18 +273,17 @@ itself is unchanged and stays the Dev Agent's actual instructions.
 Documented in `.claude/skills/tech-lead-agent/SKILL.md` and
 `.claude/skills/orchestrate/SKILL.md`.
 
-**2. The Dev Agent no longer commits on its first pass.** It writes code,
+**2. The Dev Agent no longer commits on its first pass.** ~~It writes code,
 tests, and `diff-summary.md` (with `Commit: PENDING`), then halts with the
-change sitting uncommitted in the working tree. The Phase 4B gate now reviews
-`git status --short` / `git diff` against the **working tree**, not a commit
-range. Only after the human approves does the orchestrator re-spawn the Dev
-Agent a second time with an explicit "commit now" instruction, which is the
-only point at which it runs the Commit protocol. Rationale: committing before
-review meant the human was reading history instead of the actual thing being
-decided on. Documented in the same two skill files.
+change sitting uncommitted in the working tree.~~
 
-**Both changes apply going forward. Item 5 was already committed under the
-old single-pass rule before this decision was made** — the human explicitly
+**REVERSED 2026-08-05 — see "Phase 4B is now review-after-push" below.** This
+two-pass rule stood for three runs and was undone at the human's request during
+item 8. The text is kept only so the reversal makes sense; do not follow it.
+
+**Change 1 still applies. Change 2 was reversed on 2026-08-05 (below).
+Item 5 was already committed under the old single-pass rule before this decision
+was made** — the human explicitly
 chose to leave `3c51fb0` as-is rather than uncommit and redo the review, so
 this run finishes under the old rule (see "Item 5 — current state" above).
 
