@@ -356,13 +356,6 @@ first three.
 the pipeline nor the reference docs — **including this file and the product
 brief**. Fine for solo work; blocking the moment anyone else touches the repo.
 
-**Update 2026-08-04: this exact risk materialised.** A `.gitignore` edit intended
-to push these directories, followed by what's believed to be a `git clean` while
-they were briefly unignored, deleted `.agents/`, `.codex/`, and almost all of
-`.claude/` outside of any session. Recovery was partial, reconstructed from an
-active session's own conversation context — see `handover.md`'s incident note.
-This item should have been acted on, not just flagged.
-
 ---
 
 ## 6. Repo debt

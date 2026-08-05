@@ -10,16 +10,6 @@
 >
 > Written 2026-07-30. If you are reading this after week 1 shipped, delete it.
 
-> **⚠ RECONSTRUCTED AFTER DATA LOSS (2026-08-04).** Reconstructed from
-> conversation context with high confidence (this file was read in full early in
-> the session that lost it, with exactly one tracked edit — the
-> `design-conventions.md` → `system-foundation-specs.md` reference fix under item
-> 4 — applied below). Current status of items 6, 6.1, 6.2, and 7 has moved on
-> significantly since this file's last true edit and is **not** re-synced into
-> the checkboxes below; `handover.md` is the up-to-date source for that. Treat
-> this file as a faithful snapshot of the original checklist, not a live-updated
-> one, until someone deliberately reconciles it.
-
 ---
 
 ## How to use this
@@ -54,18 +44,27 @@ on vendor dashboards.
 - ⏸ **0.2 — Apple Developer — SKIPPED.** v1 is Android-only; no Mac, no iPhone, so
       iOS cannot be built or verified. Saves the $99/yr enrolment and what would have
       been the slowest item in this stage. Returns with iOS.
-- [x] **0.3 — Discord developer app.** ✅ Done (product owner confirmed, this
-      session's earlier conversation). Client registered; used for social sign-in.
-- [x] **0.4 — Google Cloud OAuth client.** ✅ Done (product owner confirmed, this
-      session's earlier conversation). OAuth consent screen + Web application
-      client configured.
+- ⏸ **0.3 — Discord developer app — DEFERRED 2026-08-02.** Not started yet;
+      human is putting it off for a while, no blocker cited. Item 5 (auth
+      domain/data layer) proceeds without it — the code path for both providers
+      is built regardless, but Discord sign-in cannot be manually verified
+      end-to-end until this exists and 0.6 configures it.
+- ⏸ **0.4 — Google Cloud OAuth client — DEFERRED.** Google Cloud project quota
+      reached; human returning to it within days. Tracked in
+      `roadmap-deferred.md`. **Blocks Google login only — Discord is unaffected**,
+      so auth work proceeds with one provider and Google is enabled later by
+      pasting credentials into the Supabase dashboard, with no code change.
+      When unblocked: consent screen (External, scopes `email` + `profile` only),
+      then a **Web application** client — not Android, since v1 uses the browser
+      OAuth flow.
 - [x] **0.5 — Twitch developer app — IGDB credential only.** ✅ Already done and
       working; IGDB APICalypse calls succeed today. Client ID and Secret live in
       `secret.env`. Item 9 moves them server-side.
-- [x] **0.6 — Configure both providers (Discord, Google) in Supabase Auth
-      settings.** ✅ Done (product owner confirmed, this session). Both providers
-      configured; Discord sign-in manually verified end-to-end (redirect URI
-      troubleshooting resolved earlier this session).
+- ⏸ **0.6 — Configure both providers (Discord, Google) in Supabase Auth
+      settings — DEFERRED.** Waiting on 0.3 and 0.4, both deferred. **Both**
+      providers are now unconfigured in Supabase, so item 5's sign-in cannot be
+      manually verified against real Supabase Auth until at least one of them
+      lands — build and unit-test it regardless, per item 5's brief.
 - [x] **0.7 — Sentry project.** ✅ Done 2026-07-30. DSN recorded. **One project**,
       environment-tagged, not two — see item 10.
       Crashlytics was weighed and rejected: genuinely cheaper (free, unlimited vs
@@ -77,9 +76,9 @@ on vendor dashboards.
       integration. Revisit if the free tier is ever exceeded.
 - [x] **0.8 — Provider marks.** ✅ Done 2026-07-31.
       `assets/icons/discord-logo.svg` and `assets/icons/google-logo.svg`.
-      Note: item 7 ultimately shipped with PNG conversions instead of these SVGs
-      (product-owner decision — the SVGs "came out all black" when rendered via
-      flutter_svg) — see `handover.md` for detail.
+      Note two follow-ons, both authorised inside item 7: `assets/icons/` is not yet
+      registered under `flutter: assets:` in `pubspec.yaml`, and there is no
+      `flutter_svg` dependency, so nothing can render them today.
 
 ---
 
@@ -102,9 +101,7 @@ Note for the run: `.vscode/tasks.json` uses `fvm`; the pipeline skills use bare
 `flutter`. Harmless while the SDK versions match, but this is the run most likely to
 surface it.
 
-- [x] Done. Full pipeline run, merged to `develop`. (Checkbox was stale/unchecked
-      in the original file despite `handover.md` recording this as complete — noted
-      here for accuracy.)
+- [ ] Done
 
 #### 1a — `app_title` rename [MANUAL — IDE ONLY]
 
@@ -121,8 +118,7 @@ Flutter Intl IDE plugin and have no CLI. Change both `.arb` files, then let the 
 plugin regenerate. Do **not** hand-edit the generated files; that is the exact
 mistake recorded in `.agents/handover.md` gotcha #2.
 
-- [x] Both `.arb` files updated and regenerated in the IDE — confirmed done and
-      committed this session (`app_title` verified as `"QuestLoggd"` throughout).
+- [ ] Both `.arb` files updated and regenerated in the IDE
 
 ### 2 — Supabase client and DI [PIPELINE]
 
@@ -136,12 +132,13 @@ mistake recorded in `.agents/handover.md` gotcha #2.
 > can be called at startup to confirm the client resolves against the configured
 > project.
 
-- [x] Done. Full pipeline run, merged to `develop`.
+- [x] Done. **2026-08-01.** Full pipeline run, merged to `develop` via PR #16.
       `SupabaseModule` (`@preResolve`) + `SupabasePing` (concrete, no interface —
       dropped `ISupabaseHealthProbe` as over-engineered) + `SupabaseConnectionChecker`,
       called unawaited from `bootstrap()`. Manually verified on device: dev
       reachable, prod unreachable (expected — no prod project yet), first frame
-      reached either way.
+      reached either way. Run folder `supabase-client-di-20260731` (since
+      removed — run complete, evidence retired).
 
 ### 3 — Database schema and RLS [MANUAL-CODE]
 
@@ -180,9 +177,6 @@ reading the policy and agreeing with yourself. This is worth an hour on its own.
 - [ ] Cross-account read/write denial verified with two real accounts
 - [ ] Applied to prod
 
-**Status as of 2026-08-04: not started, explicitly deferred by product owner.**
-Not urgent — blocks weeks 3–4 (Library, Game Detail, Stats), not items 6–8.
-
 ### 4 — Design token layer [PIPELINE]
 
 Pulled into week 1 because the auth and welcome screens need it. The component
@@ -198,9 +192,11 @@ library itself stays in week 2.
 > restructuring — but do not implement light theme now. No widget may reference a raw
 > hex value once this lands.
 
-- [x] Done. Full pipeline run, QA pass-pending-manual. Retroactively brought in
-      line with the plain-English comment/naming rules added during item 2. Merged
-      to `develop`.
+- [x] Done. **2026-07-31.** Full pipeline run, QA pass-pending-manual. Run
+      folder `design-token-layer-20260731` (since removed — run complete,
+      evidence retired). Retroactively brought in line with the plain-English
+      comment/naming rules added during item 2 (see `handover.md`). Merged to
+      `develop` via PR #17 on 2026-08-02.
 
 ---
 
@@ -221,10 +217,11 @@ library itself stays in week 2.
 > and token expiry without polling. Target Android only — add no iOS-specific auth
 > handling and no platform conditionals.
 
-- [x] Done. Full pipeline run plus direct human review at the Phase 4B gate
-      (mapper extraction, comment/format decisions), QA pass with no manual
-      checks outstanding — Android debug build verified directly. Merged to
-      `develop`.
+- [x] Done. **2026-08-02.** Full pipeline run plus direct human review at the
+      Phase 4B gate (mapper extraction, comment/format decisions), QA pass with
+      no manual checks outstanding — Android debug build verified directly.
+      Run folder `auth-domain-data-layer-20260802`. Merged to `develop` via
+      **PR #19**.
 
 ### 6 — Welcome screens [PIPELINE]
 
@@ -236,12 +233,11 @@ library itself stays in week 2.
 > recreate that artwork with widget-drawn shapes or custom painting. The flow must
 > record that onboarding has been seen, so it does not reappear on subsequent launches.
 
-- [x] Done. Implemented and reviewed; merged to `develop`. The final
+- [x] Done. **2026-08-03.** Implemented and reviewed in run folder
+      `welcome-screens-20260802`; merged to `develop` via **PR #20**. The final
       analyzer/test-harness correction was accepted under a human-authorized QA
-      retry waiver after Flutter tooling timed out without diagnostics.
-      **Status as of 2026-08-04: superseded by item 6.1 (flat PNG header rework,
-      committed `5bd84e8`, unmerged) and item 6.2 (padding/sizing/SafeArea/swipe
-      polish, paused mid-Phase-0 — see `handover.md`).**
+      retry waiver after Flutter tooling timed out without diagnostics. Manual
+      visual verification of both welcome screens remains recommended.
 
 ### 7 — Auth screen [PIPELINE]
 
@@ -262,11 +258,7 @@ library itself stays in week 2.
 > The 88px app mark has no asset yet and stays a dashed placeholder through beta. Failed sign-in uses the error conventions from the
 > component brief, per section, never a full-page error.
 
-- [x] Done. Implemented in another session, merged via PR #21. Auth verified
-      end-to-end for Discord this session. **Deviation from spec:** shipped with
-      PNG conversions of the provider marks instead of the licensed SVGs via
-      `flutter_svg` — product-owner decision (the SVGs rendered solid black) — see
-      `handover.md`.
+- [ ] Done
 
 ### 8 — Route guard and session [PIPELINE]
 
