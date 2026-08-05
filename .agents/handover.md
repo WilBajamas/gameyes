@@ -2,9 +2,9 @@
 
 Written 2026-07-29. Last updated 2026-08-05 (second update that day): items 2,
 4, 5, 6 (with 6.1 and 6.2), 7 and **8 are complete**, plus an unplanned
-sign-out follow-up. Item 8 and the follow-up are **QA PASS but unmerged**, both
-on `claude/questloggd-week1-item8-sosqs6`. **Stage 0 is now fully unblocked —
-Discord and Google are live on Supabase dev.**
+sign-out follow-up. Both are **QA PASS and merged to `develop` at `129443c`**.
+**Stage 0 is now fully unblocked — Discord and Google are live on Supabase
+dev.** Item 3 (database schema and RLS) is next.
 
 ---
 
@@ -48,8 +48,8 @@ process notes still apply.
 
 ### Item 8 shipped, plus an unplanned follow-up (2026-08-05)
 
-Both on branch `claude/questloggd-week1-item8-sosqs6`, **QA PASS, not merged** —
-merging to `develop` is the human's call.
+Both **merged to `develop` at `129443c`** on 2026-08-05, as a fast-forward from
+`claude/questloggd-week1-item8-sosqs6`. QA PASS on both, 0 QA cycles either.
 
 - **Item 8 — route guard and session.** Run `route-guard-session-20260805`.
   `AuthGuard` on `/` and the four content routes, fed by an `AuthStatusListener`
@@ -126,9 +126,9 @@ disagree about Phase 4B.
 
 ```text
 Resume QuestLoggd. Item 8 (route guard and session) and an unplanned sign-out
-follow-up are both done and QA PASS, but UNMERGED — both sit on branch
-claude/questloggd-week1-item8-sosqs6. Read .agents/handover.md's top section
-first; it is current as of the second 2026-08-05 update.
+follow-up are both done, QA PASS, and MERGED to develop at 129443c. Read
+.agents/handover.md's top section first; it is current as of the second
+2026-08-05 update.
 
 Before anything else:
 - Check `git status` is clean. `.agents/`, `.claude/` and `.codex/` are tracked.
@@ -136,10 +136,7 @@ Before anything else:
   `flutter pub get` and `dart run build_runner build --delete-conflicting-outputs`
   before trusting any baseline.
 
-First decision for the human: merge the two completed runs to `develop`, or keep
-building on that branch. Nothing else should start until that is settled.
-
-Then week 1 item 3 (database schema and RLS) is the next checklist item — but
+Week 1 item 3 (database schema and RLS) is the next checklist item — but
 read the handover's "No way to sign in as a different account" note first: its
 cross-account denial check cannot be verified with Discord/Google alone.
 

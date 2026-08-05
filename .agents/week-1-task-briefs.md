@@ -280,7 +280,17 @@ library itself stays in week 2.
 > A user who has completed onboarding but signed out should land on the auth screen,
 > not on welcome screen 1. Preserve the existing tab structure and deep links.
 
-- [ ] Done
+- [x] Done. **2026-08-05.** Full pipeline run, QA PASS, 0 QA cycles. Run folder
+      `route-guard-session-20260805`. Merged to `develop` at `129443c`.
+      Guard scope was widened at the human's call: `/` plus the four content
+      routes, with `/onboarding`, `/auth` and `/legal` carved out, and the
+      blocked route resumed after sign-in. `OnboardingGuard` was deleted and its
+      decision folded into `AuthGuard`. 13 of 13 attempted device checks passed;
+      the URL deep-link entry checks are deferred — Android has no `VIEW` intent
+      filter for app routes yet. An unplanned follow-up run
+      (`debug-sign-out-20260805`) added the Settings sign-out control, without
+      which four of those checks had no trigger; its **visual design is
+      provisional, not signed off**.
 
 ---
 
