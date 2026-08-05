@@ -67,6 +67,12 @@ class RouteConstants {
   static const browse = '/browse';
   static const news = '/news';
   static const settings = '/settings';
+
+  static const auth = '/auth';
+  static const legal = '/legal';
+
+  /// The only paths reachable without signing in.
+  static const openPaths = {onboarding, auth, legal};
 }
 
 class IGDBConfig {

@@ -10,8 +10,16 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
+import 'package:gaming_library_assessment_flutter/config/route/auth_status_listener.dart'
+    as _i627;
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.dart'
     as _i1015;
+import 'package:gaming_library_assessment_flutter/config/route/guards/auth_guard.dart'
+    as _i964;
+import 'package:gaming_library_assessment_flutter/config/route/pending_route_store.dart'
+    as _i748;
+import 'package:gaming_library_assessment_flutter/config/route/session_navigator.dart'
+    as _i569;
 import 'package:gaming_library_assessment_flutter/core/di/network_module.dart'
     as _i420;
 import 'package:gaming_library_assessment_flutter/core/di/storage_module.dart'
@@ -152,7 +160,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i646.DefaultDioInterceptor>(
       () => _i646.DefaultDioInterceptor(),
     );
-    gh.singleton<_i1015.AppRouter>(() => _i1015.AppRouter());
+    gh.singleton<_i748.PendingRouteStore>(() => _i748.PendingRouteStore());
     gh.singleton<_i641.TwitchAuthInterceptor>(
       () => _i641.TwitchAuthInterceptor(),
     );
@@ -289,6 +297,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i526.GetOutThisWeekUseCase>(),
       ),
     );
+    gh.singleton<_i627.AuthStatusListener>(
+      () => _i627.AuthStatusListener(gh<_i595.ObserveAuthStatusUseCase>()),
+    );
     gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>(
       (task, _) => _i633.TaskCubit(
         task: task,
@@ -320,6 +331,23 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i591.GamesBloc>(
       () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()),
+    );
+    gh.singleton<_i964.AuthGuard>(
+      () => _i964.AuthGuard(
+        gh<_i627.AuthStatusListener>(),
+        gh<_i460.SharedPreferences>(),
+        gh<_i748.PendingRouteStore>(),
+      ),
+    );
+    gh.singleton<_i1015.AppRouter>(
+      () => _i1015.AppRouter(gh<_i964.AuthGuard>()),
+    );
+    gh.singleton<_i569.SessionNavigator>(
+      () => _i569.SessionNavigator(
+        gh<_i627.AuthStatusListener>(),
+        gh<_i748.PendingRouteStore>(),
+        gh<_i1015.AppRouter>(),
+      ),
     );
     return this;
   }

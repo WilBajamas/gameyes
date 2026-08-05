@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gaming_library_assessment_flutter/bootstrap.dart';
 import 'package:gaming_library_assessment_flutter/config/flavor/flavor.dart';
+import 'package:gaming_library_assessment_flutter/config/route/auth_status_listener.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
@@ -30,7 +31,9 @@ class MyApp extends StatelessWidget {
       theme: buildTheme(),
       darkTheme: buildDarkTheme(),
       themeMode: ThemeMode.dark,
-      routerConfig: getIt<AppRouter>().config(),
+      routerConfig: getIt<AppRouter>().config(
+        reevaluateListenable: getIt<AuthStatusListener>(),
+      ),
     );
   }
 }
