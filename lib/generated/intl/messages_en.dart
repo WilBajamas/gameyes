@@ -70,6 +70,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "auth_sign_in_error": MessageLookupByLibrary.simpleMessage(
       "We couldn\'t sign you in. Please try again.",
     ),
+    "auth_sign_out": MessageLookupByLibrary.simpleMessage("Sign out"),
+    "auth_sign_out_error": MessageLookupByLibrary.simpleMessage(
+      "We couldn\'t sign you out. Please try again.",
+    ),
     "auth_signing_in": m0,
     "auth_terms": MessageLookupByLibrary.simpleMessage("Terms"),
     "auth_title": MessageLookupByLibrary.simpleMessage("Sign in"),
@@ -277,28 +281,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome_body_two": MessageLookupByLibrary.simpleMessage(
       "Track what you are waiting on and see the countdown to every release you care about.",
     ),
-    "welcome_chip_one": MessageLookupByLibrary.simpleMessage("Your library"),
-    "welcome_chip_two": MessageLookupByLibrary.simpleMessage(
-      "Wishlisted · PS5",
-    ),
-    "welcome_countdown_days": MessageLookupByLibrary.simpleMessage("Days"),
-    "welcome_countdown_hours": MessageLookupByLibrary.simpleMessage("Hrs"),
-    "welcome_countdown_minutes": MessageLookupByLibrary.simpleMessage("Min"),
-    "welcome_countdown_title": MessageLookupByLibrary.simpleMessage(
-      "NEON VESPER",
-    ),
     "welcome_headline_one": MessageLookupByLibrary.simpleMessage(
       "TRACK EVERY GAME YOU\'VE EVER TOUCHED",
     ),
     "welcome_headline_two": MessageLookupByLibrary.simpleMessage(
       "AND KNOW WHAT DROPS NEXT",
     ),
-    "welcome_social_proof": MessageLookupByLibrary.simpleMessage(
-      "2.4M games tracked so far.",
-    ),
-    "welcome_stat_hours": MessageLookupByLibrary.simpleMessage("Hours"),
-    "welcome_stat_playing": MessageLookupByLibrary.simpleMessage("Playing"),
-    "welcome_stat_tracked": MessageLookupByLibrary.simpleMessage("Tracked"),
     "welcome_to_gameyes": MessageLookupByLibrary.simpleMessage(
       "Welcome to GameYes 🎮",
     ),

@@ -110,106 +110,6 @@ class S {
     );
   }
 
-  /// `Your library`
-  String get welcome_chip_one {
-    return Intl.message(
-      'Your library',
-      name: 'welcome_chip_one',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Wishlisted · PS5`
-  String get welcome_chip_two {
-    return Intl.message(
-      'Wishlisted · PS5',
-      name: 'welcome_chip_two',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Tracked`
-  String get welcome_stat_tracked {
-    return Intl.message(
-      'Tracked',
-      name: 'welcome_stat_tracked',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hours`
-  String get welcome_stat_hours {
-    return Intl.message(
-      'Hours',
-      name: 'welcome_stat_hours',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Playing`
-  String get welcome_stat_playing {
-    return Intl.message(
-      'Playing',
-      name: 'welcome_stat_playing',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `2.4M games tracked so far.`
-  String get welcome_social_proof {
-    return Intl.message(
-      '2.4M games tracked so far.',
-      name: 'welcome_social_proof',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `NEON VESPER`
-  String get welcome_countdown_title {
-    return Intl.message(
-      'NEON VESPER',
-      name: 'welcome_countdown_title',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Days`
-  String get welcome_countdown_days {
-    return Intl.message(
-      'Days',
-      name: 'welcome_countdown_days',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Hrs`
-  String get welcome_countdown_hours {
-    return Intl.message(
-      'Hrs',
-      name: 'welcome_countdown_hours',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Min`
-  String get welcome_countdown_minutes {
-    return Intl.message(
-      'Min',
-      name: 'welcome_countdown_minutes',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Get started`
   String get get_started {
     return Intl.message('Get started', name: 'get_started', desc: '', args: []);
@@ -265,6 +165,21 @@ class S {
     return Intl.message(
       'We couldn\'t sign you in. Please try again.',
       name: 'auth_sign_in_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign out`
+  String get auth_sign_out {
+    return Intl.message('Sign out', name: 'auth_sign_out', desc: '', args: []);
+  }
+
+  /// `We couldn't sign you out. Please try again.`
+  String get auth_sign_out_error {
+    return Intl.message(
+      'We couldn\'t sign you out. Please try again.',
+      name: 'auth_sign_out_error',
       desc: '',
       args: [],
     );

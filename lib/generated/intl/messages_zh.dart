@@ -60,6 +60,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "现在只需登录，接下来我们会帮你完成设置。",
     ),
     "auth_sign_in_error": MessageLookupByLibrary.simpleMessage("无法登录，请重试。"),
+    "auth_sign_out": MessageLookupByLibrary.simpleMessage("退出登录"),
+    "auth_sign_out_error": MessageLookupByLibrary.simpleMessage("无法退出登录，请重试。"),
     "auth_signing_in": m0,
     "auth_terms": MessageLookupByLibrary.simpleMessage("条款"),
     "auth_title": MessageLookupByLibrary.simpleMessage("登录"),
@@ -247,22 +249,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome_body_two": MessageLookupByLibrary.simpleMessage(
       "追踪你在等的游戏，看着倒计时一天一天逼近每一个发售日。",
     ),
-    "welcome_chip_one": MessageLookupByLibrary.simpleMessage("你的游戏库"),
-    "welcome_chip_two": MessageLookupByLibrary.simpleMessage("已心愿 · PS5"),
-    "welcome_countdown_days": MessageLookupByLibrary.simpleMessage("天"),
-    "welcome_countdown_hours": MessageLookupByLibrary.simpleMessage("时"),
-    "welcome_countdown_minutes": MessageLookupByLibrary.simpleMessage("分"),
-    "welcome_countdown_title": MessageLookupByLibrary.simpleMessage(
-      "NEON VESPER",
-    ),
     "welcome_headline_one": MessageLookupByLibrary.simpleMessage("追踪你玩过的每一款游戏"),
     "welcome_headline_two": MessageLookupByLibrary.simpleMessage("抢先知道下一款大作"),
-    "welcome_social_proof": MessageLookupByLibrary.simpleMessage(
-      "已追踪 240 万款游戏。",
-    ),
-    "welcome_stat_hours": MessageLookupByLibrary.simpleMessage("小时"),
-    "welcome_stat_playing": MessageLookupByLibrary.simpleMessage("在玩"),
-    "welcome_stat_tracked": MessageLookupByLibrary.simpleMessage("已追踪"),
     "welcome_to_gameyes": MessageLookupByLibrary.simpleMessage(
       "欢迎来到 GameYes 🎮",
     ),
