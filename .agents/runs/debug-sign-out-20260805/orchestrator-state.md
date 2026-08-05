@@ -3,7 +3,7 @@ Feature: Sign-out action on the Settings screen (item 8 follow-up)
 Run ID: debug-sign-out-20260805
 Run folder: .agents/runs/debug-sign-out-20260805/
 Started: 2026-08-05
-Current phase: HUMAN_GATE
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +176 -13 (189 total) — captured 2026-08-05
@@ -47,3 +47,11 @@ NONE
 
 ## Code review outcomes
 NONE
+
+## Phase 3 gate
+2026-08-05 **APPROVED**, no revisions. The human accepted the two new
+  localisation keys and the manual IDE regeneration they require, the
+  `if (isClosed) return;` guard against the redirect disposing the screen
+  mid-flight, the non-destructive styling, and the cubit's placement in the auth
+  feature. Advanced to Phase 4 (Dev — implements and commits in one pass, under
+  the new review-after-push rule).
