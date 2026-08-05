@@ -42,7 +42,11 @@ in this checkout and were run before the baselines were captured.
 Working tree was clean (`git status --short` empty) at Phase 0.
 
 ## Escalation history
-NONE
+2026-08-05 Phase 1 — BA Agent — CRITICAL-1: scope of the auth guard undecided
+  (which routes it protects; "route unauthenticated users away" vs. "preserve
+  existing deep links") — Resolved: Product Owner chose option B **plus**
+  deep-link resume at the Phase 1 gate, and confirmed ASSUMPTION 7 in scope.
+  Recorded in `decisions.md`; escalation file deleted; BA re-spawned.
 
 ## Deviation approvals
 NONE
