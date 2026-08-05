@@ -3,7 +3,7 @@ Feature: Sign-out action on the Settings screen (item 8 follow-up)
 Run ID: debug-sign-out-20260805
 Run folder: .agents/runs/debug-sign-out-20260805/
 Started: 2026-08-05
-Current phase: DEV
+Current phase: CODE_REVIEW
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +176 -13 (189 total) — captured 2026-08-05
@@ -16,7 +16,7 @@ Pre-existing test failures: 13 failures across 6 files — test/api/games/games_
 Branch: claude/questloggd-week1-item8-sosqs6
 Base branch: develop
 Base SHA: cd7be4c2de82b7d33266b79b4a9a72d485489a3d
-Dev commit: NONE
+Dev commit: 1ed6c7eb0d0887363f5312da77164006f68703b4 — pushed; awaiting Phase 4B
 Last updated: 2026-08-05
 
 ## Phase 0 notes
