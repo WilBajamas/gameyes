@@ -443,6 +443,18 @@ accept query parameters that ask the provider to re-prompt for an account
 (`prompt=select_account` for Google, `prompt=consent` for Discord). Cheaper than
 a new provider and worth testing before committing to email/password.
 
+**The interim option shipped 2026-08-05** (`auth_datasource.dart`, for week 1
+item 3's cross-account RLS check) and surfaced a rough edge on Google: picking
+an account that's already on the device leads to a "checking info" page, then
+"you already have this account on this device", then the in-app browser goes
+blank (Crashpad minidump in the log — the browser view crashing, not the app),
+then back to the sign-in screen. Tapping Google again from there looked like
+the app had crashed, but it hadn't — the session's logs kept running and a hot
+restart brought it straight back, so this is Android back navigation emptying
+the route stack after the broken browser flow, not an app crash. Known,
+not investigated further, not blocking — this whole code path is interim and
+goes away once email + password sign-in lands.
+
 ### Sign-out UI/UX — PROVISIONAL, needs a real design pass
 Shipped 2026-08-05 in run `debug-sign-out-20260805` so that four of week 1 item
 8's manual checks could be run at all. **The component is deliberately kept, the
