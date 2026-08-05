@@ -95,7 +95,10 @@ Note for the run: `.vscode/tasks.json` uses `fvm`; the pipeline skills use bare
 `flutter`. Harmless while the SDK versions match, but this is the run most likely to
 surface it.
 
-- [ ] Done
+- [x] Done. Checkbox was simply never ticked — `lib/config/flavor/` (`flavor.dart`,
+      `flavor_config.dart`), `dev`/`prod` product flavours with separate
+      `applicationIdSuffix` in `android/app/build.gradle`, and `.vscode/tasks.json`
+      already reflect this. Confirmed 2026-08-05 while resuming for item 3/9.
 
 #### 1a — `app_title` rename [MANUAL — IDE ONLY]
 
@@ -112,7 +115,10 @@ Flutter Intl IDE plugin and have no CLI. Change both `.arb` files, then let the 
 plugin regenerate. Do **not** hand-edit the generated files; that is the exact
 mistake recorded in `.agents/handover.md` gotcha #2.
 
-- [ ] Both `.arb` files updated and regenerated in the IDE
+- [x] Both `.arb` files updated and regenerated in the IDE. Confirmed
+      2026-08-05: `app_title` is `"QuestLoggd"` in both `.arb` files and in
+      both generated `messages_en.dart`/`messages_zh.dart`. Checkbox was
+      simply never ticked.
 
 ### 2 — Supabase client and DI [PIPELINE]
 
