@@ -1,79 +1,68 @@
 # Ambiguities Report
-Source: W1-8 — `.agents/week-1-task-briefs.md` § "8 — Route guard and session"
+Source: W1-8 — `.agents/week-1-task-briefs.md` § "8 — Route guard and session",
+as amended by `decisions.md` (Product Owner, 2026-08-05)
 Date: 2026-08-05
 
 ## CRITICAL (pipeline blocked — requires human decision before proceeding)
 
-CRITICAL-1: W1-8 — Which routes the authentication guard protects is undefined,
-and the ticket's two relevant sentences pull in opposite directions.
-"unauthenticated users are routed to the onboarding flow" implies app-wide
-gating; "Preserve the existing tab structure and deep links" can be read as
-leaving today's reachability untouched. Today only `/` (the tab shell and its
-five children) carries a guard. Four content routes are declared at the router
-root with their own paths and are reachable by deep link with no guard at all:
-`/game-detail`, `/tracker-detail`, `/task-detail`, `/image-view`. `/legal` is
-also unguarded and must stay that way — the sign-in screen's terms and privacy
-links open it, so gating it would make sign-in unusable. So "guard everything"
-is not a mechanical default; it needs a deliberate carve-out list, which is a
-product decision about whether app content is readable while signed out.
-  Options:
-    A) Guard `/` only — the auth guard sits alongside the existing onboarding
-       guard on the tab shell. Deep links to `/game-detail`, `/tracker-detail`,
-       `/task-detail` and `/image-view` keep working for a signed-out user
-       exactly as they do today. Smallest diff, no change to deep-link
-       behaviour, but signed-out users can read content through a link.
-    B) Guard `/` plus the four content routes, with `/onboarding`, `/auth` and
-       `/legal` explicitly unguarded. A signed-out deep link lands on the auth
-       screen (or welcome screen 1 if onboarding was never seen) instead of the
-       requested content. Closes the hole; changes deep-link behaviour for
-       signed-out users, which may be what "preserve deep links" forbids.
-  Recommended: B, on the reading that gating the shell but not the detail
-    screens leaves the guard trivially bypassable — but this is a product call
-    on whether QuestLoggd content is public, not a technical one, so it is not
-    being taken unilaterally. Note that under B the post-sign-in destination is
-    the tab shell root, not the originally requested deep link (see ASSUMPTION
-    3); if the requested route should be resumed after sign-in instead, say so
-    with the answer, as that is additional scope.
-  Decision needed from: Product Owner
+NONE
+
+CRITICAL-1 (guard scope) was answered at the Phase 1 gate: option B **plus**
+deep-link resume. See `decisions.md` DECISION-1. It is settled and folded into
+`tech-ac.md` (W1-8-AC01, AC02, AC08–AC12). ASSUMPTION 7 was confirmed in scope
+by DECISION-2 (W1-8-AC10, AC11).
 
 ## ASSUMPTIONS (minor — pipeline may proceed)
 
-ASSUMPTION 1: Signed-in beats onboarding-unseen. If the auth state is signed-in
-while the `first_use` flag is absent or false, the destination is the tab shell,
-not welcome screen 1 — per the ticket's "authenticated users go straight to the
-main tab shell". The onboarding flag is only consulted for a signed-out user.
+ASSUMPTION 1: Signed-in beats onboarding-unseen. A signed-in status routes to the
+tab shell even when the `first_use` flag is absent or false; the flag is only
+consulted for a signed-out user. Confirmed unchanged by the Product Owner.
+  Precedence note: this meets ASSUMPTION 8 (leave the existing onboarding guard
+  alone) in one case — signed-in with the flag unset. ASSUMPTION 1 is the more
+  specific rule and governs, so the guard chain on `/` must not divert a
+  signed-in user into onboarding. No change is made to when the flag is written,
+  so ASSUMPTION 8 is otherwise intact. Not re-escalated: both assumptions were
+  put to the Product Owner and confirmed, and this reading follows from the
+  ticket's "authenticated users go straight to the main tab shell".
 
 ASSUMPTION 2: A guard redirect replaces the navigation stack rather than pushing
 onto it, so after a forced sign-out the system back gesture cannot return to a
 protected screen. The ticket says the user is "returned to sign-in" but does not
 state stack behaviour.
 
-ASSUMPTION 3: After a reactive signed-in emission the destination is the tab
-shell root. No pre-expiry route or pending deep link is stored and resumed —
-"go straight to the main tab shell" is taken literally.
+ASSUMPTION 3 (superseded in part by DECISION-1): A signed-in emission resumes the
+route the user originally requested. Only when no requested route was recorded is
+the destination the tab shell root — that half of the original assumption stands.
 
-ASSUMPTION 4: The reactive redirect applies from whatever route is on screen,
-and is a no-op when the app is already on the correct destination, so a repeat
+ASSUMPTION 4: The reactive redirect applies from whatever route is on screen, and
+is a no-op when the app is already on the correct destination, so a repeat
 emission of the same status does not push a duplicate route or loop.
 
-ASSUMPTION 5: No user-facing message accompanies a forced return to sign-in
-(no snackbar, dialog or banner explaining the expiry). The ticket asks for none,
-and per `handover.md` new localisation keys cannot be made to compile by an
-agent, so a silent redirect is the safe choice.
+ASSUMPTION 5: No user-facing message accompanies a forced return to sign-in (no
+snackbar, dialog or banner explaining the expiry). The ticket asks for none, and
+per `handover.md` new localisation keys cannot be made to compile by an agent,
+so a silent redirect is the safe choice.
 
 ASSUMPTION 6: "An expired session" needs no separate detection. Item 5's status
 stream already reports a null-session or errored auth event as signed-out, so
-expiry and explicit sign-out arrive as the same signed-out emission and the
-guard treats them identically.
+expiry and explicit sign-out arrive as the same signed-out emission and the guard
+treats them identically.
 
-ASSUMPTION 7: The forward direction of the reactive requirement is in scope.
-The ticket spells out only sign-out and expiry, but nothing in the app currently
-navigates away from the sign-in screen after a successful sign-in, and no other
-week-1 item owns that. So a signed-in emission must move the user to the tab
-shell, otherwise "authenticated users go straight to the main tab shell" is
-unreachable in practice. Flagging rather than burying it: if this belongs to a
-later item, say so.
+ASSUMPTION 7 (confirmed by DECISION-2): The signed-in direction is this item's
+work — a signed-in emission must move the user off the sign-in screen to their
+destination.
 
-ASSUMPTION 8: The existing onboarding guard's behaviour and the `first_use`
-write rules stay as they are. The auth guard is added alongside it; this run
-reads onboarding-seen state and never writes it.
+ASSUMPTION 8: The existing onboarding guard stays in place and the `first_use`
+write rules are untouched; the auth guard is added alongside it. This run reads
+onboarding-seen state and never writes it. Subject to the precedence note under
+ASSUMPTION 1.
+
+ASSUMPTION 9 (new this pass): If the auth status is not yet available when a
+guarded navigation is resolved — the cold-start race the ticket does not
+describe — it is treated as signed-out. Failing closed never leaks a protected
+screen; the correct destination follows from the first real emission.
+
+ASSUMPTION 10 (new this pass): The pending requested route is held for the app
+session only and is not persisted across a process restart. DECISION-1 asks for
+resume after sign-in, not resume after relaunch; persisting it would add storage
+and a staleness policy that nothing in the ticket calls for.
