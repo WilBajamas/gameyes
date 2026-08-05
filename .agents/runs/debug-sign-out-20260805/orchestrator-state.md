@@ -3,7 +3,7 @@ Feature: Sign-out action on the Settings screen (item 8 follow-up)
 Run ID: debug-sign-out-20260805
 Run folder: .agents/runs/debug-sign-out-20260805/
 Started: 2026-08-05
-Current phase: BA
+Current phase: TECH_LEAD
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +176 -13 (189 total) — captured 2026-08-05
