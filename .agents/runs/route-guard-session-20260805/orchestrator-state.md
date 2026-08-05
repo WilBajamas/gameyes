@@ -3,7 +3,8 @@ Feature: Route guard and session (week 1 item 8)
 Run ID: route-guard-session-20260805
 Run folder: .agents/runs/route-guard-session-20260805/
 Started: 2026-08-05
-Current phase: QA
+Current phase: COMPLETE
+Result: PASS — pending manual checks (13 in qa-report.md ## Manual verification required)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +148 -13 (161 total) — captured 2026-08-05
@@ -18,6 +19,7 @@ Branch: claude/questloggd-week1-item8-sosqs6
 Base branch: develop
 Base SHA: 9115e36d3c4d0cf6f7c94c78c95cf9d8764a4eae
 Dev commit: 036015f0dd5bc980dd4e97277ea11d1d9f84a4ff
+Completed: 2026-08-05
 Last updated: 2026-08-05
 
 ## Phase 0 notes
@@ -79,3 +81,23 @@ Working tree was clean (`git status --short` empty) at Phase 0.
   replay, which could briefly show the sign-in screen on a cold start with a
   valid session) is **deferred to a QA manual check**, not designed away.
   Advanced to Phase 4 (Dev, first pass — no commit).
+
+## Phase 5 notes
+
+QA PASS — pending manual checks, 0 QA cycles used, no escalation. 17 criteria
+PASS, 4 MANUAL (AC01, AC07, AC12, AC14), 0 FAIL, 0 PARTIAL. Scope git-verified
+against Base SHA: `036015f` holds only allowlisted files plus their generated
+outputs; the later branch commits are `.agents/`/`.claude/` docs, not code.
+Analyzer identical to baseline; full suite 176 passed / 13 failed, the 13 being
+exactly the recorded pre-existing set.
+
+**One coverage gap, recorded not fixed:** `session_navigator_test.dart:82`
+("resume the pending route after the onboarding hop", AC12) duplicates the AC10
+test at line 60 — same default `/auth` path, the onboarding hop is never
+simulated. The behaviour is sound by construction (`PendingRouteStore` is a
+`@singleton` with no route-lifecycle coupling), so this is a test-quality gap,
+not a behaviour gap. Manual check 5 covers it. Worth a follow-up test.
+
+**Not merged, not ticked.** `week-1-task-briefs.md` item 8's `[ ] Done` box is
+deliberately left unticked — the pipeline ends at QA PASS, and merging to
+`develop` is the human's call.
