@@ -3,7 +3,7 @@ Feature: Route guard and session (week 1 item 8)
 Run ID: route-guard-session-20260805
 Run folder: .agents/runs/route-guard-session-20260805/
 Started: 2026-08-05
-Current phase: DEV
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +148 -13 (161 total) — captured 2026-08-05
@@ -17,7 +17,7 @@ Pre-existing test failures: 13 failures across 6 files — test/api/games/games_
 Branch: claude/questloggd-week1-item8-sosqs6
 Base branch: develop
 Base SHA: 9115e36d3c4d0cf6f7c94c78c95cf9d8764a4eae
-Dev commit: NONE
+Dev commit: 036015f0dd5bc980dd4e97277ea11d1d9f84a4ff
 Last updated: 2026-08-05
 
 ## Phase 0 notes
@@ -49,10 +49,16 @@ Working tree was clean (`git status --short` empty) at Phase 0.
   Recorded in `decisions.md`; escalation file deleted; BA re-spawned.
 
 ## Deviation approvals
-NONE
+2026-08-05 `session_navigator_test.dart` uses a hand-written `_FakeAppRouter`
+  instead of `@GenerateMocks([AppRouter])` — Mockito's builder crashes on any
+  `RootStackRouter` subclass on this project's pinned toolchain (`Bad state: No
+  element` in source_gen's `ConstantReader.revive()`), reproduced with a bare
+  subclass. Matches existing practice in the repo, which mocks the abstract
+  `StackRouter` and never `AppRouter`. — Approved by human
 
 ## Code review outcomes
-NONE
+2026-08-05 Phase 4B — working tree reviewed and APPROVED by human (production
+  diff read in full at their request). Dev commit pass → 036015f.
 
 ## Phase 3 gate rounds
 2026-08-05 Round 1 — REVISE (naming only, no design change): `AuthStatusWatcher`

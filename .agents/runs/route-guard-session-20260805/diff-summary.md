@@ -3,7 +3,7 @@ Source: W1-8 — `tech-ac.md` (BA Agent 1.0), as amended by `decisions.md`
 DECISION-1 and DECISION-2
 Date: 2026-08-05
 Branch: claude/questloggd-week1-item8-sosqs6
-Commit: PENDING — awaiting Phase 4B human review, on first pass
+Commit: 036015f0dd5bc980dd4e97277ea11d1d9f84a4ff
 
 ## Files created
 lib/config/route/pending_route_store.dart — `@singleton` in-memory holder of the
