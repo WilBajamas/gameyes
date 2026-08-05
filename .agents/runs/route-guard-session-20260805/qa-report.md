@@ -392,3 +392,47 @@ spinner clears on leaving the app and the user returns to a blank sign-in
 screen until `SessionNavigator` moves them. Pre-existing gap in item 7's auth
 screen, not a regression from this run and not covered by any W1-8 criterion.
 Worth its own run.
+
+## Manual check update — 2026-08-05, after the sign-out control shipped
+
+The four checks blocked on a missing sign-out trigger were re-run against run
+`debug-sign-out-20260805`'s commit and **all four pass**:
+
+- check 2 (guard covers in-app navigation) — PASS, with the caveat below
+- check 9 (live sign-out, no restart) `[W1-8-AC14]` — PASS. Server-side
+  revocation was **not** needed: an explicit sign-out and an expired session
+  reach the guard as the same `signedOut` emission (ASSUMPTION 6).
+- check 10 (back gesture cannot re-enter a protected screen) `[W1-8-AC15]` — PASS
+- check 13 (silent redirect, no snackbar/dialog/banner) `[W1-8-AC19]` — PASS
+
+**Item 8's manual tally is now 13 of 13 attempted checks passed, 0 failures**,
+with the deep-link-entry variants still deferred (see the deferral note above).
+
+### Known behaviour, not a defect: a mid-session sign-out resumes to the shell
+
+Observed on device: signed in on a game detail screen → sign out → sign back in
+→ you land on the **tab shell**, not the game detail.
+
+Cause: a reactive sign-out does not block a single navigation. It re-runs the
+guards across the whole existing stack, which is `[HomeRoute, GameDetailRoute]`,
+bottom first. `HomeRoute`'s guard is evaluated first, calls
+`PendingRouteStore.remember` with `/`, and rejects — ending the pass before
+`GameDetailRoute` is reached. The store therefore holds the shell.
+
+**This is within spec.** `source-request.md` DECISION-1 promises resume only for
+the *blocked navigation* case — a signed-out user requests a guarded route, is
+sent to sign-in, and is returned to that route on success. Returning someone to
+the exact screen they were on when a session expired mid-use was never
+specified, and no criterion asserts it. `[W1-8-AC08]` and `[W1-8-AC10]` are
+about the blocked-navigation path, which behaves correctly.
+
+**Consequence worth carrying forward:** the blocked-navigation resume path is
+verified by unit tests only. The manual check that would exercise it end to end
+needs URL deep-link entry, which is deferred, and `[W1-8-AC12]`'s unit test is
+the duplicate flagged under `## Coverage gaps`. Verification of the resume
+feature is thinner than the pass count suggests.
+
+**Possible future enhancement, not a fix:** capture the top-most stack route
+rather than the first evaluated one, so a mid-session sign-out returns the user
+to where they actually were. `NavigationResolver.isReevaluating` distinguishes
+the two cases if this is ever taken up.
