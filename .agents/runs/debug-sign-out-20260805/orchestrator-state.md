@@ -3,7 +3,7 @@ Feature: Sign-out action on the Settings screen (item 8 follow-up)
 Run ID: debug-sign-out-20260805
 Run folder: .agents/runs/debug-sign-out-20260805/
 Started: 2026-08-05
-Current phase: DEV (Phase 4B revise round 1)
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +176 -13 (189 total) — captured 2026-08-05
@@ -16,7 +16,8 @@ Pre-existing test failures: 13 failures across 6 files — test/api/games/games_
 Branch: claude/questloggd-week1-item8-sosqs6
 Base branch: develop
 Base SHA: cd7be4c2de82b7d33266b79b4a9a72d485489a3d
-Dev commit: 1ed6c7eb0d0887363f5312da77164006f68703b4 — pushed; awaiting Phase 4B
+Dev commit: 1ed6c7eb0d0887363f5312da77164006f68703b4 (initial)
+  + 0bf661e (revise round 1 — test finder fix). Both pushed.
 Last updated: 2026-08-05
 
 ## Phase 0 notes
@@ -54,6 +55,11 @@ NONE
   tests pass, including the no-route-action assertion. The Dev Agent could not
   have caught it: the test could not compile until the localisation
   regeneration landed.
+2026-08-05 Phase 4B round 2 — **APPROVED.** Fix verified independently by the
+  orchestrator: both `expect`s now use `find.widgetWithText(Center, 'Settings')`
+  rather than the bare string, so the assertion is scoped rather than weakened;
+  no production file and no existing Settings content was touched.
+  `settings_screen_test.dart` 6/6 green. Advanced to Phase 5 (QA).
 
 ## Localisation — resolved, and gotcha #1 is wrong
 2026-08-05 The pre-authorised "human must regenerate from the IDE" step turned
