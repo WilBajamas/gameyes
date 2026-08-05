@@ -21,6 +21,8 @@
     }
   },
   "auth_sign_in_error": "We couldn't sign you in. Please try again.",
+  "auth_sign_out": "Sign out",
+  "auth_sign_out_error": "We couldn't sign you out. Please try again.",
   "auth_scope_reassurance": "Just sign in for now — we'll help you set things up next.",
   "auth_legal_prefix": "By continuing, you agree to our ",
   "auth_terms": "Terms",

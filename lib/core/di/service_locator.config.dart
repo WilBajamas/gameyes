@@ -54,6 +54,8 @@ import 'package:gaming_library_assessment_flutter/features/auth/domain/use_cases
     as _i1024;
 import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_in_cubit.dart'
     as _i347;
+import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_out_cubit.dart'
+    as _i410;
 import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart'
     as _i554;
 import 'package:gaming_library_assessment_flutter/features/featured/data/repositories/featured_repository_impl.dart'
@@ -271,6 +273,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i851.GetLibrarySnapshotUseCase>(),
         gh<_i460.SharedPreferences>(),
       ),
+    );
+    gh.factory<_i410.SignOutCubit>(
+      () => _i410.SignOutCubit(gh<_i1024.SignOutUseCase>()),
     );
     gh.factoryParam<_i32.GameDetailCubit, int, dynamic>(
       (id, _) => _i32.GameDetailCubit(
