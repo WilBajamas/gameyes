@@ -166,10 +166,23 @@ readable by nobody, and a table without RLS enabled is readable by everybody.
 Verify by trying to read another user's row with a real second account, not by
 reading the policy and agreeing with yourself. This is worth an hour on its own.
 
-- [ ] Schema migrations written and applied to dev
-- [ ] RLS enabled on every table, policy per operation
-- [ ] Cross-account read/write denial verified with two real accounts
-- [ ] Applied to prod
+- [x] Schema migrations written. **2026-08-05.** `supabase/migrations/`:
+      `profiles` (+ auto-create trigger on `auth.users` insert),
+      `library_entries` (IGDB snapshot, six-value status check, one row per
+      user+game), `lists` (stub). Not yet applied to the real dev project —
+      see `handover.md` for the apply steps and what's still open.
+- [x] RLS enabled on every table, policy per operation. Every table has
+      select; `library_entries`/`lists` also have insert/update/delete
+      scoped to `auth.uid() = user_id`; `profiles` deliberately has no
+      insert/delete policy (insert is trigger-only, delete is cascade-only).
+- [ ] Cross-account read/write denial verified with two real accounts.
+      Logic was proven against a local disposable Postgres standing in for
+      Supabase (two fake users, RLS enforced, cross-read/write/delete all
+      correctly blocked, cascade-delete and constraints all fired) — that is
+      NOT the same as verifying on the real dev project with the real app,
+      which still needs to happen.
+- [ ] Applied to prod. Blocked — no prod Supabase project exists yet (0.1b,
+      still deferred).
 
 ### 4 — Design token layer [PIPELINE]
 

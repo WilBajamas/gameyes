@@ -1,14 +1,78 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-05 (second update that day): items 2,
-4, 5, 6 (with 6.1 and 6.2), 7 and **8 are complete**, plus an unplanned
-sign-out follow-up. Both are **QA PASS and merged to `develop` at `129443c`**.
-**Stage 0 is now fully unblocked — Discord and Google are live on Supabase
-dev.** Item 3 (database schema and RLS) is next.
+Written 2026-07-29. Last updated 2026-08-05 (third update that day): item 3
+(database schema and RLS) has its migration files written and locally proven,
+but **not yet applied to the real dev project or verified on-device** — see
+below for exactly what's left and how to do it. Items 2, 4, 5, 6 (with 6.1 and
+6.2, both now manually confirmed), 7 and 8 are all complete and merged.
 
 ---
 
-## Current update — 2026-08-05
+## Current update — 2026-08-05 (third update: item 3 in progress)
+
+**Not a pipeline run** — item 3 is `[MANUAL-CODE]`, written and committed
+directly to `claude/questloggd-week1-item3-rls-x334sm`.
+
+### What's done
+- **The account-picker fix.** `auth_datasource.dart`'s `signInWithOAuth` now
+  passes `prompt=select_account` (Google) / `prompt=consent` (Discord) as
+  `queryParams`, so the provider always shows its account chooser instead of
+  silently reusing whatever account is already active on the device. This is
+  what unblocks two-account testing at all — chosen over email/password auth
+  (too big for this) and over manual OS-level sign-out (too fiddly to redo
+  every test). Analyzer clean, `test/repository/auth/` 13/13 green, no other
+  test touched.
+- **The schema**, in `supabase/migrations/`:
+  - `20260805200001_profiles.sql` — `profiles` (`id`, nullable `tier`,
+    `created_at`), plus a trigger on `auth.users` insert that creates the row
+    automatically (the standard Supabase pattern — no app code needed to
+    populate it).
+  - `20260805200002_library_entries.sql` — `user_id`, `igdb_id` + the
+    denormalised `title`/`cover_url`/`release_date`, `status` (six values,
+    checked), one row per user+game (`unique (user_id, igdb_id)`).
+  - `20260805200003_lists.sql` — stub only: `user_id`, `name`.
+  - All three enable RLS in the same file that creates the table (never a
+    moment where the table exists without it), with an explicit policy per
+    operation. `profiles` deliberately has no insert/delete policy — insert
+    only ever happens via the trigger (security definer, bypasses RLS),
+    delete only ever happens via the `on delete cascade` from `auth.users`.
+- **Proved the logic locally**, not just read and agreed with: spun up a
+  disposable local Postgres, stubbed just enough of Supabase's `auth` schema
+  (`auth.users`, `auth.uid()`) to apply all three migration files for real,
+  created two fake users, and as the second one tried to read/update/delete
+  the first's rows under RLS. All correctly blocked (0 rows visible, 0 rows
+  affected, forged insert rejected); deleting a fake `auth.users` row cascaded
+  away its profile/entries/lists; the duplicate-game and bad-status
+  constraints both fired. Full transcript is in this session, not saved as a
+  file.
+
+### What's NOT done — needs the human
+1. **Apply the three migration files to the real `questloggd-dev` project.**
+   No Supabase CLI or project credentials exist in this sandbox (correctly —
+   `dev.env` is git-ignored and was never populated here). Open the
+   `questloggd-dev` project's SQL editor in the Supabase dashboard and run
+   the three files in `supabase/migrations/`, in filename order (`profiles`
+   → `library_entries` → `lists`), each as its own statement batch. If you'd
+   rather use the CLI: `supabase link --project-ref <dev-project-ref>` then
+   `supabase db push`.
+2. **Verify cross-account denial on the real app, on-device**, now that the
+   account picker works: sign in as account A, add a library entry, sign out,
+   sign in as account B (picking a different real account), confirm B's
+   library is empty and B has no way to see or edit A's row. The local
+   Postgres proof above is a strong signal the *rules* are right, but the
+   brief's own bar — "verify by trying to read another user's row with a real
+   second account" — is about the real deployed project and the real app,
+   not a simulation.
+3. **Apply to prod** — blocked, not on this run. There is no prod Supabase
+   project yet (0.1b, still deferred on the free-plan project cap). Revisit
+   once that project exists.
+
+Once 1 and 2 are done, tick the remaining boxes in
+`week-1-task-briefs.md` item 3 and update this file again.
+
+---
+
+## Older update — 2026-08-05 (second update that day)
 
 The 2026-08-03 update below is superseded by this one for status; its
 process notes still apply.
