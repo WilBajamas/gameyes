@@ -88,9 +88,15 @@ Possible workaround worth checking before paying: the free project cap is applie
 per organisation, so a second Supabase organisation may allow another free project.
 Verify against current Supabase terms rather than assuming.
 
-### Google Cloud OAuth client — PLANNED, blocked on account limits
-Deferred 2026-07-30. Google Cloud project quota reached; the human expects to
-resolve it within a few days.
+### Google Cloud OAuth client — ✅ RESOLVED 2026-08-05
+Was deferred 2026-07-30 on Google Cloud project quota. The quota issue was
+resolved, the OAuth client created, and the credentials pasted into Supabase
+dev — no code change required, as the note below predicted. Discord was set up
+in the same pass. Both providers are live on `questloggd-dev` and were verified
+on device during week 1 item 8's manual checks. **Dev only** — prod has no
+Supabase project yet (see 0.1b, still deferred).
+
+The original note is kept below for the reasoning it records.
 
 **Blocks Google as a login provider only.** Discord is unaffected, so auth work can
 proceed with one provider and Google can be enabled later by pasting credentials

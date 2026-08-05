@@ -4,7 +4,8 @@ Run ID: route-guard-session-20260805
 Run folder: .agents/runs/route-guard-session-20260805/
 Started: 2026-08-05
 Current phase: COMPLETE
-Result: PASS — pending manual checks (13 in qa-report.md ## Manual verification required)
+Result: PASS — 9 of 13 manual checks done 2026-08-05, 0 failures; 4 outstanding
+  (see qa-report.md ## Manual check results)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +148 -13 (161 total) — captured 2026-08-05

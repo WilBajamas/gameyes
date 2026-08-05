@@ -44,27 +44,21 @@ on vendor dashboards.
 - ⏸ **0.2 — Apple Developer — SKIPPED.** v1 is Android-only; no Mac, no iPhone, so
       iOS cannot be built or verified. Saves the $99/yr enrolment and what would have
       been the slowest item in this stage. Returns with iOS.
-- ⏸ **0.3 — Discord developer app — DEFERRED 2026-08-02.** Not started yet;
-      human is putting it off for a while, no blocker cited. Item 5 (auth
-      domain/data layer) proceeds without it — the code path for both providers
-      is built regardless, but Discord sign-in cannot be manually verified
-      end-to-end until this exists and 0.6 configures it.
-- ⏸ **0.4 — Google Cloud OAuth client — DEFERRED.** Google Cloud project quota
-      reached; human returning to it within days. Tracked in
-      `roadmap-deferred.md`. **Blocks Google login only — Discord is unaffected**,
-      so auth work proceeds with one provider and Google is enabled later by
-      pasting credentials into the Supabase dashboard, with no code change.
-      When unblocked: consent screen (External, scopes `email` + `profile` only),
-      then a **Web application** client — not Android, since v1 uses the browser
-      OAuth flow.
+- [x] **0.3 — Discord developer app.** ✅ Done 2026-08-05. Created and wired
+      into Supabase dev (see 0.6). Discord sign-in verified end-to-end on device
+      during item 8's manual checks.
+- [x] **0.4 — Google Cloud OAuth client.** ✅ Done 2026-08-05. Quota issue
+      resolved and the client created; credentials pasted into Supabase dev
+      (see 0.6). No code change was needed, exactly as predicted.
 - [x] **0.5 — Twitch developer app — IGDB credential only.** ✅ Already done and
       working; IGDB APICalypse calls succeed today. Client ID and Secret live in
       `secret.env`. Item 9 moves them server-side.
-- ⏸ **0.6 — Configure both providers (Discord, Google) in Supabase Auth
-      settings — DEFERRED.** Waiting on 0.3 and 0.4, both deferred. **Both**
-      providers are now unconfigured in Supabase, so item 5's sign-in cannot be
-      manually verified against real Supabase Auth until at least one of them
-      lands — build and unit-test it regardless, per item 5's brief.
+- [x] **0.6 — Configure both providers (Discord, Google) in Supabase Auth
+      settings.** ✅ Done 2026-08-05, **dev only**. Both providers are live on
+      the `questloggd-dev` project and sign-in was verified on device during
+      item 8's manual checks. **Prod is not configured** — it has no Supabase
+      project at all (0.1b, still deferred), so this must be repeated there
+      before any prod build can sign anyone in.
 - [x] **0.7 — Sentry project.** ✅ Done 2026-07-30. DSN recorded. **One project**,
       environment-tagged, not two — see item 10.
       Crashlytics was weighed and rejected: genuinely cheaper (free, unlimited vs

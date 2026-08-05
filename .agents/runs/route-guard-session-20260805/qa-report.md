@@ -347,3 +347,48 @@ WARNINGs:
 ## Escalation required
 
 NONE
+
+---
+
+## Manual check results — recorded 2026-08-05 by the Product Owner
+
+9 of 13 passed on device (dev flavour, Android). **Zero failures.** The
+remaining four are blocked on tooling, not on any suspected defect.
+
+**PASSED:** 1 (partial — signed-out shell block; the per-tab deep-link half is
+deferred), 3, 6, 7, 8, 11 (partial — the idle half; the completing-sign-in half
+folded into 12), 12 (partial — OAuth return via activity restart).
+
+**Check 7 passed structurally, not by luck.** `auth_repository_impl.dart:53`
+yields `_statusFromSession(currentSession)` as the stream's first emission, and
+`AuthStatusListener.start()` runs in `bootstrap()` before `runApp`, so the
+fail-closed default is overwritten before the router evaluates any route. No
+sign-in flash was observed across repeated cold starts. `[W1-8-AC07]`
+
+**BLOCKED — no sign-out trigger exists:** checks 2, 9, 10, 13.
+`SignOutUseCase` is built and unit-tested but no UI calls it. The Product Owner
+revoked the user server-side and the app still opened on the tab shell — this
+is **correct behaviour, not a defect**: Supabase restores `currentSession` from
+local storage and trusts that JWT until its own expiry, so a server-side
+revocation is only noticed at the next failed token refresh (up to an hour on
+the default expiry). No `signedOut` was ever emitted, so the guard was never
+exercised. A follow-up run adds a debug sign-out button; these four checks
+complete against that.
+
+**DEFERRED by the Product Owner:** the deep-link-dependent checks — 1 (per-tab
+half), 4, 5, 12 (pending-route half). Android has no `VIEW` intent filter for
+app routes and no `flutter_deeplinking_enabled` meta-data, so URL deep links
+cannot be delivered at all today. Not an item 8 defect — the route tree
+supports them, Android entry is simply not wired up. Revisit when shared links
+become a real feature. Note this leaves `[W1-8-AC12]` verified by neither a
+real unit test (see `## Coverage gaps`) nor a manual check.
+
+### Defect found during check 12 — out of scope, logged not fixed
+
+No loading indicator is shown while an OAuth sign-in is in flight.
+`sign_in_cubit.dart:21-24` emits idle on `Success`, but `signInWithOAuth`
+returns as soon as the **browser opens**, not when sign-in completes — so the
+spinner clears on leaving the app and the user returns to a blank sign-in
+screen until `SessionNavigator` moves them. Pre-existing gap in item 7's auth
+screen, not a regression from this run and not covered by any W1-8 criterion.
+Worth its own run.
