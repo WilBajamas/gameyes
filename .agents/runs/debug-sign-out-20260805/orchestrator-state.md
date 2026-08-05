@@ -3,7 +3,8 @@ Feature: Sign-out action on the Settings screen (item 8 follow-up)
 Run ID: debug-sign-out-20260805
 Run folder: .agents/runs/debug-sign-out-20260805/
 Started: 2026-08-05
-Current phase: QA
+Current phase: COMPLETE
+Result: PASS — no manual checks outstanding
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 36 info (38 issues) — captured 2026-08-05
 Test baseline: +176 -13 (189 total) — captured 2026-08-05
@@ -92,3 +93,31 @@ that run's `qa-report.md`.
   mid-flight, the non-destructive styling, and the cubit's placement in the auth
   feature. Advanced to Phase 4 (Dev — implements and commits in one pass, under
   the new review-after-push rule).
+
+## Phase 5 notes
+QA **PASS**, 0 QA cycles used, no escalation. All 13 criteria PASS with
+file:line or test-name evidence — no MANUAL, no PARTIAL. Scope git-verified
+across `cd7be4c..0bf661e`: 23 paths, all allowlisted, generated-from-allowlisted
+or `.agents/` docs. Analyzer identical to baseline (38/0/2/36) with the
+predicted `undefined_getter` errors gone. Full suite 188 passed / 13 failed —
+two *above* the 186 forecast, the 13 being exactly the pre-existing set.
+
+**No-navigation constraint (AC05/AC06/AC07) verified by inspection**, this run's
+most important requirement: grepping the four feature files for
+`auto_route|config/route|Navigator|context.router|AutoRouter|BlocListener`
+returns one hit, `import 'package:auto_route/annotations.dart'` in
+`settings_screen.dart` — pre-existing, unchanged, annotations-only for
+`@RoutePage()`, no navigation API. No `BlocListener` exists anywhere in the
+feature, so there is no imperative hook through which a route action could be
+introduced later without review.
+
+**Offline-failure coverage judged adequate by QA.** Manual check 8 not reaching
+`SignOutStatus.failed` is correct product behaviour, not a coverage gap —
+Supabase discards the local session offline, so the sign-out genuinely
+succeeds. The unit tests inject a `Failure` directly, driving the identical path
+a backend failure would, since the cubit switches on `Result<void>` and cannot
+tell where a `Failure` originated. Only the failure state's physical appearance
+is untested, and `_InlineSignOutError` mirrors the shipped `_InlineSignInError`.
+
+**Not merged.** The pipeline ends at QA PASS; merging to `develop` is the
+human's call. This branch now carries both week 1 item 8 and this follow-up.
