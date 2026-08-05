@@ -172,11 +172,12 @@ readable by nobody, and a table without RLS enabled is readable by everybody.
 Verify by trying to read another user's row with a real second account, not by
 reading the policy and agreeing with yourself. This is worth an hour on its own.
 
-- [x] Schema migrations written. **2026-08-05.** `supabase/migrations/`:
-      `profiles` (+ auto-create trigger on `auth.users` insert),
-      `library_entries` (IGDB snapshot, six-value status check, one row per
-      user+game), `lists` (stub). Not yet applied to the real dev project —
-      see `handover.md` for the apply steps and what's still open.
+- [x] Schema migrations written and applied to dev. **2026-08-05.**
+      `supabase/migrations/`: `profiles` (+ auto-create trigger on
+      `auth.users` insert), `library_entries` (IGDB snapshot, six-value
+      status check, one row per user+game), `lists` (stub). Applied to the
+      real `questloggd-dev` project via the SQL editor, confirmed by the
+      human.
 - [x] RLS enabled on every table, policy per operation. Every table has
       select; `library_entries`/`lists` also have insert/update/delete
       scoped to `auth.uid() = user_id`; `profiles` deliberately has no
