@@ -30,13 +30,11 @@ process notes still apply.
   not SVG).
 - **Items 6.1 and 6.2** (welcome-screen header rework, then padding/height/
   `SafeArea`/swipe polish) are both done, riding the same branch, merged to
-  `develop` together via **PR #23** on 2026-08-05. Run folder
-  `welcome-screens-polish-20260804/`. QA passed with one outstanding
-  on-device manual check: confirm the system navigation bar reads as canvas
-  `#23272A` on a real Android device (API 34 and 35+ if both are available) —
-  see that run's `qa-report.md ## Manual verification required`.
-  Also still outstanding, carried over from 6.1 and never done: 3 manual
-  visual checks on the flat-PNG hero rework itself.
+  `develop` together via **PR #23** on 2026-08-05. All manual checks now
+  **PASS**, confirmed on-device 2026-08-05: the 6.1 hero-art checks (screen 2
+  background framing, both screens' content art placement and baked-in text
+  legibility, no seam/box around the art) and the 6.2 nav-bar colour check
+  (canvas `#23272A`, no black band). Nothing outstanding on item 6.
 - **New standing convention, recorded in `project-conventions.md`:** every
   screen wraps its body in `SafeArea`, and the app sets one global
   `SystemUiOverlayStyle` at bootstrap (transparent status bar, nav bar
@@ -148,9 +146,9 @@ Smaller follow-ups, all recorded, none blocking, pick up when convenient:
 - Android has no VIEW intent filter for app routes, so URL deep links cannot be
   delivered; four of item 8's manual checks are deferred on that.
 
-Still outstanding from earlier runs, never done:
-- On-device check of the system nav bar colour (item 6.2).
-- 3 visual checks from item 6.1.
+Item 6's manual checks (6.1 hero art, 6.2 nav bar colour) all PASSED on-device
+2026-08-05 — nothing outstanding there. Finished run folders (items 6, 7, 8)
+have been removed from `.agents/runs/`, evidence retired, same as items 2 and 4.
 
 Note: `.codex/` was deliberately left on the OLD Phase 4B rule and now disagrees
 with `.claude/`.

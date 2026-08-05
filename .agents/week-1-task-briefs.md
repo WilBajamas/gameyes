@@ -238,9 +238,9 @@ library itself stays in week 2.
       item 6.1 (2026-08-04) replaced both heroes' composed-widget content with
       flat PNG art. Item 6.2 (2026-08-05) padded the hero art, reduced hero
       height to ~1/3 screen, added `SafeArea` plus a new app-wide system-bar
-      convention, and made the two screens swipeable via `PageView`. Run
-      folder `welcome-screens-polish-20260804`. QA pass pending one on-device
-      manual check (system nav bar colour) — see that run's `qa-report.md`.
+      convention, and made the two screens swipeable via `PageView`. All
+      manual checks (6.1 hero art, 6.2 nav bar colour) PASSED on-device
+      2026-08-05. Run folder retired, evidence kept in `handover.md`.
 
 ### 7 — Auth screen [PIPELINE]
 
