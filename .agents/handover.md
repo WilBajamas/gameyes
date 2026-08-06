@@ -1,9 +1,10 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-06: item 9's Flutter-client-repoint
-is QA PASS and **merged to `develop` at `9b5e303`** (fast-forward from
-`feature/igdb-client-repoint`). Item 9 is fully done. Item 3's SQL/Edge
-Function work (on this branch) is still unmerged.
+Written 2026-07-29. Last updated 2026-08-06: item 3's SQL/Edge Function work
+is now also **merged to `develop` at `a908840`** (regular merge, item 9's
+fast-forward and item 3's branch had diverged — no conflicts). Items 3 and 9
+are both fully merged now; only item 3's on-device cross-account check and
+prod deploys for both remain open.
 
 ---
 
@@ -12,23 +13,21 @@ Function work (on this branch) is still unmerged.
 - **Items 1, 1a, 2, 4, 5, 6 (with 6.1/6.2), 7, 8 — done, merged to `develop`,
   nothing outstanding.** Per-item history and PR numbers live in
   `week-1-task-briefs.md`, not repeated here.
-- **Item 3 (database schema and RLS) — mostly done.** SQL migrations
-  (`supabase/migrations/`) are written, applied to the real `questloggd-dev`
-  project, and RLS is proven both locally (a disposable Postgres standing in
-  for Supabase, two fake users, cross-read/write/delete all correctly
-  blocked, cascade-delete and constraints fired) and via the account-picker
-  fix in `auth_datasource.dart`. **Still open:** the actual on-device
-  cross-account check, which needs something in the app to write to
-  `library_entries` — nothing does yet, so this is blocked on week 3's
+- **Item 3 (database schema and RLS) — mostly done, merged to `develop`.**
+  SQL migrations (`supabase/migrations/`) are written, applied to the real
+  `questloggd-dev` project, and RLS is proven both locally (a disposable
+  Postgres standing in for Supabase, two fake users, cross-read/write/delete
+  all correctly blocked, cascade-delete and constraints fired) and via the
+  account-picker fix in `auth_datasource.dart`. **Still open:** the actual
+  on-device cross-account check, which needs something in the app to write
+  to `library_entries` — nothing does yet, so this is blocked on week 3's
   Library feature (the human declined a temporary test screen). Prod is
-  blocked separately (no prod Supabase project — 0.1b, deferred). This work
-  is on `claude/questloggd-week1-item3-rls-x334sm` (this branch), not yet
-  merged either.
+  blocked separately (no prod Supabase project — 0.1b, deferred).
 - **Item 9 (IGDB Edge Function) — done and merged to `develop`.** Both
-  halves shipped: the function itself (`supabase/functions/igdb-proxy/`,
-  still only on this branch — see below) and the Flutter client repoint
-  (pipeline run `igdb-client-repoint-20260805`, QA PASS, fast-forward merged
-  to `develop` at `9b5e303`). Games list, game detail and all three Featured
+  halves shipped: the function itself (`supabase/functions/igdb-proxy/`) and
+  the Flutter client repoint (pipeline run `igdb-client-repoint-20260805`,
+  QA PASS, fast-forward merged to `develop` at `9b5e303`). Games list, game
+  detail and all three Featured
   reads now go through `SupabaseIgdbClient` and one `*ApiService` per
   feature; the old direct-to-IGDB Retrofit/Dio/Twitch stack is gone from
   active use. One recorded, approved exception: `TwitchAuthInterceptor` and
@@ -248,16 +247,11 @@ Before anything else:
   any baseline. Expect 13 pre-existing test failures (gotcha #3 in
   handover.md) -- the suite is not green and never has been.
 
-Current state: items 1-8 (with 6.1/6.2) and item 9 are all done and merged to
-develop. Item 3 (database schema/RLS) is applied to dev and proven, but the
-on-device cross-account check is blocked until something writes to
-library_entries, and item 3's own SQL/Edge Function work still needs merging
-from this branch (claude/questloggd-week1-item3-rls-x334sm) to develop.
+Current state: items 1-9 (with 6.1/6.2) are all done and merged to develop.
+Item 3's on-device cross-account check is the one thing still open, blocked
+until something writes to library_entries.
 
 Next real options, pick one:
-- Merge this branch's item 3 work (supabase/migrations/,
-  supabase/functions/igdb-proxy/) to develop, once you've confirmed there's
-  nothing else pending on it.
 - Item 3: hold the on-device cross-account check until week 3's Library
   feature lands (or build a temporary test screen sooner, if asked).
 - Item 10 (Sentry) or item 11 (repo cleanup) -- both normal PIPELINE runs,
