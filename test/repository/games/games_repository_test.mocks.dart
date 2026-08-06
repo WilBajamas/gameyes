@@ -9,7 +9,7 @@ import 'package:gaming_library_assessment_flutter/core/data/models/games_model.d
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart'
     as _i3;
-import 'package:gaming_library_assessment_flutter/features/games/services/igdb_api_service.dart'
+import 'package:gaming_library_assessment_flutter/features/games/services/games_api_service.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i6;
@@ -29,9 +29,9 @@ import 'package:mockito/src/dummies.dart' as _i6;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeIgdbApiService_0 extends _i1.SmartFake
-    implements _i2.IgdbApiService {
-  _FakeIgdbApiService_0(Object parent, Invocation parentInvocation)
+class _FakeGamesApiService_0 extends _i1.SmartFake
+    implements _i2.GamesApiService {
+  _FakeGamesApiService_0(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -44,15 +44,15 @@ class MockGamesDataSource extends _i1.Mock implements _i3.GamesDataSource {
   }
 
   @override
-  _i2.IgdbApiService get igdbApiService =>
+  _i2.GamesApiService get gamesApiService =>
       (super.noSuchMethod(
-            Invocation.getter(#igdbApiService),
-            returnValue: _FakeIgdbApiService_0(
+            Invocation.getter(#gamesApiService),
+            returnValue: _FakeGamesApiService_0(
               this,
-              Invocation.getter(#igdbApiService),
+              Invocation.getter(#gamesApiService),
             ),
           )
-          as _i2.IgdbApiService);
+          as _i2.GamesApiService);
 
   @override
   _i4.Future<_i5.GamesModel> fetchDatasourceGames({

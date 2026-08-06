@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_list_entity.dart';
@@ -36,32 +37,57 @@ void main() {
   });
 
   test(
-      'should return Success(GameListEntity) when datasource fetch is successful',
-      () async {
-    when(gamesDataSource.fetchDatasourceGames())
-        .thenAnswer((_) async => mockGamesResponse);
+    'should return Success(GameListEntity) when datasource fetch is successful',
+    () async {
+      when(
+        gamesDataSource.fetchDatasourceGames(),
+      ).thenAnswer((_) async => mockGamesResponse);
 
-    final result = await gamesRepository.fetchGames();
+      final result = await gamesRepository.fetchGames();
 
-    expect(result, isA<Success<GameListEntity>>());
-    expect((result as Success<GameListEntity>).value,
-        mockGamesResponse.toEntity());
-    verify(gamesDataSource.fetchDatasourceGames());
-  });
+      expect(result, isA<Success<GameListEntity>>());
+      expect(
+        (result as Success<GameListEntity>).value,
+        mockGamesResponse.toEntity(),
+      );
+      verify(gamesDataSource.fetchDatasourceGames());
+    },
+  );
 
-  test('should return Failure(ErrorType) when datasource fetch fails',
-      () async {
-    when(gamesDataSource.fetchDatasourceGames())
-        .thenAnswer((_) async => throw DioException(
-              requestOptions: RequestOptions(path: ''),
-              type: DioExceptionType.connectionTimeout,
-            ));
+  test(
+    'should return Failure(ErrorType) when datasource fetch fails',
+    () async {
+      when(gamesDataSource.fetchDatasourceGames()).thenAnswer(
+        (_) async => throw DioException(
+          requestOptions: RequestOptions(path: ''),
+          type: DioExceptionType.connectionTimeout,
+        ),
+      );
+
+      final result = await gamesRepository.fetchGames();
+
+      expect(result, isA<Failure<GameListEntity>>());
+      expect(
+        (result as Failure<GameListEntity>).error,
+        mockConnectionTimeoutError,
+      );
+      verify(gamesDataSource.fetchDatasourceGames());
+    },
+  );
+
+  test('should return Failure carrying the proxy status code and message '
+      'when the datasource throws FunctionException', () async {
+    when(
+      gamesDataSource.fetchDatasourceGames(),
+    ).thenAnswer((_) async => throw mockFunctionException);
 
     final result = await gamesRepository.fetchGames();
 
     expect(result, isA<Failure<GameListEntity>>());
     expect(
-        (result as Failure<GameListEntity>).error, mockConnectionTimeoutError);
+      (result as Failure<GameListEntity>).error,
+      ErrorType.functionError(exception: mockFunctionException),
+    );
     verify(gamesDataSource.fetchDatasourceGames());
   });
 }

@@ -11,20 +11,6 @@ abstract class Env {
     defaultValue: 'PLACEHOLDER_API_KEY',
   )
   static String apiKey = _Env.apiKey;
-
-  @EnviedField(
-    varName: ConfigConstants.twitchClientId,
-    obfuscate: true,
-    defaultValue: 'PLACEHOLDER_TWITCH_CLIENT_ID',
-  )
-  static String twitchClientId = _Env.twitchClientId;
-
-  @EnviedField(
-    varName: ConfigConstants.twitchClientSecret,
-    obfuscate: true,
-    defaultValue: 'PLACEHOLDER_TWITCH_CLIENT_SECRET',
-  )
-  static String twitchClientSecret = _Env.twitchClientSecret;
 }
 
 @Envied(path: ConfigConstants.enviedDevFilePath, name: 'EnvDev')

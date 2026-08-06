@@ -9,7 +9,6 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:dio/dio.dart' as _i361;
 import 'package:gaming_library_assessment_flutter/config/route/auth_status_listener.dart'
     as _i627;
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.dart'
@@ -20,8 +19,6 @@ import 'package:gaming_library_assessment_flutter/config/route/pending_route_sto
     as _i748;
 import 'package:gaming_library_assessment_flutter/config/route/session_navigator.dart'
     as _i569;
-import 'package:gaming_library_assessment_flutter/core/di/network_module.dart'
-    as _i420;
 import 'package:gaming_library_assessment_flutter/core/di/storage_module.dart'
     as _i472;
 import 'package:gaming_library_assessment_flutter/core/di/supabase_module.dart'
@@ -32,12 +29,12 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_t
     as _i424;
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart'
     as _i646;
-import 'package:gaming_library_assessment_flutter/core/services/api/twitch_auth_interceptor.dart'
-    as _i641;
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart'
     as _i857;
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connection_checker.dart'
     as _i656;
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart'
+    as _i995;
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_ping.dart'
     as _i124;
 import 'package:gaming_library_assessment_flutter/features/auth/data/datasources/auth_datasource.dart'
@@ -80,6 +77,8 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
     as _i187;
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_cubit.dart'
     as _i426;
+import 'package:gaming_library_assessment_flutter/features/featured/services/featured_api_service.dart'
+    as _i524;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart'
     as _i669;
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart'
@@ -92,8 +91,8 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/domain/re
     as _i223;
 import 'package:gaming_library_assessment_flutter/features/game_detail/presentation/cubits/game_detail_cubit.dart'
     as _i32;
-import 'package:gaming_library_assessment_flutter/features/game_detail/services/game_detail_service.dart'
-    as _i54;
+import 'package:gaming_library_assessment_flutter/features/game_detail/services/game_detail_api_service.dart'
+    as _i40;
 import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart'
     as _i621;
 import 'package:gaming_library_assessment_flutter/features/games/data/repositories/games_repository_impl.dart'
@@ -104,8 +103,8 @@ import 'package:gaming_library_assessment_flutter/features/games/domain/use_case
     as _i14;
 import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_bloc.dart'
     as _i591;
-import 'package:gaming_library_assessment_flutter/features/games/services/igdb_api_service.dart'
-    as _i35;
+import 'package:gaming_library_assessment_flutter/features/games/services/games_api_service.dart'
+    as _i706;
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart'
     as _i1017;
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_cubit.dart'
@@ -150,7 +149,6 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final storageModule = _$StorageModule();
     final supabaseModule = _$SupabaseModule();
-    final networkModule = _$NetworkModule();
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => storageModule.prefs,
       preResolve: true,
@@ -163,22 +161,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i646.DefaultDioInterceptor(),
     );
     gh.singleton<_i748.PendingRouteStore>(() => _i748.PendingRouteStore());
-    gh.singleton<_i641.TwitchAuthInterceptor>(
-      () => _i641.TwitchAuthInterceptor(),
-    );
     gh.singleton<_i857.GameLocalStorageService>(
       () => _i857.GameLocalStorageService(),
     );
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
-    gh.singleton<_i361.Dio>(
-      () => networkModule.getDioInstance(gh<_i641.TwitchAuthInterceptor>()),
-    );
-    gh.singleton<_i35.IgdbApiService>(
-      () => networkModule.getIgdbApiService(gh<_i361.Dio>()),
-    );
-    gh.singleton<_i54.GameDetailService>(
-      () => networkModule.getGameDetailService(gh<_i361.Dio>()),
-    );
     gh.factory<_i403.WelcomeCubit>(
       () => _i403.WelcomeCubit(gh<_i460.SharedPreferences>()),
     );
@@ -196,14 +182,14 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i460.SharedPreferences>(),
       ),
     );
+    gh.factory<_i995.SupabaseIgdbClient>(
+      () => _i995.SupabaseIgdbClient(gh<_i454.SupabaseClient>()),
+    );
     gh.factory<_i124.SupabasePing>(
       () => _i124.SupabasePing(gh<_i454.SupabaseClient>()),
     );
     gh.factory<_i445.AuthDatasource>(
       () => _i445.AuthDatasource(gh<_i454.SupabaseClient>()),
-    );
-    gh.factory<_i750.GameDetailRemoteDatasource>(
-      () => _i750.GameDetailRemoteDatasource(gh<_i54.GameDetailService>()),
     );
     gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>(
       (initialState, _) => _i669.FilterCubit(initialState: initialState),
@@ -217,47 +203,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i656.SupabaseConnectionChecker>(
       () => _i656.SupabaseConnectionChecker(gh<_i124.SupabasePing>()),
     );
-    gh.factory<_i985.FeaturedRepository>(
-      () => _i840.FeaturedRepositoryImpl(
-        gh<_i554.FeaturedLocalDatasource>(),
-        gh<_i35.IgdbApiService>(),
-      ),
-    );
     gh.factory<_i671.GetTrackerSortUseCase>(
       () => _i671.GetTrackerSortUseCase(gh<_i922.TrackerSortRepository>()),
     );
     gh.factory<_i422.SaveTrackerSortUseCase>(
       () => _i422.SaveTrackerSortUseCase(gh<_i922.TrackerSortRepository>()),
     );
-    gh.factory<_i223.GameDetailRepository>(
-      () => _i366.GameDetailRepositoryImpl(
-        gh<_i750.GameDetailRemoteDatasource>(),
-        gh<_i944.GameLocalDatasource>(),
-      ),
+    gh.factory<_i524.FeaturedApiService>(
+      () => _i524.FeaturedApiService(gh<_i995.SupabaseIgdbClient>()),
     );
-    gh.factory<_i621.GamesDataSource>(
-      () => _i621.GamesDataSource(gh<_i35.IgdbApiService>()),
+    gh.factory<_i40.GameDetailApiService>(
+      () => _i40.GameDetailApiService(gh<_i995.SupabaseIgdbClient>()),
     );
-    gh.factory<_i781.GetCountdownGameUseCase>(
-      () => _i781.GetCountdownGameUseCase(gh<_i985.FeaturedRepository>()),
+    gh.factory<_i706.GamesApiService>(
+      () => _i706.GamesApiService(gh<_i995.SupabaseIgdbClient>()),
     );
-    gh.factory<_i971.GetCriticsChoiceUseCase>(
-      () => _i971.GetCriticsChoiceUseCase(gh<_i985.FeaturedRepository>()),
-    );
-    gh.factory<_i804.GetGenrePreferencesUseCase>(
-      () => _i804.GetGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()),
-    );
-    gh.factory<_i851.GetLibrarySnapshotUseCase>(
-      () => _i851.GetLibrarySnapshotUseCase(gh<_i985.FeaturedRepository>()),
-    );
-    gh.factory<_i526.GetOutThisWeekUseCase>(
-      () => _i526.GetOutThisWeekUseCase(gh<_i985.FeaturedRepository>()),
-    );
-    gh.factory<_i151.SaveGenrePreferencesUseCase>(
-      () => _i151.SaveGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()),
-    );
-    gh.factory<_i461.GamesRepository>(
-      () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()),
+    gh.factory<_i750.GameDetailRemoteDatasource>(
+      () => _i750.GameDetailRemoteDatasource(gh<_i40.GameDetailApiService>()),
     );
     gh.factory<_i595.ObserveAuthStatusUseCase>(
       () => _i595.ObserveAuthStatusUseCase(gh<_i615.AuthRepository>()),
@@ -268,39 +230,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1024.SignOutUseCase>(
       () => _i1024.SignOutUseCase(gh<_i615.AuthRepository>()),
     );
-    gh.factory<_i426.LibraryStatsCubit>(
-      () => _i426.LibraryStatsCubit(
-        gh<_i851.GetLibrarySnapshotUseCase>(),
-        gh<_i460.SharedPreferences>(),
-      ),
+    gh.factory<_i621.GamesDataSource>(
+      () => _i621.GamesDataSource(gh<_i706.GamesApiService>()),
     );
     gh.factory<_i410.SignOutCubit>(
       () => _i410.SignOutCubit(gh<_i1024.SignOutUseCase>()),
-    );
-    gh.factoryParam<_i32.GameDetailCubit, int, dynamic>(
-      (id, _) => _i32.GameDetailCubit(
-        id: id,
-        gameDetailRepository: gh<_i223.GameDetailRepository>(),
-      ),
     );
     gh.factory<_i980.TrackerDetailRepository>(
       () => _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()),
     );
     gh.factory<_i443.TrackerRepository>(
       () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()),
-    );
-    gh.factory<_i187.CriticsGridCubit>(
-      () => _i187.CriticsGridCubit(
-        gh<_i804.GetGenrePreferencesUseCase>(),
-        gh<_i971.GetCriticsChoiceUseCase>(),
-        gh<_i151.SaveGenrePreferencesUseCase>(),
-      ),
-    );
-    gh.factory<_i208.CountdownReleasesCubit>(
-      () => _i208.CountdownReleasesCubit(
-        gh<_i781.GetCountdownGameUseCase>(),
-        gh<_i526.GetOutThisWeekUseCase>(),
-      ),
     );
     gh.singleton<_i627.AuthStatusListener>(
       () => _i627.AuthStatusListener(gh<_i595.ObserveAuthStatusUseCase>()),
@@ -321,11 +261,38 @@ extension GetItInjectableX on _i174.GetIt {
         trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
       ),
     );
+    gh.factory<_i223.GameDetailRepository>(
+      () => _i366.GameDetailRepositoryImpl(
+        gh<_i750.GameDetailRemoteDatasource>(),
+        gh<_i944.GameLocalDatasource>(),
+      ),
+    );
+    gh.factory<_i985.FeaturedRepository>(
+      () => _i840.FeaturedRepositoryImpl(
+        gh<_i554.FeaturedLocalDatasource>(),
+        gh<_i524.FeaturedApiService>(),
+      ),
+    );
+    gh.factory<_i781.GetCountdownGameUseCase>(
+      () => _i781.GetCountdownGameUseCase(gh<_i985.FeaturedRepository>()),
+    );
+    gh.factory<_i971.GetCriticsChoiceUseCase>(
+      () => _i971.GetCriticsChoiceUseCase(gh<_i985.FeaturedRepository>()),
+    );
+    gh.factory<_i804.GetGenrePreferencesUseCase>(
+      () => _i804.GetGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()),
+    );
+    gh.factory<_i851.GetLibrarySnapshotUseCase>(
+      () => _i851.GetLibrarySnapshotUseCase(gh<_i985.FeaturedRepository>()),
+    );
+    gh.factory<_i526.GetOutThisWeekUseCase>(
+      () => _i526.GetOutThisWeekUseCase(gh<_i985.FeaturedRepository>()),
+    );
+    gh.factory<_i151.SaveGenrePreferencesUseCase>(
+      () => _i151.SaveGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()),
+    );
     gh.factory<_i347.SignInCubit>(
       () => _i347.SignInCubit(gh<_i403.SignInUseCase>()),
-    );
-    gh.factory<_i14.FetchGamesUseCase>(
-      () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()),
     );
     gh.factory<_i970.TrackerCubit>(
       () => _i970.TrackerCubit(
@@ -334,8 +301,27 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i671.GetTrackerSortUseCase>(),
       ),
     );
-    gh.factory<_i591.GamesBloc>(
-      () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()),
+    gh.factory<_i461.GamesRepository>(
+      () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()),
+    );
+    gh.factory<_i426.LibraryStatsCubit>(
+      () => _i426.LibraryStatsCubit(
+        gh<_i851.GetLibrarySnapshotUseCase>(),
+        gh<_i460.SharedPreferences>(),
+      ),
+    );
+    gh.factoryParam<_i32.GameDetailCubit, int, dynamic>(
+      (id, _) => _i32.GameDetailCubit(
+        id: id,
+        gameDetailRepository: gh<_i223.GameDetailRepository>(),
+      ),
+    );
+    gh.factory<_i187.CriticsGridCubit>(
+      () => _i187.CriticsGridCubit(
+        gh<_i804.GetGenrePreferencesUseCase>(),
+        gh<_i971.GetCriticsChoiceUseCase>(),
+        gh<_i151.SaveGenrePreferencesUseCase>(),
+      ),
     );
     gh.singleton<_i964.AuthGuard>(
       () => _i964.AuthGuard(
@@ -344,8 +330,17 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i748.PendingRouteStore>(),
       ),
     );
+    gh.factory<_i208.CountdownReleasesCubit>(
+      () => _i208.CountdownReleasesCubit(
+        gh<_i781.GetCountdownGameUseCase>(),
+        gh<_i526.GetOutThisWeekUseCase>(),
+      ),
+    );
     gh.singleton<_i1015.AppRouter>(
       () => _i1015.AppRouter(gh<_i964.AuthGuard>()),
+    );
+    gh.factory<_i14.FetchGamesUseCase>(
+      () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()),
     );
     gh.singleton<_i569.SessionNavigator>(
       () => _i569.SessionNavigator(
@@ -354,6 +349,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1015.AppRouter>(),
       ),
     );
+    gh.factory<_i591.GamesBloc>(
+      () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()),
+    );
     return this;
   }
 }
@@ -361,5 +359,3 @@ extension GetItInjectableX on _i174.GetIt {
 class _$StorageModule extends _i472.StorageModule {}
 
 class _$SupabaseModule extends _i871.SupabaseModule {}
-
-class _$NetworkModule extends _i420.NetworkModule {}

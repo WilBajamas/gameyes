@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'error.freezed.dart';
 
@@ -20,15 +21,14 @@ sealed class ErrorType with _$ErrorType {
   // network or provider problem, so it needs its own kind of error.
   const factory ErrorType.signInCancelled() = SignInCancelled;
 
-  factory ErrorType.dioError({
-    required DioException exception,
-  }) {
+  factory ErrorType.dioError({required DioException exception}) {
     final response = exception.response;
     final data = response?.data;
 
     final apiError = (data is Map) ? data['error']?.toString() : null;
-    final apiMessage =
-        (data is Map) ? data['message']?.toString() : exception.message;
+    final apiMessage = (data is Map)
+        ? data['message']?.toString()
+        : exception.message;
 
     return switch (exception.type) {
       DioExceptionType.connectionTimeout => ErrorType.connectionTimeout(),
@@ -36,10 +36,22 @@ sealed class ErrorType with _$ErrorType {
       DioExceptionType.sendTimeout => ErrorType.sendTimeout(),
       _ when response == null => const ErrorType.unknown(),
       _ => ErrorType.responseError(
-          message: apiMessage,
-          statusCode: exception.response?.statusCode,
-          error: apiError,
-        )
+        message: apiMessage,
+        statusCode: exception.response?.statusCode,
+        error: apiError,
+      ),
     };
+  }
+
+  factory ErrorType.functionError({required FunctionException exception}) {
+    final details = exception.details;
+    final message = (details is Map) ? details['error']?.toString() : null;
+
+    if (message == null) return const ErrorType.unknown();
+
+    return ErrorType.responseError(
+      message: message,
+      statusCode: exception.status,
+    );
   }
 }

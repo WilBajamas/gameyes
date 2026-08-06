@@ -4,8 +4,6 @@ class ConfigConstants {
   static const gamesEndpoint = 'games';
   static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';
-  static const twitchClientId = 'TWITCH_CLIENT_ID';
-  static const twitchClientSecret = 'TWITCH_CLIENT_SECRET';
   static const heroTag = 'hero_tag';
   static const enviedFilePath = '../gameyes/secret.env';
   static const enviedDevFilePath = '../gameyes/dev.env';
@@ -87,4 +85,14 @@ class IGDBConfig {
     'release_dates.date',
     'release_dates.human',
   ];
+}
+
+// The deployed igdb-proxy Edge Function's contract: its name, the endpoint
+// names it accepts, and the bound every call to it is made under.
+class IgdbProxyConstants {
+  static const functionName = 'igdb-proxy';
+  static const gamesEndpoint = 'games';
+  static const releaseDatesEndpoint = 'release_dates';
+
+  static const Duration requestTimeout = Duration(seconds: 30);
 }

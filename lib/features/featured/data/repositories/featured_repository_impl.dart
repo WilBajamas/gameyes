@@ -6,7 +6,7 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/game_enti
 import 'package:gaming_library_assessment_flutter/core/utils/igdb_query_builder.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart';
-import 'package:gaming_library_assessment_flutter/features/games/services/igdb_api_service.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/services/featured_api_service.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: FeaturedRepository)
@@ -14,11 +14,11 @@ class FeaturedRepositoryImpl
     with BaseRepositoryMixin
     implements FeaturedRepository {
   final FeaturedLocalDatasource _localDatasource;
-  final IgdbApiService _igdbApiService;
+  final FeaturedApiService _featuredApiService;
 
   FeaturedRepositoryImpl(
     this._localDatasource,
-    this._igdbApiService,
+    this._featuredApiService,
   );
 
   static const _gameFields = [
@@ -81,7 +81,7 @@ class FeaturedRepositoryImpl
             .limit(1)
             .build();
 
-        final games = await _igdbApiService.fetchGames(query);
+        final games = await _featuredApiService.fetchGames(query);
         if (games.isNotEmpty) {
           return Success(games.first.toEntity());
         }
@@ -97,7 +97,7 @@ class FeaturedRepositoryImpl
           .limit(1)
           .build();
 
-      final games = await _igdbApiService.fetchGames(query);
+      final games = await _featuredApiService.fetchGames(query);
       if (games.isNotEmpty) {
         return Success(games.first.toEntity());
       }
@@ -141,7 +141,7 @@ class FeaturedRepositoryImpl
             .limit(50)
             .build();
 
-        final games = await _igdbApiService.fetchGames(query);
+        final games = await _featuredApiService.fetchGames(query);
         final gameEntities = games.map((g) => g.toEntity()).toList();
 
         // Sort: Wishlisted games first, then by hypes desc
@@ -195,7 +195,7 @@ class FeaturedRepositoryImpl
             .sort('total_rating')
             .limit(4)
             .build();
-        final genreGames = await _igdbApiService.fetchGames(query);
+        final genreGames = await _featuredApiService.fetchGames(query);
         results.addAll(genreGames.map((g) => g.toEntity()));
       }
 
@@ -210,7 +210,7 @@ class FeaturedRepositoryImpl
             )
             .limit(4)
             .build();
-        final globalGames = await _igdbApiService.fetchGames(query);
+        final globalGames = await _featuredApiService.fetchGames(query);
         for (final game in globalGames) {
           final entity = game.toEntity();
           if (!results.any((g) => g.id == entity.id)) {

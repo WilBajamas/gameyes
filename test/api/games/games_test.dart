@@ -1,61 +1,148 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
-import 'package:http_mock_adapter/http_mock_adapter.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/games_model.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/igdb_query_builder.dart';
+import 'package:gaming_library_assessment_flutter/features/games/data/datasources/games_datasource.dart';
+import 'package:gaming_library_assessment_flutter/features/games/services/games_api_service.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../mocks/game_response_mock.dart';
+import '../../mocks/error_mock.dart';
+import '../../mocks/game_mock.dart';
+import '../../mocks/release_date_mock.dart';
+import 'games_test.mocks.dart';
 
+@GenerateMocks([SupabaseIgdbClient])
 void main() {
-  late DioAdapter dioAdapter;
-  late Dio dio;
+  late MockSupabaseIgdbClient igdbClient;
+  late GamesApiService gamesApiService;
+  late GamesDataSource gamesDataSource;
 
   setUp(() {
-    dio = Dio(BaseOptions(baseUrl: 'https://example.com'));
+    igdbClient = MockSupabaseIgdbClient();
+    gamesApiService = GamesApiService(igdbClient);
+    gamesDataSource = GamesDataSource(gamesApiService);
+  });
 
-    // GetIt.I.registerSingleton(mockDioService);
+  tearDown(() {
+    reset(igdbClient);
+  });
 
-    dioAdapter = DioAdapter(
-      dio: dio,
+  test('should send the games endpoint and the built query to the proxy '
+      'when fetching games', () async {
+    final expectedQuery = IGDBQueryBuilder()
+        .fields(IGDBConfig.standardGameFields)
+        .limit(20)
+        .offset(0)
+        .sort('first_release_date')
+        .build();
+
+    when(
+      igdbClient.invoke(
+        endpoint: IgdbProxyConstants.gamesEndpoint,
+        query: expectedQuery,
+      ),
+    ).thenAnswer((_) async => mockGamesJson);
+
+    await gamesDataSource.fetchDatasourceGames();
+
+    verify(
+      igdbClient.invoke(
+        endpoint: IgdbProxyConstants.gamesEndpoint,
+        query: expectedQuery,
+      ),
     );
   });
 
-  test('fetches games response successfully', () async {
-    const path = '/games';
+  test('should send a search query with no sort clause when a search term '
+      'is given', () async {
+    final expectedQuery = IGDBQueryBuilder()
+        .fields(IGDBConfig.standardGameFields)
+        .limit(20)
+        .offset(20)
+        .search('zelda')
+        .build();
 
-    dioAdapter.onPost(
-      path,
-      (server) => server.reply(
-        201,
-        mockGamesResponse,
-        delay: const Duration(seconds: 1),
+    when(
+      igdbClient.invoke(
+        endpoint: IgdbProxyConstants.gamesEndpoint,
+        query: expectedQuery,
+      ),
+    ).thenAnswer((_) async => mockGamesJson);
+
+    await gamesDataSource.fetchDatasourceGames(page: 2, searchTerm: 'zelda');
+
+    verify(
+      igdbClient.invoke(
+        endpoint: IgdbProxyConstants.gamesEndpoint,
+        query: expectedQuery,
       ),
     );
-
-    final response = await dio.post(path);
-
-    final list = (response.data as List)
-        .map((i) => Game.fromJson(i as Map<String, dynamic>))
-        .toList();
-
-    expect(response.statusCode, 201);
-    expect(list, isA<List<Game>>());
   });
 
-  test('fetches games response failed', () async {
-    const path = '/games';
+  test('should return GamesModel with count 0 and decoded games when the '
+      'proxy returns a JSON array', () async {
+    when(
+      igdbClient.invoke(
+        endpoint: anyNamed('endpoint'),
+        query: anyNamed('query'),
+      ),
+    ).thenAnswer((_) async => mockGamesJson);
 
-    dioAdapter.onPost(
-      path,
-      (server) => server.throws(
-        404,
-        DioException(
-          requestOptions: RequestOptions(
-            path: path,
-          ),
-        ),
+    final result = await gamesDataSource.fetchDatasourceGames();
+
+    expect(result, GamesModel(count: 0, results: mockListGames));
+  });
+
+  test('should throw when the proxy reply is not a JSON array', () async {
+    when(
+      igdbClient.invoke(
+        endpoint: anyNamed('endpoint'),
+        query: anyNamed('query'),
+      ),
+    ).thenAnswer((_) async => {'unexpected': 'shape'});
+
+    expect(
+      () => gamesDataSource.fetchDatasourceGames(),
+      throwsA(isA<FormatException>()),
+    );
+  });
+
+  test('should throw FunctionException when the proxy call fails', () async {
+    when(
+      igdbClient.invoke(
+        endpoint: anyNamed('endpoint'),
+        query: anyNamed('query'),
+      ),
+    ).thenAnswer((_) async => throw mockFunctionException);
+
+    expect(
+      () => gamesDataSource.fetchDatasourceGames(),
+      throwsA(isA<FunctionException>()),
+    );
+  });
+
+  test('should send the release dates endpoint and decode into ReleaseDate '
+      'when fetching release dates', () async {
+    const query = 'fields date,human,category; where id = 1;';
+
+    when(
+      igdbClient.invoke(
+        endpoint: IgdbProxyConstants.releaseDatesEndpoint,
+        query: query,
+      ),
+    ).thenAnswer((_) async => mockReleaseDatesJson);
+
+    final result = await gamesApiService.fetchReleaseDates(query);
+
+    expect(result, [mockReleaseDate, mockReleaseDate]);
+    verify(
+      igdbClient.invoke(
+        endpoint: IgdbProxyConstants.releaseDatesEndpoint,
+        query: query,
       ),
     );
-
-    expect(() async => await dio.get(path), throwsA(isA<DioException>()));
   });
 }
