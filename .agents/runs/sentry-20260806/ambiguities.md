@@ -7,30 +7,15 @@ Date: 2026-08-06
 
 ## CRITICAL (pipeline blocked — requires human decision before proceeding)
 
-CRITICAL-1: added requirement 2 (remove the deprecated `PrettyDioLogger`
-interceptor) — two instructions in it cannot both hold. Removing
-`pretty_dio_logger: ^1.4.0` from `pubspec.yaml` was premised on nothing else
-referencing it, but `lib/core/services/api/twitch_auth_interceptor.dart` also
-imports the package and registers `PrettyDioLogger` on its private `_tokenDio`
-(lines 3, 27-32). The same requirement lists `TwitchAuthInterceptor` as staying
-exactly as-is and says this is not a broader dead-code cleanup. Removing the
-package while leaving that file alone breaks compilation and adds an analyzer
-error against the run baseline.
-  Options: A — also strip the import and the `PrettyDioLogger` registration from
-  `twitch_auth_interceptor.dart`, then remove the package, expanding the file
-  allowlist by one file | B — keep `pretty_dio_logger` in `pubspec.yaml` and
-  delete only the `network_module.dart` registration and import
-  Recommended: A — it is the same one logger interceptor, both usages sit in
-  `@Deprecated` reference-only code the app never runs, and it is the only option
-  where the package actually leaves the project. Secondary: `.agents/references/
-  flutter-arch.md` lines 170 and 181 document `PrettyDioLogger` and go stale under
-  A; confirm whether the reference doc is in scope for this run.
-  Decision needed from: Human / Product Owner
+NONE
 
-Requirement 1 (`talker` logging around the IGDB client) has no critical
-ambiguity. Its criteria are ready to append as 10.15 onward once CRITICAL-1 is
-answered; per the BA rules nothing was written to `tech-ac.md` while a CRITICAL
-is open, so the existing 10.1-10.14 file is untouched.
+CRITICAL-1 (`pretty_dio_logger` removal contradicted leaving
+`TwitchAuthInterceptor` untouched) was answered by the human on 2026-08-06:
+**Option A** — strip the import and the `PrettyDioLogger` registration from
+`twitch_auth_interceptor.dart` as well, then remove the package from
+`pubspec.yaml` entirely, and update the two now-stale `PrettyDioLogger`
+references in `.agents/references/flutter-arch.md`. The file allowlist grows by
+those two files. Criteria [10.15]-[10.26] are now appended to `tech-ac.md`.
 
 ## ASSUMPTIONS (minor — pipeline may proceed)
 
@@ -57,6 +42,29 @@ no per-caller logging is added.
 ASSUMPTION: Log content is not privacy-reviewed the way Sentry payloads are in
 [10.9]-[10.10], because output is console-only, dev-flavour-only and debug-only,
 and never leaves the device.
+
+ASSUMPTION: No new package is needed for the logging half. `talker_flutter` is
+already a direct dependency and `pubspec.lock` carries `talker` transitively
+through it, so "use talker" is assumed to mean the logging core already on hand,
+not a new `pubspec.yaml` entry.
+
+### Added requirement — `PrettyDioLogger` removal
+
+ASSUMPTION: `pubspec.lock` lists `pretty_dio_logger` as `direct main` and nothing
+else depends on it, so removing the `pubspec.yaml` line is assumed to remove it
+from the lock outright rather than demote it to transitive.
+
+ASSUMPTION: "Remove the interceptor" means remove only the logger registration
+and its import from the two files. Both files stay in the tree, still
+`@Deprecated`, still unregistered in DI; deleting them outright is item 11's
+question, not this run's.
+
+ASSUMPTION: The `.agents/references/flutter-arch.md` edit is scoped to its two
+`PrettyDioLogger` mentions (lines 170 and 181). A separate staleness in the same
+section — line 169 gives the module's path as
+`lib/core/services/api/network_module.dart` while the file actually lives at
+`lib/core/di/network_module.dart` — is assumed out of scope and left alone, since
+correcting it is unrelated to the logger removal.
 
 ### Original Sentry requirement
 

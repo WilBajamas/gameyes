@@ -1,5 +1,7 @@
 # Technical Acceptance Criteria
-Source: `.agents/week-1-task-briefs.md` §"10 — Sentry [PIPELINE]"
+Source: `.agents/week-1-task-briefs.md` §"10 — Sentry [PIPELINE]", plus a second
+requirement added by the human on 2026-08-06 to the same run (IGDB client logging
+via `talker`, and removal of the deprecated `PrettyDioLogger` interceptor)
 Date: 2026-08-06
 BA Agent version: 1.0
 
@@ -16,6 +18,16 @@ user-identifying value permitted, attached when a session exists and removed whe
 it ends. Startup must survive a missing, placeholder or failing Sentry
 configuration without blocking the first frame. Delivery is verified by a
 deliberate uncaught error raised in the dev flavour.
+
+Added to the same run: local network visibility for the live IGDB path. Calls
+through the Supabase IGDB client are logged with `talker` — the outgoing endpoint
+and query, the returned body trimmed to at most 50 lines, and any failure with a
+full untrimmed stack trace — gated on the dev flavour and a debug build together,
+console output only, and entirely separate from Sentry. Alongside it, the
+`PrettyDioLogger` interceptor is stripped from the two deprecated files that still
+register it, the `pretty_dio_logger` package is dropped from the project, and the
+architecture reference is updated so it no longer documents a logger the code no
+longer has.
 
 ## Technical acceptance criteria
 
@@ -106,12 +118,99 @@ against the run baseline.
   Failure case: a new analyzer error or a newly failing test that is not in the
   recorded pre-existing failure list.
 
+[10.15] LOGGING: Each invocation of the Supabase IGDB client's `invoke` entry
+point emits one `talker` request entry before the call is dispatched, carrying
+both the endpoint value and the query value passed to it.
+  Failure case: if emitting the log entry throws, the call is still dispatched
+  unchanged and the thrown log error does not reach the caller.
+
+[10.16] LOGGING: After `invoke` returns successfully, one `talker` response entry
+is emitted whose body content is capped at 50 lines. When the rendered body
+exceeds the cap, only the first 50 lines are emitted and the entry carries an
+explicit marker that output was cut short.
+  Failure case: a body at or under the cap is emitted in full with no truncation
+  marker, so a complete log is never mistaken for a truncated one.
+
+[10.17] LOGGING: When `invoke` fails — including a timeout, a transport failure
+and an error returned by the edge function — one `talker` error entry is emitted
+carrying the error and its complete stack trace with no line trimming applied,
+and the original error then propagates to the caller unchanged in type and
+message.
+  Failure case: swallowing the error, wrapping it in a different type, or
+  applying the [10.16] 50-line cap to error output or a stack trace each fail
+  this criterion.
+
+[10.18] GATING: The logging in [10.15]-[10.17] runs only when the active flavour
+is dev AND the build is a debug build. Both conditions are evaluated per call.
+Any other combination — dev release, prod debug, prod release — emits nothing at
+all for these three entries.
+  Failure case: if the active flavour cannot be resolved at call time, nothing is
+  logged; the call itself still proceeds normally.
+
+[10.19] OUTPUT SURFACE: Log output goes to the console/logger sink only. No
+in-app log viewer screen, route, overlay, floating button or other user-reachable
+affordance is added, and no stored log history is exposed in the UI.
+  Failure case: any new widget, route or gesture that surfaces log contents fails
+  this criterion.
+
+[10.20] SEPARATION: The IGDB logging path is independent of crash reporting. No
+entry from [10.15]-[10.17] is turned into a Sentry breadcrumb, event or
+attachment, and neither mechanism's failure or disablement affects the other.
+  Failure case: a Sentry-disabled build must still log per [10.15]-[10.18], and a
+  build with logging gated off must still report crashes per [10.6]-[10.7].
+
+[10.21] REGRESSION: The IGDB client's public entry point keeps its existing
+signature, return value and error propagation, and its callers — the games, game
+detail and featured API services — are not modified and gain no logging of their
+own.
+  Failure case: an existing test of the client or of those services that passed
+  at the run baseline and now fails.
+
+[10.22] CLEANUP: `lib/core/di/network_module.dart` no longer imports or registers
+`PrettyDioLogger`. Everything else in the file is byte-identical in behaviour —
+the same `Dio` instance, the same base options, the same `TwitchAuthInterceptor`
+registration, the same `@Deprecated` annotation and comments.
+  Failure case: removing or reordering any other interceptor, option or member of
+  that file fails this criterion.
+
+[10.23] CLEANUP: `lib/core/services/api/twitch_auth_interceptor.dart` no longer
+imports `PrettyDioLogger` and no longer registers it on its private token `Dio`.
+The constructor still builds that `Dio` with the same base URL and the same three
+timeouts, and every other member of the class is unchanged. The class stays in
+the tree, stays `@Deprecated`, and stays unregistered in DI.
+  Failure case: deleting the file, deleting the token `Dio`, or changing any
+  other method fails this criterion.
+
+[10.24] DEPENDENCY: The `pretty_dio_logger` entry is removed from `pubspec.yaml`,
+and after dependency resolution the package appears nowhere in `pubspec.lock` —
+neither as a direct nor as a transitive dependency. No import of it remains
+anywhere under `lib/` or `test/`.
+  Failure case: a leftover import produces an analyzer error against the run
+  baseline; the package reappearing in the lock as transitive means something
+  still pulls it in and must be reported rather than worked around.
+
+[10.25] DOCS: `.agents/references/flutter-arch.md` no longer presents
+`PrettyDioLogger` as part of the Dio/network setup at either of its two mentions
+(around lines 170 and 181). What remains at those two points describes only
+mechanisms the code still contains.
+  Failure case: a doc line still naming `PrettyDioLogger`, or a rewrite that
+  describes network logging that does not exist in the code, both fail.
+
+[10.26] REGRESSION: The changes for [10.15]-[10.25] produce no new analyzer error
+and no newly failing test against the recorded run baseline, and no runtime
+behaviour change outside the IGDB client call path — the two files touched by
+[10.22] and [10.23] are unreachable from the running app, so removing the logger
+from them changes nothing observable.
+  Failure case: a new analyzer error or a newly failing test that is not in the
+  recorded pre-existing failure list.
+
 ## Out of scope
 
 - Performance monitoring, tracing, profiling, session replay and release-health
   sessions.
 - Reporting of handled/caught exceptions, and routing the app's existing logging
-  into Sentry breadcrumbs.
+  into Sentry breadcrumbs. This explicitly includes the [10.15]-[10.17] IGDB log
+  entries — no breadcrumb bridging in either direction.
 - Native (Android JVM/NDK) crash capture as a stated requirement, plus debug
   symbol, ProGuard mapping and source-map upload to Sentry. Whatever the SDK does
   by default is acceptable; no upload tooling or build-step integration is added.
@@ -124,6 +223,22 @@ against the run baseline.
   existing error messaging.
 - Supplying the real DSN value. It is not in this checkout; the human provides it
   locally for the [10.12] verification run.
+- `talker_flutter`'s viewer UI — the log screen, overlay, route and any in-app
+  log inspector — stays out. This run adds console/logger output only ([10.19]).
+- Logging on any other network or data path: Supabase auth, storage, the tracker
+  repository and direct `SupabaseClient` calls are untouched. Only the IGDB
+  client's `invoke` is instrumented.
+- Log persistence, file or remote export, log-level configuration, and privacy
+  scrubbing of log content. Output is local, dev-only and debug-only.
+- Migrating existing `debugPrint`/`logger` calls to `talker`, and any change to
+  the `logger` or `talker_flutter` dependency entries.
+- Broader dead-code cleanup. `NetworkModule`, `TwitchAuthInterceptor`, the `dio`
+  and `retrofit` dependencies and all remaining Dio wiring stay exactly as they
+  are apart from the single logger interceptor removed by [10.22] and [10.23].
+  Deleting those deprecated files belongs to item 11, not this run.
+- Any reference-doc edit other than the two `PrettyDioLogger` mentions in
+  `flutter-arch.md` ([10.25]) — including the unrelated stale module path on the
+  line above them.
 
 ## Assumptions
 
@@ -148,3 +263,16 @@ ASSUMPTION: Attaching the Supabase user ID is required, not merely permitted.
 
 ASSUMPTION: 100% of error events are sent; no sampling and no quota guard against
 the ~5k events/month free tier.
+
+ASSUMPTION: A "line" for the [10.16] cap is a newline-separated line of the
+rendered response body.
+
+ASSUMPTION: Request and successful-response entries log at an informational
+level, failures at error level, so failures are filterable in console output.
+
+ASSUMPTION: No new package is needed for logging — `talker_flutter` is already a
+direct dependency and carries `talker` transitively.
+
+ASSUMPTION: `pretty_dio_logger` is `direct main` in `pubspec.lock` with nothing
+else depending on it, so removing the `pubspec.yaml` line drops it from the lock
+entirely.
