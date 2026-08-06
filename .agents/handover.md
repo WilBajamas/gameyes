@@ -1,41 +1,29 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-06: item 3's SQL/Edge Function work
-is now also **merged to `develop` at `a908840`** (regular merge, item 9's
-fast-forward and item 3's branch had diverged — no conflicts). Items 3 and 9
-are both fully merged now; only item 3's on-device cross-account check and
-prod deploys for both remain open.
+Written 2026-07-29. Last updated 2026-08-06: items 3 and 9 both fully merged
+to `develop` (`a908840`). **Items 1 through 9 are now all done and merged.**
+One thing left open across the whole set — see below.
 
 ---
 
 ## Where things stand
 
-- **Items 1, 1a, 2, 4, 5, 6 (with 6.1/6.2), 7, 8 — done, merged to `develop`,
-  nothing outstanding.** Per-item history and PR numbers live in
-  `week-1-task-briefs.md`, not repeated here.
-- **Item 3 (database schema and RLS) — mostly done, merged to `develop`.**
-  SQL migrations (`supabase/migrations/`) are written, applied to the real
-  `questloggd-dev` project, and RLS is proven both locally (a disposable
-  Postgres standing in for Supabase, two fake users, cross-read/write/delete
-  all correctly blocked, cascade-delete and constraints fired) and via the
-  account-picker fix in `auth_datasource.dart`. **Still open:** the actual
-  on-device cross-account check, which needs something in the app to write
-  to `library_entries` — nothing does yet, so this is blocked on week 3's
-  Library feature (the human declined a temporary test screen). Prod is
-  blocked separately (no prod Supabase project — 0.1b, deferred).
-- **Item 9 (IGDB Edge Function) — done and merged to `develop`.** Both
-  halves shipped: the function itself (`supabase/functions/igdb-proxy/`) and
-  the Flutter client repoint (pipeline run `igdb-client-repoint-20260805`,
-  QA PASS, fast-forward merged to `develop` at `9b5e303`). Games list, game
-  detail and all three Featured
-  reads now go through `SupabaseIgdbClient` and one `*ApiService` per
-  feature; the old direct-to-IGDB Retrofit/Dio/Twitch stack is gone from
-  active use. One recorded, approved exception: `TwitchAuthInterceptor` and
-  `NetworkModule` are kept as `@Deprecated`, DI-unregistered, credential-free
-  reference code (two-line comments, trimmed at the human's request) —
-  `tech-ac.md` was amended with an explicit carve-out for this, see that
-  run's `orchestrator-state.md ## Deviation approvals`. **Still open:** prod
-  deploy, once a prod Supabase project exists.
+**Items 1, 1a, 2, 4, 5, 6 (with 6.1/6.2), 7, 8, 9 — done, merged to
+`develop`, nothing outstanding.** Per-item history, PR numbers and full
+build/verification detail live in `week-1-task-briefs.md` and each item's
+(now-merged) commit history — not repeated here.
+
+**One open item, carried from item 3:** the on-device cross-account RLS
+check. The database schema, RLS policies and the account-picker sign-in fix
+are all done and applied to the real `questloggd-dev` project — this is only
+about *verifying* it live. It's blocked because nothing in the app writes to
+`library_entries` yet (week 3's Library feature will; the human declined a
+temporary test screen sooner).
+
+**Prod deploys are blocked project-wide**, not per item — there is no prod
+Supabase project yet (0.1b, still deferred on the free-plan cap). Every
+item's dev-only work (schema, RLS, Edge Function, provider config) will need
+repeating there once it exists.
 
 ---
 
@@ -248,12 +236,18 @@ Before anything else:
   handover.md) -- the suite is not green and never has been.
 
 Current state: items 1-9 (with 6.1/6.2) are all done and merged to develop.
-Item 3's on-device cross-account check is the one thing still open, blocked
-until something writes to library_entries.
+The only thing still open is item 3's on-device cross-account RLS check,
+blocked until something writes to library_entries (week 3's Library
+feature) -- nothing to do there right now unless asked to build a temporary
+test screen sooner.
 
 Next real options, pick one:
-- Item 3: hold the on-device cross-account check until week 3's Library
-  feature lands (or build a temporary test screen sooner, if asked).
-- Item 10 (Sentry) or item 11 (repo cleanup) -- both normal PIPELINE runs,
-  nothing blocking either.
+- Item 10 (Sentry) -- normal PIPELINE run, nothing blocking it.
+- Item 11 (repo cleanup: .gitattributes for generated-file line endings,
+  untrack coverage/, remove a stale envied TODO) -- normal PIPELINE run,
+  nothing blocking it.
+- Items 10 and 11 are the last two week-1 checklist items. Once both ship,
+  week 1 is done -- delete week-1-task-briefs.md per its own top note, and
+  check with the human on what's next (week 2 component library, or week 3
+  Library/tracker migration).
 ```
