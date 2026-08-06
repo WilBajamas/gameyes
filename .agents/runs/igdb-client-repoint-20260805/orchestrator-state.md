@@ -12,7 +12,18 @@ Branch: feature/igdb-client-repoint
 Base branch: develop
 Base SHA: da609058d5abc4280a6aab1aa7e2213b1d86fe04
 Dev commit: df1456f8725855c95c7732f33226148a89066b0a
-Human follow-up commits: 8f9f9bf (trim comments, rename classes), 5cd8a4f (rename constant) — pushed directly by the human, not through the Dev Agent. Re-verified after: build_runner clean (no diff), analyzer 0 errors/2 warnings/34 info (unchanged), tests +200 -11 (unchanged). HEAD is now 5cd8a4f855c33113c96b9df439743adfa2494282.
+Human follow-up commits: 8f9f9bf (trim comments, rename classes), 5cd8a4f (rename constant) — pushed directly by the human, not through the Dev Agent. Re-verified after: build_runner clean (no diff), analyzer 0 errors/2 warnings/34 info (unchanged), tests +200 -11 (unchanged).
+
+Orchestrator-made addition (human-directed, not a Dev Agent round): restored
+`lib/core/services/api/twitch_auth_interceptor.dart` and
+`lib/core/di/network_module.dart`, both deleted by the Dev commit, at the
+human's explicit request for reference. Both marked `@Deprecated`, DI
+annotations stripped (`injectable_builder` confirms 2 no-op, so neither is
+registered), `Env.twitchClientId`/`Env.twitchClientSecret` swapped for local
+placeholder constants since those fields no longer exist, and
+`NetworkModule`'s two Retrofit-service provider methods are a comment (their
+return types were deleted). Re-verified: build_runner clean, analyzer back
+at the 34-issue baseline exactly, tests +200 -11 unchanged.
 Last updated: 2026-08-05T00:00:00Z
 
 ## Escalation history
