@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../res/const.dart';
 import '../services/api/twitch_auth_interceptor.dart';
@@ -22,12 +21,6 @@ abstract class NetworkModule {
     );
 
     dio.interceptors.add(interceptor);
-    dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-      ),
-    );
     return dio;
   }
 }

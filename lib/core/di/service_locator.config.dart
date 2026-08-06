@@ -29,6 +29,8 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_t
     as _i424;
 import 'package:gaming_library_assessment_flutter/core/services/api/default_dio_interceptor.dart'
     as _i646;
+import 'package:gaming_library_assessment_flutter/core/services/sentry/crash_report_user.dart'
+    as _i554;
 import 'package:gaming_library_assessment_flutter/core/services/storage/game_local_storage.dart'
     as _i857;
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connection_checker.dart'
@@ -244,6 +246,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i627.AuthStatusListener>(
       () => _i627.AuthStatusListener(gh<_i595.ObserveAuthStatusUseCase>()),
+    );
+    gh.singleton<_i554.CrashReportUser>(
+      () => _i554.CrashReportUser(gh<_i595.ObserveAuthStatusUseCase>()),
     );
     gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>(
       (task, _) => _i633.TaskCubit(

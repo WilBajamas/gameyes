@@ -35,6 +35,10 @@ final class FlavorConfig {
     };
   }
 
+  /// Null until bootstrap has run. For callers that can carry on without
+  /// knowing which build this is; everything else uses [instance].
+  static FlavorConfig? get instanceOrNull => _instance;
+
   static FlavorConfig get instance {
     final config = _instance;
     if (config == null) {
