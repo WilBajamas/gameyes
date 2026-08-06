@@ -3,7 +3,7 @@ Feature: Item 10 — Sentry crash reporting
 Run ID: sentry-20260806
 Run folder: .agents/runs/sentry-20260806/
 Started: 2026-08-06
-Current phase: BA (re-run, resuming after CRITICAL-1)
+Current phase: TECH_LEAD (re-run, delta for 10.15-10.26)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-06T00:00:00Z
 Test baseline: +11 -11 counted as failures (199 passing, 11 failing out of 210) — captured 2026-08-06T00:00:00Z
@@ -27,8 +27,10 @@ precedent set by `claude/questloggd-week1-item3-rls-x334sm`.
 the Phase 3 design gate — `talker` request/response/error logging around the IGDB
 client, and removal of the deprecated `PrettyDioLogger` interceptor. Phase 1 was
 re-run for it. The logging half is unambiguous; the `PrettyDioLogger` half opened
-CRITICAL-1, so no criteria were appended to `tech-ac.md` and it still holds only the
-original 10.1-10.14.
+CRITICAL-1, resolved by the human choosing Option A. Criteria 10.15-10.26 appended
+to `tech-ac.md`. The human also asked to fix an unrelated stale module path in
+`flutter-arch.md` line 169 (`lib/core/services/api/network_module.dart` should read
+`lib/core/di/network_module.dart`) in the same pass as the 10.25 doc edit.
 
 ## Escalation history
 2026-08-06T00:00:00Z Phase 1 — BA Agent — CRITICAL-1, `pretty_dio_logger` removal
