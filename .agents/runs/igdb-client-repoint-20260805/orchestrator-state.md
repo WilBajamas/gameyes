@@ -3,8 +3,8 @@ Feature: Week 1 item 9 (continued) — repoint the Flutter client to call the ig
 Run ID: igdb-client-repoint-20260805
 Run folder: .agents/runs/igdb-client-repoint-20260805/
 Started: 2026-08-05
-Current phase: QA
-QA cycles used: 0
+Current phase: ESCALATED
+QA cycles used: 1
 Analyzer baseline: 0 errors, 2 warnings, 36 info — captured 2026-08-05T00:00:00Z
 Test baseline: +187 -13 — captured 2026-08-05T00:00:00Z
 Pre-existing test failures: test/api/games/games_test.dart (1), test/api/game_detail/game_detail_test.dart (1), test/cubit/games/games_bloc_test.dart (3), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/repository/tracker/tracker_repository_test.dart (4), test/widget_test.dart (1)
@@ -27,7 +27,12 @@ at the 34-issue baseline exactly, tests +200 -11 unchanged.
 Last updated: 2026-08-05T00:00:00Z
 
 ## Escalation history
-NONE
+2026-08-06 Phase QA — QA Agent — REQ-9.3 CONFIG and REQ-9.3 NETWORKING both FAIL as
+written: TwitchAuthInterceptor and NetworkModule are allowlisted DELETE, correctly
+deleted by Dev commit df1456f, then restored as deprecated reference by commit
+434c50f at the human's explicit request. No credential is exposed (placeholders
+only, DI-unregistered); this is a criteria-vs-decision conflict, not a defect.
+Route: Human. — OPEN
 
 ## Deviation approvals
 NONE
