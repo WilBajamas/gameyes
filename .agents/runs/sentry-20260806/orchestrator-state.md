@@ -3,7 +3,7 @@ Feature: Item 10 — Sentry crash reporting
 Run ID: sentry-20260806
 Run folder: .agents/runs/sentry-20260806/
 Started: 2026-08-06
-Current phase: ESCALATED (return to HUMAN_GATE (Phase 3 — design) once CRITICAL-1 is answered)
+Current phase: BA (re-run, resuming after CRITICAL-1)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-06T00:00:00Z
 Test baseline: +11 -11 counted as failures (199 passing, 11 failing out of 210) — captured 2026-08-06T00:00:00Z
@@ -31,9 +31,11 @@ CRITICAL-1, so no criteria were appended to `tech-ac.md` and it still holds only
 original 10.1-10.14.
 
 ## Escalation history
-OPEN 2026-08-06T00:00:00Z — BA Agent, Phase 1 (added-requirement re-run): CRITICAL-1,
-`pretty_dio_logger` removal contradicts leaving `TwitchAuthInterceptor` untouched.
-Awaiting human choice of option A or B. See `escalation.md`.
+2026-08-06T00:00:00Z Phase 1 — BA Agent — CRITICAL-1, `pretty_dio_logger` removal
+contradicts leaving `TwitchAuthInterceptor` untouched — Resolved: human chose
+Option A (strip PrettyDioLogger from twitch_auth_interceptor.dart too, then
+remove the package entirely) and asked flutter-arch.md's stale reference to it
+be updated in the same run.
 
 ## Deviation approvals
 NONE
