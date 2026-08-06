@@ -14,6 +14,13 @@ class AuthDatasource {
       _client.auth.signInWithOAuth(
         provider,
         redirectTo: FlavorConfig.instance.authRedirectUrl,
+        // Both providers otherwise sign back into whatever account is already
+        // active on the device without ever showing a picker.
+        queryParams: switch (provider) {
+          OAuthProvider.google => const {'prompt': 'select_account'},
+          OAuthProvider.discord => const {'prompt': 'consent'},
+          _ => null,
+        },
       );
 
   Future<void> signOut() => _client.auth.signOut();

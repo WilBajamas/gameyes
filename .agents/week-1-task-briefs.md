@@ -95,7 +95,10 @@ Note for the run: `.vscode/tasks.json` uses `fvm`; the pipeline skills use bare
 `flutter`. Harmless while the SDK versions match, but this is the run most likely to
 surface it.
 
-- [ ] Done
+- [x] Done. Checkbox was simply never ticked — `lib/config/flavor/` (`flavor.dart`,
+      `flavor_config.dart`), `dev`/`prod` product flavours with separate
+      `applicationIdSuffix` in `android/app/build.gradle`, and `.vscode/tasks.json`
+      already reflect this. Confirmed 2026-08-05 while resuming for item 3/9.
 
 #### 1a — `app_title` rename [MANUAL — IDE ONLY]
 
@@ -112,7 +115,10 @@ Flutter Intl IDE plugin and have no CLI. Change both `.arb` files, then let the 
 plugin regenerate. Do **not** hand-edit the generated files; that is the exact
 mistake recorded in `.agents/handover.md` gotcha #2.
 
-- [ ] Both `.arb` files updated and regenerated in the IDE
+- [x] Both `.arb` files updated and regenerated in the IDE. Confirmed
+      2026-08-05: `app_title` is `"QuestLoggd"` in both `.arb` files and in
+      both generated `messages_en.dart`/`messages_zh.dart`. Checkbox was
+      simply never ticked.
 
 ### 2 — Supabase client and DI [PIPELINE]
 
@@ -166,10 +172,24 @@ readable by nobody, and a table without RLS enabled is readable by everybody.
 Verify by trying to read another user's row with a real second account, not by
 reading the policy and agreeing with yourself. This is worth an hour on its own.
 
-- [ ] Schema migrations written and applied to dev
-- [ ] RLS enabled on every table, policy per operation
-- [ ] Cross-account read/write denial verified with two real accounts
-- [ ] Applied to prod
+- [x] Schema migrations written and applied to dev. **2026-08-05.**
+      `supabase/migrations/`: `profiles` (+ auto-create trigger on
+      `auth.users` insert), `library_entries` (IGDB snapshot, six-value
+      status check, one row per user+game), `lists` (stub). Applied to the
+      real `questloggd-dev` project via the SQL editor, confirmed by the
+      human.
+- [x] RLS enabled on every table, policy per operation. Every table has
+      select; `library_entries`/`lists` also have insert/update/delete
+      scoped to `auth.uid() = user_id`; `profiles` deliberately has no
+      insert/delete policy (insert is trigger-only, delete is cascade-only).
+- [ ] Cross-account read/write denial verified with two real accounts.
+      Logic was proven against a local disposable Postgres standing in for
+      Supabase (two fake users, RLS enforced, cross-read/write/delete all
+      correctly blocked, cascade-delete and constraints all fired) — that is
+      NOT the same as verifying on the real dev project with the real app,
+      which still needs to happen.
+- [ ] Applied to prod. Blocked — no prod Supabase project exists yet (0.1b,
+      still deferred).
 
 ### 4 — Design token layer [PIPELINE]
 
@@ -238,9 +258,9 @@ library itself stays in week 2.
       item 6.1 (2026-08-04) replaced both heroes' composed-widget content with
       flat PNG art. Item 6.2 (2026-08-05) padded the hero art, reduced hero
       height to ~1/3 screen, added `SafeArea` plus a new app-wide system-bar
-      convention, and made the two screens swipeable via `PageView`. Run
-      folder `welcome-screens-polish-20260804`. QA pass pending one on-device
-      manual check (system nav bar colour) — see that run's `qa-report.md`.
+      convention, and made the two screens swipeable via `PageView`. All
+      manual checks (6.1 hero art, 6.2 nav bar colour) PASSED on-device
+      2026-08-05. Run folder retired, evidence kept in `handover.md`.
 
 ### 7 — Auth screen [PIPELINE]
 
@@ -311,10 +331,43 @@ query shapes without shipping a new build.
 Then update the Flutter side to call the function instead of IGDB directly. That
 part **is** a pipeline run — split it.
 
-- [ ] Edge Function written and deployed to dev
-- [ ] Flutter client repointed [PIPELINE]
-- [ ] IGDB credentials removed from the client build entirely
-- [ ] Deployed to prod
+- [x] Edge Function written and deployed to dev. **2026-08-05.**
+      `supabase/functions/igdb-proxy/index.ts` — matches the two real
+      endpoints exactly (`games`, `release_dates`, both used by
+      `igdb_api_service.dart` and `game_detail_service.dart`), mirrors the
+      client's existing token-fetch-and-retry-once-on-401 behaviour
+      (`twitch_auth_interceptor.dart`), and takes zero external imports.
+      Verified with Deno's test runner against a mocked Twitch/IGDB
+      (5/5 passing) — fmt, lint and type-check all clean. Deployed to
+      `questloggd-dev` through the dashboard (no CLI), secrets set, and
+      smoke-tested from the real signed-in app via a temporary
+      `supabase.functions.invoke('igdb-proxy', ...)` button on Settings —
+      returned real game data. That button has been removed again
+      (`settings_screen.dart` is back to byte-identical with before it
+      was added).
+- [x] Flutter client repointed [PIPELINE]. **2026-08-06.** Full pipeline
+      run, `igdb-client-repoint-20260805`, **merged to `develop` at `9b5e303`**
+      (fast-forward from `feature/igdb-client-repoint`). Games list, game
+      detail and
+      all three Featured reads now call the `igdb-proxy` function through
+      `SupabaseIgdbClient` plus one API service per feature
+      (`GamesApiService`, `GameDetailApiService`, `FeaturedApiService`),
+      replacing the direct-to-IGDB Retrofit stack. QA PASS after one cycle —
+      the only failure was a deliberate human decision (see next line), not a
+      defect. Human also tested on-device: games list, search, pagination,
+      game detail, all three Featured sections, offline/retry, fresh install.
+- [x] IGDB credentials removed from the client build entirely. Both Twitch
+      `envied` fields and constants are gone; the two Retrofit services and
+      the Dio/interceptor stack are deleted from active use. One recorded
+      exception, approved by the human at the QA gate:
+      `TwitchAuthInterceptor` and `NetworkModule` were restored as
+      `@Deprecated`, DI-unregistered, credential-free reference code (real
+      values swapped for the placeholder `'REMOVED_BY_ITEM_9'`) because the
+      human wants the old shape available to consult. `tech-ac.md`'s
+      criteria were amended with an explicit carve-out for this; see
+      `orchestrator-state.md ## Deviation approvals` in the run folder.
+- [ ] Deployed to prod. Blocked — no prod Supabase project exists yet (0.1b,
+      still deferred).
 
 ### 10 — Sentry [PIPELINE]
 
