@@ -17,5 +17,6 @@ in short, plain English.
 
 - Feature work goes through `/orchestrate` — see `.claude/skills/orchestrate/SKILL.md`.
 - Product/design/architecture references: `.agents/references/`.
-- `.claude/` and `.agents/` are both git-ignored — nothing there has version
-  history. Edit with care; there's no `git diff` safety net.
+- `.claude/`, `.agents/` and `.codex/` are all git-tracked, not ignored — they
+  have full version history like any other file. (Corrected 2026-08-05; they
+  were un-ignored 2026-08-04, see `.agents/handover.md`.)
