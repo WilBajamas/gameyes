@@ -346,8 +346,9 @@ part **is** a pipeline run — split it.
       (`settings_screen.dart` is back to byte-identical with before it
       was added).
 - [x] Flutter client repointed [PIPELINE]. **2026-08-06.** Full pipeline
-      run, `igdb-client-repoint-20260805`, branch `feature/igdb-client-repoint`
-      (pushed, **not merged** — HEAD `f987d5a`). Games list, game detail and
+      run, `igdb-client-repoint-20260805`, **merged to `develop` at `9b5e303`**
+      (fast-forward from `feature/igdb-client-repoint`). Games list, game
+      detail and
       all three Featured reads now call the `igdb-proxy` function through
       `SupabaseIgdbClient` plus one API service per feature
       (`GamesApiService`, `GameDetailApiService`, `FeaturedApiService`),

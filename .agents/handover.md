@@ -1,9 +1,9 @@
 # Handover — QuestLoggd
 
 Written 2026-07-29. Last updated 2026-08-06: item 9's Flutter-client-repoint
-pipeline run shipped, QA PASS — **pushed to `feature/igdb-client-repoint`,
-not merged to `develop`.** See below for exactly what that branch has and
-what merging it still needs.
+is QA PASS and **merged to `develop` at `9b5e303`** (fast-forward from
+`feature/igdb-client-repoint`). Item 9 is fully done. Item 3's SQL/Edge
+Function work (on this branch) is still unmerged.
 
 ---
 
@@ -24,20 +24,19 @@ what merging it still needs.
   blocked separately (no prod Supabase project — 0.1b, deferred). This work
   is on `claude/questloggd-week1-item3-rls-x334sm` (this branch), not yet
   merged either.
-- **Item 9 (IGDB Edge Function) — done, not merged.** Both halves shipped:
-  the function itself (`supabase/functions/igdb-proxy/`, on this branch) and
-  the Flutter client repoint (pipeline run `igdb-client-repoint-20260805`,
-  branch `feature/igdb-client-repoint`, QA PASS). Games list, game detail and
-  all three Featured reads now go through `SupabaseIgdbClient` and one
-  `*ApiService` per feature; the old direct-to-IGDB Retrofit/Dio/Twitch stack
-  is gone from active use. One recorded exception: `TwitchAuthInterceptor`
-  and `NetworkModule` were restored as `@Deprecated`, DI-unregistered,
-  credential-free reference code at the human's request — approved at the QA
-  gate, `tech-ac.md` amended with an explicit carve-out for it, see that run's
-  `orchestrator-state.md ## Deviation approvals`. **Still open:** merging
-  `feature/igdb-client-repoint` to `develop` (nothing merges anything
-  automatically — that's the human's call), and prod deploy once a prod
-  Supabase project exists.
+- **Item 9 (IGDB Edge Function) — done and merged to `develop`.** Both
+  halves shipped: the function itself (`supabase/functions/igdb-proxy/`,
+  still only on this branch — see below) and the Flutter client repoint
+  (pipeline run `igdb-client-repoint-20260805`, QA PASS, fast-forward merged
+  to `develop` at `9b5e303`). Games list, game detail and all three Featured
+  reads now go through `SupabaseIgdbClient` and one `*ApiService` per
+  feature; the old direct-to-IGDB Retrofit/Dio/Twitch stack is gone from
+  active use. One recorded, approved exception: `TwitchAuthInterceptor` and
+  `NetworkModule` are kept as `@Deprecated`, DI-unregistered, credential-free
+  reference code (two-line comments, trimmed at the human's request) —
+  `tech-ac.md` was amended with an explicit carve-out for this, see that
+  run's `orchestrator-state.md ## Deviation approvals`. **Still open:** prod
+  deploy, once a prod Supabase project exists.
 
 ---
 
@@ -249,16 +248,16 @@ Before anything else:
   any baseline. Expect 13 pre-existing test failures (gotcha #3 in
   handover.md) -- the suite is not green and never has been.
 
-Current state: items 1-8 (with 6.1/6.2) are all done and merged. Item 3
-(database schema/RLS) is applied to dev and proven, but the on-device
-cross-account check is blocked until something writes to library_entries.
-Item 9 is fully shipped (Edge Function plus the Flutter client repoint,
-QA PASS) but sitting on unmerged branches -- feature/igdb-client-repoint for
-the repoint, this branch for the Edge Function and item 3's SQL.
+Current state: items 1-8 (with 6.1/6.2) and item 9 are all done and merged to
+develop. Item 3 (database schema/RLS) is applied to dev and proven, but the
+on-device cross-account check is blocked until something writes to
+library_entries, and item 3's own SQL/Edge Function work still needs merging
+from this branch (claude/questloggd-week1-item3-rls-x334sm) to develop.
 
 Next real options, pick one:
-- Merge feature/igdb-client-repoint to develop (nothing auto-merges; this is
-  a human call, not something a prior session did for you).
+- Merge this branch's item 3 work (supabase/migrations/,
+  supabase/functions/igdb-proxy/) to develop, once you've confirmed there's
+  nothing else pending on it.
 - Item 3: hold the on-device cross-account check until week 3's Library
   feature lands (or build a temporary test screen sooner, if asked).
 - Item 10 (Sentry) or item 11 (repo cleanup) -- both normal PIPELINE runs,
