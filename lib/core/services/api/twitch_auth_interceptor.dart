@@ -2,16 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-// DEPRECATED -- kept for reference only, not wired into DI, not used
-// anywhere. Superseded by the igdb-proxy Supabase Edge Function (week 1
-// item 9): this used to fetch a Twitch app access token client-side and
-// attach it to every direct IGDB request; that logic now lives server-side
-// in supabase/functions/igdb-proxy/index.ts.
-//
-// Env.twitchClientId / Env.twitchClientSecret no longer exist -- item 9
-// deleted them so no IGDB/Twitch credential ships in the client build. The
-// two references below are placeholders so this file still compiles as
-// historical reference.
+// Old code, kept only so you can look at it later. Not used by the app.
+// The real client ID and secret are gone, so the two below are fake values.
 @Deprecated(
   'Superseded by the igdb-proxy Supabase Edge Function (week 1 item 9). '
   'Kept for reference only -- not registered in DI, not used anywhere.',
