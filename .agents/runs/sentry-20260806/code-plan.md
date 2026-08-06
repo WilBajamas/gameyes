@@ -1,5 +1,7 @@
 # Code Plan
-Source: `.agents/week-1-task-briefs.md` §"10 — Sentry [PIPELINE]" (via `tech-ac.md`)
+Source: `.agents/week-1-task-briefs.md` §"10 — Sentry [PIPELINE]", plus the IGDB
+`talker` logging and `PrettyDioLogger` removal added to the same run on
+2026-08-06 (both via `tech-ac.md`)
 Date: 2026-08-06
 
 > **Two new packages.** `sentry_flutter` (the feature itself) and
@@ -16,6 +18,14 @@ Date: 2026-08-06
 >    always passes a real flavour, so that branch is a guard, not a live path.
 > 3. `CrashReportUser` takes a *second* subscription to the auth stream rather
 >    than extending item 8's `AuthStatusListener`.
+>
+> **Added scope [10.15]-[10.26] starts at "Added scope" below.** It needs no new
+> package and removes `pretty_dio_logger`. Two points worth your eye there:
+> 1. `FlavorConfig` gains one `instanceOrNull` getter. Without it, `invoke` would
+>    throw in every unit test, since `instance` throws before bootstrap has run.
+> 2. `.agents/references/flutter-arch.md` line 169's stale path is corrected in
+>    the same edit as [10.25], which you approved separately — it is not one of
+>    `tech-ac.md`'s criteria.
 
 ## CREATE NEW
 
@@ -331,3 +341,227 @@ No mocks, no `GetIt`, no `provideDummy` — the subject is pure.
   settings carrying the identical `dsn`. [10.2]
 - `'should name the environment after the flavour'` — dev gives
   `environment == 'dev'`, prod gives `environment == 'prod'`. [10.5]
+
+---
+
+# Added scope — [10.15]-[10.26]
+
+Everything above is the Sentry half and is unchanged. Everything below was added
+to this run on 2026-08-06.
+
+## CREATE NEW (added scope)
+
+### lib/core/services/supabase/igdb_call_log.dart
+
+```dart
+import 'package:flutter/foundation.dart';
+import 'package:gaming_library_assessment_flutter/config/flavor/flavor.dart';
+import 'package:gaming_library_assessment_flutter/config/flavor/flavor_config.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+
+/// Console notes about live IGDB calls, for a developer running the dev build.
+/// Silent everywhere else, and nothing here ever leaves the device.
+abstract final class IgdbCallLog {
+  // History is off because nothing can ever show it - the console is the only
+  // reader.
+  static final Talker _talker = Talker(
+    settings: TalkerSettings(useHistory: false),
+  );
+
+  // Checked on every call, not once at startup. kDebugMode comes first so a
+  // release build drops the rest of this file entirely.
+  static bool get _isOn =>
+      kDebugMode && FlavorConfig.instanceOrNull?.flavor == Flavor.dev;
+
+  static void request({required String endpoint, required String query}) {
+    _write(() => _talker.info('IGDB request -> $endpoint | $query'));
+  }
+
+  static void response(Object? body) {
+    _write(() => _talker.info('IGDB response <-\n${trimToLineCap(body)}'));
+  }
+
+  static void failure(Object error, StackTrace stackTrace) {
+    _write(() => _talker.error('IGDB call failed', error, stackTrace));
+  }
+
+  /// At most 50 lines of body, and a plain note when there was more, so a short
+  /// log is never mistaken for a cut-off one.
+  @visibleForTesting
+  static String trimToLineCap(Object? body) {
+    final text = '$body';
+    final lines = text.split('\n');
+    final cap = SupabaseIgdbProxyConstants.maxLogBodyLines;
+    if (lines.length <= cap) return text;
+    final kept = lines.take(cap).join('\n');
+    return '$kept\n[cut short: showing $cap of ${lines.length} lines]';
+  }
+
+  static void _write(void Function() entry) {
+    if (!_isOn) return;
+    try {
+      entry();
+    } catch (_) {
+      // A missing log line is always better than a failed IGDB call.
+    }
+  }
+}
+```
+
+Reviewer notes:
+- `_talker` is a lazy `static final`, so a build where `_isOn` is never true
+  never constructs it.
+- `trimToLineCap` is public only for its test; nothing else calls it.
+- The `catch (_)` is deliberately empty apart from the comment. That comment is
+  also what keeps `empty_catches` quiet; if the analyzer still flags it, an
+  `// ignore: empty_catches` on the line is pre-approved.
+- `package:talker_flutter/...` is the import, not `package:talker/...` —
+  `talker_flutter` re-exports the whole of `talker` and is the direct dependency.
+
+## MODIFY EXISTING (added scope)
+
+### lib/config/flavor/flavor_config.dart
+
+```dart
+  static FlavorConfig? _instance;
+
+  // ... initialise unchanged ...
+
+  /// Null until bootstrap has run. For callers that can carry on without
+  /// knowing which build this is; everything else uses [instance].
+  static FlavorConfig? get instanceOrNull => _instance;
+
+  static FlavorConfig get instance {
+    // ... unchanged, still throws ...
+  }
+```
+
+### lib/core/res/const.dart
+
+```dart
+class SupabaseIgdbProxyConstants {
+  // ... functionName, gamesEndpoint, releaseDatesEndpoint, requestTimeout
+  //     all unchanged ...
+
+  // How much of a response body is worth reading in the console.
+  static const maxLogBodyLines = 50;
+}
+```
+
+### lib/core/services/supabase/supabase_igdb_client.dart
+
+```dart
+// added import: core/services/supabase/igdb_call_log.dart
+
+  Future<Object?> invoke({
+    required String endpoint,
+    required String query,
+  }) async {
+    IgdbCallLog.request(endpoint: endpoint, query: query);
+    try {
+      final response = await _client.functions
+          .invoke(
+            SupabaseIgdbProxyConstants.functionName,
+            body: {'endpoint': endpoint, 'query': query},
+          )
+          .timeout(SupabaseIgdbProxyConstants.requestTimeout);
+
+      IgdbCallLog.response(response.data);
+      return response.data;
+    } catch (error, stackTrace) {
+      IgdbCallLog.failure(error, stackTrace);
+      rethrow;
+    }
+  }
+```
+
+The `@injectable` annotation, the `const` constructor, the `_client` field, the
+method signature and the `.timeout(...)` are all unchanged. `rethrow` is what
+keeps the error's type, message and original stack trace intact for the caller.
+
+### lib/core/di/network_module.dart
+
+```dart
+import 'package:dio/dio.dart';
+// deleted: import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+
+import '../res/const.dart';
+import '../services/api/twitch_auth_interceptor.dart';
+
+// ... comments and @Deprecated unchanged ...
+    dio.interceptors.add(interceptor);
+    // deleted: dio.interceptors.add(PrettyDioLogger(requestHeader: true,
+    //                                               requestBody: true));
+    return dio;
+```
+
+### lib/core/services/api/twitch_auth_interceptor.dart
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+// deleted: import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+
+// ... comments, @Deprecated, class header, both constants unchanged ...
+
+  TwitchAuthInterceptor()
+      : _tokenDio = Dio(
+          BaseOptions(
+            baseUrl: 'https://id.twitch.tv/oauth2/',
+            connectTimeout: ConfigConstants.connectTimeout,
+            receiveTimeout: ConfigConstants.receiveTimeout,
+            sendTimeout: ConfigConstants.sendTimeout,
+          ),
+        );
+
+// ... _fetchToken, onRequest, onError unchanged ...
+```
+
+The constructor body was only ever the logger registration, so it goes away and
+the initialiser list now ends the constructor.
+
+### pubspec.yaml
+
+```yaml
+  # Logging
+  logger: ^2.7.0
+  talker_flutter: ^5.1.16
+  # deleted: pretty_dio_logger: ^1.4.0
+```
+
+Then `flutter pub get`, and check `pretty_dio_logger` is gone from
+`pubspec.lock`. It is `direct main` there today with nothing else depending on
+it, so it should disappear rather than turn transitive. [10.24]
+
+### .agents/references/flutter-arch.md
+
+```markdown
+line 169  **NetworkModule** (`@module` in `lib/core/di/network_module.dart`):
+line 170  - Provides the singleton `Dio` instance with `TwitchAuthInterceptor`
+line 181  <deleted: Logging: `PrettyDioLogger` (request header + body).>
+```
+
+- 169 is the path correction the human approved on top of `tech-ac.md`; the
+  `@module` wording on the same line is left as it is.
+- 170 loses ` + PrettyDioLogger` and nothing else.
+- 181 is deleted rather than reworded — after this run the Dio path has no
+  logging, and describing logging that does not exist is exactly what [10.25]
+  fails on. `IgdbCallLog` is not mentioned in its place: it logs the Supabase
+  edge-function path, not the Dio path.
+
+## TEST FILES (added scope)
+
+### test/api/supabase/igdb_call_log_test.dart
+
+No mocks, no `FlavorConfig`, no client — `trimToLineCap` is pure.
+
+- `'should return the body unchanged when it is shorter than the cap'` — a
+  three-line body comes back identical, with no marker. [10.16]
+- `'should return the body unchanged when it is exactly at the cap'` — a
+  50-line body comes back identical, with no marker; the boundary is inclusive.
+  [10.16]
+- `'should keep only the first 50 lines when the body is longer than the cap'` —
+  a 60-line body yields 50 original lines plus one added line. [10.16]
+- `'should say the output was cut short when the body is longer than the cap'` —
+  the last line names both the cap and the real line count. [10.16]
