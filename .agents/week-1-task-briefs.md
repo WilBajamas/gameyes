@@ -345,8 +345,26 @@ part **is** a pipeline run — split it.
       returned real game data. That button has been removed again
       (`settings_screen.dart` is back to byte-identical with before it
       was added).
-- [ ] Flutter client repointed [PIPELINE]
-- [ ] IGDB credentials removed from the client build entirely
+- [x] Flutter client repointed [PIPELINE]. **2026-08-06.** Full pipeline
+      run, `igdb-client-repoint-20260805`, branch `feature/igdb-client-repoint`
+      (pushed, **not merged** — HEAD `f987d5a`). Games list, game detail and
+      all three Featured reads now call the `igdb-proxy` function through
+      `SupabaseIgdbClient` plus one API service per feature
+      (`GamesApiService`, `GameDetailApiService`, `FeaturedApiService`),
+      replacing the direct-to-IGDB Retrofit stack. QA PASS after one cycle —
+      the only failure was a deliberate human decision (see next line), not a
+      defect. Human also tested on-device: games list, search, pagination,
+      game detail, all three Featured sections, offline/retry, fresh install.
+- [x] IGDB credentials removed from the client build entirely. Both Twitch
+      `envied` fields and constants are gone; the two Retrofit services and
+      the Dio/interceptor stack are deleted from active use. One recorded
+      exception, approved by the human at the QA gate:
+      `TwitchAuthInterceptor` and `NetworkModule` were restored as
+      `@Deprecated`, DI-unregistered, credential-free reference code (real
+      values swapped for the placeholder `'REMOVED_BY_ITEM_9'`) because the
+      human wants the old shape available to consult. `tech-ac.md`'s
+      criteria were amended with an explicit carve-out for this; see
+      `orchestrator-state.md ## Deviation approvals` in the run folder.
 - [ ] Deployed to prod. Blocked — no prod Supabase project exists yet (0.1b,
       still deferred).
 

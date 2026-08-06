@@ -1,9 +1,9 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Rewritten and trimmed 2026-08-05 (from 857 lines to this)
-— completed and superseded narrative removed. Nothing is lost: it's all still
-in `git log -p -- .agents/handover.md` if a past decision's full story is ever
-needed. This file now states current state and forward-looking notes only.
+Written 2026-07-29. Last updated 2026-08-06: item 9's Flutter-client-repoint
+pipeline run shipped, QA PASS — **pushed to `feature/igdb-client-repoint`,
+not merged to `develop`.** See below for exactly what that branch has and
+what merging it still needs.
 
 ---
 
@@ -21,14 +21,23 @@ needed. This file now states current state and forward-looking notes only.
   cross-account check, which needs something in the app to write to
   `library_entries` — nothing does yet, so this is blocked on week 3's
   Library feature (the human declined a temporary test screen). Prod is
-  blocked separately (no prod Supabase project — 0.1b, deferred).
-- **Item 9 (IGDB Edge Function) — partly done.** The function itself
-  (`supabase/functions/igdb-proxy/`) is written, deployed to dev via the
-  Supabase dashboard, and confirmed working from the real signed-in app.
-  **Still open:** repointing the Flutter client to call it instead of IGDB
-  directly (explicitly a `[PIPELINE]` run, not manual code — see
-  `week-1-task-briefs.md` item 9), which is also what removes the IGDB
-  credentials from the client build. Prod deploy follows from that.
+  blocked separately (no prod Supabase project — 0.1b, deferred). This work
+  is on `claude/questloggd-week1-item3-rls-x334sm` (this branch), not yet
+  merged either.
+- **Item 9 (IGDB Edge Function) — done, not merged.** Both halves shipped:
+  the function itself (`supabase/functions/igdb-proxy/`, on this branch) and
+  the Flutter client repoint (pipeline run `igdb-client-repoint-20260805`,
+  branch `feature/igdb-client-repoint`, QA PASS). Games list, game detail and
+  all three Featured reads now go through `SupabaseIgdbClient` and one
+  `*ApiService` per feature; the old direct-to-IGDB Retrofit/Dio/Twitch stack
+  is gone from active use. One recorded exception: `TwitchAuthInterceptor`
+  and `NetworkModule` were restored as `@Deprecated`, DI-unregistered,
+  credential-free reference code at the human's request — approved at the QA
+  gate, `tech-ac.md` amended with an explicit carve-out for it, see that run's
+  `orchestrator-state.md ## Deviation approvals`. **Still open:** merging
+  `feature/igdb-client-repoint` to `develop` (nothing merges anything
+  automatically — that's the human's call), and prod deploy once a prod
+  Supabase project exists.
 
 ---
 
@@ -243,13 +252,13 @@ Before anything else:
 Current state: items 1-8 (with 6.1/6.2) are all done and merged. Item 3
 (database schema/RLS) is applied to dev and proven, but the on-device
 cross-account check is blocked until something writes to library_entries.
-Item 9 (IGDB Edge Function) is deployed to dev and confirmed working, but the
-Flutter client still calls IGDB directly.
+Item 9 is fully shipped (Edge Function plus the Flutter client repoint,
+QA PASS) but sitting on unmerged branches -- feature/igdb-client-repoint for
+the repoint, this branch for the Edge Function and item 3's SQL.
 
 Next real options, pick one:
-- Item 9: run the Flutter-client-repoint through /orchestrate (explicitly a
-  PIPELINE run per week-1-task-briefs.md item 9) -- this also removes the
-  IGDB credentials from the client build.
+- Merge feature/igdb-client-repoint to develop (nothing auto-merges; this is
+  a human call, not something a prior session did for you).
 - Item 3: hold the on-device cross-account check until week 3's Library
   feature lands (or build a temporary test screen sooner, if asked).
 - Item 10 (Sentry) or item 11 (repo cleanup) -- both normal PIPELINE runs,
