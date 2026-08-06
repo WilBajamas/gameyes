@@ -3,7 +3,7 @@ Feature: Week 1 item 9 (continued) — repoint the Flutter client to call the ig
 Run ID: igdb-client-repoint-20260805
 Run folder: .agents/runs/igdb-client-repoint-20260805/
 Started: 2026-08-05
-Current phase: ESCALATED
+Current phase: QA
 QA cycles used: 1
 Analyzer baseline: 0 errors, 2 warnings, 36 info — captured 2026-08-05T00:00:00Z
 Test baseline: +187 -13 — captured 2026-08-05T00:00:00Z
@@ -32,10 +32,23 @@ written: TwitchAuthInterceptor and NetworkModule are allowlisted DELETE, correct
 deleted by Dev commit df1456f, then restored as deprecated reference by commit
 434c50f at the human's explicit request. No credential is exposed (placeholders
 only, DI-unregistered); this is a criteria-vs-decision conflict, not a defect.
-Route: Human. — OPEN
+Route: Human. — Resolved: human chose to keep both files. tech-ac.md REQ-9.3
+CONFIG and NETWORKING amended with an explicit reference-code carve-out
+(@Deprecated, no real credential, unregistered in DI). See ## Deviation
+approvals below.
 
 ## Deviation approvals
-NONE
+2026-08-06 Keeping `TwitchAuthInterceptor` and `NetworkModule` as `@Deprecated`
+reference code instead of deleting them per the original allowlist — Approved
+by human at the QA gate. `tech-ac.md REQ-9.3` amended with a carve-out;
+`task-brief.md`'s DELETE entries for both files are now stale but the human
+declined to update it (see the separate constant/error-factory renaming note
+below, same call).
+2026-08-06 `IgdbProxyConstants` renamed `SupabaseIgdbProxyConstants` and
+`ErrorType.functionError` renamed `ErrorType.supabaseIgdbError` by direct
+human commits (8f9f9bf, 5cd8a4f) after Dev — Approved by human; `task-brief.md`
+and `code-plan.md` delta 1 are left naming the old identifiers, by explicit
+human instruction not to update them for this.
 
 ## Code review outcomes
 2026-08-06 434c50f2cd3d0ea178151f7fa7e6b8fb92634307 — Reviewed and approved by human, including manual on-device testing (games list, search, pagination, game detail, all three Featured sections, offline/retry behaviour, and a fresh install/startup check) and two rounds of direct human follow-up commits (comment/naming trims, and restoring TwitchAuthInterceptor/NetworkModule as deprecated reference). Advancing to QA.

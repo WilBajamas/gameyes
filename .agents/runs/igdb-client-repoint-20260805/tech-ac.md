@@ -86,14 +86,29 @@ Dart source or generated Dart file under `lib/` references `TWITCH_CLIENT_ID`,
 `TWITCH_CLIENT_SECRET`, or the corresponding `Env` accessors, and the envied
 generated output is regenerated without those fields.
   Failure case: a case-insensitive search for `twitch` under `lib/` returning any
-  hit is a fail.
+  hit that is not covered by the reference-code carve-out below is a fail.
 
-[REQ-9.3] NETWORKING: The direct-to-IGDB stack is deleted, not left unused — both
-Retrofit IGDB services and their generated files, the Twitch auth interceptor, and
-the DI providers for the shared IGDB Dio instance and those two services. DI
+[REQ-9.3] NETWORKING: The direct-to-IGDB stack is deleted from active use, not
+left wired up — both Retrofit IGDB services and their generated files, and the
+DI providers for the shared IGDB Dio instance and those two services. DI
 generated output is regenerated without them.
   Failure case: a dangling import, an unresolvable DI registration, or any new
   analyzer error measured against the recorded Phase 0 analyzer baseline.
+
+  **Reference-code carve-out (added 2026-08-06, human decision at the QA gate
+  on this run):** `TwitchAuthInterceptor` and `NetworkModule` may exist under
+  `lib/` as inert, `@Deprecated`-annotated reference code, kept because the
+  human wants the old shape available to consult. This does not satisfy "the
+  Twitch client ID and secret are gone from the build" or "the stack is
+  deleted" as a literal file-presence rule — it satisfies the actual security
+  intent behind both: no real credential (`Env.twitchClientId`/
+  `twitchClientSecret` and the `TWITCH_CLIENT_ID`/`TWITCH_CLIENT_SECRET` envied
+  fields are still fully gone, replaced in the reference file by the literal
+  placeholder `'REMOVED_BY_ITEM_9'`), and no DI registration (confirmed by
+  `injectable_builder` reporting both files as no-op — neither the interceptor
+  nor the module is reachable from any code path the app actually runs). Any
+  future carve-out of this kind must meet the same three conditions:
+  `@Deprecated`, no real credential, unregistered in DI.
 
 [REQ-NC] APP: Both flavours build and start with no IGDB or Twitch credential
 present, and games list, game detail and featured all load real data against the
