@@ -3,7 +3,7 @@ Feature: Item 10 — Sentry crash reporting
 Run ID: sentry-20260806
 Run folder: .agents/runs/sentry-20260806/
 Started: 2026-08-06
-Current phase: HUMAN_GATE (Phase 3 — design)
+Current phase: ESCALATED (return to HUMAN_GATE (Phase 3 — design) once CRITICAL-1 is answered)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-06T00:00:00Z
 Test baseline: +11 -11 counted as failures (199 passing, 11 failing out of 210) — captured 2026-08-06T00:00:00Z
@@ -22,8 +22,18 @@ human gate awaiting the human's decision — not aborted, not touched by this ru
 per run; here both runs share the one branch the outer harness designates, per the
 precedent set by `claude/questloggd-week1-item3-rls-x334sm`.
 
+## Note on scope growth
+2026-08-06: the human added a second requirement to this run while it was parked at
+the Phase 3 design gate — `talker` request/response/error logging around the IGDB
+client, and removal of the deprecated `PrettyDioLogger` interceptor. Phase 1 was
+re-run for it. The logging half is unambiguous; the `PrettyDioLogger` half opened
+CRITICAL-1, so no criteria were appended to `tech-ac.md` and it still holds only the
+original 10.1-10.14.
+
 ## Escalation history
-NONE
+OPEN 2026-08-06T00:00:00Z — BA Agent, Phase 1 (added-requirement re-run): CRITICAL-1,
+`pretty_dio_logger` removal contradicts leaving `TwitchAuthInterceptor` untouched.
+Awaiting human choice of option A or B. See `escalation.md`.
 
 ## Deviation approvals
 NONE
