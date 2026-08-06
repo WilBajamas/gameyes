@@ -3,8 +3,7 @@ import 'package:gaming_library_assessment_flutter/core/services/supabase/supabas
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/models/game_detail_model.dart';
 import 'package:injectable/injectable.dart';
 
-// Replaces the Retrofit GameDetailService, method name and return type
-// intact, so the datasource keeps calling `response.first`.
+// the "game detail" feature api service
 @injectable
 class GameDetailApiService {
   const GameDetailApiService(this._client);

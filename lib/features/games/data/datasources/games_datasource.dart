@@ -31,15 +31,8 @@ class GamesDataSource {
       queryBuilder.sort('first_release_date');
     }
 
-    // Note: Converting RAWG-style filters to IGDB where-clauses will require more logic.
-    // For now, we apply the basic query.
-
     final response = await gamesApiService.fetchGames(queryBuilder.build());
 
-    // We manually wrap the IGDB list into the old GamesModel for backward compatibility
-    return GamesModel(
-      count: 0, // IGDB doesn't return total count in the same request easily
-      results: response,
-    );
+    return GamesModel(count: 0, results: response);
   }
 }

@@ -2,9 +2,8 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-// Asks the igdb-proxy function one question and hands back whatever it
-// replied with. Nothing else uses this class, so the call is always bounded
-// here — no caller has to remember to time it out.
+// the client we use to communicate with supabase
+// querying and retrieving data from it
 @injectable
 class SupabaseIgdbClient {
   const SupabaseIgdbClient(this._client);

@@ -4,8 +4,7 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart';
 import 'package:injectable/injectable.dart';
 
-// Replaces the Retrofit IgdbApiService. Keeps both of its method names and
-// return types, so the datasource call sites read the same as before.
+// the "games" feature api service
 @injectable
 class GamesApiService {
   const GamesApiService(this._client);
@@ -24,8 +23,7 @@ class GamesApiService {
     fromJson: ReleaseDate.fromJson,
   );
 
-  // Private on purpose. Games is the only feature reading two endpoints; the
-  // other two services decode inline rather than share this.
+  // reusable function - both functions above share the same shape
   Future<List<T>> _decodeList<T>({
     required String endpoint,
     required String query,

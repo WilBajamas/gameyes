@@ -43,7 +43,7 @@ sealed class ErrorType with _$ErrorType {
     };
   }
 
-  factory ErrorType.functionError({required FunctionException exception}) {
+  factory ErrorType.supabaseIgdbError({required FunctionException exception}) {
     final details = exception.details;
     final message = (details is Map) ? details['error']?.toString() : null;
 

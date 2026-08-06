@@ -3,8 +3,7 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart';
 import 'package:injectable/injectable.dart';
 
-// Featured borrowed games' service before this run. It owns one now, so the
-// two features can diverge without either one growing the other's endpoints.
+// the "featured" feature api service
 @injectable
 class FeaturedApiService {
   const FeaturedApiService(this._client);

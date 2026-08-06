@@ -87,8 +87,6 @@ class IGDBConfig {
   ];
 }
 
-// The deployed igdb-proxy Edge Function's contract: its name, the endpoint
-// names it accepts, and the bound every call to it is made under.
 class IgdbProxyConstants {
   static const functionName = 'igdb-proxy';
   static const gamesEndpoint = 'games';

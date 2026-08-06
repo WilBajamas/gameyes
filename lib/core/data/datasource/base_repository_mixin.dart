@@ -11,8 +11,9 @@ mixin BaseRepositoryMixin {
       return Success(response);
     } on DioException catch (dioException) {
       return Failure(ErrorType.dioError(exception: dioException));
+      // Supabase - IGDB exceptions
     } on FunctionException catch (functionException) {
-      return Failure(ErrorType.functionError(exception: functionException));
+      return Failure(ErrorType.supabaseIgdbError(exception: functionException));
     } catch (_) {
       return Failure(ErrorType.unknown());
     }

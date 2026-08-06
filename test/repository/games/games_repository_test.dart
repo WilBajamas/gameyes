@@ -86,7 +86,7 @@ void main() {
     expect(result, isA<Failure<GameListEntity>>());
     expect(
       (result as Failure<GameListEntity>).error,
-      ErrorType.functionError(exception: mockFunctionException),
+      ErrorType.supabaseIgdbError(exception: mockFunctionException),
     );
     verify(gamesDataSource.fetchDatasourceGames());
   });
