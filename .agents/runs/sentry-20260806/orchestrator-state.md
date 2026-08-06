@@ -3,7 +3,7 @@ Feature: Item 10 — Sentry crash reporting
 Run ID: sentry-20260806
 Run folder: .agents/runs/sentry-20260806/
 Started: 2026-08-06
-Current phase: HUMAN_GATE (Phase 3 — design, revised with 10.15-10.26 delta)
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-06T00:00:00Z
 Test baseline: +11 -11 counted as failures (199 passing, 11 failing out of 210) — captured 2026-08-06T00:00:00Z
@@ -40,7 +40,7 @@ remove the package entirely) and asked flutter-arch.md's stale reference to it
 be updated in the same run.
 
 ## Deviation approvals
-NONE
+2026-08-06 Revised code-plan.md (Sentry + [10.15]-[10.26] talker/PrettyDioLogger delta) — Approved by human
 
 ## Code review outcomes
 NONE
