@@ -87,7 +87,7 @@ class IGDBConfig {
   ];
 }
 
-class IgdbProxyConstants {
+class SupabaseIgdbProxyConstants {
   static const functionName = 'igdb-proxy';
   static const gamesEndpoint = 'games';
   static const releaseDatesEndpoint = 'release_dates';

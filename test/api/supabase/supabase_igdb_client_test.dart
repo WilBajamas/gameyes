@@ -31,7 +31,7 @@ void main() {
       'the body', () async {
     when(
       functionsClient.invoke(
-        IgdbProxyConstants.functionName,
+        SupabaseIgdbProxyConstants.functionName,
         body: {'endpoint': 'games', 'query': 'fields name;'},
       ),
     ).thenAnswer((_) async => const FunctionResponse(data: [], status: 200));
@@ -40,7 +40,7 @@ void main() {
 
     verify(
       functionsClient.invoke(
-        IgdbProxyConstants.functionName,
+        SupabaseIgdbProxyConstants.functionName,
         body: {'endpoint': 'games', 'query': 'fields name;'},
       ),
     );
@@ -53,7 +53,7 @@ void main() {
 
     when(
       functionsClient.invoke(
-        IgdbProxyConstants.functionName,
+        SupabaseIgdbProxyConstants.functionName,
         body: anyNamed('body'),
       ),
     ).thenAnswer((_) async => FunctionResponse(data: rawBody, status: 200));
@@ -70,7 +70,7 @@ void main() {
       'within 30 seconds', (tester) async {
     when(
       functionsClient.invoke(
-        IgdbProxyConstants.functionName,
+        SupabaseIgdbProxyConstants.functionName,
         body: anyNamed('body'),
       ),
     ).thenAnswer((_) => Completer<FunctionResponse>().future);

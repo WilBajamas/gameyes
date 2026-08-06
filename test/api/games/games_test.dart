@@ -41,7 +41,7 @@ void main() {
 
     when(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.gamesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
         query: expectedQuery,
       ),
     ).thenAnswer((_) async => mockGamesJson);
@@ -50,7 +50,7 @@ void main() {
 
     verify(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.gamesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
         query: expectedQuery,
       ),
     );
@@ -67,7 +67,7 @@ void main() {
 
     when(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.gamesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
         query: expectedQuery,
       ),
     ).thenAnswer((_) async => mockGamesJson);
@@ -76,7 +76,7 @@ void main() {
 
     verify(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.gamesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
         query: expectedQuery,
       ),
     );
@@ -130,7 +130,7 @@ void main() {
 
     when(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.releaseDatesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.releaseDatesEndpoint,
         query: query,
       ),
     ).thenAnswer((_) async => mockReleaseDatesJson);
@@ -140,7 +140,7 @@ void main() {
     expect(result, [mockReleaseDate, mockReleaseDate]);
     verify(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.releaseDatesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.releaseDatesEndpoint,
         query: query,
       ),
     );

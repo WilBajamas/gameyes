@@ -12,13 +12,13 @@ class GamesApiService {
   final SupabaseIgdbClient _client;
 
   Future<List<Game>> fetchGames(String query) => _decodeList(
-    endpoint: IgdbProxyConstants.gamesEndpoint,
+    endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
     query: query,
     fromJson: Game.fromJson,
   );
 
   Future<List<ReleaseDate>> fetchReleaseDates(String query) => _decodeList(
-    endpoint: IgdbProxyConstants.releaseDatesEndpoint,
+    endpoint: SupabaseIgdbProxyConstants.releaseDatesEndpoint,
     query: query,
     fromJson: ReleaseDate.fromJson,
   );

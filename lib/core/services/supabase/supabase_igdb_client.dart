@@ -16,10 +16,10 @@ class SupabaseIgdbClient {
   }) async {
     final response = await _client.functions
         .invoke(
-          IgdbProxyConstants.functionName,
+          SupabaseIgdbProxyConstants.functionName,
           body: {'endpoint': endpoint, 'query': query},
         )
-        .timeout(IgdbProxyConstants.requestTimeout);
+        .timeout(SupabaseIgdbProxyConstants.requestTimeout);
 
     return response.data;
   }

@@ -12,7 +12,7 @@ class GameDetailApiService {
 
   Future<List<GameDetailModel>> fetchGameDetail(String query) async {
     final body = await _client.invoke(
-      endpoint: IgdbProxyConstants.gamesEndpoint,
+      endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
       query: query,
     );
 

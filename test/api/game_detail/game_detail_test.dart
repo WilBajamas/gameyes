@@ -38,7 +38,7 @@ void main() {
 
     when(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.gamesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
         query: expectedQuery,
       ),
     ).thenAnswer((_) async => mockGameDetailJson);
@@ -47,7 +47,7 @@ void main() {
 
     verify(
       igdbClient.invoke(
-        endpoint: IgdbProxyConstants.gamesEndpoint,
+        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
         query: expectedQuery,
       ),
     );
