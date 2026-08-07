@@ -1,9 +1,9 @@
 # Code Plan
 Source: `.agents/week-1-task-briefs.md` §10.1 — IGDB client transport: Dio + Retrofit
 Date: 2026-08-07
-Revised: 2026-08-07, twice — Phase 3 human feedback applied inline below; the full
-change list is in `## Approved feedback delta` at the end, which is authoritative
-on any conflict with `task-brief.md`.
+Revised: 2026-08-07, three times — Phase 3 human feedback applied inline below; the
+full change list is in `## Approved feedback delta` at the end, which is
+authoritative on any conflict with `task-brief.md`.
 
 ## MODIFY EXISTING — pubspec.yaml
 
@@ -278,6 +278,41 @@ Session get mockRefreshedDiscordSession => Session(
     );
 ```
 
+### test/mocks/error_mock.dart
+
+```dart
+import 'package:dio/dio.dart';
+// the existing supabase_flutter and error.dart imports stay
+
+// mockFunctionException stays untouched - the repository test still uses it
+
+// What a failed igdb-proxy call looks like now: a bad gateway from the
+// function, with the function's own error body attached.
+DioException get mockDioException {
+  final requestOptions = RequestOptions(
+    path: SupabaseIgdbProxyConstants.functionPath,
+  );
+
+  return DioException.badResponse(
+    statusCode: 502,
+    requestOptions: requestOptions,
+    response: Response<Map<String, Object?>>(
+      statusCode: 502,
+      data: const {'error': 'test proxy error message'},
+      requestOptions: requestOptions,
+    ),
+  );
+}
+```
+
+A block-bodied getter rather than an expression, only so the same
+`RequestOptions` can sit on both the exception and its response — a `DioException`
+whose `response.requestOptions` disagrees with its own is not a shape Dio ever
+produces. Status and body deliberately match `mockFunctionException`'s 502 and
+`{'error': 'test proxy error message'}`, so the fixture the two API tests throw
+now carries the same information it used to, in the type the transport can
+actually produce.
+
 ## DELETE
 
 ### lib/core/services/supabase/supabase_igdb_client.dart
@@ -370,12 +405,14 @@ Sessions come from `test/mocks/auth_mock.dart`.
 
 ### test/api/games/games_test.dart
 
-Mechanical mock swap. Four kinds of edit, nothing else in the file moves — same
-five test names, same `mockGamesJson` / `mockReleaseDatesJson` /
-`mockFunctionException`, same expectations.
+Mechanical mock swap, plus one typed-fixture correction in the error test. Five
+kinds of edit, nothing else in the file moves — same five test bodies, same
+`mockGamesJson` / `mockReleaseDatesJson`, same expectations.
 
-1. Import: `supabase_igdb_client.dart` → `supabase_igdb_proxy_service.dart`.
-   The `supabase_flutter` import stays; `FunctionException` still comes from it.
+1. Imports: `supabase_igdb_client.dart` → `supabase_igdb_proxy_service.dart`, and
+   `package:supabase_flutter/supabase_flutter.dart` → `package:dio/dio.dart`. The
+   supabase import existed only for `FunctionException` and would become an unused
+   import once the error test changes type.
 2. `@GenerateMocks([SupabaseIgdbClient])` →
    `@GenerateMocks([SupabaseIgdbProxyService])`.
 3. `late MockSupabaseIgdbClient igdbClient;` → `late MockSupabaseIgdbProxyService
@@ -419,11 +456,40 @@ Mockito wraps a plain argument in `equals(...)`, which compares maps by deep
 equality — so the map literal matches the map the service builds. Do not
 hand-write a `predicate(...)` for it.
 
+5. The error-propagation test, and only that one:
+
+```dart
+// before
+test('should throw FunctionException when the proxy call fails', () async {
+  when(...).thenAnswer((_) async => throw mockFunctionException);
+
+  expect(
+    () => gamesDataSource.fetchDatasourceGames(),
+    throwsA(isA<FunctionException>()),
+  );
+});
+
+// after
+test('should throw DioException when the proxy call fails', () async {
+  when(igdbProxy.invoke(any)).thenAnswer((_) async => throw mockDioException);
+
+  expect(
+    () => gamesDataSource.fetchDatasourceGames(),
+    throwsA(isA<DioException>()),
+  );
+});
+```
+
+The name changes because it names the type it asserts. What the test proves is
+unchanged: whatever the proxy throws reaches the datasource uncaught.
+
 ### test/api/game_detail/game_detail_test.dart
 
-Exactly the same four edits across its four tests, with
-`GameDetailApiService(igdbProxy)` in `setUp`. Test names, `mockGameDetailJson`,
-`mockEmptyGameDetailJson` and every expectation are unchanged.
+Exactly the same five edits across its four tests, with
+`GameDetailApiService(igdbProxy)` in `setUp` and
+`gameDetailDatasource.fetchGameDetail(id: 1)` as the call under test in the error
+case. `mockGameDetailJson`, `mockEmptyGameDetailJson` and every other test name
+and expectation are unchanged.
 
 ### Untested by design
 
@@ -545,13 +611,10 @@ Test fallout, all four items accounted for:
   `invoke(endpoint: anyNamed('endpoint'), query: anyNamed('query'))` →
   `invoke(any)`. Mockito wraps a plain argument in `equals(...)`, which does deep
   map comparison, so the literal matches. No test name, stubbed response or
-  expectation changes.
-- `mockFunctionException` stays as the thrown stub in both files. Those two tests
-  assert that an error from the proxy is not swallowed, not which type it is; the
-  transport can no longer produce a `FunctionException`, but swapping it would
-  pull `test/mocks/error_mock.dart` into the diff for no added coverage, and
-  `test/repository/games/games_repository_test.dart` needs the getter regardless.
-  Deliberate residual, flagged so QA does not read it as an oversight.
+  expectation changes. (Delta 4 amends this last sentence for one test in each
+  file.)
+- `mockFunctionException` stays as the thrown stub in both files.
+  **Superseded by delta 4.**
 - `FeaturedApiService` has **no test** — re-verified by search across `test/`.
   `featured` is covered at the use-case and cubit layers, which mock
   repositories, so its one-line change breaks nothing hidden. No test is added
@@ -582,3 +645,71 @@ Criteria this overturns or re-reads, all human-approved:
 As with delta 2, `tdd.md` and `task-brief.md` were corrected in place for this
 change rather than left stale, because the Dev Agent's file-allowlist check reads
 `task-brief.md` literally and would otherwise refuse to touch the three callers.
+
+**4. The two edited caller tests throw and assert `DioException`, not
+`FunctionException`.**
+
+Third Phase 3 revision, same date. Delta 3 kept `mockFunctionException` as the
+thrown stub on the grounds that the type was incidental. The human rejected that:
+once the transport is Dio + Retrofit, nothing in the call chain under those two
+tests touches `supabase_flutter`'s functions client, so a `FunctionException`
+fixture describes a failure the code can no longer produce. A test that stubs an
+impossible error is misleading even when its assertion still passes.
+
+- `test/mocks/error_mock.dart` is **added to the allowlist** and gains one getter,
+  `mockDioException`, plus a `package:dio/dio.dart` import. Shape:
+  `DioException.badResponse` with `statusCode: 502` and a `Response` carrying
+  `{'error': 'test proxy error message'}`, both sharing one `RequestOptions`
+  whose path is `SupabaseIgdbProxyConstants.functionPath`. 502 and that body are
+  copied deliberately from `mockFunctionException` so the fixture carries the same
+  information in a type the new transport can actually raise. `badResponse` (not
+  the bare constructor) is what makes it flow through `ErrorType.dioError`'s
+  `DioExceptionType` switch the way a real proxy failure would.
+- `mockFunctionException` is **kept, not deleted.** Checked before deciding:
+  `test/repository/games/games_repository_test.dart:82,89` still reads it, and
+  that file is out of scope for this run. It is the only remaining reader.
+- In `test/api/games/games_test.dart` and
+  `test/api/game_detail/game_detail_test.dart`, one test each changes:
+  `thenAnswer((_) async => throw mockFunctionException)` →
+  `throw mockDioException`, `throwsA(isA<FunctionException>())` →
+  `throwsA(isA<DioException>())`, and the test name
+  `'should throw FunctionException when the proxy call fails'` →
+  `'should throw DioException when the proxy call fails'`. The name has to move
+  with the type; leaving it would recreate the same inaccuracy one line up.
+- **Imports.** `package:supabase_flutter/supabase_flutter.dart` is **removed** from
+  both files and `package:dio/dio.dart` added. Checked: after this change neither
+  file references any other `supabase_flutter` symbol, so leaving the import would
+  be a new `unused_import` info against the analyzer baseline. This corrects
+  delta 3's "the `supabase_flutter` import stays" line, which is now void.
+- **Coverage is unchanged.** Both tests assert only that an error from the proxy
+  reaches the datasource uncaught. No case is added, removed or weakened, and the
+  pass count does not move.
+- **Scope is unchanged otherwise.** `BaseRepositoryMixin`,
+  `lib/core/data/models/error.dart` and
+  `test/repository/games/games_repository_test.dart` are still untouched.
+
+**Reported, not actioned — `BaseRepositoryMixin`'s `on FunctionException` branch
+is about to be dead code.** Raised by the human at this gate and confirmed by
+trace, but deliberately left out of this run's scope pending a separate decision.
+The finding, so it is not lost:
+
+- `BaseRepositoryMixin` is mixed into exactly three classes —
+  `GamesRepositoryImpl`, `GameDetailRepositoryImpl`, `FeaturedRepositoryImpl` —
+  i.e. precisely the three repositories above the IGDB transport this run
+  migrates.
+- The only `functions.invoke` call in `lib/` is
+  `supabase_igdb_client.dart:20-25`, which this run deletes. After that, no code
+  under those three repositories can raise a `FunctionException`.
+- The other `supabase_flutter` callers cannot reach the branch: `AuthRepositoryImpl`
+  does not use the mixin (it has its own `on AuthException` handling), and
+  `SupabasePing` uses PostgREST and throws `PostgrestException`.
+- So `base_repository_mixin.dart:15-17`, `ErrorType.supabaseIgdbError`
+  (`lib/core/data/models/error.dart:46-56`), `mockFunctionException`, and
+  `test/repository/games/games_repository_test.dart:78-92` all become coverage of
+  an unreachable path once this run lands. Nothing breaks — the tests keep passing
+  because they inject the exception directly — but they stop describing the app.
+- **Not fixed here.** Removing them means editing `BaseRepositoryMixin` and
+  `ErrorType`, both explicitly ruled out of scope in `tdd.md` and both shared
+  across features; that is a scope expansion for the human to approve, not a
+  self-correction. Recorded so QA does not read the surviving branch as an
+  oversight.

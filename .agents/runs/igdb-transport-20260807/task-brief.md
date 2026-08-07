@@ -1,10 +1,12 @@
 # Task Brief
 Source: `.agents/week-1-task-briefs.md` §10.1 — IGDB client transport: Dio + Retrofit
 Date: 2026-08-07
-Revised: 2026-08-07 (twice) — Phase 3 human feedback. `code-plan.md ## Approved
-feedback delta` is authoritative wherever anything still conflicts. Second
-revision: `SupabaseIgdbClient` is deleted and its three callers talk to
-`SupabaseIgdbProxyService` directly.
+Revised: 2026-08-07 (three times) — Phase 3 human feedback. `code-plan.md ##
+Approved feedback delta` is authoritative wherever anything still conflicts.
+Second revision: `SupabaseIgdbClient` is deleted and its three callers talk to
+`SupabaseIgdbProxyService` directly. Third revision: the error-propagation test in
+each of the two edited caller tests throws and asserts `DioException`, not
+`FunctionException`.
 
 ## Context
 
@@ -82,10 +84,19 @@ this one service serves `games`, `game_detail` and `featured`.
   SupabaseIgdbClient])` becomes `@GenerateMocks([SupabaseIgdbProxyService])`,
   `MockSupabaseIgdbClient` becomes `MockSupabaseIgdbProxyService`, and every
   `invoke(endpoint: X, query: Y)` / `invoke(endpoint: anyNamed('endpoint'), query:
-  anyNamed('query'))` becomes the single-map form. Test names, stubbed data and
-  assertions do not change.
+  anyNamed('query'))` becomes the single-map form. **Plus** the error-propagation
+  test only: it throws `mockDioException` and asserts `isA<DioException>()`, its
+  name becomes `'should throw DioException when the proxy call fails'`, the
+  `supabase_flutter` import goes and a `dio` import comes in. Every other test
+  name, stubbed value and assertion is unchanged.
 - `test/api/game_detail/game_detail_test.dart` — **modify**, exactly the same
-  four changes.
+  changes, including the same one error-propagation test.
+- `test/mocks/error_mock.dart` — **modify**: add a `mockDioException` getter (a
+  502 bad-response `DioException` carrying the same
+  `{'error': 'test proxy error message'}` body the existing
+  `mockFunctionException` carries) and the `dio` import it needs. **Keep
+  `mockFunctionException`** — `test/repository/games/games_repository_test.dart`
+  still uses it and is out of scope. Nothing else in the file changes.
 - `test/mocks/auth_mock.dart` — add one refreshed-session getter. Nothing existing
   in this file changes.
 
@@ -166,8 +177,11 @@ Step 11: run `dart run build_runner build --delete-conflicting-outputs` — rewi
 `service_locator.config.dart`: `SupabaseIgdbClient` disappears from it and the
 three API services now take `SupabaseIgdbProxyService`.
 
-Step 12: `test/mocks/auth_mock.dart` — add a `mockRefreshedDiscordSession` getter
-with a different access token from `mockDiscordSession`. Change nothing else.
+Step 12: `test/mocks/` — two additions, nothing removed. In `auth_mock.dart`, add
+a `mockRefreshedDiscordSession` getter with a different access token from
+`mockDiscordSession`. In `error_mock.dart`, add a `mockDioException` getter (502
+bad response, body `{'error': 'test proxy error message'}`) and the `dio` import;
+leave `mockFunctionException` and every other getter exactly as they are.
 
 Step 13: create `test/api/supabase/supabase_igdb_proxy_service_test.dart` — mock
 `HttpClientAdapter` with `@GenerateMocks`, build a `Dio` with a stand-in Supabase
@@ -176,11 +190,14 @@ drive it directly. See `code-plan.md` for the case list.
 
 Step 14: `test/api/games/games_test.dart` — mock `SupabaseIgdbProxyService`
 instead of `SupabaseIgdbClient` and rewrite the six `when`/`verify` argument lists
-to the single-map form. Do not change a test name, a stubbed response or an
-expectation.
+to the single-map form. In the error-propagation test only, throw
+`mockDioException`, assert `isA<DioException>()`, rename the test to
+`'should throw DioException when the proxy call fails'`, drop the now-unused
+`supabase_flutter` import and add `package:dio/dio.dart`. Change no other test
+name, stubbed response or expectation.
 
 Step 15: `test/api/game_detail/game_detail_test.dart` — the same change across its
-four tests.
+four tests, including the same one error-propagation edit.
 
 Step 16: create `test/api/supabase/igdb_proxy_auth_interceptor_test.dart` — mock
 `HttpClientAdapter` and `GoTrueClient`, install the interceptor on a test `Dio`,
@@ -205,7 +222,7 @@ is not a regression. Only a new in-scope error or failure is yours to fix.
 Canonical: `tech-ac.md ## Technical acceptance criteria`
 IDs in scope: 10.1-AC-1 through 10.1-AC-24.
 
-Six criteria read differently after the two Phase 3 decisions. None of them is a
+Six criteria read differently after the Phase 3 decisions. None of them is a
 licence to skip work elsewhere.
 
 - AC-1, AC-3, AC-5 — every mention of `SupabaseIgdbClient` now means
@@ -221,7 +238,9 @@ licence to skip work elsewhere.
   changes.
 - AC-15 — its "with no edits" clause is void. The three services each take a
   one-line dependency edit; their *behaviour* is unchanged, which is the part
-  that still holds. `BaseRepositoryMixin` and `ErrorType` are untouched.
+  that still holds. `BaseRepositoryMixin` and `ErrorType` are untouched — see the
+  dead-branch finding recorded in `code-plan.md` delta 4, which is reported, not
+  acted on, in this run.
 - AC-16 — the endpoint/query line and the failure log survive via
   `TalkerDioLogger`'s request/error output. The 50-line response trim with its
   omitted-line count and the caller's own stack trace do not, and the human
@@ -229,9 +248,10 @@ licence to skip work elsewhere.
 - AC-22 — superseded. The trim it protects no longer exists, so there is nothing
   to cover. Do not write a replacement test for it.
 - AC-23 — **overturned, human-approved.** `test/api/games/games_test.dart` and
-  `test/api/game_detail/game_detail_test.dart` are edited. Do not try to preserve
-  them unedited; QA should mark this criterion as knowingly not met rather than
-  as a failure.
+  `test/api/game_detail/game_detail_test.dart` are edited, and the edits now go
+  one line further than a mock swap: the error-propagation test in each changes
+  type. Do not try to preserve these files unedited; QA should mark this
+  criterion as knowingly not met rather than as a failure.
 
 ## Constraints
 
@@ -257,7 +277,11 @@ licence to skip work elsewhere.
   keys — three inline `{'endpoint': …, 'query': …}` literals is the accepted
   cost of deleting the wrapper.
 - Do not edit `ErrorType`, `BaseRepositoryMixin`, any datasource or any
-  repository. The change stops at the three services.
+  repository. The change stops at the three services. This holds even though
+  `BaseRepositoryMixin`'s `on FunctionException` branch becomes unreachable —
+  that is reported for a separate decision, not fixed here.
+- `test/repository/games/games_repository_test.dart` is out of scope and is not
+  edited, including its `FunctionException` case.
 - `dart-style.md`: 80-character lines, single quotes, trailing commas on
   multi-line argument lists, no bare `dynamic`, package imports over relative,
   no top-level constants outside a `*Constants` class.
@@ -277,12 +301,11 @@ licence to skip work elsewhere.
   Everything else in `testing-conventions.md` still applies: `@GenerateMocks`
   immediately above `void main()`, `reset(mock)` in `tearDown`, `'should
   [behaviour] when [condition]'` naming, shared mock data from `test/mocks/`.
-- In the two edited caller tests, keep `mockFunctionException` as the thrown
-  stub. It is arbitrary — those tests assert that whatever the proxy throws
-  reaches the datasource uncaught, not which type it is — and swapping it for a
-  `DioException` would drag `test/mocks/error_mock.dart` into the diff for no
-  added coverage. `test/repository/games/games_repository_test.dart` uses the same
-  getter and is out of scope.
+- In the two edited caller tests, the thrown stub is `mockDioException`, not
+  `mockFunctionException`. Nothing in the new call chain can produce a
+  `FunctionException`, so a fixture of that type would misdescribe what the
+  transport does. `mockFunctionException` itself stays in `error_mock.dart` —
+  `test/repository/games/games_repository_test.dart` still reads it.
 - No test is written for the logger. It is a third-party interceptor behind a
   build-mode gate; there is nothing of ours to assert.
 - Never a golden test.
@@ -290,6 +313,6 @@ licence to skip work elsewhere.
 ## Self-correction budget
 
 Max attempts per failure: 3 (see `execution.md`). Do not modify test files to make
-tests pass, beyond the mechanical mock swap Steps 14 and 15 call for. Beyond the
-one approved `talker_dio_logger` line, do not add packages to `pubspec.yaml` or
+tests pass, beyond the changes Steps 12, 14 and 15 call for. Beyond the one
+approved `talker_dio_logger` line, do not add packages to `pubspec.yaml` or
 touch files outside the allowlist — escalate instead.

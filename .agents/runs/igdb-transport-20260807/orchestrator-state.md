@@ -37,6 +37,9 @@ passthrough to `SupabaseIgdbProxyService.invoke`. The three callers
 on `SupabaseIgdbProxyService` directly, and their tests mock that instead.
 Overturns tech-ac.md's original AC-23 guarantee that callers/their tests need
 no changes — Approved by human at the Phase 3 gate.
+2026-08-07 `games_test.dart`/`game_detail_test.dart`'s error-propagation cases
+throw/assert `DioException` (new `mockDioException` fixture) instead of the
+now-impossible `FunctionException` — Approved by human at the Phase 3 gate.
 
 ## Code review outcomes
 NONE
