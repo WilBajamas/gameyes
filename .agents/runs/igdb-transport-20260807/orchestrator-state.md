@@ -3,7 +3,7 @@ Feature: Item 10.1 — IGDB client transport: Dio + Retrofit
 Run ID: igdb-transport-20260807
 Run folder: .agents/runs/igdb-transport-20260807/
 Started: 2026-08-07
-Current phase: BA
+Current phase: TECH_LEAD
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-07T08:00:00Z
 Test baseline: +209 -11 — captured 2026-08-07T08:00:00Z
