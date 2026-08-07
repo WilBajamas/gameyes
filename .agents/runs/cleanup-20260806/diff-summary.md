@@ -406,3 +406,11 @@ AC-4.1: satisfied
 AC-4.2: superseded by AC-4.4, see AC-4.4
 AC-4.3: superseded by AC-4.4, see AC-4.4
 AC-4.4: satisfied
+
+## QA cycle 1 fix
+
+AC-7.6 came back PARTIAL: the item 9 pointer replacement at
+`.agents/week-1-task-briefs.md:366-368` left a dangling `; see` lead-in
+running into the next sentence. Fixed by closing the sentence at
+`… carve-out for this.` and leaving the next line as its own sentence — one
+line, no other change. New commit: `12d08d9bb0dcafdd3ffccb7dc68dd9ff6f0ceb13`.
