@@ -13,7 +13,6 @@ import 'package:gaming_library_assessment_flutter/core/services/sentry/crash_rep
 import 'package:gaming_library_assessment_flutter/core/services/sentry/test_crash.dart';
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connection_checker.dart';
 
-/// Shared startup sequence for every flavour entrypoint.
 Future<void> bootstrap({required Flavor flavor, required Widget app}) async {
   WidgetsFlutterBinding.ensureInitialized();
   // The status bar shows whatever the screen paints behind it, and the
@@ -30,7 +29,7 @@ Future<void> bootstrap({required Flavor flavor, required Widget app}) async {
   FlavorConfig.initialise(flavor);
   await configureDependencies();
   // Start listening for sign-in and sign-out before the first screen is
-  // built, so the router knows where the person stands as early as it can.
+  // built.
   getIt<AuthStatusListener>().start();
   getIt<SessionNavigator>().start();
   // Ask Supabase if it's reachable, but don't wait for the answer - the app

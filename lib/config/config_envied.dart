@@ -13,7 +13,7 @@ abstract class Env {
   static String apiKey = _Env.apiKey;
 
   // One key for both builds - dev and prod are told apart by Sentry's
-  // environment, not by a second key.
+  // environment
   @EnviedField(
     varName: ConfigConstants.sentryDsn,
     obfuscate: true,
