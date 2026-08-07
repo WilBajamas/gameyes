@@ -4,6 +4,27 @@ Source: `.agents/week-1-task-briefs.md` §"10 — Sentry [PIPELINE]", plus the I
 2026-08-06 (both via `tech-ac.md`)
 Date: 2026-08-06
 
+## Amendment — Phase 4B revision (2026-08-07)
+
+Per the human's Phase 4B review (recorded in `orchestrator-state.md ## Code
+review outcomes`, shipped as commit `e652d1f`), two pieces described below no
+longer match the code, on purpose:
+
+- **`CrashReportingSettings`** (§Models, below) — the class and its static
+  `resolve` factory were replaced by a top-level function,
+  `resolveCrashReportingSettings`, returning a nullable Dart 3 record
+  (`({String dsn, String environment})?`) instead of a class instance. Same
+  four branches, same failure cases, same criteria coverage — only the shape
+  changed, class → function, instance fields → record fields.
+- **`AppVersion`** (§Services, below) — the class was deleted. Its logic moved
+  to a top-level function, `readAppVersion()`, at
+  `lib/core/utils/version_utils.dart` (not `lib/core/services/sentry/` as
+  described below).
+
+Everything else in this document — `CrashReporter`, `CrashReportUser`,
+`TestCrash`, `IgdbCallLog`, the constants, and every criterion mapping — matches
+the shipped code as originally designed.
+
 ## Feature summary
 
 A new self-contained startup service under `lib/core/services/sentry/` initialises
