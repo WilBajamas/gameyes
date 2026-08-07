@@ -42,6 +42,16 @@ be updated in the same run.
 ## Deviation approvals
 2026-08-06 Revised code-plan.md (Sentry + [10.15]-[10.26] talker/PrettyDioLogger delta) — Approved by human
 
+## Follow-up actions
+2026-08-07: Agreed with the human — `TestCrash` (`lib/core/services/sentry/test_crash.dart`,
+its call site in `bootstrap.dart`, and the three `SentryConstants.testCrash*`
+constants in `lib/core/res/const.dart`) is removed once, and only once, both
+(a) this run's QA phase passes, and (b) the human confirms [10.12]'s manual
+Sentry-delivery check succeeded on their own device with a real DSN. Confirmed
+via grep these three files are TestCrash's complete footprint — nothing else
+in the repo references it. Not removed as part of the current Phase 4B
+revision; tracked here so it isn't forgotten once QA/manual verification land.
+
 ## Code review outcomes
 2026-08-06 a963c5ff4a97845d131cb4dcaec4a32771ce6cd3 — Sent back to Dev: simplify
 `CrashReportingSettings` (class -> top-level function returning a record) and
