@@ -13,7 +13,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/questloggd-resume-e1e0fi
 Base branch: develop
 Base SHA: 3eec7031a8691c8bad4e383fd83548f56f1a4a11
-Dev commit: e652d1fa0ec3a8a9679b4310deb62ec51068bd03 (revision 2, on top of a963c5ff4a97845d131cb4dcaec4a32771ce6cd3)
+Dev commit: 7adeb25f23ab9633ce87f4a7f815f37be519c564 (TestCrash removal follow-up, on top of e652d1fa0ec3a8a9679b4310deb62ec51068bd03 / a963c5ff4a97845d131cb4dcaec4a32771ce6cd3)
 Last updated: 2026-08-06T00:00:00Z
 
 ## Note on branch naming
