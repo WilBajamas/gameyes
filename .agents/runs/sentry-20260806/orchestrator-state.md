@@ -54,6 +54,13 @@ via grep these three files are TestCrash's complete footprint — nothing else
 in the repo references it. Not removed as part of the current Phase 4B
 revision; tracked here so it isn't forgotten once QA/manual verification land.
 
+2026-08-07 (later): Both gating conditions met. QA passed 2026-08-07. Human
+completed [10.12] manually — correct command needed `--flavor dev`
+(`fvm flutter run --flavor dev -t lib/main.dart --dart-define=SENTRY_TEST_CRASH=true`),
+event confirmed in the Sentry dashboard. [10.18] also confirmed manually — IGDB
+request/response lines appeared in terminal logs. `TestCrash` removal proceeding
+now as a small follow-up commit.
+
 ## Code review outcomes
 2026-08-06 a963c5ff4a97845d131cb4dcaec4a32771ce6cd3 — Sent back to Dev: simplify
 `CrashReportingSettings` (class -> top-level function returning a record) and
