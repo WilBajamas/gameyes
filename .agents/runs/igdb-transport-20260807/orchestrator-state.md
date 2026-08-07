@@ -31,6 +31,12 @@ and caller-stack-trace granularity `IgdbCallLog` had, in exchange for simpler
 code.
 2026-08-07 Rename `IgdbProxyService` to `SupabaseIgdbProxyService` — Approved
 by human at the Phase 3 gate.
+2026-08-07 Collapse `SupabaseIgdbClient` entirely — it had become a one-line
+passthrough to `SupabaseIgdbProxyService.invoke`. The three callers
+(`GamesApiService`, `GameDetailApiService`, `FeaturedApiService`) now depend
+on `SupabaseIgdbProxyService` directly, and their tests mock that instead.
+Overturns tech-ac.md's original AC-23 guarantee that callers/their tests need
+no changes — Approved by human at the Phase 3 gate.
 
 ## Code review outcomes
 NONE
