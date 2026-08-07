@@ -1,7 +1,7 @@
 # Technical Design Document
 Source: `.agents/week-1-task-briefs.md` §10.1 — IGDB client transport: Dio + Retrofit
 Date: 2026-08-07
-Revised: 2026-08-07, twice — Phase 3 human feedback (see `code-plan.md
+Revised: 2026-08-07, four times — Phase 3 human feedback (see `code-plan.md
 ## Approved feedback delta`, which is authoritative on any conflict).
 
 ## Feature summary
@@ -310,10 +310,15 @@ are the code that was already there.
 `test/mocks/auth_mock.dart` — reused for `mockDiscordSession`; one refreshed-session
 getter is added beside it rather than defining session data inline in a test.
 
-`test/mocks/error_mock.dart` — reused untouched. The two edited caller tests keep
-throwing `mockFunctionException`; the type is incidental to what they assert
-(that an error from the proxy is not swallowed), and
-`test/repository/games/games_repository_test.dart` still needs the getter anyway.
+`test/mocks/error_mock.dart` — reused, and **edited** (fourth Phase 3 revision;
+this file was "reused untouched" until then). It gains one `mockDioException`
+getter — a 502 bad-response `DioException` carrying the same
+`{'error': 'test proxy error message'}` body `mockFunctionException` already
+carries — plus the `dio` import it needs. The two edited caller tests throw that
+instead, because nothing in the Dio/Retrofit call chain can raise a
+`FunctionException` any more. `mockFunctionException` itself is kept untouched:
+`test/repository/games/games_repository_test.dart` still reads it and is out of
+scope.
 
 `NetworkModule.getDioInstance` and `TwitchAuthInterceptor` — read as reference for
 the `BaseOptions` shape and the retry-once idea, then deliberately not reused. Both
@@ -331,6 +336,11 @@ stay byte-for-byte as they are (AC-19).
 - Editing `ErrorType`, `BaseRepositoryMixin`, any datasource or any repository.
   The three API services change only in the injected type and one call line each;
   nothing else about them is in scope.
+- Cleaning up the `FunctionException` path this run makes unreachable
+  (`BaseRepositoryMixin`'s `on FunctionException` branch,
+  `ErrorType.supabaseIgdbError`, `mockFunctionException` and its repository test)
+  — surfaced at the Phase 3 gate, traced in `code-plan.md` delta 4, and
+  consciously deferred by the human to a separate follow-up run.
 - Extending the Dio/Retrofit pattern to any other API.
 - Caching, offline handling, request deduplication, and deduplicating concurrent
   session refreshes. Two parallel 401s would each refresh; that is the same
