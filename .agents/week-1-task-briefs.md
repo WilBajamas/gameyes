@@ -364,7 +364,7 @@ part **is** a pipeline run — split it.
       `@Deprecated`, DI-unregistered, credential-free reference code (real
       values swapped for the placeholder `'REMOVED_BY_ITEM_9'`) because the
       human wants the old shape available to consult. `tech-ac.md`'s
-      criteria were amended with an explicit carve-out for this; see
+      criteria were amended with an explicit carve-out for this.
       A second approval from the same run, recorded nowhere else:
       `IgdbProxyConstants` was renamed `SupabaseIgdbProxyConstants` and
       `ErrorType.functionError` renamed `ErrorType.supabaseIgdbError` by
