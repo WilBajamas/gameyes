@@ -8,8 +8,8 @@ Resumed: 2026-08-07 — branch/base SHA/baselines refreshed (item 10.1 merged to
 develop meanwhile); scope expanded with two new items (REQ-11.4, REQ-11.5) per
 human request, re-entering at Phase 1 (BA) for those two before returning to
 Phase 3 for a combined gate covering all five.
-Current phase: QA
-QA cycles used: 0
+Current phase: DEV
+QA cycles used: 1
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-07T15:48:33Z
 Test baseline: +218 -11 — captured 2026-08-07T15:48:33Z
 Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3), test/widget_test.dart (1)
