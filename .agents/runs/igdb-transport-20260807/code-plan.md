@@ -1,7 +1,7 @@
 # Code Plan
 Source: `.agents/week-1-task-briefs.md` §10.1 — IGDB client transport: Dio + Retrofit
 Date: 2026-08-07
-Revised: 2026-08-07 — Phase 3 human feedback applied inline below; the full
+Revised: 2026-08-07, twice — Phase 3 human feedback applied inline below; the full
 change list is in `## Approved feedback delta` at the end, which is authoritative
 on any conflict with `task-brief.md`.
 
@@ -39,6 +39,11 @@ abstract class SupabaseIgdbProxyService {
   Future<Object?> invoke(@Body() Map<String, String> body);
 }
 ```
+
+The three API services call this as
+`invoke({'endpoint': …, 'query': …})`. Retrofit takes the whole request body as
+one `@Body()` argument, so the two named arguments the deleted
+`SupabaseIgdbClient` accepted cannot be kept here.
 
 ### lib/core/services/supabase/igdb_proxy_auth_interceptor.dart
 
@@ -171,32 +176,76 @@ abstract class IgdbProxyModule {
 
 ## MODIFY EXISTING
 
-### lib/core/services/supabase/supabase_igdb_client.dart
+### lib/features/games/services/games_api_service.dart
 
 ```dart
+import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
+import 'package:gaming_library_assessment_flutter/core/data/models/release_date.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_proxy_service.dart';
 import 'package:injectable/injectable.dart';
 
-// the client we use to communicate with supabase
-// querying and retrieving data from it
+// the "games" feature api service
 @injectable
-class SupabaseIgdbClient {
-  const SupabaseIgdbClient(this._service);
+class GamesApiService {
+  const GamesApiService(this._proxy);
 
-  final SupabaseIgdbProxyService _service;
+  final SupabaseIgdbProxyService _proxy;
 
-  Future<Object?> invoke({
+  // fetchGames and fetchReleaseDates are unchanged
+
+  // reusable function - both functions above share the same shape
+  Future<List<T>> _decodeList<T>({
     required String endpoint,
     required String query,
-  }) => _service.invoke({'endpoint': endpoint, 'query': query});
+    required T Function(Map<String, dynamic> json) fromJson,
+  }) async {
+    final body = await _proxy.invoke({'endpoint': endpoint, 'query': query});
+
+    if (body is! List) {
+      throw const FormatException('igdb-proxy did not return a list');
+    }
+
+    return body.map((item) => fromJson(item as Map<String, dynamic>)).toList();
+  }
 }
 ```
 
-Gone from this file: the `supabase_flutter`, `core/res/const.dart` and
-`igdb_call_log.dart` imports, the `SupabaseClient` field,
-`_client.functions.invoke(...)`, the `.timeout(...)` chain, the three
-`IgdbCallLog` calls, and the `try`/`catch`/`rethrow` that only wrapped them.
-Errors now propagate because nothing touches them.
+Three lines move: the import, the field, and the `invoke` call. Everything else in
+the file — the header comment, `@injectable`, the `const` constructor,
+`fetchGames`, `fetchReleaseDates`, the guard and the mapping — stays byte for
+byte.
+
+### lib/features/game_detail/services/game_detail_api_service.dart
+
+```dart
+// import swaps to supabase_igdb_proxy_service.dart
+
+@injectable
+class GameDetailApiService {
+  const GameDetailApiService(this._proxy);
+
+  final SupabaseIgdbProxyService _proxy;
+
+  Future<List<GameDetailModel>> fetchGameDetail(String query) async {
+    final body = await _proxy.invoke({
+      'endpoint': SupabaseIgdbProxyConstants.gamesEndpoint,
+      'query': query,
+    });
+
+    // the `body is! List` guard and the GameDetailModel.fromJson mapping
+    // below it are unchanged
+  }
+}
+```
+
+### lib/features/featured/services/featured_api_service.dart
+
+Identical change to `GameDetailApiService`: the import, the field
+`final SupabaseIgdbProxyService _proxy;`, and the single call in `fetchGames`
+becoming the same three-line `_proxy.invoke({...})` with
+`SupabaseIgdbProxyConstants.gamesEndpoint` and `query`. The guard and the
+`Game.fromJson` mapping are untouched.
 
 ### lib/core/res/const.dart
 
@@ -211,7 +260,9 @@ class SupabaseIgdbProxyConstants {
 
 `functionName` is renamed to `functionPath`; `requestTimeout` goes because the
 Dio instance owns the deadline now, and `maxLogBodyLines` goes with the trim it
-sized. Every other class in this file is untouched.
+sized. `'endpoint'` and `'query'` stay as literals at the three call sites — they
+are this one endpoint's wire format, written next to the value they carry. Every
+other class in this file is untouched.
 
 ### test/mocks/auth_mock.dart
 
@@ -229,9 +280,22 @@ Session get mockRefreshedDiscordSession => Session(
 
 ## DELETE
 
+### lib/core/services/supabase/supabase_igdb_client.dart
+Whole file, whole class. After the transport moved to Retrofit and the logging to
+an interceptor, `invoke` was
+`_service.invoke({'endpoint': endpoint, 'query': query})` and nothing else. Its
+three callers take `SupabaseIgdbProxyService` instead.
+
+### test/api/supabase/supabase_igdb_client_test.dart
+Whole file. Its brief moves intact to
+`test/api/supabase/supabase_igdb_proxy_service_test.dart` below — nothing it
+asserted is dropped. Delete
+`test/api/supabase/supabase_igdb_client_test.mocks.dart` with it if build_runner
+does not clear the orphan itself.
+
 ### lib/core/services/supabase/igdb_call_log.dart
 Whole file. `TalkerDioLogger` takes over. Nothing else imports it once
-`supabase_igdb_client.dart` is updated.
+`supabase_igdb_client.dart` is gone.
 
 ### test/api/supabase/igdb_call_log_test.dart
 Whole file, all 4 tests. They exercise `IgdbCallLog.trimToLineCap`, which no
@@ -239,15 +303,19 @@ longer exists. Nothing is ported.
 
 ## TEST FILES
 
-### test/api/supabase/supabase_igdb_client_test.dart
+### test/api/supabase/supabase_igdb_proxy_service_test.dart
+
+New file, carrying every case the deleted `supabase_igdb_client_test.dart` was
+briefed to cover, with the wrapper taken out of the middle.
 
 `@GenerateMocks([HttpClientAdapter])`. A `Dio` with
-`baseUrl: 'https://test-project.supabase.co/functions/v1'` and the mock adapter
-in place, wrapped in `SupabaseIgdbProxyService`, wrapped in `SupabaseIgdbClient`.
-No interceptor — auth is the other file's job. Responses come from a small helper
-that returns `ResponseBody.fromString(jsonEncode(body), status, headers: {json
-content type})`, and the request is read back off the `RequestOptions` mockito
-captures.
+`baseUrl: 'https://test-project.supabase.co/functions/v1'`,
+`contentType: Headers.jsonContentType` and the mock adapter in place, wrapped in
+`SupabaseIgdbProxyService(dio)`. No interceptor — auth is the other file's job.
+Responses come from a small helper that returns
+`ResponseBody.fromString(jsonEncode(body), status, headers: {json content type})`,
+and the request is read back off the `RequestOptions` mockito captures. Every call
+under test is `proxy.invoke({'endpoint': 'games', 'query': 'fields name;'})`.
 
 - `'should post to the igdb-proxy function url when invoke is called'` — the
   captured request is a `POST` to
@@ -300,12 +368,71 @@ Sessions come from `test/mocks/auth_mock.dart`.
 - `'should not try again when the request fails without a response'` — a
   connection error; one request; no refresh. (AC-13)
 
-### Unchanged test files
+### test/api/games/games_test.dart
 
-`test/api/games/games_test.dart`, `test/api/game_detail/game_detail_test.dart`
-and the featured repository tests mock `SupabaseIgdbClient` itself and must pass
-unedited (AC-23). No test covers the logger — it is a third-party interceptor
-behind a build-mode gate, with nothing of ours to assert.
+Mechanical mock swap. Four kinds of edit, nothing else in the file moves — same
+five test names, same `mockGamesJson` / `mockReleaseDatesJson` /
+`mockFunctionException`, same expectations.
+
+1. Import: `supabase_igdb_client.dart` → `supabase_igdb_proxy_service.dart`.
+   The `supabase_flutter` import stays; `FunctionException` still comes from it.
+2. `@GenerateMocks([SupabaseIgdbClient])` →
+   `@GenerateMocks([SupabaseIgdbProxyService])`.
+3. `late MockSupabaseIgdbClient igdbClient;` → `late MockSupabaseIgdbProxyService
+   igdbProxy;`, `MockSupabaseIgdbClient()` → `MockSupabaseIgdbProxyService()`,
+   `GamesApiService(igdbClient)` → `GamesApiService(igdbProxy)`, and the
+   `reset(...)` in `tearDown` follows.
+4. Every `when`/`verify` argument list:
+
+```dart
+// before
+when(
+  igdbClient.invoke(
+    endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
+    query: expectedQuery,
+  ),
+).thenAnswer((_) async => mockGamesJson);
+
+// after
+when(
+  igdbProxy.invoke({
+    'endpoint': SupabaseIgdbProxyConstants.gamesEndpoint,
+    'query': expectedQuery,
+  }),
+).thenAnswer((_) async => mockGamesJson);
+```
+
+and the two loose stubs:
+
+```dart
+// before
+when(igdbClient.invoke(
+  endpoint: anyNamed('endpoint'),
+  query: anyNamed('query'),
+))
+
+// after
+when(igdbProxy.invoke(any))
+```
+
+Mockito wraps a plain argument in `equals(...)`, which compares maps by deep
+equality — so the map literal matches the map the service builds. Do not
+hand-write a `predicate(...)` for it.
+
+### test/api/game_detail/game_detail_test.dart
+
+Exactly the same four edits across its four tests, with
+`GameDetailApiService(igdbProxy)` in `setUp`. Test names, `mockGameDetailJson`,
+`mockEmptyGameDetailJson` and every expectation are unchanged.
+
+### Untested by design
+
+`FeaturedApiService` has no test file — verified, nothing under `test/` names it.
+`featured` is covered at the use-case and cubit layers
+(`test/features/featured/…`), which mock repositories and never reach this
+service, so its one-line change breaks nothing and needs no new test. No test
+covers the logger either — it is a third-party interceptor behind a build-mode
+gate, with nothing of ours to assert.
 
 ## Approved feedback delta
 
@@ -358,10 +485,100 @@ it conflicts with anything above or with `task-brief.md`.
   `lib/core/services/supabase/supabase_igdb_proxy_service.dart`; the `part`
   directive and the generated output become `supabase_igdb_proxy_service.g.dart`.
 - `IgdbProxyModule`'s provider returns `SupabaseIgdbProxyService`; the method is
-  named `supabaseIgdbProxyService`. `SupabaseIgdbClient`'s field type follows.
+  named `supabaseIgdbProxyService`. `SupabaseIgdbClient`'s field type follows
+  (superseded by delta 3 — that class is gone).
 - Only this class is renamed. `IgdbProxyAuthInterceptor`,
   `igdb_proxy_auth_interceptor.dart`, `IgdbProxyModule` and
   `igdb_proxy_module.dart` keep the names they already have.
 - `tdd.md` and `task-brief.md` were updated in place for this rename and for the
   deletion above, because the Dev Agent's file-allowlist check in
   `.claude/pipeline/rules/git.md` reads `task-brief.md` literally.
+
+**3. `SupabaseIgdbClient` is deleted; its three callers use
+`SupabaseIgdbProxyService` directly.**
+
+Second Phase 3 revision, same date. Delta 1 and delta 2 between them left
+`SupabaseIgdbClient.invoke` as a single delegating line
+(`_service.invoke({'endpoint': endpoint, 'query': query})`), which the human
+judged not worth a class, a DI registration, a generated mock and a test file.
+
+- `lib/core/services/supabase/supabase_igdb_client.dart` is **deleted**. It is no
+  longer a MODIFY entry anywhere; the skeleton delta 1 showed for it is void.
+- `lib/features/games/services/games_api_service.dart`,
+  `lib/features/game_detail/services/game_detail_api_service.dart` and
+  `lib/features/featured/services/featured_api_service.dart` each change in
+  exactly three places: the import, the field
+  (`final SupabaseIgdbClient _client` → `final SupabaseIgdbProxyService _proxy`),
+  and the one `invoke` call. Their public methods, their `body is! List` guards,
+  their `FormatException`s and their `fromJson` mappings do not move. `@injectable`
+  and the `const` constructors stay.
+- **Call shape.** Retrofit takes the request body as one `@Body()` argument, so
+  `invoke(endpoint: …, query: …)` becomes
+  `invoke({'endpoint': …, 'query': …})`. `'endpoint'` and `'query'` are written as
+  literals at all three sites rather than promoted to constants — they are one
+  endpoint's wire format, and a constant would lengthen each call without making
+  it safer. This is the one duplication the deletion buys, and it was weighed.
+- **DI.** `service_locator.config.dart` loses its `SupabaseIgdbClient` entry and
+  passes `SupabaseIgdbProxyService` to all three services. Regenerated, never
+  hand-edited.
+- **Field name.** `_proxy`, not `_client` or `_service` — inside a class already
+  called `…ApiService`, `_service` says nothing.
+
+Test fallout, all four items accounted for:
+
+- `test/api/supabase/supabase_igdb_client_test.dart` is **deleted**, and its
+  coverage moves whole to a new
+  `test/api/supabase/supabase_igdb_proxy_service_test.dart`. That file is not new
+  work: it is the same seven cases delta 1 already briefed for the client test
+  (request target, body shape, JSON content type, no IGDB host, decoded return
+  value, 400 propagation, 502 propagation), asserted directly against
+  `SupabaseIgdbProxyService` with the deleted wrapper removed from the middle.
+  **Nothing is orphaned and nothing is ported anywhere else.** Delete
+  `supabase_igdb_client_test.mocks.dart` alongside it if build_runner leaves the
+  orphan behind.
+- `test/api/games/games_test.dart` and
+  `test/api/game_detail/game_detail_test.dart` are **edited**:
+  `@GenerateMocks([SupabaseIgdbClient])` → `@GenerateMocks([
+  SupabaseIgdbProxyService])`, `MockSupabaseIgdbClient` →
+  `MockSupabaseIgdbProxyService`, and every argument list to the map form —
+  `invoke(endpoint: X, query: Y)` → `invoke({'endpoint': X, 'query': Y})`,
+  `invoke(endpoint: anyNamed('endpoint'), query: anyNamed('query'))` →
+  `invoke(any)`. Mockito wraps a plain argument in `equals(...)`, which does deep
+  map comparison, so the literal matches. No test name, stubbed response or
+  expectation changes.
+- `mockFunctionException` stays as the thrown stub in both files. Those two tests
+  assert that an error from the proxy is not swallowed, not which type it is; the
+  transport can no longer produce a `FunctionException`, but swapping it would
+  pull `test/mocks/error_mock.dart` into the diff for no added coverage, and
+  `test/repository/games/games_repository_test.dart` needs the getter regardless.
+  Deliberate residual, flagged so QA does not read it as an oversight.
+- `FeaturedApiService` has **no test** — re-verified by search across `test/`.
+  `featured` is covered at the use-case and cubit layers, which mock
+  repositories, so its one-line change breaks nothing hidden. No test is added
+  for it; that matches the standing decision recorded in the
+  `igdb-client-repoint-20260805` run.
+
+Criteria this overturns or re-reads, all human-approved:
+
+- **AC-23 is overturned outright.** Its guarantee that the callers' test files are
+  not edited is now explicitly false. QA marks it knowingly-not-met, not failed,
+  and should not treat the edits as evidence that AC-14 or AC-15 broke.
+- **AC-14** named a method on a deleted class. What still binds, and what QA
+  should check instead: the proxy returns the decoded body untouched, and
+  `GamesApiService.fetchGames` / `fetchReleaseDates`,
+  `GameDetailApiService.fetchGameDetail` and `FeaturedApiService.fetchGames` keep
+  their names, parameters, return types and bodies. Nothing above the three
+  services changes.
+- **AC-15**'s "compile and behave unchanged with no edits" loses the "no edits"
+  half and keeps the "behave unchanged" half.
+- **AC-1, AC-3, AC-5** read `SupabaseIgdbProxyService` and its Dio wherever they
+  say `SupabaseIgdbClient`. AC-5 is met more completely than written — the type
+  that held `FunctionsClient` no longer exists.
+- **Test-count effect, updated.** On top of delta 1's 4, deleting
+  `supabase_igdb_client_test.dart` removes its 3 passing tests. The recorded
+  `Test baseline: +209` legitimately drops by 7 before this task's new tests are
+  counted.
+
+As with delta 2, `tdd.md` and `task-brief.md` were corrected in place for this
+change rather than left stale, because the Dev Agent's file-allowlist check reads
+`task-brief.md` literally and would otherwise refuse to touch the three callers.

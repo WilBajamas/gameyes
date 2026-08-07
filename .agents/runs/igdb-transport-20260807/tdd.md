@@ -1,35 +1,41 @@
 # Technical Design Document
 Source: `.agents/week-1-task-briefs.md` §10.1 — IGDB client transport: Dio + Retrofit
 Date: 2026-08-07
-Revised: 2026-08-07 — Phase 3 human feedback (see `code-plan.md ## Approved
-feedback delta`, which is authoritative on any conflict).
+Revised: 2026-08-07, twice — Phase 3 human feedback (see `code-plan.md
+## Approved feedback delta`, which is authoritative on any conflict).
 
 ## Feature summary
 
-`SupabaseIgdbClient` keeps its public shape and swaps what sits underneath it.
-Instead of `supabase_flutter`'s `functions.invoke`, it calls a one-method Retrofit
-interface (`SupabaseIgdbProxyService`) over a Dio instance built by a new
-`@module` in `lib/core/di/`. That Dio carries the flavour's Supabase functions
-host as its `baseUrl`, the three shared `ConfigConstants` timeouts, an
-interceptor that attaches the Supabase session credentials per request and
-replays a 401 once after refreshing the session, and — in debug builds on the dev
-flavour only — a `TalkerDioLogger`. The hand-rolled `IgdbCallLog` is deleted and
-its logging duty moves to that interceptor. Everything above the client — the
-three API services, `BaseRepositoryMixin`, `ErrorType`, the UI — is untouched, and
-so is the Edge Function and the deprecated `NetworkModule` /
+The IGDB path stops going through `supabase_flutter`'s `functions.invoke` and
+goes through a one-method Retrofit interface (`SupabaseIgdbProxyService`) on a Dio
+instance built by a new `@module` in `lib/core/di/`. That Dio carries the
+flavour's Supabase functions host as its `baseUrl`, the three shared
+`ConfigConstants` timeouts, an interceptor that attaches the Supabase session
+credentials per request and replays a 401 once after refreshing the session, and —
+in debug builds on the dev flavour only — a `TalkerDioLogger`. The hand-rolled
+`IgdbCallLog` is deleted and its logging duty moves to that interceptor.
+
+`SupabaseIgdbClient` is deleted too. Once the transport moved and the logging
+left, its `invoke` was a one-line forward to the Retrofit service with no
+behaviour of its own, so `GamesApiService`, `GameDetailApiService` and
+`FeaturedApiService` hold `SupabaseIgdbProxyService` directly instead — a field
+type and a single call line each. Everything above those three services —
+`BaseRepositoryMixin`, `ErrorType`, the datasources, the repositories, the UI —
+is untouched, and so are the Edge Function and the deprecated `NetworkModule` /
 `TwitchAuthInterceptor` pair. This is entirely a data-layer change; there is no
 domain, state or UI work in it.
 
 ## Layer map
 
-10.1-AC-1: data (Retrofit service, client)
+10.1-AC-1: data (Retrofit service, the three API services' call sites)
 10.1-AC-2: data (DI module, flavour config read)
 10.1-AC-3: data (DI module baseUrl, Retrofit path)
 10.1-AC-4: data (DI module BaseOptions)
-10.1-AC-5: data (client)
+10.1-AC-5: data (`SupabaseIgdbClient` deleted outright)
 10.1-AC-6: data (Retrofit service + generated `.g.dart`)
 10.1-AC-7 … 10.1-AC-13: data (auth interceptor)
-10.1-AC-14, 10.1-AC-15: data (client)
+10.1-AC-14, 10.1-AC-15: data (Retrofit service + the three API services — see
+Services; the class these two named is deleted)
 10.1-AC-16 … 10.1-AC-18: data (`TalkerDioLogger` interceptor + its registration
 gate in the DI module — see Reuse; `IgdbCallLog` is deleted)
 10.1-AC-19, 10.1-AC-20: no layer — static checks on the diff
@@ -47,7 +53,7 @@ gate in the DI module — see Reuse; `IgdbCallLog` is deleted)
 - Request body: `{"endpoint": String, "query": String}` — exactly these two keys
 - 200: the IGDB response body verbatim, `Content-Type: application/json`.
   In practice a JSON array; Dio decodes it to `List`. Passed through untyped —
-  the client does not model it, and each caller does its own `fromJson`.
+  the service does not model it, and each caller does its own `fromJson`.
 - 400: `{"error": String}` — body not JSON, `endpoint` not in
   `{games, release_dates}`, or `query` empty
 - 401: rejected by the Supabase gateway before the function body runs
@@ -61,10 +67,11 @@ for the `$supabaseUrl/functions/v1` host and `:373` for the two headers and the
 
 ### Models
 
-None. AC-14 requires the decoded body to reach callers as the same untyped
-`List`/`Map` they get today, so introducing a response DTO would break the
+None. AC-14 requires the decoded body to reach the API services as the same
+untyped `List`/`Map` they get today, so introducing a response DTO would break the
 contract. The request body is a two-entry `Map<String, String>` literal built at
-the one call site — a DTO for two strings would be a class with no behaviour.
+each of the three call sites — a DTO for two strings would be a class with no
+behaviour.
 
 ### Repositories
 
@@ -85,22 +92,49 @@ friends are unchanged.
 - Return type is `Object?` deliberately: retrofit's generator emits a plain
   `_dio.fetch(...)` + `return _result.data` for `Object`/`dynamic` returns, which
   is exactly the untyped pass-through AC-14 asks for.
-- Name carries the `Supabase` prefix to match `SupabaseIgdbClient` and to say
-  which backend the proxy belongs to. Only this class is renamed; the interceptor
+- Name carries the `Supabase` prefix to match the deleted `SupabaseIgdbClient`
+  and to say which backend the proxy belongs to. The interceptor
   (`IgdbProxyAuthInterceptor`) and the DI module (`IgdbProxyModule`) keep their
-  names.
+  shorter names.
+- Retrofit puts the whole body behind one `@Body()` parameter, so the two named
+  arguments the deleted client took cannot survive as named arguments here. Each
+  caller writes the map literal instead. That is three copies of two well-known
+  key names against one deleted class — the human weighed that trade at the
+  Phase 3 gate and took the deletion.
 
-`SupabaseIgdbClient` (modify) — `lib/core/services/supabase/supabase_igdb_client.dart`
-- `invoke({required String endpoint, required String query}) -> Future<Object?>`
-  — name, parameters and return type unchanged (AC-14).
-- Constructor dependency changes from `SupabaseClient` to
-  `SupabaseIgdbProxyService`. Per `ambiguities.md`, this is inside the agreed
-  reading of "signature unchanged": the three callers depend on `invoke` only,
-  and their tests mock `SupabaseIgdbClient` itself.
-- `.timeout(...)` is dropped — Dio's `BaseOptions` now owns the deadline (AC-4).
-- The three `IgdbCallLog` calls go, and with them the `try`/`catch`/`rethrow`
-  that only existed to log the failure. `invoke` becomes a one-line delegation;
-  errors propagate by doing nothing to them, which is what AC-15 asks for.
+`SupabaseIgdbClient` (**delete**) —
+`lib/core/services/supabase/supabase_igdb_client.dart`
+- With the transport in Retrofit and the logging in an interceptor, `invoke` had
+  nothing left but `_service.invoke({'endpoint': endpoint, 'query': query})`. A
+  class whose only job is to rename two arguments is not worth a DI registration,
+  a mock and a test file.
+- Deleting it satisfies AC-5 outright rather than by inspection: the type that
+  held `FunctionsClient` is gone.
+- Cost, accepted: AC-14's literal signature guarantee and AC-23's
+  "callers' tests are not edited" guarantee both fail. What replaces them is a
+  behavioural guarantee one layer up — see the API services below.
+
+`GamesApiService` (modify) —
+`lib/features/games/services/games_api_service.dart`
+- `final SupabaseIgdbClient _client` becomes
+  `final SupabaseIgdbProxyService _proxy`; the import follows.
+- The one line in `_decodeList` becomes
+  `await _proxy.invoke({'endpoint': endpoint, 'query': query})`.
+- `fetchGames`, `fetchReleaseDates`, the `body is! List` guard, the
+  `FormatException` and the `fromJson` mapping are all unchanged. Public
+  behaviour is identical, which is the part of AC-14/AC-15 that still binds.
+
+`GameDetailApiService` (modify) —
+`lib/features/game_detail/services/game_detail_api_service.dart` — the same field
+and import swap, one call site in `fetchGameDetail`.
+
+`FeaturedApiService` (modify) —
+`lib/features/featured/services/featured_api_service.dart` — the same field and
+import swap, one call site in `fetchGames`.
+
+All three keep `@injectable` and their `const` constructors. `injectable` resolves
+`SupabaseIgdbProxyService` from `IgdbProxyModule`'s `@singleton`, so the only
+change in `service_locator.config.dart` is which type is passed in.
 
 ### Interceptors
 
@@ -160,7 +194,12 @@ for why this replaces `IgdbCallLog` and what that costs.
   replaces.
 - delete `maxLogBodyLines` — its only reader was `IgdbCallLog.trimToLineCap`,
   which is deleted with it. `TalkerDioLogger` does its own formatting.
-- `gamesEndpoint` and `releaseDatesEndpoint` are unchanged.
+- `gamesEndpoint` and `releaseDatesEndpoint` are unchanged, and all three API
+  services keep reading them.
+- The two request-body keys (`endpoint`, `query`) are **not** promoted to
+  constants. They are the wire format of one endpoint, written beside the value
+  they carry at three call sites; a constant would make each call site longer and
+  no safer.
 
 ### Packages
 
@@ -187,11 +226,26 @@ None — no screen or widget changes.
 
 `coverage`. First matching rule is auth/authorisation: AC-7 to AC-13 are entirely
 about bearer tokens, an anon-key fallback and a 401 refresh-and-replay. The
-shared-utility rule matches independently — `SupabaseIgdbClient` is the single
-IGDB path for `games`, `game_detail` and `featured`.
+shared-utility rule matches independently — `SupabaseIgdbProxyService` is the
+single IGDB path for `games`, `game_detail` and `featured`.
 
-Unit tests only, no widget tests, no golden tests. Layer-based paths under
-`test/api/supabase/`.
+Unit tests only, no widget tests, no golden tests. Layer-based paths: the two new
+files under `test/api/supabase/`, the two edited caller tests stay where they are
+under `test/api/games/` and `test/api/game_detail/`.
+
+Coverage accounting for the deletion, so nothing is left orphaned:
+- `test/api/supabase/supabase_igdb_client_test.dart` is deleted and its whole
+  brief — request target and body shape, JSON content type, no IGDB host, the
+  decoded return value, error propagation with status preserved — moves to the
+  new `test/api/supabase/supabase_igdb_proxy_service_test.dart`, which asserts
+  exactly the same things directly against `SupabaseIgdbProxyService`. Nothing is
+  dropped; the wrapper simply left the middle of the test.
+- `test/api/supabase/igdb_call_log_test.dart` is deleted with nothing ported —
+  the behaviour it covered no longer exists (AC-22, superseded).
+- `FeaturedApiService` has no test and gains none. Confirmed by search: no file
+  under `test/` names it. `featured` is covered at the use-case and cubit layers,
+  which mock repositories and never reach this service, so its one-line change
+  breaks no test.
 
 ## Reuse decisions
 
@@ -200,9 +254,9 @@ along with its test `test/api/supabase/igdb_call_log_test.dart`. Overturns this
 document's first pass, on the human's decision at the Phase 3 gate. Logging moves
 to `TalkerDioLogger` from the newly added `talker_dio_logger` package, registered
 as an interceptor on the new Dio. What that buys: one less hand-maintained
-logging class, request and response logging that comes with the transport rather
-than being called by hand at one call site, and a `SupabaseIgdbClient.invoke`
-that is a pure delegation. What it costs, accepted by the human explicitly:
+logging class, and request and response logging that comes with the transport
+rather than being called by hand at one call site. What it costs, accepted by the
+human explicitly:
   1. The 50-line response trim and its "cut short: showing N of M lines" note are
      gone. `TalkerDioLoggerSettings`' own defaults stand in.
   2. `IgdbCallLog.failure` logged the *caller's* stack trace; `TalkerDioLogger`
@@ -219,6 +273,13 @@ that is a pure delegation. What it costs, accepted by the human explicitly:
   request) then holds by construction everywhere the gate is closed, since no
   logging code runs at all; inside a debug dev build it rests on
   `TalkerDioLogger` itself, which we do not wrap.
+
+`SupabaseIgdbClient` — **not reused, deleted.** Second Phase 3 decision. It was
+kept in the first two passes so its callers would not move; once its body was one
+delegating line, keeping it meant a class, a DI entry, a mock and a test file to
+express a rename of two arguments. The three callers absorb it. This is the only
+place in this design where an existing abstraction is removed rather than
+rewired, and it is the reason AC-23 no longer holds.
 
 `Talker` from `talker_flutter` — reused as the `talker:` argument to
 `TalkerDioLogger`, constructed with `TalkerSettings(useHistory: false)` exactly as
@@ -242,8 +303,17 @@ place; only the IGDB path stops using its HTTP layer.
 `statusCode` and `data['error']` off a `DioException`, which is why AC-15 needs no
 edit to either file.
 
+The three API services' own bodies — reused as they are. Only the injected type
+and one call line move in each; the decode, the guard and the `fromJson` mapping
+are the code that was already there.
+
 `test/mocks/auth_mock.dart` — reused for `mockDiscordSession`; one refreshed-session
 getter is added beside it rather than defining session data inline in a test.
+
+`test/mocks/error_mock.dart` — reused untouched. The two edited caller tests keep
+throwing `mockFunctionException`; the type is incidental to what they assert
+(that an error from the proxy is not swallowed), and
+`test/repository/games/games_repository_test.dart` still needs the getter anyway.
 
 `NetworkModule.getDioInstance` and `TwitchAuthInterceptor` — read as reference for
 the `BaseOptions` shape and the retry-once idea, then deliberately not reused. Both
@@ -258,7 +328,9 @@ stay byte-for-byte as they are (AC-19).
 - Any package change other than adding `talker_dio_logger`. In particular
   `talker_flutter` stays and stays at its current constraint.
 - Putting `TalkerDioLogger` on any other Dio instance in the project.
-- Editing `ErrorType`, `BaseRepositoryMixin`, or the three API services.
+- Editing `ErrorType`, `BaseRepositoryMixin`, any datasource or any repository.
+  The three API services change only in the injected type and one call line each;
+  nothing else about them is in scope.
 - Extending the Dio/Retrofit pattern to any other API.
 - Caching, offline handling, request deduplication, and deduplicating concurrent
   session refreshes. Two parallel 401s would each refresh; that is the same
