@@ -22,6 +22,13 @@ precedent set by `claude/questloggd-week1-item3-rls-x334sm` and the `cleanup-202
 ## Escalation history
 NONE
 
+## Follow-up (not this run)
+`BaseRepositoryMixin`'s `on FunctionException` catch branch, `ErrorType.supabaseIgdbError`,
+`mockFunctionException`, and `games_repository_test.dart`'s "throws FunctionException" test
+all become dead/unreachable once this run lands (only source of `FunctionException` was
+`supabase_igdb_client.dart`, deleted by this run). Human decided 2026-08-07: leave for a
+separate follow-up run, not in scope here.
+
 ## Deviation approvals
 2026-08-07 Add `talker_dio_logger` as a new direct dependency (pubspec.yaml
 normally read-only for this pipeline) and delete `IgdbCallLog` entirely,
