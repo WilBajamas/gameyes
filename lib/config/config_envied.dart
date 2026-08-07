@@ -11,6 +11,15 @@ abstract class Env {
     defaultValue: 'PLACEHOLDER_API_KEY',
   )
   static String apiKey = _Env.apiKey;
+
+  // One key for both builds - dev and prod are told apart by Sentry's
+  // environment
+  @EnviedField(
+    varName: ConfigConstants.sentryDsn,
+    obfuscate: true,
+    defaultValue: SentryConstants.placeholderDsn,
+  )
+  static String sentryDsn = _Env.sentryDsn;
 }
 
 @Envied(path: ConfigConstants.enviedDevFilePath, name: 'EnvDev')

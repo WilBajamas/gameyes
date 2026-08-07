@@ -41,7 +41,6 @@ dependencies:
   # Logging
   logger: ^2.7.0
   talker_flutter: ^5.1.16
-  pretty_dio_logger: ^1.4.0
 
   # Local db
   isar_community:
@@ -110,6 +109,12 @@ dependencies:
 
   # Supabase
   supabase_flutter: ^2.16.0
+
+  # Crash reporting
+  sentry_flutter: ^9.26.0
+
+  # App version, for the crash report tag
+  package_info_plus: ^10.2.1
 
 dev_dependencies:
   flutter_test:

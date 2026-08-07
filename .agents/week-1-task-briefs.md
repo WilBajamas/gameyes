@@ -382,6 +382,56 @@ part **is** a pipeline run — split it.
 
 - [ ] Done
 
+### 10.1 — IGDB client transport: Dio + Retrofit [PIPELINE]
+
+> Swap `SupabaseIgdbClient`'s transport from `supabase_flutter`'s `functions.invoke`
+> to Dio + Retrofit, calling the `igdb-proxy` Edge Function's HTTPS URL directly.
+> Motivation: Dio + Retrofit is the standard HTTP stack in the target job market,
+> and this establishes the client-side pattern future external APIs (e.g. gaming
+> news, OpenCritic) will reuse once they get their own Edge Functions. `dio`,
+> `retrofit` and `retrofit_generator` are already direct dependencies — no new
+> package.
+>
+> **Do not touch `supabase/functions/igdb-proxy/index.ts` or item 9's server-side
+> architecture.** The Edge Function keeps hiding the Twitch client secret,
+> verifying the caller's JWT (`verify_jwt`), and proxying to IGDB exactly as it
+> does today — only the client's transport changes.
+>
+> Add a **new** Dio instance (or reuse one via DI) with `baseUrl` pointed at the
+> `igdb-proxy` function URL, and a Retrofit interface for the one endpoint it
+> calls. **Do not reuse `NetworkModule.getDioInstance`/`TwitchAuthInterceptor`
+> as-is.** Both are `@Deprecated`, `getDioInstance`'s `baseUrl` points at IGDB
+> directly (the wrong target — the client must keep going through the Edge
+> Function, never IGDB), and `TwitchAuthInterceptor` is built around Twitch's
+> client-credentials flow, the wrong auth mechanism for a Supabase-session-based
+> interceptor. Item 10 fixed both files in place (removed `PrettyDioLogger`) on
+> the understanding they'd otherwise stay untouched reference code — this item
+> should not repurpose them further. **Do reuse** the timeout values —
+> `ConfigConstants.connectTimeout`/`receiveTimeout`/`sendTimeout` — for the new
+> Dio's `BaseOptions`; those are generic, not IGDB- or Twitch-specific.
+>
+> Add a Dio interceptor that reads the current Supabase session
+> (`Supabase.instance.client.auth.currentSession`) and attaches
+> `Authorization: Bearer <access token>` and `apikey: <anon key>` headers per
+> request — the same two headers `functions.invoke` already sends for you today.
+> On a 401, call `supabase.auth.refreshSession()` and retry once, mirroring the
+> retry-once-on-401 pattern the Edge Function itself already uses for its Twitch
+> token — GoTrue refreshes proactively in the background, so this path is a rare
+> race, not the common case.
+>
+> `SupabaseIgdbClient`'s public signature, return type and error propagation stay
+> unchanged, so its callers (`GamesApiService`, `GameDetailApiService`, the
+> featured repository) need no changes and their existing tests keep passing.
+>
+> **`IgdbCallLog`'s fate is an open decision for this item, not pre-decided.**
+> `talker_dio_logger`'s `TalkerDioLogger` Dio interceptor is a strong candidate
+> to replace it once the transport is Dio — check whether it covers the 50-line
+> response trim and full-stacktrace-on-error requirements out of the box before
+> assuming a 1:1 drop-in. `IgdbCallLog` stays exactly as item 10 shipped it
+> until this item's own BA/Tech Lead phase decides.
+
+- [ ] Done
+
 ### 11 — Cleanup [PIPELINE]
 
 > Three unrelated repository-hygiene fixes. Change no dependency version, and add

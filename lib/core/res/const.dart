@@ -10,6 +10,7 @@ class ConfigConstants {
   static const enviedProdFilePath = '../gameyes/prod.env';
   static const supabaseUrl = 'SUPABASE_URL';
   static const supabaseAnonKey = 'SUPABASE_ANON_KEY';
+  static const sentryDsn = 'SENTRY_DSN';
 
   static const Duration connectTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
@@ -38,10 +39,19 @@ class SupabaseConstants {
 
   static const Duration connectionTimeout = Duration(seconds: 10);
 
-  // Where the sign-in page sends the person back to once they approve.
-  // Each build has its own address so both can be installed side by side.
+  // Where the sign-in page sends the person back to once they logged in
+  // accounts for flavours
   static const devAuthRedirectUrl = 'com.questloggd.app.dev://login-callback';
   static const prodAuthRedirectUrl = 'com.questloggd.app://login-callback';
+}
+
+class SentryConstants {
+  // What a checkout with no secret.env resolves to. Seeing this means crash
+  // reporting stays off.
+  static const placeholderDsn = 'PLACEHOLDER_SENTRY_DSN';
+
+  static const flavorTag = 'flavor';
+  static const appVersionTag = 'app_version';
 }
 
 class StringConstants {
@@ -93,4 +103,7 @@ class SupabaseIgdbProxyConstants {
   static const releaseDatesEndpoint = 'release_dates';
 
   static const Duration requestTimeout = Duration(seconds: 30);
+
+  // How much of a response body is worth reading in the console.
+  static const maxLogBodyLines = 50;
 }

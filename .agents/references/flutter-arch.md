@@ -166,8 +166,8 @@ DI wiring is done entirely by the generated `service_locator.config.dart`.
 2. Run `dart run build_runner build --delete-conflicting-outputs`
 3. The generated `service_locator.config.dart` updates automatically — do not edit it manually
 
-**NetworkModule** (`@module` in `lib/core/services/api/network_module.dart`):
-- Provides the singleton `Dio` instance with `TwitchAuthInterceptor` + `PrettyDioLogger`
+**NetworkModule** (`@module` in `lib/core/di/network_module.dart`):
+- Provides the singleton `Dio` instance with `TwitchAuthInterceptor`
 - Provides singleton Retrofit services (`IgdbApiService`, `GameDetailService`)
 - Every new Retrofit service must be registered here as a `@singleton` provider method
 
@@ -178,7 +178,6 @@ DI wiring is done entirely by the generated `service_locator.config.dart`.
 **Dio** is the HTTP client. One singleton instance shared across all services.
 Base URL: `ConfigConstants.igdbBaseUrl` (IGDB API).
 Auth: `TwitchAuthInterceptor` (see below).
-Logging: `PrettyDioLogger` (request header + body).
 
 **Retrofit services:**
 - Defined as `abstract class` annotated with `@RestApi(baseUrl: ...)`

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 // Old code, kept only so you can look at it later. Not used by the app.
 // The real client ID and secret are gone, so the two below are fake values.
@@ -16,21 +15,14 @@ class TwitchAuthInterceptor extends QueuedInterceptor {
   final Dio _tokenDio;
 
   TwitchAuthInterceptor()
-      : _tokenDio = Dio(
-          BaseOptions(
-            baseUrl: 'https://id.twitch.tv/oauth2/',
-            connectTimeout: ConfigConstants.connectTimeout,
-            receiveTimeout: ConfigConstants.receiveTimeout,
-            sendTimeout: ConfigConstants.sendTimeout,
-          ),
-        ) {
-    _tokenDio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-      ),
-    );
-  }
+    : _tokenDio = Dio(
+        BaseOptions(
+          baseUrl: 'https://id.twitch.tv/oauth2/',
+          connectTimeout: ConfigConstants.connectTimeout,
+          receiveTimeout: ConfigConstants.receiveTimeout,
+          sendTimeout: ConfigConstants.sendTimeout,
+        ),
+      );
 
   Future<String?> _fetchToken() async {
     try {

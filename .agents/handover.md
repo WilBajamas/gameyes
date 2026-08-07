@@ -1,17 +1,31 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-06: items 3 and 9 both fully merged
-to `develop` (`a908840`). **Items 1 through 9 are now all done and merged.**
-One thing left open across the whole set — see below.
+Written 2026-07-29. Last updated 2026-08-07: item 10 (Sentry crash reporting +
+IGDB `talker` logging + `PrettyDioLogger` removal) done and merged to
+`develop`. **Items 1 through 10 are now all done and merged.** One thing left
+open across the whole set — see below.
 
 ---
 
 ## Where things stand
 
-**Items 1, 1a, 2, 4, 5, 6 (with 6.1/6.2), 7, 8, 9 — done, merged to
+**Items 1, 1a, 2, 4, 5, 6 (with 6.1/6.2), 7, 8, 9, 10 — done, merged to
 `develop`, nothing outstanding.** Per-item history, PR numbers and full
 build/verification detail live in `week-1-task-briefs.md` and each item's
 (now-merged) commit history — not repeated here.
+
+**Item 10.1 (IGDB client transport: Dio + Retrofit) is written up but not
+started.** Full brief is in `week-1-task-briefs.md`'s "### 10.1" section —
+swap `SupabaseIgdbClient`'s transport from `functions.invoke` to Dio +
+Retrofit hitting the `igdb-proxy` Edge Function's URL directly, with a new
+Supabase-session auth interceptor. Ready for a normal PIPELINE run, nothing
+blocking it.
+
+**Item 11 (repo cleanup) has a run in progress, parked at the Phase 3 human
+design gate — never approved.** `tech-ac.md`/`tdd.md`/`task-brief.md`/
+`code-plan.md` exist in `.agents/runs/cleanup-20260806/`, no code written yet.
+Whoever resumes should either approve/revise/abandon that existing run rather
+than starting a new one for item 11.
 
 **One open item, carried from item 3:** the on-device cross-account RLS
 check. The database schema, RLS policies and the account-picker sign-in fix
@@ -69,6 +83,14 @@ repeating there once it exists.
 - **`.codex/` was deliberately left on the OLD Phase 4B rule** (two-pass,
   uncommitted review) at the human's request — it now disagrees with
   `.claude/` on purpose, not a bug to fix.
+- **Resume sessions run the pipeline directly on the harness-designated
+  session branch** (e.g. `claude/questloggd-resume-*`), reset onto
+  `origin/develop`'s tip, instead of creating a nested `feature/<slug>`
+  branch per run — established precedent (`claude/questloggd-week1-item3-rls-x334sm`,
+  and item 10's `claude/questloggd-resume-e1e0fi`). Multiple runs' artifacts
+  can coexist under `.agents/runs/` on the same branch; only one run's Dev/QA
+  phases are ever active at once. The branch gets merged into `develop`
+  directly (not via PR) once the human says so.
 
 ---
 
@@ -104,13 +126,14 @@ Two distinct symptoms after a build_runner run — tell them apart with
   last known-good commit and re-verify baselines — never hand-edit.
 
 ### 3. The test suite has never been green
-13 pre-existing failures on a clean checkout, unrelated to any single
-feature — confirmed fresh this session:
-- `test/api/games/games_test.dart` (1)
-- `test/api/game_detail/game_detail_test.dart` (1)
-- `test/cubit/games/games_bloc_test.dart` (3)
-- `test/cubit/game_detail/game_detail_cubit_test.dart` (3)
+**11** pre-existing failures on a clean checkout (corrected 2026-08-07 — a
+prior version of this note said 13, listing two files,
+`test/api/games/games_test.dart` and `test/api/game_detail/game_detail_test.dart`,
+that in fact pass cleanly on a fresh checkout; re-verify if this drifts again
+rather than trusting either number blindly):
 - `test/repository/tracker/tracker_repository_test.dart` (4)
+- `test/cubit/game_detail/game_detail_cubit_test.dart` (3)
+- `test/cubit/games/games_bloc_test.dart` (3)
 - `test/widget_test.dart` (1)
 
 QA scopes its run to the task-brief's allowlisted files, so these don't
@@ -134,6 +157,31 @@ Confirmed from the package source (`get_it_helper.dart`): called once, then
 re-registered via `factory(() => instance, ...)`, so every later resolve
 returns the same instance. This is what makes `SupabaseClient` and
 `SharedPreferences` true singletons without needing `@singleton`.
+
+### 7. Custom pipeline agent types can be missing at session start
+In a fresh "resume" session, `ba-agent`/`tech-lead-agent`/`dev-agent`/
+`qa-agent` (defined in `.claude/agents/*.md`) were not in the Agent tool's
+available-types list until partway through the session (they appeared once
+the harness had reloaded, seemingly after switching off the initial
+harness-assigned branch onto `develop`). Spawning one by name before then
+fails with "Agent type not found." Workaround: fall back to
+`subagent_type: "general-purpose"` with an explicit `model` override matching
+the missing agent's frontmatter (`ba-agent`/`tech-lead-agent`/`qa-agent` are
+`opus`, `dev-agent` is `sonnet`), and instruct it in the prompt to invoke the
+matching skill via the Skill tool and follow it exactly. Retry spawning the
+real registered type on the next phase — it may have appeared by then.
+
+### 8. `flutter run` needs `--flavor dev`, not just `-t lib/main.dart`
+Discovered debugging item 10's manual Sentry verification: running
+`flutter run -t lib/main.dart --dart-define=SENTRY_TEST_CRASH=true` **without**
+`--flavor dev` produced no crash and an unexpected light-themed screen instead
+of the app's hardcoded dark theme (exact mechanism not root-caused — could be
+an Android flavour/build-variant mismatch rather than a Dart-level hang; not
+confirmed either way). Adding `--flavor dev` fixed it outright. The working
+command needs both the target and the flavour flag:
+`flutter run --flavor dev -t lib/main.dart --dart-define=SENTRY_TEST_CRASH=true`
+(or the `fvm flutter` equivalent per gotcha #4). Worth remembering for any
+future flavour-dependent manual verification, not just Sentry's.
 
 ---
 
@@ -225,29 +273,40 @@ Guarding against scope creep, since several of these feel adjacent:
 ## Next-session prompt
 
 ```text
-Resume QuestLoggd. Read .agents/handover.md in full first (it's short).
+Resume QuestLoggd. Checkout develop first. Read .agents/handover.md in full
+(it's short).
 
 Before anything else:
 - Check `git status` is clean. `.agents/`, `.claude/` and `.codex/` are tracked.
 - No Flutter in a fresh container. Install 3.41.4 to match `.fvmrc`, then
   `flutter pub get` and
   `dart run build_runner build --delete-conflicting-outputs` before trusting
-  any baseline. Expect 13 pre-existing test failures (gotcha #3 in
+  any baseline. Expect 11 pre-existing test failures (gotcha #3 in
   handover.md) -- the suite is not green and never has been.
 
-Current state: items 1-9 (with 6.1/6.2) are all done and merged to develop.
-The only thing still open is item 3's on-device cross-account RLS check,
+Current state: items 1-10 (with 6.1/6.2) are all done and merged to develop.
+The only other open thing is item 3's on-device cross-account RLS check,
 blocked until something writes to library_entries (week 3's Library
 feature) -- nothing to do there right now unless asked to build a temporary
 test screen sooner.
 
-Next real options, pick one:
-- Item 10 (Sentry) -- normal PIPELINE run, nothing blocking it.
-- Item 11 (repo cleanup: .gitattributes for generated-file line endings,
-  untrack coverage/, remove a stale envied TODO) -- normal PIPELINE run,
-  nothing blocking it.
-- Items 10 and 11 are the last two week-1 checklist items. Once both ship,
-  week 1 is done -- delete week-1-task-briefs.md per its own top note, and
-  check with the human on what's next (week 2 component library, or week 3
-  Library/tracker migration).
+Do item 10.1 next: IGDB client transport, Dio + Retrofit. Full brief is in
+.agents/week-1-task-briefs.md's "### 10.1" section -- read it in full before
+starting, it already records several decisions made in discussion last
+session (do not reuse NetworkModule/TwitchAuthInterceptor as-is, do reuse
+ConfigConstants' timeout values, IgdbCallLog's fate vs. talker_dio_logger is
+an open call for this item's own BA/Tech Lead phase to make, not pre-decided).
+Normal PIPELINE run through /orchestrate, nothing blocking it. Gotcha #7 in
+handover.md if the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types
+aren't available yet when you try to spawn one.
+
+Also still open, not started this run: item 11 (repo cleanup) has an
+existing run parked at the Phase 3 human design gate in
+.agents/runs/cleanup-20260806/ -- resume and get a decision on that existing
+run rather than starting a new one, whenever it comes up.
+
+Items 10.1 and 11 are the last two week-1 checklist items. Once both ship,
+week 1 is done -- delete week-1-task-briefs.md per its own top note, and
+check with the human on what's next (week 2 component library, or week 3
+Library/tracker migration).
 ```
