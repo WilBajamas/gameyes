@@ -31,7 +31,11 @@ never merged by the agent — merges to `develop` happen only on explicit human
 instruction, as item 10.1's did on 2026-08-07).
 
 ## Escalation history
-NONE
+2026-08-07T16:40:00Z Phase 1 — BA — `_TaskReminder` unused class is the entirety of
+the 2-warning analyzer baseline; deleting it per REQ-11.4 would move a baseline
+REQ-11.C pins — Resolved: human chose option A, leave `_TaskReminder` and its
+commented-out call site alone, baseline unchanged. `tech-ac.md` was already written
+to this option, no further edit needed.
 
 ## Deviation approvals
 NONE
