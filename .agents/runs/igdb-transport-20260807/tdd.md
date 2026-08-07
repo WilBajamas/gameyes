@@ -1,18 +1,22 @@
 # Technical Design Document
 Source: `.agents/week-1-task-briefs.md` §10.1 — IGDB client transport: Dio + Retrofit
 Date: 2026-08-07
+Revised: 2026-08-07 — Phase 3 human feedback (see `code-plan.md ## Approved
+feedback delta`, which is authoritative on any conflict).
 
 ## Feature summary
 
 `SupabaseIgdbClient` keeps its public shape and swaps what sits underneath it.
 Instead of `supabase_flutter`'s `functions.invoke`, it calls a one-method Retrofit
-interface (`IgdbProxyService`) over a Dio instance built by a new `@module` in
-`lib/core/di/`. That Dio carries the flavour's Supabase functions host as its
-`baseUrl`, the three shared `ConfigConstants` timeouts, and a single new
+interface (`SupabaseIgdbProxyService`) over a Dio instance built by a new
+`@module` in `lib/core/di/`. That Dio carries the flavour's Supabase functions
+host as its `baseUrl`, the three shared `ConfigConstants` timeouts, an
 interceptor that attaches the Supabase session credentials per request and
-replays a 401 once after refreshing the session. Everything above the client —
-the three API services, `BaseRepositoryMixin`, `ErrorType`, the UI — is
-untouched, and so is the Edge Function and the deprecated `NetworkModule` /
+replays a 401 once after refreshing the session, and — in debug builds on the dev
+flavour only — a `TalkerDioLogger`. The hand-rolled `IgdbCallLog` is deleted and
+its logging duty moves to that interceptor. Everything above the client — the
+three API services, `BaseRepositoryMixin`, `ErrorType`, the UI — is untouched, and
+so is the Edge Function and the deprecated `NetworkModule` /
 `TwitchAuthInterceptor` pair. This is entirely a data-layer change; there is no
 domain, state or UI work in it.
 
@@ -26,7 +30,8 @@ domain, state or UI work in it.
 10.1-AC-6: data (Retrofit service + generated `.g.dart`)
 10.1-AC-7 … 10.1-AC-13: data (auth interceptor)
 10.1-AC-14, 10.1-AC-15: data (client)
-10.1-AC-16 … 10.1-AC-18: data (existing `IgdbCallLog`, unchanged — see Reuse)
+10.1-AC-16 … 10.1-AC-18: data (`TalkerDioLogger` interceptor + its registration
+gate in the DI module — see Reuse; `IgdbCallLog` is deleted)
 10.1-AC-19, 10.1-AC-20: no layer — static checks on the diff
 10.1-AC-21 … 10.1-AC-24: test
 
@@ -68,29 +73,36 @@ friends are unchanged.
 
 ### Services
 
-`IgdbProxyService` (create) — `lib/core/services/supabase/igdb_proxy_service.dart`
+`SupabaseIgdbProxyService` (create) —
+`lib/core/services/supabase/supabase_igdb_proxy_service.dart`
 - `@RestApi()`, no `baseUrl` in the annotation. Retrofit falls back to the Dio
   instance's own `baseUrl`, which is the only way AC-2's runtime flavour host can
   work; a compile-time `baseUrl` would hardcode a project.
-- `factory IgdbProxyService(Dio dio) = _IgdbProxyService;`
+- `factory SupabaseIgdbProxyService(Dio dio) = _SupabaseIgdbProxyService;`,
+  `part 'supabase_igdb_proxy_service.g.dart';`
 - `@POST(SupabaseIgdbProxyConstants.functionPath)`
   `Future<Object?> invoke(@Body() Map<String, String> body);`
 - Return type is `Object?` deliberately: retrofit's generator emits a plain
   `_dio.fetch(...)` + `return _result.data` for `Object`/`dynamic` returns, which
   is exactly the untyped pass-through AC-14 asks for.
+- Name carries the `Supabase` prefix to match `SupabaseIgdbClient` and to say
+  which backend the proxy belongs to. Only this class is renamed; the interceptor
+  (`IgdbProxyAuthInterceptor`) and the DI module (`IgdbProxyModule`) keep their
+  names.
 
 `SupabaseIgdbClient` (modify) — `lib/core/services/supabase/supabase_igdb_client.dart`
 - `invoke({required String endpoint, required String query}) -> Future<Object?>`
   — name, parameters and return type unchanged (AC-14).
-- Constructor dependency changes from `SupabaseClient` to `IgdbProxyService`.
-  Per `ambiguities.md`, this is inside the agreed reading of "signature
-  unchanged": the three callers depend on `invoke` only, and their tests mock
-  `SupabaseIgdbClient` itself.
+- Constructor dependency changes from `SupabaseClient` to
+  `SupabaseIgdbProxyService`. Per `ambiguities.md`, this is inside the agreed
+  reading of "signature unchanged": the three callers depend on `invoke` only,
+  and their tests mock `SupabaseIgdbClient` itself.
 - `.timeout(...)` is dropped — Dio's `BaseOptions` now owns the deadline (AC-4).
-- The three `IgdbCallLog` calls and the `try`/`rethrow` stay exactly as they are
-  (AC-15, AC-16, AC-18).
+- The three `IgdbCallLog` calls go, and with them the `try`/`catch`/`rethrow`
+  that only existed to log the failure. `invoke` becomes a one-line delegation;
+  errors propagate by doing nothing to them, which is what AC-15 asks for.
 
-### Interceptor
+### Interceptors
 
 `IgdbProxyAuthInterceptor` (create) —
 `lib/core/services/supabase/igdb_proxy_auth_interceptor.dart`
@@ -114,13 +126,21 @@ friends are unchanged.
   `TwitchAuthInterceptor`'s throwaway `Dio()` — would send the replay through an
   adapter no test can see, and AC-21 requires counting requests against a mock.
 
+`TalkerDioLogger` (adopt, from the new `talker_dio_logger` package) — no file of
+our own. Installed on the same Dio, after the auth interceptor, and only when
+`kDebugMode && FlavorConfig.instance.flavor == Flavor.dev`. See Reuse decisions
+for why this replaces `IgdbCallLog` and what that costs.
+
 ### Dependency injection
 
 `IgdbProxyModule` (create) — `lib/core/di/igdb_proxy_module.dart`
 - `@module abstract class`, one `@singleton` provider returning
-  `IgdbProxyService`, taking the already-registered `SupabaseClient`.
+  `SupabaseIgdbProxyService`, taking the already-registered `SupabaseClient`.
 - Builds the Dio: `baseUrl` = flavour Supabase URL + `/functions/v1`,
   the three `ConfigConstants` timeouts, `contentType: Headers.jsonContentType`.
+- Adds `IgdbProxyAuthInterceptor` first, then — behind the debug/dev gate —
+  `TalkerDioLogger`. Auth first means a 401 that the replay rescues is logged as
+  the success it ended up being, not as an error.
 - Reads `FlavorConfig.instance`, which throws `StateError` when bootstrap has not
   run. `@singleton` is constructed eagerly during `configureDependencies()`, so a
   missing flavour config fails at startup rather than on the first game list —
@@ -137,8 +157,19 @@ friends are unchanged.
   path, and the leading slash is what joins it to the `/functions/v1` base.
 - add `functionsBasePath = '/functions/v1'`.
 - delete `requestTimeout` — its only reader was the `.timeout(...)` that AC-4
-  replaces. Leaving it would be a dead 30-second constant next to three live ones.
-- `gamesEndpoint`, `releaseDatesEndpoint` and `maxLogBodyLines` are unchanged.
+  replaces.
+- delete `maxLogBodyLines` — its only reader was `IgdbCallLog.trimToLineCap`,
+  which is deleted with it. `TalkerDioLogger` does its own formatting.
+- `gamesEndpoint` and `releaseDatesEndpoint` are unchanged.
+
+### Packages
+
+`talker_dio_logger` (add) — `pubspec.yaml`, under `# Logging` beside
+`talker_flutter`, constrained `^5.1.16` to sit on the same talker 5.1.x line the
+lockfile already pins (`talker 5.1.20`, `talker_flutter 5.1.18`). Approved by the
+human at the Phase 3 gate as a one-off deviation from this pipeline's
+read-only-`pubspec.yaml` rule. No other dependency moves; if `flutter pub get`
+cannot resolve without bumping something else, that is an escalation, not a fix.
 
 ## Domain layer
 
@@ -164,27 +195,43 @@ Unit tests only, no widget tests, no golden tests. Layer-based paths under
 
 ## Reuse decisions
 
-`IgdbCallLog` at `lib/core/services/supabase/igdb_call_log.dart` — kept as-is,
-still called from `SupabaseIgdbClient.invoke`, **not** rebuilt as an interceptor.
-Confirming the BA's recommendation and declining the interceptor wiring the
-original brief suggested, for three reasons AC-16 to AC-18 make decisive:
-  1. `invoke` has `endpoint` and `query` as typed arguments. An interceptor would
-     have to dig them back out of the serialised request body to log them.
-  2. `IgdbCallLog.failure` logs the *caller's* stack trace. Inside `onError` the
-     only stack trace available starts in Dio, which is worse for AC-16.
-  3. The gate (`kDebugMode && flavour == dev`) and the swallow-own-failures rule
-     that AC-17 and AC-18 pin already live in `_write`. Moving them buys nothing.
-  Consequence: zero new logging code, and AC-22's existing coverage in
-  `test/api/supabase/igdb_call_log_test.dart` stays valid with no edit.
-  `talker_dio_logger` is not adopted — it is not in `pubspec.yaml`, and the
-  pipeline treats that file as read-only.
+`IgdbCallLog` at `lib/core/services/supabase/igdb_call_log.dart` — **deleted**,
+along with its test `test/api/supabase/igdb_call_log_test.dart`. Overturns this
+document's first pass, on the human's decision at the Phase 3 gate. Logging moves
+to `TalkerDioLogger` from the newly added `talker_dio_logger` package, registered
+as an interceptor on the new Dio. What that buys: one less hand-maintained
+logging class, request and response logging that comes with the transport rather
+than being called by hand at one call site, and a `SupabaseIgdbClient.invoke`
+that is a pure delegation. What it costs, accepted by the human explicitly:
+  1. The 50-line response trim and its "cut short: showing N of M lines" note are
+     gone. `TalkerDioLoggerSettings`' own defaults stand in.
+  2. `IgdbCallLog.failure` logged the *caller's* stack trace; `TalkerDioLogger`
+     logs what Dio hands it. Not reproduced.
+  3. AC-22 has nothing left to cover — the behaviour it protects no longer
+     exists. Treat it as superseded, not failed.
+  Settings are left at their defaults, which matters for one reason worth
+  stating: `printRequestHeaders` defaults to `false`, so the bearer token never
+  reaches the console. Do not turn it on.
+  AC-17 (nothing in release builds or on prod) is met by *registration*, not by
+  settings — the interceptor is only added when
+  `kDebugMode && FlavorConfig.instance.flavor == Flavor.dev`, which is the same
+  gate `IgdbCallLog._isOn` used. AC-18 (a logging failure never breaks the
+  request) then holds by construction everywhere the gate is closed, since no
+  logging code runs at all; inside a debug dev build it rests on
+  `TalkerDioLogger` itself, which we do not wrap.
+
+`Talker` from `talker_flutter` — reused as the `talker:` argument to
+`TalkerDioLogger`, constructed with `TalkerSettings(useHistory: false)` exactly as
+`IgdbCallLog` did. Nothing in this app can display log history, so keeping bodies
+in memory would be pure cost. This is also what keeps `talker_flutter` a used
+direct dependency after `IgdbCallLog` goes.
 
 `ConfigConstants.connectTimeout` / `receiveTimeout` / `sendTimeout` at
 `lib/core/res/const.dart` — reused verbatim, no new timeout constant (AC-4).
 
 `FlavorConfig.instance` at `lib/config/flavor/flavor_config.dart` — reused for
-both the host and the anon key. Its existing `StateError` is the loud failure
-AC-2 asks for, so no new guard is written.
+the host, the anon key, and the logger's dev-flavour gate. Its existing
+`StateError` is the loud failure AC-2 asks for, so no new guard is written.
 
 `SupabaseClient` from `SupabaseModule` — reused as the source of the `GoTrueClient`
 handed to the interceptor. Supabase is still initialised exactly once, in the same
@@ -208,7 +255,9 @@ stay byte-for-byte as they are (AC-19).
 - Un-deprecating, reusing or deleting `NetworkModule` / `TwitchAuthInterceptor`.
 - Moving any other Supabase call off the SDK — auth, database, storage and the
   connection ping all keep using `supabase_flutter`.
-- Adding `talker_dio_logger` or any other package.
+- Any package change other than adding `talker_dio_logger`. In particular
+  `talker_flutter` stays and stays at its current constraint.
+- Putting `TalkerDioLogger` on any other Dio instance in the project.
 - Editing `ErrorType`, `BaseRepositoryMixin`, or the three API services.
 - Extending the Dio/Retrofit pattern to any other API.
 - Caching, offline handling, request deduplication, and deduplicating concurrent
