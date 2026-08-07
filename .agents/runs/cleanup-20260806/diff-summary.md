@@ -4,7 +4,7 @@ Source: `.agents/week-1-task-briefs.md` § "11 — Cleanup [PIPELINE]", plus
 Date: 2026-08-07
 Branch: claude/questloggd-item-10-1-igdb-ogvf5r (harness-designated session
 branch, see `orchestrator-state.md ## Note on branch naming`)
-Commit: (recorded below after commit)
+Commit: 37f82ee85413ed9089de0f5fc0d9fc9c560e85c6
 
 ## Read the diffstat first
 
