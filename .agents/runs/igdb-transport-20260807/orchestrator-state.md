@@ -23,7 +23,14 @@ precedent set by `claude/questloggd-week1-item3-rls-x334sm` and the `cleanup-202
 NONE
 
 ## Deviation approvals
-NONE
+2026-08-07 Add `talker_dio_logger` as a new direct dependency (pubspec.yaml
+normally read-only for this pipeline) and delete `IgdbCallLog` entirely,
+replacing it with `TalkerDioLogger` wired in as a Dio interceptor — Approved
+by human at the Phase 3 gate, accepting the loss of the 50-line response trim
+and caller-stack-trace granularity `IgdbCallLog` had, in exchange for simpler
+code.
+2026-08-07 Rename `IgdbProxyService` to `SupabaseIgdbProxyService` — Approved
+by human at the Phase 3 gate.
 
 ## Code review outcomes
 NONE
