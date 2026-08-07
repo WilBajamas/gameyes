@@ -3,50 +3,67 @@ Source: `.agents/week-1-task-briefs.md` § "11 — Cleanup [PIPELINE]", via
 `.agents/runs/cleanup-20260806/tech-ac.md`
 Date: 2026-08-07
 
-Overall result: FAIL
+Overall result: PASS
 
-One defect, one line, in `.agents/week-1-task-briefs.md`. Everything else in the
-run verified clean, including all 14 constant deletions re-checked independently.
+Covers both commits: `37f82ee` (Dev) + `12d08d9` (QA cycle 1 fix). Cycle 1's
+single defect — the dangling `; see` in `week-1-task-briefs.md`'s item 9 record —
+is fixed and reads correctly in context. Everything else re-confirmed unchanged.
+
+QA cycles used: 2. Cycle 1 verified the whole run from scratch (all 14 constant
+deletions independently re-derived, the three retired run folders, every AC);
+cycle 2 re-verified the fix plus a full scope/analyzer/test regression sweep,
+and carries cycle 1's findings forward where nothing has touched them since.
 
 ## Scope check (git, not diff-summary.md)
 
-`git diff --name-status 871652d..37f82ee` = exactly the allowlisted set:
+`git diff --name-only 871652d..12d08d9` = exactly the allowlisted set:
 `.gitattributes`, `.gitignore`, `pubspec.yaml`, `lib/core/res/const.dart`,
 `.agents/week-1-task-briefs.md`, `.agents/handover.md`, the index deletion of
 `coverage/lcov.info`, this run's own artifacts, and 25 deletions across the
 three retired run folders (9 + 8 + 8). No file git shows that `diff-summary.md`
-did not mention. No path outside the allowlist. `git status` clean — no
-uncommitted change. Two commits sit after the Dev commit (`5cc9edf`, `d11b89f`);
-both touch only this run's `diff-summary.md`/`orchestrator-state.md`.
+did not mention. No path outside the allowlist.
+
+`12d08d9` touches one file, `.agents/week-1-task-briefs.md`, one line — squarely
+inside the allowlist and exactly the fix asked for, nothing bundled in.
+
+`git status --short` is empty — no uncommitted change, before or after this
+pass's analyzer and test runs. Commits after the fix (`adfbc91`, `5356a44`)
+touch only this run's `diff-summary.md`, `escalation.md` and
+`orchestrator-state.md`; `adfbc91` adds the `## QA cycle 1 fix` addendum naming
+`12d08d9`, so the artifacts and git agree.
 
 Both deviations listed in `diff-summary.md` have matching lines under
 `orchestrator-state.md ## Deviation approvals`, and both are implemented as
-described — see AC-7.4 below.
+described — see AC-7.4. The Dev-commit line in `orchestrator-state.md` records
+the fix commit (`Dev commit: 37f82ee (QA cycle 1 fix: 12d08d9)`), matching git.
 
 ## Static analysis
 Status: PASS
 Errors: NONE
 
-`dart run build_runner build --delete-conflicting-outputs` ran clean (76
-outputs) and left `git status` completely empty — independently confirming
-AC-1.6.
-
 `flutter analyze`: 34 issues — 0 errors, 2 warnings, 32 info. Matches
 `orchestrator-state.md`'s `Analyzer baseline: 0 errors, 2 warnings, 32 info`
-exactly. Both warnings are the pre-existing `_TaskReminder` pair in
-`task_detail_screen.dart:201`/`:204`, out of scope per AC-5.10. Nothing
-attributable to an allowlisted file.
+exactly, and matches cycle 1's result exactly. Both warnings are the pre-existing
+`_TaskReminder` pair in `task_detail_screen.dart:201`/`:204`, out of scope per
+AC-5.10. Nothing attributable to an allowlisted file.
 
 This is also the strongest available check on the constant deletions: a deleted
 `static const` that anything still read would be a compile error, and there are
 zero errors.
 
+Generated code: `dart run build_runner build --delete-conflicting-outputs` was
+run in cycle 1 — clean, 76 outputs, `git status` left completely empty,
+independently confirming AC-1.6. Not re-run this pass: `12d08d9` touches one
+Markdown file, no annotated source, and `git status` is still empty.
+
 ## Test results
-Status: SKIPPED (testing-mode: none) — run anyway, as instructed, for baseline
-confirmation.
+Status: SKIPPED (testing-mode: none) — run anyway for baseline confirmation.
+Tests run: 229 | Passed: 218 | Failed: 11
 `flutter test`: **+218 -11**, matching `orchestrator-state.md`'s
-`Test baseline: +218 -11` exactly. The 11 failures are the recorded pre-existing
-set and are not flagged. No file under `test/` is in the diff (AC-5.12).
+`Test baseline: +218 -11` exactly, and matching cycle 1. The 11 failures are the
+recorded pre-existing set (`tracker_repository_test.dart` 4,
+`game_detail_cubit_test.dart` 3, `games_bloc_test.dart` 3, `widget_test.dart` 1)
+and are not regressions. No file under `test/` is in the diff (AC-5.12).
 
 ## Coverage gaps (coverage mode only)
 N/A — testing mode `none`.
@@ -61,7 +78,7 @@ AC-1.3: PASS — no `* text=auto`, no `*.dart eol=lf`, no `* eol=…`; every rul
 targets a named generated pattern. Verified against the full file, not the diff.
 AC-1.4: PASS — no hand-written `.dart`, doc, asset or config file in the
 renormalisation diff. Vacuously so in this checkout (nothing to renormalise).
-AC-1.5: PASS — nothing reverted, stashed or split; one commit.
+AC-1.5: PASS — nothing reverted, stashed or split.
 AC-1.6: PASS — independently re-run. `build_runner` completed and `git status`
 reported zero modified generated Dart files (empty output).
 AC-1.7: PASS — `diff-summary.md:9-17` states it explicitly, and the commit
@@ -83,10 +100,10 @@ AC-5.2: PASS — `diff-summary.md:89-98`, all three observations recorded;
 AC-5.3: PASS — `diff-summary.md:100-104` states the public-declaration blind
 spot explicitly and does not present the analyzer result as sweep evidence.
 AC-5.4: PASS — 58 members (52 + 6), each with a count. **Independently
-re-derived**, not accepted: I ran the qualified form for all 38 retained members
-of `lib/core/res/const.dart` and all 6 of `lib/features/onboarding/const.dart`,
-plus bare and qualified forms for the 14 deleted. Every count matches
-`diff-summary.md`'s table exactly.
+re-derived** in cycle 1, not accepted: the qualified form was run for all 38
+retained members of `lib/core/res/const.dart` and all 6 of
+`lib/features/onboarding/const.dart`, plus bare and qualified forms for the 14
+deleted. Every count matched `diff-summary.md`'s table exactly. Untouched since.
 AC-5.5: PASS — the 14 deleted members return **zero** qualified references
 across `lib/` and `test/` (single combined regex, no hits). The four retained
 members at zero qualified refs are each legitimately retained: `featured` under
@@ -112,7 +129,7 @@ left empty.
 AC-5.10: PASS — `diff-summary.md:201-208` records `_TaskReminder` as a finding
 and leaves it; it is still present and still both analyzer warnings.
 AC-5.11: PASS — 0 errors, 2 warnings, 32 info, unchanged in all three
-severities.
+severities, re-confirmed this pass.
 AC-5.12: PASS — `+218 -11`; no `test/` path in the diff.
 AC-6.1: PASS — all 15 files (README.md, handover.md, week-1-task-briefs.md, 12
 files in `.agents/references/`) recorded at `diff-summary.md:221-252`, each with
@@ -142,7 +159,8 @@ AC-7.3: PASS — items 10 and 10.1 now carry full shipped entries with date,
 retired folder name, commit SHA, QA outcome, cycle count and every approved
 deviation (`.agents/week-1-task-briefs.md:390-410`, `:459-478`), both ticked
 `- [x] Done`. Item 9's pointer was replaced with the substance it pointed at
-(`:368-375`) — see AC-7.6 for the defect in how that replacement was made.
+(`.agents/week-1-task-briefs.md:359-375`), and after `12d08d9` that replacement
+reads as clean prose — see AC-7.6.
 AC-7.4: PASS — both items migrated into `handover.md ## Known non-blocking
 gaps`: the `FunctionException` dead-code follow-up and all four manual checks
 (`10.1-AC-16`, `10.1-AC-17`, `10.1-AC-2`, `10.1-AC-10`), each carrying enough of
@@ -155,50 +173,46 @@ and the "item 11 parked at the gate" paragraph and now points the reader at
 but not started".
 AC-7.5: PASS — `diff-summary.md:265-271` records the re-read result for both
 folders, matching the expected outcome; nothing further migrated.
-AC-7.6: **PARTIAL** — see below.
+AC-7.6: PASS (was PARTIAL in cycle 1, fixed by `12d08d9`) — see below.
 AC-7.7: PASS — `.agents/runs/` contains exactly one entry,
 `cleanup-20260806`. `git status --short --ignored .agents/runs/` returns empty:
 no empty directory, no untracked residue. All 25 deletions recorded in the
 commit.
 AC-7.8: PASS — the folder deletions and the checkbox ticks are applied under
 this supersession, correctly, and are not read as AC-6.3/AC-6.4 violations here.
-AC-4.1: PASS — `git diff 871652d..37f82ee -- pubspec.lock` is empty; the only
+AC-4.1: PASS — `git diff 871652d..12d08d9 -- pubspec.lock` is empty; the only
 `pubspec.yaml` change is the comment deletion.
 AC-4.2: superseded by AC-4.4.
 AC-4.3: superseded by AC-4.4.
-AC-4.4: PASS — baselines read from `orchestrator-state.md` both hold exactly;
-changed-file set is within the amended allowance; no path under `.agents/runs/`
-outside the three deletions and this run's folder was touched.
+AC-4.4: PASS — baselines read from `orchestrator-state.md` both hold exactly,
+re-confirmed this pass across both commits; changed-file set is within the
+amended allowance; no path under `.agents/runs/` outside the three deletions and
+this run's folder was touched.
 
-### AC-7.6 — PARTIAL
+### AC-7.6 — cycle 1 defect and its fix
 
-The item 9 pointer was removed but its lead-in was not. `.agents/week-1-task-briefs.md:366-368`
-now reads:
+Cycle 1 returned PARTIAL: the item 9 pointer was removed but its `; see` lead-in
+was not, leaving `.agents/week-1-task-briefs.md:367` running mid-instruction into
+an unrelated new sentence, and leaving the approved
+`TwitchAuthInterceptor`/`NetworkModule` carve-out record visibly truncated.
 
-```
-      human wants the old shape available to consult. `tech-ac.md`'s
-      criteria were amended with an explicit carve-out for this; see
-      A second approval from the same run, recorded nowhere else:
-```
+`12d08d9` changes exactly that one line, `; see` → `.`, nothing else.
+`.agents/week-1-task-briefs.md:359-375` now reads as continuous prose: the
+carve-out sentence closes at "`tech-ac.md`'s criteria were amended with an
+explicit carve-out for this."; "A second approval from the same run, recorded
+nowhere else: …" then stands as its own complete sentence and runs correctly
+through to the closing "Run folder `igdb-client-repoint-20260805` retired
+2026-08-07 — run complete, evidence retired." Read as a whole paragraph, not as a
+diff: no dangling clause, no orphaned pointer, no truncated record. The dropped
+pointer target is the right outcome rather than a loss — it pointed into the
+deleted folder, and the substance it pointed at is now inline immediately above.
 
-The old text was `… for this; see \`orchestrator-state.md ## Deviation
-approvals\` in the run folder.` The replacement dropped the pointer target and
-the closing full stop but left the trailing `; see`, which now runs straight
-into an unrelated new sentence.
-
-The substantive half of AC-7.6 holds — no surviving file directs a reader into a
-deleted folder, and a repo-wide search for the three folder names (run
-independently) returns only this run's own artifacts and
-`week-1-task-briefs.md`'s retired-folder records, all correct as history. But
-AC-7.6's failure case is "leaving an instruction that points at a path which no
-longer exists", and this `see` is an instruction pointing at nothing. It also
-leaves the carve-out record — the approved `TwitchAuthInterceptor`/`NetworkModule`
-deviation — visibly truncated mid-sentence, in the one file `handover.md`
-nominates as the record of what each run shipped.
-
-Fix is one line: end the sentence at `… carve-out for this.` (or restore a
-substantive continuation), leaving the new second-approval paragraph as its own
-sentence. No other change needed.
+The substantive half of AC-7.6 also still holds, re-verified this pass: a
+repo-wide search for the three retired folder names
+(`igdb-client-repoint-20260805`, `igdb-transport-20260807`, `sentry-20260806`)
+returns only this run's own artifacts and `week-1-task-briefs.md`'s
+retired-folder records — all correct as history, none an instruction to open a
+path that no longer exists.
 
 ## Architectural compliance
 Status: PASS
@@ -207,8 +221,9 @@ WARNINGs: NONE
 
 `tdd.md` prescribes no classes, paths or signatures for this run — it is a
 config/docs/deletion change. No package added, removed or re-constrained; no
-global scope introduced; no layer boundary touched. The commit message follows
-`git.md` (conventional `chore:`, no AI signature, identifies the renormalisation).
+global scope introduced; no layer boundary touched. Both commit messages follow
+`git.md` (conventional `chore:` / `fix:`, no AI signature; `37f82ee` identifies
+the renormalisation, `12d08d9` names the QA cycle it answers).
 
 ## Notes (non-blocking, no action required of Dev)
 
@@ -225,9 +240,7 @@ global scope introduced; no layer boundary touched. The commit message follows
    so the file briefly disagrees with itself until item 11 closes out.
 3. The renormalisation was a genuine no-op in this checkout (no `core.autocrlf`,
    generated files already LF). The `.gitattributes` fix is still correct and
-   still lands; I confirmed independently that a full `build_runner` run leaves
-   the tree clean.
+   still lands; a full `build_runner` run leaves the tree clean.
 
 ## Escalation required
-AC-7.6 PARTIAL — dangling `; see` at `.agents/week-1-task-briefs.md:367` →
-route to: Dev Agent
+NONE
