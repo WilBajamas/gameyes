@@ -3,7 +3,7 @@ Feature: Item 10.1 — IGDB client transport: Dio + Retrofit
 Run ID: igdb-transport-20260807
 Run folder: .agents/runs/igdb-transport-20260807/
 Started: 2026-08-07
-Current phase: CODE_REVIEW
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-07T08:00:00Z
 Test baseline: +209 -11 — captured 2026-08-07T08:00:00Z
@@ -49,4 +49,8 @@ throw/assert `DioException` (new `mockDioException` fixture) instead of the
 now-impossible `FunctionException` — Approved by human at the Phase 3 gate.
 
 ## Code review outcomes
-NONE
+2026-08-07 5385338 — Reviewed and approved by human. Manual on-device
+verification recommended (games list/search, game detail, all three Featured
+sections, fresh cold start, ideally the 401-refresh-and-replay path) but not
+required before Phase 4B approval — can happen alongside or after QA's own
+manual checklist.
