@@ -116,7 +116,7 @@ No criteria affected — this revision is a pure refactor of already-covered log
 
 ## Follow-up: TestCrash removal
 Date: 2026-08-07
-Commit: (pending — see run folder Commit: line once made)
+Commit: 7adeb25f23ab9633ce87f4a7f815f37be519c564
 
 Removed once both gating conditions in `orchestrator-state.md ## Follow-up
 actions` were met: QA passed, and the human confirmed a real Sentry event was
