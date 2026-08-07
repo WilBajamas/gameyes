@@ -3,7 +3,7 @@ Feature: Item 10 — Sentry crash reporting
 Run ID: sentry-20260806
 Run folder: .agents/runs/sentry-20260806/
 Started: 2026-08-06
-Current phase: CODE_REVIEW (Phase 4B — human code-review gate, revision 2)
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-06T00:00:00Z
 Test baseline: +11 -11 counted as failures (199 passing, 11 failing out of 210) — captured 2026-08-06T00:00:00Z
@@ -57,3 +57,5 @@ revision; tracked here so it isn't forgotten once QA/manual verification land.
 `CrashReportingSettings` (class -> top-level function returning a record) and
 `AppVersion` (class -> top-level function, moved to lib/core/utils/version_utils.dart).
 Does not consume a QA cycle.
+2026-08-07 e652d1fa0ec3a8a9679b4310deb62ec51068bd03 (+ human's own a6685d4
+comment-trim commit on top) — Reviewed and approved by human.
