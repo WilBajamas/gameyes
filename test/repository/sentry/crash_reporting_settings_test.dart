@@ -7,17 +7,17 @@ void main() {
   const dsn = 'https://key@o1.ingest.sentry.io/1';
 
   test('should return null when the flavour is unknown', () {
-    final settings = CrashReportingSettings.resolve(flavor: null, dsn: dsn);
+    final settings = resolveCrashReportingSettings(flavor: null, dsn: dsn);
 
     expect(settings, isNull);
   });
 
   test('should return null when the key is the placeholder', () {
-    final devSettings = CrashReportingSettings.resolve(
+    final devSettings = resolveCrashReportingSettings(
       flavor: Flavor.dev,
       dsn: SentryConstants.placeholderDsn,
     );
-    final prodSettings = CrashReportingSettings.resolve(
+    final prodSettings = resolveCrashReportingSettings(
       flavor: Flavor.prod,
       dsn: SentryConstants.placeholderDsn,
     );
@@ -27,20 +27,17 @@ void main() {
   });
 
   test('should return null when the key is empty', () {
-    final settings = CrashReportingSettings.resolve(
-      flavor: Flavor.dev,
-      dsn: '',
-    );
+    final settings = resolveCrashReportingSettings(flavor: Flavor.dev, dsn: '');
 
     expect(settings, isNull);
   });
 
   test('should keep the same key for both flavours', () {
-    final devSettings = CrashReportingSettings.resolve(
+    final devSettings = resolveCrashReportingSettings(
       flavor: Flavor.dev,
       dsn: dsn,
     );
-    final prodSettings = CrashReportingSettings.resolve(
+    final prodSettings = resolveCrashReportingSettings(
       flavor: Flavor.prod,
       dsn: dsn,
     );
@@ -50,11 +47,11 @@ void main() {
   });
 
   test('should name the environment after the flavour', () {
-    final devSettings = CrashReportingSettings.resolve(
+    final devSettings = resolveCrashReportingSettings(
       flavor: Flavor.dev,
       dsn: dsn,
     );
-    final prodSettings = CrashReportingSettings.resolve(
+    final prodSettings = resolveCrashReportingSettings(
       flavor: Flavor.prod,
       dsn: dsn,
     );

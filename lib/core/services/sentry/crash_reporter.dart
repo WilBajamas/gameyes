@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:gaming_library_assessment_flutter/config/config_envied.dart';
 import 'package:gaming_library_assessment_flutter/config/flavor/flavor.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/core/services/sentry/app_version.dart';
 import 'package:gaming_library_assessment_flutter/core/services/sentry/crash_reporting_settings.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/version_utils.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 abstract final class CrashReporter {
@@ -20,7 +20,7 @@ abstract final class CrashReporter {
       startApp();
     }
 
-    final settings = CrashReportingSettings.resolve(
+    final settings = resolveCrashReportingSettings(
       flavor: flavor,
       dsn: Env.sentryDsn,
     );
@@ -33,7 +33,7 @@ abstract final class CrashReporter {
     final tags = <String, String>{
       SentryConstants.flavorTag: settings.environment,
     };
-    final appVersion = await AppVersion.read();
+    final appVersion = await readAppVersion();
     if (appVersion != null) {
       tags[SentryConstants.appVersionTag] = appVersion;
     }
@@ -51,7 +51,7 @@ abstract final class CrashReporter {
 
   static void _configure(
     SentryFlutterOptions options,
-    CrashReportingSettings settings,
+    ({String dsn, String environment}) settings,
     Map<String, String> tags,
   ) {
     options

@@ -76,3 +76,40 @@ Five desktop-platform plugin registrant files (`linux/`, `macos/`, `windows/`) c
 10.24: satisfied — `pretty_dio_logger` absent from `pubspec.lock` entirely
 10.25: satisfied
 10.26: satisfied — see Verification against baseline
+
+## Revision 2 (Phase 4B code review — simplification)
+Date: 2026-08-07
+Commit: PENDING
+Additive on top of the entry above — supersedes nothing there.
+
+Per human review of a963c5ff4a97845d131cb4dcaec4a32771ce6cd3: simplify
+`CrashReportingSettings` and `AppVersion` from single-method classes to
+top-level functions.
+
+### Files modified
+lib/core/services/sentry/crash_reporting_settings.dart — `CrashReportingSettings` class replaced by a top-level `resolveCrashReportingSettings` function returning a nullable `({String dsn, String environment})` record; same logic, same doc comment
+lib/core/services/sentry/crash_reporter.dart — calls `resolveCrashReportingSettings(...)` instead of `CrashReportingSettings.resolve(...)`; `_configure`'s `settings` parameter is now typed `({String dsn, String environment})`; imports `core/utils/version_utils.dart` instead of the deleted `sentry/app_version.dart`; calls `readAppVersion()` instead of `AppVersion.read()`
+test/repository/sentry/crash_reporting_settings_test.dart — all 5 calls updated to `resolveCrashReportingSettings(...)`; same test cases, same assertions
+
+### Files deleted
+lib/core/services/sentry/app_version.dart — replaced by lib/core/utils/version_utils.dart
+
+### Files created
+lib/core/utils/version_utils.dart — top-level `readAppVersion()` function, same logic and doc comment as the deleted `AppVersion.read()`
+
+### Test files
+No test files added or removed. `test/repository/sentry/crash_reporting_settings_test.dart` updated in place (see above).
+
+### Self-corrections
+NONE
+
+### Deviations from implementation plan
+NONE — both files simplified exactly as specified in the review feedback.
+
+### Verification against baseline
+`dart run build_runner build --delete-conflicting-outputs` — not run; nothing annotated changed (both are plain functions).
+`flutter analyze`: 0 errors, 2 warnings, 32 info — matches the recorded baseline exactly.
+`flutter test`: 199 passing, 11 failing out of 210 — same 11 pre-existing failures as the baseline, no new failures. `test/repository/sentry/crash_reporting_settings_test.dart`'s 5 tests all pass.
+
+### Acceptance criteria status
+No criteria affected — this revision is a pure refactor of already-covered logic behind [10.2], [10.4], [10.5], [10.8]; no behaviour change.
