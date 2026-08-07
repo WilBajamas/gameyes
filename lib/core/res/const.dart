@@ -1,8 +1,5 @@
 class ConfigConstants {
-  static const baseUrl = 'https://api.rawg.io/api/';
   static const igdbBaseUrl = 'https://api.igdb.com/v4/';
-  static const gamesEndpoint = 'games';
-  static const screenshotsEndpoint = 'screenshots';
   static const apiKey = 'API_KEY';
   static const heroTag = 'hero_tag';
   static const enviedFilePath = '../gameyes/secret.env';
@@ -18,7 +15,6 @@ class ConfigConstants {
 }
 
 class PathConstants {
-  static const lottieAnimationAssetPath = 'assets/animations/';
   static const imagePath = 'assets/images/';
 }
 
@@ -58,23 +54,13 @@ class StringConstants {
   static const emptyStringPlaceholder = '-';
   static const na = 'NA';
   static const connectionTimeout = 'Connection timeout';
-  static const sharedPrefTypeError = 'Unsupported type for shared preferences';
 }
 
 class RouteConstants {
-  static const root = '/';
-  static const home = '/home';
   static const featured = '/featured';
   static const games = '/games';
   static const tracker = '/tracker';
-  static const trackerDetail = '/tracker_detail';
-  static const taskDetail = '/task_detail';
-  static const imagePageView = 'image_page_view';
   static const onboarding = '/onboarding';
-  static const gameDetail = '/game_detail';
-  static const browse = '/browse';
-  static const news = '/news';
-  static const settings = '/settings';
 
   static const auth = '/auth';
   static const legal = '/legal';

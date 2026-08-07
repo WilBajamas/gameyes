@@ -10,3 +10,13 @@
 **/GeneratedPluginRegistrant.java   text eol=lf
 **/GeneratedPluginRegistrant.h      text eol=lf
 **/GeneratedPluginRegistrant.m      text eol=lf
+
+# Same problem, second source: build_runner writes its Dart output with LF.
+# Pin it so a generator run stops showing these files as modified with an
+# empty diff. Generated patterns only — a blanket rule would renormalise
+# every hand-written source file in the repository.
+*.g.dart        text eol=lf
+*.freezed.dart  text eol=lf
+*.gr.dart       text eol=lf
+*.config.dart   text eol=lf
+*.mocks.dart    text eol=lf

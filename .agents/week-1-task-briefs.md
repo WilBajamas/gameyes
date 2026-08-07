@@ -365,7 +365,14 @@ part **is** a pipeline run — split it.
       values swapped for the placeholder `'REMOVED_BY_ITEM_9'`) because the
       human wants the old shape available to consult. `tech-ac.md`'s
       criteria were amended with an explicit carve-out for this; see
-      `orchestrator-state.md ## Deviation approvals` in the run folder.
+      A second approval from the same run, recorded nowhere else:
+      `IgdbProxyConstants` was renamed `SupabaseIgdbProxyConstants` and
+      `ErrorType.functionError` renamed `ErrorType.supabaseIgdbError` by
+      direct human commits `8f9f9bf` and `5cd8a4f` after the Dev commit,
+      with the explicit instruction that the run's `task-brief.md` and
+      `code-plan.md` were not to be updated for it. Run folder
+      `igdb-client-repoint-20260805` retired 2026-08-07 — run complete,
+      evidence retired.
 - [ ] Deployed to prod. Blocked — no prod Supabase project exists yet (0.1b,
       still deferred).
 
@@ -380,7 +387,26 @@ part **is** a pipeline run — split it.
 > field — the Supabase user ID alone is sufficient to correlate reports. Verify by
 > triggering a deliberate test crash in dev.
 
-- [ ] Done
+- [x] Done. **2026-08-07.** Full pipeline run, `sentry-20260806` (retired
+      2026-08-07 — run complete, evidence retired). QA PASS, 0 QA cycles. Dev
+      commit `7adeb25`, on top of `e652d1f` / `a963c5f`; merged to `develop`
+      (no PR — merged directly, no merge SHA recorded). Sentry initialises
+      before `runApp` behind the single DSN, with `environment` set from the
+      flavour, flavour and app-version tags, and no personally identifying
+      field. Scope grew mid-run at the human's request: `talker`
+      request/response/error logging around the IGDB client, and removal of the
+      deprecated `PrettyDioLogger` — CRITICAL-1, resolved by the human choosing
+      option A (strip it from `twitch_auth_interceptor.dart` too, then drop the
+      package), with `flutter-arch.md`'s stale `network_module.dart` path fixed
+      in the same pass. One approved deviation: the revised code plan covering
+      that added scope. One code-review send-back before approval —
+      `CrashReportingSettings` and `AppVersion` simplified from classes to
+      top-level functions, the latter moved to `lib/core/utils/version_utils.dart`.
+      Both manual checks confirmed on-device 2026-08-07: [10.12] Sentry delivery
+      (needed `--flavor dev`, now `handover.md` gotcha #8) and [10.18] IGDB log
+      lines. `TestCrash`, its `bootstrap.dart` call site and the three
+      `SentryConstants.testCrash*` constants were removed afterwards, as agreed,
+      once QA passed and [10.12] was confirmed.
 
 ### 10.1 — IGDB client transport: Dio + Retrofit [PIPELINE]
 
@@ -430,7 +456,25 @@ part **is** a pipeline run — split it.
 > assuming a 1:1 drop-in. `IgdbCallLog` stays exactly as item 10 shipped it
 > until this item's own BA/Tech Lead phase decides.
 
-- [ ] Done
+- [x] Done. **2026-08-07.** Full pipeline run, `igdb-transport-20260807`
+      (retired 2026-08-07 — run complete, evidence retired). QA PASS, 0 QA
+      cycles, no escalations. Dev commit `5385338` on base `cf3ddc6`, branch
+      `claude/questloggd-item-10-1-igdb-ogvf5r`, merged to `develop`. The IGDB
+      transport is now Dio + Retrofit calling the `igdb-proxy` Edge Function's
+      URL directly, with a Supabase-session interceptor attaching `Authorization`
+      and `apikey` per request and refreshing-and-retrying once on a 401. Four
+      approved deviations: (1) `talker_dio_logger` added as a new direct
+      dependency and `IgdbCallLog` deleted in favour of `TalkerDioLogger`,
+      accepting the loss of the 50-line response trim and the caller stack trace;
+      (2) `IgdbProxyService` renamed `SupabaseIgdbProxyService`; (3)
+      `SupabaseIgdbClient` deleted outright, having become a one-line passthrough
+      — `GamesApiService`, `GameDetailApiService` and `FeaturedApiService` now
+      depend on `SupabaseIgdbProxyService` and their tests mock it, which
+      overturns that run's own guarantee that callers and their tests needed no
+      change; (4) `games_test.dart` / `game_detail_test.dart` error cases
+      throw and assert `DioException` (new `mockDioException` fixture) instead of
+      the now-impossible `FunctionException`. Four manual checks were never
+      performed and are carried in `handover.md`, not here.
 
 ### 11 — Cleanup [PIPELINE]
 

@@ -14,12 +14,10 @@ open across the whole set — see below.
 build/verification detail live in `week-1-task-briefs.md` and each item's
 (now-merged) commit history — not repeated here.
 
-**Item 10.1 (IGDB client transport: Dio + Retrofit) is written up but not
-started.** Full brief is in `week-1-task-briefs.md`'s "### 10.1" section —
-swap `SupabaseIgdbClient`'s transport from `functions.invoke` to Dio +
-Retrofit hitting the `igdb-proxy` Edge Function's URL directly, with a new
-Supabase-session auth interceptor. Ready for a normal PIPELINE run, nothing
-blocking it.
+**Item 10.1 (IGDB client transport: Dio + Retrofit) shipped 2026-08-07** and is
+merged to `develop` — see `week-1-task-briefs.md`'s "### 10.1" entry for what
+landed and which deviations were approved. It left two things open, both under
+"Known non-blocking gaps" below: a dead-code follow-up and four manual checks.
 
 **Item 11 (repo cleanup) has a run in progress, parked at the Phase 3 human
 design gate — never approved.** `tech-ac.md`/`tdd.md`/`task-brief.md`/
@@ -66,6 +64,26 @@ repeating there once it exists.
   stack after Google's own broken re-auth flow — session logs kept running,
   hot restart recovered it). Known, not investigated further, goes away with
   the trick once email/password lands. Full detail in `roadmap-deferred.md`.
+- Item 10.1 left dead code behind, deferred by the human on 2026-08-07 to a
+  separate run: `BaseRepositoryMixin`'s `on FunctionException` catch branch,
+  `ErrorType.supabaseIgdbError`, `mockFunctionException`, and
+  `games_repository_test.dart`'s "throws FunctionException" test are all
+  unreachable now that `supabase_igdb_client.dart` — the only producer of
+  `FunctionException` — is gone. All still present and still passing; removing
+  them is its own run, not a defect in 10.1.
+- Item 10.1's four manual checks have never been performed by anyone, and need a
+  device:
+  - `10.1-AC-16` — debug **dev** build: each IGDB call should print its request
+    line and `{endpoint, query}` body, and a failed call should print status,
+    message and the function's error body. The 50-line response trim, its
+    omitted-line note and the caller stack trace are gone by approved deviation —
+    do not expect them.
+  - `10.1-AC-17` — **release** build and **prod-flavour** build: exercise the
+    games list, expect zero IGDB transport output in the console.
+  - `10.1-AC-2` — a dev build and a prod build each hit their own Supabase
+    project host (visible in the dev build's logger output).
+  - `10.1-AC-10` — with an expired access token, or a forced 401, the games list
+    still loads with no error shown to the user.
 
 ---
 
@@ -284,29 +302,22 @@ Before anything else:
   any baseline. Expect 11 pre-existing test failures (gotcha #3 in
   handover.md) -- the suite is not green and never has been.
 
-Current state: items 1-10 (with 6.1/6.2) are all done and merged to develop.
-The only other open thing is item 3's on-device cross-account RLS check,
-blocked until something writes to library_entries (week 3's Library
-feature) -- nothing to do there right now unless asked to build a temporary
-test screen sooner.
-
-Do item 10.1 next: IGDB client transport, Dio + Retrofit. Full brief is in
-.agents/week-1-task-briefs.md's "### 10.1" section -- read it in full before
-starting, it already records several decisions made in discussion last
-session (do not reuse NetworkModule/TwitchAuthInterceptor as-is, do reuse
-ConfigConstants' timeout values, IgdbCallLog's fate vs. talker_dio_logger is
-an open call for this item's own BA/Tech Lead phase to make, not pre-decided).
-Normal PIPELINE run through /orchestrate, nothing blocking it. Gotcha #7 in
-handover.md if the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types
+Current state: items 1-10 and 10.1 (with 6.1/6.2) are all done and merged to
+develop. Item 11 (repo cleanup) is the last week-1 checklist item, and its run
+folder is .agents/runs/cleanup-20260806/ -- read that folder's
+orchestrator-state.md `Current phase` line before assuming anything: COMPLETE
+means item 11 shipped too and week 1 is done; anything else means the run is
+still live, so resume it rather than starting a new one for item 11. Gotcha #7
+in handover.md if the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types
 aren't available yet when you try to spawn one.
 
-Also still open, not started this run: item 11 (repo cleanup) has an
-existing run parked at the Phase 3 human design gate in
-.agents/runs/cleanup-20260806/ -- resume and get a decision on that existing
-run rather than starting a new one, whenever it comes up.
+Still open regardless: item 3's on-device cross-account RLS check, blocked
+until something writes to library_entries (week 3's Library feature) --
+nothing to do there right now unless asked to build a temporary test screen
+sooner. Item 10.1 also left a dead-code follow-up and four never-performed
+manual checks behind; both are in handover.md's "Known non-blocking gaps".
 
-Items 10.1 and 11 are the last two week-1 checklist items. Once both ship,
-week 1 is done -- delete week-1-task-briefs.md per its own top note, and
+Once week 1 is done, delete week-1-task-briefs.md per its own top note, and
 check with the human on what's next (week 2 component library, or week 3
 Library/tracker migration).
 ```
