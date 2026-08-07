@@ -3,12 +3,16 @@ Source: `.agents/week-1-task-briefs.md` § "11 — Cleanup [PIPELINE]" (lines 38
 checklist items 1–3. Background: `.agents/handover.md` gotcha #2 (line-ending churn).
 Source (items 4–5, added 2026-08-07): human instruction expanding this run's scope —
 unused-code scan and docs "done"/"completed" cull. No written brief exists for either.
-Date: 2026-08-06 (items 1–3), 2026-08-07 (items 4–5)
+Source (item 6, added 2026-08-07): human instruction authorising removal of the
+completed run folders under `.agents/runs/`. No written brief exists.
+Date: 2026-08-06 (items 1–3), 2026-08-07 (items 4–5, item 6)
 
-## CRITICAL (pipeline blocked — requires human decision before proceeding)
+## CRITICAL (all resolved — pipeline not blocked)
 
-CRITICAL-1: REQ-11.4 — `_TaskReminder` is a whole unused widget class, which the
-instruction for this item says to flag rather than decide. It is declared at
+CRITICAL-1 [RESOLVED 2026-08-07 — human chose option A; `tech-ac.md` was already
+written to it, no criteria change needed]: REQ-11.4 — `_TaskReminder` is a whole unused
+widget class, which the instruction for this item says to flag rather than decide. It is
+declared at
 `lib/features/tracker/presentation/screens/task_detail_screen.dart:201` with its
 constructor at `:204`, and its only reference anywhere in the repository is a
 commented-out call site at `:88` (`// _TaskReminder(task: task),`). It is also the
@@ -37,7 +41,8 @@ explicitly told not to make.
     `tech-ac.md` is written to (A): AC-5.10 makes `_TaskReminder` report-only and Out
     of scope names it, so REQ-11.1–11.3 and REQ-11.5 are unaffected either way, and
     REQ-11.4's constants half can proceed under (A) with no further input.
-  Decision needed from: Product Owner
+  Decision: (A), taken by the human 2026-08-07. Recorded in `orchestrator-state.md`
+    § Escalation history.
 
 ## ASSUMPTIONS (minor — pipeline may proceed)
 
@@ -172,23 +177,15 @@ but not started" and its whole `## Next-session prompt` tells the reader to do i
 while `week-1-task-briefs.md` still has `- [ ] Done` unticked for items 10 and 10.1 —
 but stale is not the same as finished-task noise, and correcting them is separate work
 for whoever owns those documents. Assuming they are left exactly as they are.
+(Narrowed 2026-08-07 by REQ-11.6: items 10 and 10.1's checklist entries *are* written
+and ticked, as a consequence of AC-7.3's record precondition, not as a correctness pass.
+Everything else in this assumption stands.)
 
 ASSUMPTION: `week-1-task-briefs.md`'s `- [x] Done` entries stay. They carry dates, PR
 numbers, commit SHAs and deviation notes, and `handover.md` explicitly points future
 readers at this file for that history. The file's own banner asks for its wholesale
 deletion once week 1 ships, which is a decision this item does not trigger, does not
 pre-empt, and does not duplicate.
-
-ASSUMPTION: The three complete run folders under `.agents/runs/`
-(`igdb-client-repoint-20260805`, `sentry-20260806`, `igdb-transport-20260807`) stay.
-There is a genuine conflict here and the conservative side is taken: `handover.md` says
-run folders are "removed once a run is complete with no open escalations", and
-`week-1-task-briefs.md` records two earlier folders already removed on that basis, but
-the instruction for REQ-11.5 explicitly names old run folders' `## Code review outcomes`
-logs as memory to keep. Assuming "leave them" and raising the conflict separately
-rather than resolving a documented convention inside a quick filter. Not classified
-CRITICAL because the safe default is unambiguous — deleting is the irreversible
-direction, and nothing downstream is blocked by keeping them.
 
 ASSUMPTION: `CLAUDE.md`, `.claude/**` and `.codex/**` are out of REQ-11.5's scope.
 They are pipeline definitions rather than project documentation, and `.codex/` is
@@ -204,3 +201,88 @@ ASSUMPTION: REQ-11.4 and REQ-11.5 are independent of each other and of REQ-11.1�
 and of the three items' single-commit framing. Assuming they may land in the same
 commit; if the human prefers them split, that is a task-brief decision, not a criteria
 change.
+
+--- Added 2026-08-07 with REQ-11.6 ---
+
+WITHDRAWN: the earlier assumption that the three complete run folders stay in place.
+It was recorded as a conservative reading of a genuine conflict, to be raised as a
+separate decision. The human has now taken that decision and authorised removal, so the
+assumption is replaced by REQ-11.6's criteria. REQ-11.5 itself is unchanged — it still
+touches no run folder; AC-7.8 records exactly where REQ-11.6 overrides it.
+
+ASSUMPTION: "Complete, no open escalation" is read as three checkable conditions rather
+than a judgement: `Current phase: COMPLETE` in the folder's `orchestrator-state.md`, no
+`escalation.md` file in the folder, and no unresolved entry under `## Escalation
+history`. All three candidate folders pass today —
+`igdb-client-repoint-20260805` (one escalation, resolved: the
+`TwitchAuthInterceptor`/`NetworkModule` reference-code carve-out), `sentry-20260806`
+(one escalation, resolved: `PrettyDioLogger` option A), `igdb-transport-20260807`
+(`NONE`). No `escalation.md` exists anywhere under `.agents/runs/`.
+
+ASSUMPTION: `cleanup-20260806` is excluded because it is this run, not because of its
+phase. AC-7.1(d) states that as its own condition so the rule still reads correctly for
+a future run applying it.
+
+FINDING — the record does *not* currently exist for two of the three, and this is the
+main reason REQ-11.6 has preconditions rather than just a deletion criterion.
+`handover.md` § "Where things live" says run folders are removed once complete "(see
+week-1-task-briefs.md for which runs shipped what)". Checked, per item:
+  - Item 9 — covered. Lines 348–368 carry the date, the run-folder name, the merge SHA
+    `9b5e303`, the QA outcome, the human's on-device testing and the substance of the
+    `TwitchAuthInterceptor`/`NetworkModule` deviation. Two gaps only: the entry ends by
+    pointing *into* the folder ("see `orchestrator-state.md ## Deviation approvals` in
+    the run folder"), which becomes a dangling pointer; and the folder's second approval
+    — the `IgdbProxyConstants`/`ErrorType.functionError` renames by direct human commits
+    `8f9f9bf` and `5cd8a4f`, with the instruction not to update `task-brief.md` or
+    `code-plan.md` for them — is recorded nowhere else.
+  - Item 10 — not covered at all. The checklist entry is `- [ ] Done` with no text.
+    `handover.md` says only that item 10 (Sentry + talker logging + PrettyDioLogger
+    removal) is done and merged. Everything else lives solely in `sentry-20260806`:
+    dev commit `7adeb25` on `e652d1f`/`a963c5f`, QA PASS with 0 cycles, the CRITICAL-1
+    resolution, the approved code-plan revision, the code-review send-back
+    (`CrashReportingSettings`/`AppVersion` simplification), and the whole `TestCrash`
+    removal follow-up with its two gating conditions and their confirmation.
+  - Item 10.1 — not covered at all, and worse: the checklist says `- [ ] Done` and
+    `handover.md` still says it is "written up but not started". `igdb-transport-20260807`
+    is the only evidence in the repository that item 10.1 shipped at all — dev commit
+    `5385338`, QA PASS, and four approved deviations, one of which added a direct
+    dependency (`talker_dio_logger`) and one of which deleted a class
+    (`SupabaseIgdbClient`) against `tech-ac.md`'s own guarantee.
+Assuming this is a criterion, not a CRITICAL: nothing here needs a business decision —
+the human has already decided the folders go — it needs the record written first, which
+AC-7.3 makes a hard precondition of the deletion, in the same commit.
+
+FINDING — two pieces of *open* work also live only in `igdb-transport-20260807`, and
+they are not history, so AC-7.4 sends them to `handover.md` rather than to the ephemeral
+checklist: (a) the deferred dead-code follow-up (`BaseRepositoryMixin`'s
+`on FunctionException` branch, `ErrorType.supabaseIgdbError`, `mockFunctionException`,
+and `games_repository_test.dart`'s "throws FunctionException" test, all unreachable
+since 10.1 landed, deferred by the human on 2026-08-07 to a separate run) — absent from
+`handover.md`'s "Known non-blocking gaps" list; and (b) four manual checks
+(`10.1-AC-2`, `-10`, `-16`, `-17`) that no document records as ever performed.
+`sentry-20260806` by contrast has nothing open — its `[10.12]`/`[10.18]` checks are
+recorded confirmed in its own `## Follow-up actions`, and the `--flavor dev` discovery
+they produced is already `handover.md` gotcha #8.
+
+ASSUMPTION: `week-1-task-briefs.md` being ephemeral does not disqualify it as the
+record's home. Its banner already obliges whoever deletes it to promote anything worth
+keeping into `.agents/references/` or the roadmap, so a historical shipped record placed
+there carries the same accepted risk as items 1–9's existing entries and no more. The
+split in AC-7.3/AC-7.4 — history to the checklist, open work to `handover.md` — is what
+keeps that acceptable. Flagging it rather than assuming silently, because item 11 is the
+last-but-one week-1 item and that deletion may follow soon.
+
+ASSUMPTION: The record edits and the deletions land in the same commit, so no
+intermediate state exists where a folder is gone and its record is unwritten. "Before
+deletion" in AC-7.3/AC-7.4 is a statement about the commit's final content, not about
+ordering within it.
+
+ASSUMPTION: `handover.md`'s `## Next-session prompt` and its "item 10.1 is written up
+but not started" paragraph are left wrong by this run. They are a rewrite, not a record
+migration, and AC-6.4 keeps the run out of correctness passes. Flagged for the human
+rather than fixed, since AC-7.4 already opens `handover.md` for editing and the
+temptation to fix it in passing is obvious.
+
+ASSUMPTION: Removal is `git rm -r` of tracked content. `.agents/` is git-tracked, so the
+folders stay recoverable from history for anyone who reads the retired-folder names the
+checklist will record.

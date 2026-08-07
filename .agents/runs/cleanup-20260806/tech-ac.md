@@ -4,15 +4,18 @@ checklist items 1–3. Background: `.agents/handover.md` gotcha #2 (line-ending 
 Source (items 4–5, added 2026-08-07): human instruction to the orchestrator expanding
 this run's scope — unused-code scan and docs "done"/"completed" cull. Not written up in
 `week-1-task-briefs.md`; the instruction text is the only source.
-Date: 2026-08-06 (items 1–3), 2026-08-07 (items 4–5)
+Source (item 6, added 2026-08-07, third BA pass): human instruction authorising removal
+of the completed run folders under `.agents/runs/`, acting on the convention already
+stated in `.agents/handover.md` § "Where things live".
+Date: 2026-08-06 (items 1–3), 2026-08-07 (items 4–5, item 6)
 BA Agent version: 1.0
 
 ## Feature summary
 
-Repository and codebase hygiene. Five independent fixes, no feature work, no
-architectural change, no dependency change. Items 1–3 touch no Dart source at all;
-items 4 and 5 do, but only by deleting declarations and documentation lines that
-nothing reads. Runtime behaviour is identical before and after all five.
+Repository and codebase hygiene. Six independent fixes, no feature work, no
+architectural change, no dependency change. Items 1–3 and 6 touch no Dart source at
+all; items 4 and 5 do, but only by deleting declarations and documentation lines that
+nothing reads. Runtime behaviour is identical before and after all six.
 
 Three repository fixes. (1) The repository runs `core.autocrlf=true`, so git expects
 CRLF in the working tree, while `build_runner` writes its output with LF; every
@@ -38,12 +41,24 @@ finished-task notes that carry no forward information. Conservative by construct
 anything that records a date, a PR number, a deviation or a reason stays, and an empty
 removal set is a valid outcome.
 
+One deletion, added 2026-08-07. (6) The three completed run folders under
+`.agents/runs/` are removed, applying a convention `handover.md` already states but
+that has not been followed. It is the one item in the run whose output cannot be
+re-derived, so it is gated on the record surviving elsewhere first. `handover.md`
+nominates `week-1-task-briefs.md` as the answer to "which runs shipped what"; that file
+covers item 9 in detail but records items 10 and 10.1 as an unticked `- [ ] Done` with
+no date, no SHA and no deviation note, so two of the three folders are the only account
+of what their run shipped, and one also holds still-open forward work. The shipped
+record is written into the checklist and the open work into `handover.md`, in the same
+commit as the deletion.
+
 Source IDs used below:
 - `REQ-11.1` — `.gitattributes` created and index renormalised
 - `REQ-11.2` — `coverage/` ignored and untracked
 - `REQ-11.3` — `envied` TODO removed
 - `REQ-11.4` — unused const/variable/string sweep over `lib/`
 - `REQ-11.5` — docs "done"/"completed" cull
+- `REQ-11.6` — completed run folders removed from `.agents/runs/`
 - `REQ-11.C` — run-wide constraints stated in the brief's preamble
 
 ## Technical acceptance criteria
@@ -206,7 +221,8 @@ a whole class, a whole file, an unused private member the analyzer already repor
 an unused top-level declaration outside the two constants files — is recorded in
 `diff-summary.md` as a finding and is **not** deleted. `_TaskReminder` in
 `lib/features/tracker/presentation/screens/task_detail_screen.dart` is such a finding
-and is explicitly out of scope for this run pending CRITICAL-1 in `ambiguities.md`.
+and is out of scope: CRITICAL-1 was resolved on 2026-08-07 by the human choosing option
+A, leave it alone.
   Failure case: deleting one. That is a product call about whether a feature is still
   planned, not a hygiene call, and this item does not authorise it.
 
@@ -245,14 +261,16 @@ per-item status paragraphs; `week-1-task-briefs.md`'s `- [x] Done` entries and i
 ephemeral top banner; every `## Code review outcomes`, `## Deviation approvals` and
 `## Escalation history` block under `.agents/runs/`; and every occurrence in
 `.agents/references/` where "complete"/"completed"/"done" names a library status value,
-a design behaviour, or prose rather than a finished task.
+a design behaviour, or prose rather than a finished task. Superseded in one respect by
+AC-7.8.
   Failure case: any of these in the diff. They are project memory, and the last group
   are false positives of the search term rather than cull candidates at all.
 
 [REQ-11.5] DOCS SCOPE (AC-6.4): No file is deleted. No directory under `.agents/runs/`
 is deleted. No checkbox is ticked, re-dated or corrected, and no statement that is
 merely stale — as opposed to a finished-task note — is rewritten. An empty removal set
-is a valid, passing outcome and is recorded as one.
+is a valid, passing outcome and is recorded as one. Superseded in two respects by
+AC-7.8.
   Failure case: a docs edit that changes meaning rather than removing noise, or a
   correctness fix smuggled in under a cull. Correcting stale status is separate work
   and belongs to whoever owns the document.
@@ -261,6 +279,95 @@ is a valid, passing outcome and is recorded as one.
 under `.agents/` or `README.md` at the repository root.
   Failure case: any other path. Docs work cannot touch source, config, or the pipeline
   definitions under `.claude/` and `.codex/`.
+
+[REQ-11.6] QUALIFICATION (AC-7.1): A folder under `.agents/runs/` qualifies for removal
+only when all four conditions hold, each checked and recorded per folder: (a) it
+contains an `orchestrator-state.md` whose `Current phase:` line reads exactly
+`COMPLETE`; (b) it contains no `escalation.md`; (c) every entry under its
+`## Escalation history` is marked resolved, or the section reads `NONE`; (d) it is not
+this run's own folder.
+  Failure case: removing a folder because its run "looks finished". A `Current phase`
+  reading anything other than `COMPLETE`, a present `escalation.md`, or an escalation
+  entry with no recorded resolution all mean the folder is live state, not evidence.
+
+[REQ-11.6] REMOVAL SET (AC-7.2): The removal set is exactly three folders —
+`igdb-client-repoint-20260805` (item 9), `sentry-20260806` (item 10) and
+`igdb-transport-20260807` (item 10.1) — each re-checked against AC-7.1 at execution
+time rather than trusted from this list. `cleanup-20260806` is retained in full: it is
+this run, and it is in progress. Any folder failing an AC-7.1 condition is left in
+place and reported.
+  Failure case: deleting `cleanup-20260806`, which destroys the run's own artifacts
+  mid-run; or deleting a fourth folder created since these criteria were written,
+  without checking it against AC-7.1.
+
+[REQ-11.6] RECORD PRECONDITION (AC-7.3): The commit that deletes the folders also
+contains, in `.agents/week-1-task-briefs.md`, a per-item shipped record for each of the
+three runs, in the style the file already uses for items 4, 5, 6 and 8: date,
+run-folder name marked retired, merge or commit SHA (or PR number), QA outcome and
+cycle count, and each approved deviation in one line. Item 9's existing entry (lines
+348–368) is amended; items 10 and 10.1 have no detail at all today — an unticked
+`- [ ] Done` and nothing else — so their entries are written from those folders'
+`orchestrator-state.md` before the folders go.
+  Failure case: deleting `sentry-20260806` or `igdb-transport-20260807` while the
+  checklist still says only `- [ ] Done` for items 10 and 10.1. `handover.md` nominates
+  `week-1-task-briefs.md` as the record of which runs shipped what; for those two items
+  that record does not exist yet, so deleting first destroys the only account of what
+  they shipped — deviations, SHAs, QA outcome and all.
+
+[REQ-11.6] OPEN-WORK PRECONDITION (AC-7.4): Two pieces of still-open, forward-looking
+content exist only inside `igdb-transport-20260807` and are moved into
+`.agents/handover.md` — not into `week-1-task-briefs.md` — in the same commit: (a) its
+`orchestrator-state.md` § "Follow-up (not this run)", recording that
+`BaseRepositoryMixin`'s `on FunctionException` branch, `ErrorType.supabaseIgdbError`,
+`mockFunctionException` and `games_repository_test.dart`'s "throws FunctionException"
+test all became unreachable when item 10.1 landed, deferred by the human on 2026-08-07
+to a separate run; and (b) its `qa-report.md` § "Manual verification required" — the
+four checks `10.1-AC-2`, `10.1-AC-10`, `10.1-AC-16` and `10.1-AC-17`, which no document
+anywhere records as performed.
+  Failure case: filing either as history in the checklist. (a) is scheduled work and
+  (b) is verification the app has never had; `week-1-task-briefs.md` is ephemeral by
+  its own banner, so open work recorded only there is scheduled to be deleted.
+
+[REQ-11.6] OPEN-WORK CHECK (AC-7.5): `sentry-20260806` and
+`igdb-client-repoint-20260805` are each re-read for that same class of content before
+deletion, and the result recorded. Expected outcome, to be confirmed rather than
+assumed: `sentry-20260806`'s pending manual checks `[10.12]` and `[10.18]` are recorded
+confirmed in its own `## Follow-up actions` (2026-08-07) and the `--flavor dev`
+discovery from `[10.12]` is already `handover.md` gotcha #8;
+`igdb-client-repoint-20260805`'s manual device testing is recorded complete in
+`week-1-task-briefs.md` lines 357–358.
+  Failure case: migrating nothing from either folder without checking. Anything found
+  still open is migrated under AC-7.4's rule instead, and the deletion waits on it.
+
+[REQ-11.6] CROSS-REFERENCES (AC-7.6): After deletion, no surviving file directs a
+reader into a deleted folder. A repository-wide search for the three folder names is
+run and its hits recorded. The one known live pointer is `week-1-task-briefs.md`'s item
+9 line "see `orchestrator-state.md ## Deviation approvals` in the run folder", replaced
+by the substance of that record under AC-7.3.
+  Failure case: leaving an instruction that points at a path which no longer exists. A
+  hit that merely mentions a folder as past history — this run's own artifacts, and
+  `handover.md`'s general "one folder per pipeline run" convention line — reads
+  correctly with the folder gone and is left alone.
+
+[REQ-11.6] MECHANICS (AC-7.7): Every tracked file in the three folders is removed from
+both the index and the working tree, recorded as deletions in the commit, and
+`.agents/runs/` afterwards contains exactly one entry, `cleanup-20260806`. No empty
+directory and no untracked file is left behind under the deleted paths.
+  Failure case: a working-tree deletion that leaves the files tracked, or untracked
+  residue that reappears in the next run's `git status` — the same class of problem
+  REQ-11.2 exists to fix.
+
+[REQ-11.6] SUPERSESSION (AC-7.8): For these three folders only, REQ-11.6 overrides two
+REQ-11.5 statements: AC-6.3's preservation of every `## Code review outcomes`,
+`## Deviation approvals` and `## Escalation history` block under `.agents/runs/`, and
+AC-6.4's "no directory under `.agents/runs/` is deleted". Both still bind for
+`cleanup-20260806` and for any folder failing AC-7.1. AC-6.4's ban on ticking or
+re-dating a checkbox likewise does not apply to the record edits AC-7.3 and AC-7.4
+require: writing items 10 and 10.1's entries includes ticking their `- [x] Done` boxes,
+because the entry and the tick are the record.
+  Failure case: QA failing the deletion by reading AC-6.3/AC-6.4 as still absolute, or
+  Dev applying REQ-11.5's leave-it-alone default to the record edits and deleting the
+  folders with nothing written in their place.
 
 [REQ-11.C] BUILD (AC-4.1): `pubspec.yaml`'s dependency graph is unchanged — every
 dependency and dev dependency, and every version constraint, is byte-identical to
@@ -282,13 +389,18 @@ artifacts under `.agents/runs/cleanup-20260806/`.
   sorting, or unrelated `.gitignore` tidying.
 
 [REQ-11.C] SCOPE (AC-4.4): AC-4.2 and AC-4.3 were written for items 1–3 only and are
-superseded on two points now that items 4 and 5 are in scope. The baseline figures
-that bind are the ones currently in `orchestrator-state.md`, read at execution time,
-not the figures quoted inline in AC-4.2. The allowed changed-file set is AC-4.3's set
-plus `lib/core/res/const.dart`, `lib/features/onboarding/const.dart` and the docs paths
-AC-6.5 permits.
+superseded on three points now that items 4, 5 and 6 are in scope. First, the baseline
+figures that bind are the ones currently in `orchestrator-state.md`, read at execution
+time, not the figures quoted inline in AC-4.2. Second, the allowed changed-file set is
+AC-4.3's set plus `lib/core/res/const.dart`, `lib/features/onboarding/const.dart` and
+the docs paths AC-6.5 permits. Third, it also allows REQ-11.6's changes: deletion of
+every tracked file under `.agents/runs/igdb-client-repoint-20260805/`,
+`.agents/runs/sentry-20260806/` and `.agents/runs/igdb-transport-20260807/`, and edits
+to `.agents/week-1-task-briefs.md` and `.agents/handover.md` for the records AC-7.3 and
+AC-7.4 require. No other path under `.agents/runs/` may be added, modified or deleted.
   Failure case: enforcing AC-4.2's quoted test numbers, which were captured before item
-  10.1 merged, or rejecting the two constants files as out-of-allowlist.
+  10.1 merged; rejecting the two constants files as out-of-allowlist; or rejecting the
+  run-folder deletions, which are the whole of REQ-11.6.
 
 ## Out of scope
 
@@ -311,8 +423,9 @@ AC-6.5 permits.
   constraint.
 - The 11 pre-existing test failures, and the discrepancy between them and gotcha #3's
   count of 13. Recorded in `orchestrator-state.md`; not this run's work.
-- Deleting `.agents/week-1-task-briefs.md`. Its own banner asks for deletion once
-  every item is ticked, but item 11 does not request it and other items remain open.
+- Deleting `.agents/week-1-task-briefs.md`. Its own banner asks for deletion once every
+  item is ticked, but item 11 does not request it and other items remain open. REQ-11.6
+  writes *into* that file; it does not bring its deletion forward.
 - Removing the local `coverage/` directory from disk, or changing how QA invokes
   `flutter test --coverage`.
 - Any CI or workflow configuration change.
@@ -325,7 +438,7 @@ AC-6.5 permits.
   hand is barred by handover gotcha #2.
 - Deleting, merging or emptying any class or file under `lib/`, and deleting the
   `_TaskReminder` widget and its commented-out call site. Reported under AC-5.10, not
-  actioned. See CRITICAL-1.
+  actioned — CRITICAL-1 resolved as option A.
 - Unused declarations under `test/`, `supabase/`, `android/` and `ios/`. REQ-11.4 is
   scoped to `lib/`, and `test/` is searched only as a *source of references*, never as
   a target for deletion.
@@ -335,15 +448,17 @@ AC-6.5 permits.
 - Renaming, re-grouping or relocating constants — including moving a
   single-feature constant out of `lib/core/res/const.dart` into a feature `const.dart`
   as the code-quality rules would otherwise prefer. Deletion only.
-- Deleting any run folder under `.agents/runs/`, including the three whose runs are
-  complete. `handover.md` describes run folders as removed once a run is complete, but
-  that is a different decision from REQ-11.5's and is not taken here — see the
-  assumption below.
-- Correcting stale-but-not-"done" statements in docs: `handover.md`'s "Item 10.1 … is
-  written up but not started" and its whole `## Next-session prompt`, the unticked
-  `- [ ] Done` boxes for items 10 and 10.1 in `week-1-task-briefs.md`, and this file's
-  own "lines 385–429" citation for item 11. All are now wrong; none is finished-task
-  noise, so none is REQ-11.5's to fix.
+- Doing the deferred `FunctionException` dead-code removal, and performing item 10.1's
+  four outstanding manual checks. AC-7.4 preserves both so they survive the folder
+  deletion; neither is executed here — the first is a separate run by the human's
+  2026-08-07 decision, the second needs a device.
+- Deleting or rewriting any run folder other than the three AC-7.2 names, and any edit
+  to a file inside those three. They are deleted whole, not tidied first.
+- Correcting stale-but-not-"done" statements beyond the records REQ-11.6 requires:
+  `handover.md`'s "Item 10.1 … is written up but not started" and its whole
+  `## Next-session prompt` are now wrong, and neither is this run's to fix. (Items 10
+  and 10.1's unticked boxes *are* fixed, but as a consequence of AC-7.3, not as a
+  correctness pass.)
 - `CLAUDE.md`, `.claude/**` and `.codex/**`. Pipeline definitions, not project docs.
 
 ## Constraints
@@ -367,128 +482,107 @@ Not independently testable, but binding on execution:
   analyzer-excluded generated code — are the reason AC-5.8 exists.
 - REQ-11.5 defaults to leaving content alone. When a candidate is arguable, the correct
   outcome is to leave it and record why, not to remove it and record why.
-- REQ-11.4 and REQ-11.5 are independent of REQ-11.1–11.3 and of each other. If
-  CRITICAL-1 stops REQ-11.4, the other four items are unaffected.
+- REQ-11.6 is the only item whose output cannot be re-derived from the working tree.
+  The folders stay recoverable from git history, but only by someone who knows they
+  existed — which is what AC-7.3's records are for. If an AC-7.3 or AC-7.4 record
+  cannot be written for a folder, that folder is not deleted and the reason is reported.
+- The record edits and the deletions must land together, so no intermediate state
+  exists where a folder is gone and its record unwritten.
+- REQ-11.4, REQ-11.5 and REQ-11.6 are independent of REQ-11.1–11.3 and of each other.
 
 ## Assumptions
 
-ASSUMPTION: A root `.gitattributes` already exists, pinning Flutter's generated
-plugin-registrant files to LF for the same reason. "Create a `.gitattributes`" is
-read as "ensure the five generated-Dart patterns are present" — append to the
-existing file, preserving every existing line (AC-1.2).
+Short form; the reasoning behind each is in this run's `ambiguities.md`.
 
-ASSUMPTION: Pattern text is taken verbatim from the brief's code block. Column
-alignment of `text eol=lf` is cosmetic and not asserted. Bare `*.g.dart` rather than
-`**/*.g.dart` is correct — a git pattern with no leading slash already matches at any
-depth.
+- A root `.gitattributes` already exists (7 plugin-registrant lines). "Create" is read
+  as "ensure the five generated-Dart patterns are present" — append, preserving every
+  existing line (AC-1.2).
+- Pattern text is verbatim from the brief. Column alignment is cosmetic. Bare
+  `*.g.dart` is correct — a git pattern with no leading slash matches at any depth.
+- "Untrack `coverage/lcov.info`" means index removal only; the working-tree file stays
+  (AC-2.3). The `.gitignore` entry is exactly `coverage/`, appended under its own
+  comment heading; `coverage/` is the only coverage path in the tree today.
+- Only the trailing TODO comment leaves the `envied` line — dependency, version,
+  section comment and `envied_generator` all stay (AC-3.1, AC-3.2) — and no replacement
+  comment records why it was wrong; that reasoning lives in this run's artifacts.
+- `git add --renormalize .` is run repo-wide, but content changes are expected only in
+  files matching a pattern; a hand-written source file in that diff means an over-broad
+  pattern, not an accepted cost (AC-1.4).
+- The brief's "roughly seventeen files" is descriptive; AC-1.6 asserts zero generated
+  files reported modified, whatever the count.
+- Editing `pubspec.yaml` is authorised here (comment removal only), even though the
+  preceding run treated it as read-only under its own allowlist.
+- Items 1–3 are independent and may land in any order within one commit.
+- "Unused const, variables, and strings" means unused *declarations*, not unused
+  *values*. Extracting repeated literals into new constants is the opposite job and is
+  not done.
+- REQ-11.4's mandatory sweep is the two constants files, because every `static const`
+  in `lib/` outside generated code lives in one of them. Public declarations elsewhere
+  in `lib/` are report-only (AC-5.10); private ones are the analyzer's half (AC-5.1).
+- `RouteConstants` is confirmed as the human described: every route is a hardcoded
+  literal in `lib/config/route/auto_route_config.dart` and none reads the class, and
+  several members have drifted from the real paths (`gameDetail` is `'/game_detail'`,
+  the router uses `'/game-detail'`) — stale as well as unread.
+- `RouteConstants` is not deleted as a class. `games`, `tracker` and `openPaths` are
+  read by code (`games`/`tracker` as hero-tag `fromScreen` discriminators, not routes),
+  and `openPaths` itself reads `onboarding`, `auth` and `legal`, so six members stay.
+- `RouteConstants.featured` is retained under AC-5.7 despite zero code references:
+  `project-conventions.md` § "Hero transition pattern" names it as the `fromScreen`
+  value to pass from Featured.
+- `ConfigConstants.igdbBaseUrl` is retained under AC-5.6 — its only reader is the
+  `@Deprecated` `network_module.dart`, which must keep compiling.
+- A reference from a test counts as a reference.
+- Expected removal set, found with zero references during BA analysis and subject to
+  Dev re-verifying every count under AC-5.4 and the value search under AC-5.8:
+  `RouteConstants.root`, `.home`, `.trackerDetail`, `.taskDetail`, `.imagePageView`,
+  `.gameDetail`, `.browse`, `.news`, `.settings`; `ConfigConstants.baseUrl`,
+  `.gamesEndpoint`, `.screenshotsEndpoint`; `PathConstants.lottieAnimationAssetPath`;
+  `StringConstants.sharedPrefTypeError`. A starting point, not the criterion.
+- `ConfigConstants.baseUrl`/`.gamesEndpoint`/`.screenshotsEndpoint` are RAWG-era
+  leftovers; `ConfigConstants.apiKey` is not — `config_envied.dart` still reads it as
+  the name of a `.env` variable, so it stays.
+- REQ-11.4 produces no runtime change, so it needs no manual QA check.
+- REQ-11.5's search terms ("done", "complete"/"completed", "shipped", `✅`, `- [x]`,
+  strikethrough) are entry points, not removal triggers; most `.agents/references/`
+  hits are prose or the library's own `Completed` status value.
+- `README.md` has no finished-task content and is expected to end the run unchanged.
+- REQ-11.5 removes, it does not rewrite. Where a finished-task note sits in a sentence
+  that also carries live information, the whole sentence stays.
 
-ASSUMPTION: "Untrack `coverage/lcov.info`" means index removal only, leaving the
-working-tree file in place (AC-2.3).
+Added 2026-08-07 with REQ-11.6:
 
-ASSUMPTION: The `.gitignore` entry is exactly `coverage/`, appended under its own
-comment heading in keeping with the file's existing sectioned style. `coverage/` is
-the only coverage path in the tree today.
-
-ASSUMPTION: Only the trailing TODO comment is deleted from the `envied` line; the
-dependency, its version, its section comment and `envied_generator` all remain
-(AC-3.1, AC-3.2).
-
-ASSUMPTION: No replacement comment records why the TODO was wrong. The reasoning
-lives in this run's artifacts, not in `pubspec.yaml`.
-
-ASSUMPTION: `git add --renormalize .` is run repo-wide as instructed, but content
-changes are expected only in files matching a `.gitattributes` pattern; a
-hand-written source file in that diff indicates an over-broad pattern rather than an
-accepted cost (AC-1.4).
-
-ASSUMPTION: The "roughly seventeen files" figure in the brief is descriptive. AC-1.6
-asserts zero generated files reported modified, whatever the actual count.
-
-ASSUMPTION: Editing `pubspec.yaml` is authorised here. The preceding run treated it
-as read-only under that run's allowlist; item 11 names it as a target, so it is in
-scope for comment removal only (AC-3.1, AC-3.2, AC-4.1).
-
-ASSUMPTION: The three fixes are independent and may land in any order within one
-commit. The brief calls them unrelated and states no sequencing.
-
-ASSUMPTION: "Unused const, variables, and strings" is read as unused *declarations*,
-not unused *values*. A string literal that appears once in a widget is not a
-candidate; a declared constant that nothing reads is. Extracting repeated literals
-into new constants is the opposite of this item and is not done.
-
-ASSUMPTION: REQ-11.4's mandatory sweep covers the two constants files
-(`lib/core/res/const.dart`, `lib/features/onboarding/const.dart`), because the human
-scoped it to "`lib/` (and constants files specifically)" and every `static const` in
-`lib/` outside generated code lives in one of the two. Declarations elsewhere in `lib/`
-are covered by the analyzer half (AC-5.1) for private members and are report-only
-(AC-5.10) for public ones.
-
-ASSUMPTION: `RouteConstants` in `lib/core/res/const.dart` is confirmed as the human
-described. Routes are declared as hardcoded string literals in
-`lib/config/route/auto_route_config.dart` (`'/onboarding'`, `'/auth'`, `'/legal'`,
-`'/'`, `'featured'`, `'games'`, `'tracker'`, `'browse'`, `'settings'`,
-`'/game-detail'`, `'/image-view'`, `'/tracker-detail'`, `'/task-detail'`) and none of
-them reads `RouteConstants`. Several constants have also drifted from the real paths
-(`gameDetail` is `'/game_detail'`, the router uses `'/game-detail'`), so they are
-stale as well as unread.
-
-ASSUMPTION: `RouteConstants` is not deleted as a class. Three of its members are read
-by code — `games`, `tracker` and `openPaths` — so it survives with fewer members.
-`games` and `tracker` are read as hero-tag `fromScreen` discriminators, not as routes;
-`openPaths` is read by `session_navigator.dart` and itself reads `onboarding`, `auth`
-and `legal`, so all four stay.
-
-ASSUMPTION: `RouteConstants.featured` is retained despite having zero code references,
-under AC-5.7. `.agents/references/project-conventions.md` § "Hero transition pattern"
-names it as the value to pass as `fromScreen` from Featured, alongside the two members
-that are used.
-
-ASSUMPTION: `ConfigConstants.igdbBaseUrl` is retained under AC-5.6. Its only reference
-is `lib/core/di/network_module.dart`, which is `@Deprecated`, DI-unregistered reference
-code the human asked to keep; deleting the constant would stop that file compiling.
-
-ASSUMPTION: A reference from a test counts. Constants exist to be shared between
-production code and its tests, and a test-only reference is a real use, not a
-self-fulfilling one.
-
-ASSUMPTION: The following members were found with zero references outside their own
-declaration during BA analysis and are the expected removal set, subject to Dev
-re-verifying each count under AC-5.4 and the value search under AC-5.8:
-`RouteConstants.root`, `.home`, `.trackerDetail`, `.taskDetail`, `.imagePageView`,
-`.gameDetail`, `.browse`, `.news`, `.settings`; `ConfigConstants.baseUrl`,
-`.gamesEndpoint`, `.screenshotsEndpoint`; `PathConstants.lottieAnimationAssetPath`;
-`StringConstants.sharedPrefTypeError`. This is a starting point, not the criterion —
-the criterion is AC-5.4's per-member evidence, and Dev may add to or subtract from
-this list on that evidence.
-
-ASSUMPTION: `ConfigConstants.baseUrl`, `.gamesEndpoint` and `.screenshotsEndpoint` are
-RAWG-era leftovers superseded by the Supabase IGDB proxy, and `ConfigConstants.apiKey`
-is *not* — it is still read by `lib/config/config_envied.dart` as the name of a `.env`
-variable, so it stays even though the RAWG base URL it belonged to does not.
-
-ASSUMPTION: REQ-11.4 produces no runtime change. Every deleted member is unreferenced
-by definition, so no code path can observe the deletion, and no manual QA check is
-needed for this item.
-
-ASSUMPTION: REQ-11.5's search terms are "done", "complete"/"completed", "shipped",
-`✅`, `- [x]` and strikethrough. All are search entry points, not removal triggers —
-AC-6.2 decides removal, and BA analysis found the majority of hits in
-`.agents/references/` to be prose or the library's own `Completed` status value.
-
-ASSUMPTION: `README.md` contains no finished-task content and is expected to end the
-run unchanged, recorded as "nothing removed" under AC-6.1.
-
-ASSUMPTION: The three complete run folders under `.agents/runs/`
-(`igdb-client-repoint-20260805`, `sentry-20260806`, `igdb-transport-20260807`) are left
-in place. `handover.md` says run folders are "removed once a run is complete", and two
-earlier folders were removed on that basis, but the human's instruction for REQ-11.5
-explicitly names old run folders' `## Code review outcomes` logs as memory to keep. The
-conservative reading wins: leave them, and raise the conflict for a separate decision
-rather than resolving it inside a "quick filter".
-
-ASSUMPTION: REQ-11.5 removes, it does not rewrite. Where a finished-task note is
-embedded in a sentence that also carries live information, the whole sentence stays.
-
-ASSUMPTION: AC-4.2's inline figures are stale — they predate item 10.1 merging to
-`develop` on 2026-08-07, after which `orchestrator-state.md` records `+218 -11`. AC-4.4
-resolves this by binding execution to the file rather than to the quoted numbers.
+- WITHDRAWN — the previous pass's assumption that the three complete run folders stay.
+  It recorded a real conflict (`handover.md`'s removal convention against REQ-11.5's
+  instruction to keep old run folders' review logs as memory) and deferred it. The
+  human has now decided: the folders go, and AC-7.3/AC-7.4 move the memory out first.
+  REQ-11.5 is otherwise unchanged; AC-7.8 records where REQ-11.6 overrides it.
+- "Complete with no open escalations" is read as AC-7.1's checkable conditions. All
+  three folders pass today: `igdb-client-repoint-20260805` and `sentry-20260806` each
+  carry one escalation, both recorded resolved; `igdb-transport-20260807` records
+  `NONE`; no `escalation.md` exists anywhere under `.agents/runs/`.
+- `week-1-task-briefs.md` is the right home for the shipped record — `handover.md`
+  points there, and items 4, 6 and 8 already use exactly that shape ("since removed —
+  run complete, evidence retired"). AC-7.3 follows the precedent rather than inventing
+  a location.
+- That file being ephemeral is accounted for, not ignored: its banner already obliges
+  whoever deletes it to promote anything worth keeping into `.agents/references/` or
+  the roadmap, so a *historical* record placed there carries the same accepted risk as
+  items 1–9's entries and no more. Anything still *open* goes to `handover.md` instead
+  (AC-7.4), which is not ephemeral. Flagged rather than assumed silently, since item 11
+  is the last-but-one week-1 item and that deletion may follow soon.
+- Item 9's record needs completing, not reconstructing. Lines 348–368 already carry the
+  date, folder name, merge SHA `9b5e303`, QA outcome and the substance of the
+  `TwitchAuthInterceptor`/`NetworkModule` deviation. Two gaps: the closing pointer into
+  the folder, and the second approval recorded only there (`IgdbProxyConstants` →
+  `SupabaseIgdbProxyConstants`, `ErrorType.functionError` → `ErrorType.supabaseIgdbError`
+  by direct human commits `8f9f9bf`/`5cd8a4f`, with the instruction not to update
+  `task-brief.md`/`code-plan.md` for it).
+- Items 10 and 10.1 have no record outside their folders at all, so their entries are
+  written from scratch. `handover.md` says only that item 10 is done and merged, and
+  still describes item 10.1 as "written up but not started" — `igdb-transport-20260807`
+  is currently the only evidence in the repository that item 10.1 shipped.
+- Removal is `git rm -r` of tracked content. `.agents/` is git-tracked, so the folders
+  stay recoverable from history for anyone who reads the retired-folder names.
+- AC-4.2's inline figures are stale — they predate item 10.1 merging on 2026-08-07,
+  after which `orchestrator-state.md` records `+218 -11`. AC-4.4 binds execution to the
+  file rather than to the quoted numbers.
