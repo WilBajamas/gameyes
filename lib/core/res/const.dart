@@ -39,15 +39,15 @@ class SupabaseConstants {
 
   static const Duration connectionTimeout = Duration(seconds: 10);
 
-  // Where the sign-in page sends the person back to once they approve.
-  // Each build has its own address so both can be installed side by side.
+  // Where the sign-in page sends the person back to once they logged in
+  // accounts for flavours
   static const devAuthRedirectUrl = 'com.questloggd.app.dev://login-callback';
   static const prodAuthRedirectUrl = 'com.questloggd.app://login-callback';
 }
 
 class SentryConstants {
   // What a checkout with no secret.env resolves to. Seeing this means crash
-  // reporting stays off, which is the intended behaviour, not a fault.
+  // reporting stays off.
   static const placeholderDsn = 'PLACEHOLDER_SENTRY_DSN';
 
   static const flavorTag = 'flavor';
