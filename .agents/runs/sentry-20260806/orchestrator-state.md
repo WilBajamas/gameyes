@@ -3,7 +3,7 @@ Feature: Item 10 — Sentry crash reporting
 Run ID: sentry-20260806
 Run folder: .agents/runs/sentry-20260806/
 Started: 2026-08-06
-Current phase: CODE_REVIEW (Phase 4B — human code-review gate)
+Current phase: DEV (Phase 4B revision — new commit on top of a963c5f)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-06T00:00:00Z
 Test baseline: +11 -11 counted as failures (199 passing, 11 failing out of 210) — captured 2026-08-06T00:00:00Z
@@ -43,4 +43,7 @@ be updated in the same run.
 2026-08-06 Revised code-plan.md (Sentry + [10.15]-[10.26] talker/PrettyDioLogger delta) — Approved by human
 
 ## Code review outcomes
-NONE
+2026-08-06 a963c5ff4a97845d131cb4dcaec4a32771ce6cd3 — Sent back to Dev: simplify
+`CrashReportingSettings` (class -> top-level function returning a record) and
+`AppVersion` (class -> top-level function, moved to lib/core/utils/version_utils.dart).
+Does not consume a QA cycle.
