@@ -79,7 +79,7 @@ Five desktop-platform plugin registrant files (`linux/`, `macos/`, `windows/`) c
 
 ## Revision 2 (Phase 4B code review — simplification)
 Date: 2026-08-07
-Commit: PENDING
+Commit: e652d1f
 Additive on top of the entry above — supersedes nothing there.
 
 Per human review of a963c5ff4a97845d131cb4dcaec4a32771ce6cd3: simplify
