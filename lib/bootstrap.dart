@@ -10,7 +10,6 @@ import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_color_
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/services/sentry/crash_report_user.dart';
 import 'package:gaming_library_assessment_flutter/core/services/sentry/crash_reporter.dart';
-import 'package:gaming_library_assessment_flutter/core/services/sentry/test_crash.dart';
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connection_checker.dart';
 
 Future<void> bootstrap({required Flavor flavor, required Widget app}) async {
@@ -43,7 +42,6 @@ Future<void> bootstrap({required Flavor flavor, required Widget app}) async {
       // crash reporting is actually listening.
       getIt<CrashReportUser>().start();
       runApp(app);
-      TestCrash.scheduleIfRequested(flavor);
     },
   );
 }

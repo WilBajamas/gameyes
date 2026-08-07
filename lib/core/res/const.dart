@@ -52,10 +52,6 @@ class SentryConstants {
 
   static const flavorTag = 'flavor';
   static const appVersionTag = 'app_version';
-
-  static const testCrashFlag = 'SENTRY_TEST_CRASH';
-  static const testCrashMessage = 'Deliberate test crash - Sentry check.';
-  static const Duration testCrashDelay = Duration(seconds: 3);
 }
 
 class StringConstants {

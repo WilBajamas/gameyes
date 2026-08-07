@@ -113,3 +113,36 @@ NONE — both files simplified exactly as specified in the review feedback.
 
 ### Acceptance criteria status
 No criteria affected — this revision is a pure refactor of already-covered logic behind [10.2], [10.4], [10.5], [10.8]; no behaviour change.
+
+## Follow-up: TestCrash removal
+Date: 2026-08-07
+Commit: (pending — see run folder Commit: line once made)
+
+Removed once both gating conditions in `orchestrator-state.md ## Follow-up
+actions` were met: QA passed, and the human confirmed a real Sentry event was
+delivered ([10.12] manual check, `--flavor dev`). `TestCrash` was the manual
+verification mechanism only — no longer needed now that delivery is confirmed.
+
+### Files deleted
+lib/core/services/sentry/test_crash.dart — the whole `TestCrash` abstract class
+
+### Files modified
+lib/bootstrap.dart — removed the `import '.../sentry/test_crash.dart'` line and the `TestCrash.scheduleIfRequested(flavor);` call (was the last line inside `CrashReporter.start`'s `startApp` callback); `getIt<CrashReportUser>().start();` and `runApp(app);` unchanged
+lib/core/res/const.dart — removed `SentryConstants.testCrashFlag`, `.testCrashMessage`, `.testCrashDelay`; `placeholderDsn`, `flavorTag`, `appVersionTag` unchanged
+
+### Test files
+None — `TestCrash` had no dedicated test file (grep-confirmed prior to removal, per `orchestrator-state.md`).
+
+### Self-corrections
+NONE
+
+### Deviations from implementation plan
+NONE
+
+### Verification against baseline
+`dart run build_runner build --delete-conflicting-outputs` — not run; nothing annotated changed.
+`flutter analyze`: 0 errors, 2 warnings, 32 info — matches the recorded baseline exactly.
+`flutter test`: 199 passing, 11 failing out of 210 — same 11 pre-existing failures as the baseline (tracker_repository_test.dart x4, game_detail_cubit_test.dart x3, games_bloc_test.dart x3, widget_test.dart x1), no new failures.
+
+### Acceptance criteria status
+No criteria affected — [10.12]/[10.13]/[10.19] etc. covered `TestCrash`'s presence during manual verification, not its eventual removal. This run remains COMPLETE.
