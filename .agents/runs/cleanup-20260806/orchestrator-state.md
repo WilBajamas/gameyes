@@ -8,7 +8,7 @@ Resumed: 2026-08-07 — branch/base SHA/baselines refreshed (item 10.1 merged to
 develop meanwhile); scope expanded with two new items (REQ-11.4, REQ-11.5) per
 human request, re-entering at Phase 1 (BA) for those two before returning to
 Phase 3 for a combined gate covering all five.
-Current phase: BA
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-07T15:48:33Z
 Test baseline: +218 -11 — captured 2026-08-07T15:48:33Z
@@ -42,6 +42,9 @@ to this option, no further edit needed.
 scope` bars touching this file's prose beyond record migration, but the human
 explicitly asked to fold the stale "do item 10.1 next" prompt fix into REQ-11.6
 — Approved by human.
+2026-08-07 `handover.md § "Where things stand"` corrected — item 10.1's "written
+up but not started" line is stale; replaced per `code-plan.md`'s conditional
+step 15 diff — Approved by human at the Phase 3 gate.
 
 ## Code review outcomes
 NONE
