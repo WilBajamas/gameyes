@@ -38,7 +38,10 @@ commented-out call site alone, baseline unchanged. `tech-ac.md` was already writ
 to this option, no further edit needed.
 
 ## Deviation approvals
-NONE
+2026-08-07 `handover.md ## Next-session prompt` edited — `tech-ac.md ## Out of
+scope` bars touching this file's prose beyond record migration, but the human
+explicitly asked to fold the stale "do item 10.1 next" prompt fix into REQ-11.6
+— Approved by human.
 
 ## Code review outcomes
 NONE
