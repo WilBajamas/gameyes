@@ -382,6 +382,38 @@ part **is** a pipeline run — split it.
 
 - [ ] Done
 
+### 10.1 — IGDB client transport: Dio + Retrofit [PIPELINE]
+
+> Swap `SupabaseIgdbClient`'s transport from `supabase_flutter`'s `functions.invoke`
+> to Dio + Retrofit, calling the `igdb-proxy` Edge Function's HTTPS URL directly.
+> Motivation: Dio + Retrofit is the standard HTTP stack in the target job market,
+> and this establishes the client-side pattern future external APIs (e.g. gaming
+> news, OpenCritic) will reuse once they get their own Edge Functions. `dio`,
+> `retrofit` and `retrofit_generator` are already direct dependencies — no new
+> package.
+>
+> **Do not touch `supabase/functions/igdb-proxy/index.ts` or item 9's server-side
+> architecture.** The Edge Function keeps hiding the Twitch client secret,
+> verifying the caller's JWT (`verify_jwt`), and proxying to IGDB exactly as it
+> does today — only the client's transport changes.
+>
+> Add a Dio instance (or reuse one via DI) with `baseUrl` pointed at the
+> `igdb-proxy` function URL, and a Retrofit interface for the one endpoint it
+> calls. Add a Dio interceptor that reads the current Supabase session
+> (`Supabase.instance.client.auth.currentSession`) and attaches
+> `Authorization: Bearer <access token>` and `apikey: <anon key>` headers per
+> request — the same two headers `functions.invoke` already sends for you today.
+> On a 401, call `supabase.auth.refreshSession()` and retry once, mirroring the
+> retry-once-on-401 pattern the Edge Function itself already uses for its Twitch
+> token — GoTrue refreshes proactively in the background, so this path is a rare
+> race, not the common case.
+>
+> `SupabaseIgdbClient`'s public signature, return type and error propagation stay
+> unchanged, so its callers (`GamesApiService`, `GameDetailApiService`, the
+> featured repository) need no changes and their existing tests keep passing.
+
+- [ ] Done
+
 ### 11 — Cleanup [PIPELINE]
 
 > Three unrelated repository-hygiene fixes. Change no dependency version, and add
