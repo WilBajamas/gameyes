@@ -98,12 +98,8 @@ class IGDBConfig {
 }
 
 class SupabaseIgdbProxyConstants {
-  static const functionName = 'igdb-proxy';
+  static const functionsBasePath = '/functions/v1';
+  static const functionPath = '/igdb-proxy';
   static const gamesEndpoint = 'games';
   static const releaseDatesEndpoint = 'release_dates';
-
-  static const Duration requestTimeout = Duration(seconds: 30);
-
-  // How much of a response body is worth reading in the console.
-  static const maxLogBodyLines = 50;
 }

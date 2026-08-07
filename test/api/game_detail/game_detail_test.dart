@@ -1,31 +1,31 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart';
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_proxy_service.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/igdb_query_builder.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/data/datasources/game_detail_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/game_detail/services/game_detail_api_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../mocks/error_mock.dart';
 import '../../mocks/game_detail_response_mock.dart';
 import 'game_detail_test.mocks.dart';
 
-@GenerateMocks([SupabaseIgdbClient])
+@GenerateMocks([SupabaseIgdbProxyService])
 void main() {
-  late MockSupabaseIgdbClient igdbClient;
+  late MockSupabaseIgdbProxyService igdbProxy;
   late GameDetailApiService gameDetailApiService;
   late GameDetailRemoteDatasource gameDetailDatasource;
 
   setUp(() {
-    igdbClient = MockSupabaseIgdbClient();
-    gameDetailApiService = GameDetailApiService(igdbClient);
+    igdbProxy = MockSupabaseIgdbProxyService();
+    gameDetailApiService = GameDetailApiService(igdbProxy);
     gameDetailDatasource = GameDetailRemoteDatasource(gameDetailApiService);
   });
 
   tearDown(() {
-    reset(igdbClient);
+    reset(igdbProxy);
   });
 
   test('should send the games endpoint and the id query to the proxy when '
@@ -37,30 +37,25 @@ void main() {
         .build();
 
     when(
-      igdbClient.invoke(
-        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
-        query: expectedQuery,
-      ),
+      igdbProxy.invoke({
+        'endpoint': SupabaseIgdbProxyConstants.gamesEndpoint,
+        'query': expectedQuery,
+      }),
     ).thenAnswer((_) async => mockGameDetailJson);
 
     await gameDetailDatasource.fetchGameDetail(id: 87);
 
     verify(
-      igdbClient.invoke(
-        endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
-        query: expectedQuery,
-      ),
+      igdbProxy.invoke({
+        'endpoint': SupabaseIgdbProxyConstants.gamesEndpoint,
+        'query': expectedQuery,
+      }),
     );
   });
 
   test('should return the first decoded GameDetailModel when the proxy '
       'returns a JSON array', () async {
-    when(
-      igdbClient.invoke(
-        endpoint: anyNamed('endpoint'),
-        query: anyNamed('query'),
-      ),
-    ).thenAnswer((_) async => mockGameDetailJson);
+    when(igdbProxy.invoke(any)).thenAnswer((_) async => mockGameDetailJson);
 
     final result = await gameDetailDatasource.fetchGameDetail(id: 1);
 
@@ -69,10 +64,7 @@ void main() {
 
   test('should throw when the proxy returns an empty array', () async {
     when(
-      igdbClient.invoke(
-        endpoint: anyNamed('endpoint'),
-        query: anyNamed('query'),
-      ),
+      igdbProxy.invoke(any),
     ).thenAnswer((_) async => mockEmptyGameDetailJson);
 
     expect(
@@ -81,17 +73,12 @@ void main() {
     );
   });
 
-  test('should throw FunctionException when the proxy call fails', () async {
-    when(
-      igdbClient.invoke(
-        endpoint: anyNamed('endpoint'),
-        query: anyNamed('query'),
-      ),
-    ).thenAnswer((_) async => throw mockFunctionException);
+  test('should throw DioException when the proxy call fails', () async {
+    when(igdbProxy.invoke(any)).thenAnswer((_) async => throw mockDioException);
 
     expect(
       () => gameDetailDatasource.fetchGameDetail(id: 1),
-      throwsA(isA<FunctionException>()),
+      throwsA(isA<DioException>()),
     );
   });
 }

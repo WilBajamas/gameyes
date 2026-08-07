@@ -1,15 +1,15 @@
 import 'package:gaming_library_assessment_flutter/core/data/models/game.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/release_date.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
-import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart';
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_proxy_service.dart';
 import 'package:injectable/injectable.dart';
 
 // the "games" feature api service
 @injectable
 class GamesApiService {
-  const GamesApiService(this._client);
+  const GamesApiService(this._proxy);
 
-  final SupabaseIgdbClient _client;
+  final SupabaseIgdbProxyService _proxy;
 
   Future<List<Game>> fetchGames(String query) => _decodeList(
     endpoint: SupabaseIgdbProxyConstants.gamesEndpoint,
@@ -29,7 +29,7 @@ class GamesApiService {
     required String query,
     required T Function(Map<String, dynamic> json) fromJson,
   }) async {
-    final body = await _client.invoke(endpoint: endpoint, query: query);
+    final body = await _proxy.invoke({'endpoint': endpoint, 'query': query});
 
     if (body is! List) {
       throw const FormatException('igdb-proxy did not return a list');

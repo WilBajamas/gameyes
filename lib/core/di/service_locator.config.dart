@@ -19,6 +19,8 @@ import 'package:gaming_library_assessment_flutter/config/route/pending_route_sto
     as _i748;
 import 'package:gaming_library_assessment_flutter/config/route/session_navigator.dart'
     as _i569;
+import 'package:gaming_library_assessment_flutter/core/di/igdb_proxy_module.dart'
+    as _i819;
 import 'package:gaming_library_assessment_flutter/core/di/storage_module.dart'
     as _i472;
 import 'package:gaming_library_assessment_flutter/core/di/supabase_module.dart'
@@ -35,8 +37,8 @@ import 'package:gaming_library_assessment_flutter/core/services/storage/game_loc
     as _i857;
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_connection_checker.dart'
     as _i656;
-import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart'
-    as _i995;
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_proxy_service.dart'
+    as _i498;
 import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_ping.dart'
     as _i124;
 import 'package:gaming_library_assessment_flutter/features/auth/data/datasources/auth_datasource.dart'
@@ -151,6 +153,7 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final storageModule = _$StorageModule();
     final supabaseModule = _$SupabaseModule();
+    final igdbProxyModule = _$IgdbProxyModule();
     await gh.factoryAsync<_i460.SharedPreferences>(
       () => storageModule.prefs,
       preResolve: true,
@@ -167,6 +170,10 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i857.GameLocalStorageService(),
     );
     gh.singleton<_i1017.ScrollNotifier>(() => _i1017.ScrollNotifier());
+    gh.singleton<_i498.SupabaseIgdbProxyService>(
+      () =>
+          igdbProxyModule.supabaseIgdbProxyService(gh<_i454.SupabaseClient>()),
+    );
     gh.factory<_i403.WelcomeCubit>(
       () => _i403.WelcomeCubit(gh<_i460.SharedPreferences>()),
     );
@@ -184,8 +191,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i460.SharedPreferences>(),
       ),
     );
-    gh.factory<_i995.SupabaseIgdbClient>(
-      () => _i995.SupabaseIgdbClient(gh<_i454.SupabaseClient>()),
+    gh.factory<_i524.FeaturedApiService>(
+      () => _i524.FeaturedApiService(gh<_i498.SupabaseIgdbProxyService>()),
+    );
+    gh.factory<_i40.GameDetailApiService>(
+      () => _i40.GameDetailApiService(gh<_i498.SupabaseIgdbProxyService>()),
+    );
+    gh.factory<_i706.GamesApiService>(
+      () => _i706.GamesApiService(gh<_i498.SupabaseIgdbProxyService>()),
+    );
+    gh.factory<_i750.GameDetailRemoteDatasource>(
+      () => _i750.GameDetailRemoteDatasource(gh<_i40.GameDetailApiService>()),
+    );
+    gh.factory<_i621.GamesDataSource>(
+      () => _i621.GamesDataSource(gh<_i706.GamesApiService>()),
     );
     gh.factory<_i124.SupabasePing>(
       () => _i124.SupabasePing(gh<_i454.SupabaseClient>()),
@@ -210,61 +229,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i422.SaveTrackerSortUseCase>(
       () => _i422.SaveTrackerSortUseCase(gh<_i922.TrackerSortRepository>()),
-    );
-    gh.factory<_i524.FeaturedApiService>(
-      () => _i524.FeaturedApiService(gh<_i995.SupabaseIgdbClient>()),
-    );
-    gh.factory<_i40.GameDetailApiService>(
-      () => _i40.GameDetailApiService(gh<_i995.SupabaseIgdbClient>()),
-    );
-    gh.factory<_i706.GamesApiService>(
-      () => _i706.GamesApiService(gh<_i995.SupabaseIgdbClient>()),
-    );
-    gh.factory<_i750.GameDetailRemoteDatasource>(
-      () => _i750.GameDetailRemoteDatasource(gh<_i40.GameDetailApiService>()),
-    );
-    gh.factory<_i595.ObserveAuthStatusUseCase>(
-      () => _i595.ObserveAuthStatusUseCase(gh<_i615.AuthRepository>()),
-    );
-    gh.factory<_i403.SignInUseCase>(
-      () => _i403.SignInUseCase(gh<_i615.AuthRepository>()),
-    );
-    gh.factory<_i1024.SignOutUseCase>(
-      () => _i1024.SignOutUseCase(gh<_i615.AuthRepository>()),
-    );
-    gh.factory<_i621.GamesDataSource>(
-      () => _i621.GamesDataSource(gh<_i706.GamesApiService>()),
-    );
-    gh.factory<_i410.SignOutCubit>(
-      () => _i410.SignOutCubit(gh<_i1024.SignOutUseCase>()),
-    );
-    gh.factory<_i980.TrackerDetailRepository>(
-      () => _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()),
-    );
-    gh.factory<_i443.TrackerRepository>(
-      () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()),
-    );
-    gh.singleton<_i627.AuthStatusListener>(
-      () => _i627.AuthStatusListener(gh<_i595.ObserveAuthStatusUseCase>()),
-    );
-    gh.singleton<_i554.CrashReportUser>(
-      () => _i554.CrashReportUser(gh<_i595.ObserveAuthStatusUseCase>()),
-    );
-    gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>(
-      (task, _) => _i633.TaskCubit(
-        task: task,
-        trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
-      ),
-    );
-    gh.factoryParam<
-      _i43.TrackerDetailCubit,
-      _i190.TrackerSavedGameEntity,
-      dynamic
-    >(
-      (game, _) => _i43.TrackerDetailCubit(
-        game: game,
-        trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
-      ),
     );
     gh.factory<_i223.GameDetailRepository>(
       () => _i366.GameDetailRepositoryImpl(
@@ -296,18 +260,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i151.SaveGenrePreferencesUseCase>(
       () => _i151.SaveGenrePreferencesUseCase(gh<_i985.FeaturedRepository>()),
     );
-    gh.factory<_i347.SignInCubit>(
-      () => _i347.SignInCubit(gh<_i403.SignInUseCase>()),
-    );
-    gh.factory<_i970.TrackerCubit>(
-      () => _i970.TrackerCubit(
-        gh<_i443.TrackerRepository>(),
-        gh<_i422.SaveTrackerSortUseCase>(),
-        gh<_i671.GetTrackerSortUseCase>(),
-      ),
-    );
     gh.factory<_i461.GamesRepository>(
       () => _i891.GamesRepositoryImpl(gh<_i621.GamesDataSource>()),
+    );
+    gh.factory<_i595.ObserveAuthStatusUseCase>(
+      () => _i595.ObserveAuthStatusUseCase(gh<_i615.AuthRepository>()),
+    );
+    gh.factory<_i403.SignInUseCase>(
+      () => _i403.SignInUseCase(gh<_i615.AuthRepository>()),
+    );
+    gh.factory<_i1024.SignOutUseCase>(
+      () => _i1024.SignOutUseCase(gh<_i615.AuthRepository>()),
     );
     gh.factory<_i426.LibraryStatsCubit>(
       () => _i426.LibraryStatsCubit(
@@ -315,11 +278,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i460.SharedPreferences>(),
       ),
     );
+    gh.factory<_i410.SignOutCubit>(
+      () => _i410.SignOutCubit(gh<_i1024.SignOutUseCase>()),
+    );
     gh.factoryParam<_i32.GameDetailCubit, int, dynamic>(
       (id, _) => _i32.GameDetailCubit(
         id: id,
         gameDetailRepository: gh<_i223.GameDetailRepository>(),
       ),
+    );
+    gh.factory<_i980.TrackerDetailRepository>(
+      () => _i441.TrackerDetailRepositoryImpl(gh<_i944.GameLocalDatasource>()),
+    );
+    gh.factory<_i443.TrackerRepository>(
+      () => _i104.TrackerRepositoryImpl(gh<_i944.GameLocalDatasource>()),
     );
     gh.factory<_i187.CriticsGridCubit>(
       () => _i187.CriticsGridCubit(
@@ -328,6 +300,50 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i151.SaveGenrePreferencesUseCase>(),
       ),
     );
+    gh.factory<_i208.CountdownReleasesCubit>(
+      () => _i208.CountdownReleasesCubit(
+        gh<_i781.GetCountdownGameUseCase>(),
+        gh<_i526.GetOutThisWeekUseCase>(),
+      ),
+    );
+    gh.singleton<_i627.AuthStatusListener>(
+      () => _i627.AuthStatusListener(gh<_i595.ObserveAuthStatusUseCase>()),
+    );
+    gh.singleton<_i554.CrashReportUser>(
+      () => _i554.CrashReportUser(gh<_i595.ObserveAuthStatusUseCase>()),
+    );
+    gh.factoryParam<_i633.TaskCubit, _i424.TrackerTaskEntity?, dynamic>(
+      (task, _) => _i633.TaskCubit(
+        task: task,
+        trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
+      ),
+    );
+    gh.factoryParam<
+      _i43.TrackerDetailCubit,
+      _i190.TrackerSavedGameEntity,
+      dynamic
+    >(
+      (game, _) => _i43.TrackerDetailCubit(
+        game: game,
+        trackerDetailRepository: gh<_i980.TrackerDetailRepository>(),
+      ),
+    );
+    gh.factory<_i347.SignInCubit>(
+      () => _i347.SignInCubit(gh<_i403.SignInUseCase>()),
+    );
+    gh.factory<_i14.FetchGamesUseCase>(
+      () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()),
+    );
+    gh.factory<_i970.TrackerCubit>(
+      () => _i970.TrackerCubit(
+        gh<_i443.TrackerRepository>(),
+        gh<_i422.SaveTrackerSortUseCase>(),
+        gh<_i671.GetTrackerSortUseCase>(),
+      ),
+    );
+    gh.factory<_i591.GamesBloc>(
+      () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()),
+    );
     gh.singleton<_i964.AuthGuard>(
       () => _i964.AuthGuard(
         gh<_i627.AuthStatusListener>(),
@@ -335,17 +351,8 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i748.PendingRouteStore>(),
       ),
     );
-    gh.factory<_i208.CountdownReleasesCubit>(
-      () => _i208.CountdownReleasesCubit(
-        gh<_i781.GetCountdownGameUseCase>(),
-        gh<_i526.GetOutThisWeekUseCase>(),
-      ),
-    );
     gh.singleton<_i1015.AppRouter>(
       () => _i1015.AppRouter(gh<_i964.AuthGuard>()),
-    );
-    gh.factory<_i14.FetchGamesUseCase>(
-      () => _i14.FetchGamesUseCase(gh<_i461.GamesRepository>()),
     );
     gh.singleton<_i569.SessionNavigator>(
       () => _i569.SessionNavigator(
@@ -354,9 +361,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1015.AppRouter>(),
       ),
     );
-    gh.factory<_i591.GamesBloc>(
-      () => _i591.GamesBloc(gh<_i14.FetchGamesUseCase>()),
-    );
     return this;
   }
 }
@@ -364,3 +368,5 @@ extension GetItInjectableX on _i174.GetIt {
 class _$StorageModule extends _i472.StorageModule {}
 
 class _$SupabaseModule extends _i871.SupabaseModule {}
+
+class _$IgdbProxyModule extends _i819.IgdbProxyModule {}

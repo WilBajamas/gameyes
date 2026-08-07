@@ -41,6 +41,7 @@ dependencies:
   # Logging
   logger: ^2.7.0
   talker_flutter: ^5.1.16
+  talker_dio_logger: ^5.1.16
 
   # Local db
   isar_community:

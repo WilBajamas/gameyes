@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_client.dart'
+import 'package:gaming_library_assessment_flutter/core/services/supabase/supabase_igdb_proxy_service.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -24,25 +24,19 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-/// A class which mocks [SupabaseIgdbClient].
+/// A class which mocks [SupabaseIgdbProxyService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSupabaseIgdbClient extends _i1.Mock
-    implements _i2.SupabaseIgdbClient {
-  MockSupabaseIgdbClient() {
+class MockSupabaseIgdbProxyService extends _i1.Mock
+    implements _i2.SupabaseIgdbProxyService {
+  MockSupabaseIgdbProxyService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<Object?> invoke({
-    required String? endpoint,
-    required String? query,
-  }) =>
+  _i3.Future<Object?> invoke(Map<String, String>? body) =>
       (super.noSuchMethod(
-            Invocation.method(#invoke, [], {
-              #endpoint: endpoint,
-              #query: query,
-            }),
+            Invocation.method(#invoke, [body]),
             returnValue: _i3.Future<Object?>.value(),
           )
           as _i3.Future<Object?>);
