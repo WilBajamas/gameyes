@@ -68,42 +68,21 @@ Never create files named `utils.dart`, `helpers.dart`, or `common.dart` — use 
 
 ## Class naming
 
-### BLoC / Cubit
-- BLoC class: `[Feature]Bloc` extends `Bloc<[Feature]Event, [Feature]State>`
-- Cubit class: `[Feature]Cubit` extends `Cubit<[Feature]State>`
-- Both annotated `@injectable`
+### BLoC / Cubit, Events, State
 
-### Events (BLoC only)
-- Base: `sealed class [Feature]Event extends Equatable`
-- Each event: `final class [Feature][Action] extends [Feature]Event`
-- Examples: `GamesFetched`, `GamesNextPage`
-- Defined as a `part` file of the BLoC: `part of '[feature]_bloc.dart';`
+Moved to the `flutter-state` skill.
 
-### State
-- `@freezed sealed class [Feature]State with _$[Feature]State`
-- Single `const factory [Feature]State({...}) = _[Feature]State`
-- Status tracked by a feature-specific enum, not booleans:
-  `enum [Feature]Status { initial, loading, success, failed, empty }`
-- Errors stored as `ErrorType?`, never `String?` or `Exception?`
-- All fields have `@Default(...)` where a sensible default exists
+### Repository interface & implementation
 
-### Repository interface
-- `abstract interface class [Feature]Repository` — no `I` prefix, no `Abstract`
-  suffix. `interface` is the point: these exist to be implemented, never extended.
-- All methods return `Future<Result<T>>`
-
-### Repository implementation
-- `class [Feature]RepositoryImpl with BaseRepositoryMixin implements [Feature]Repository`
-- Annotated `@Injectable(as: [Feature]Repository)`
+Moved to the `flutter-repository` skill.
 
 ### DataSource
-- `class [Feature]DataSource` annotated `@injectable`
-- Receives the Retrofit service via constructor injection
+
+Moved to the `flutter-datasource` skill.
 
 ### Use cases
-- `class [Action][Feature]UseCase` annotated `@injectable`
-- Single public method: `call(...)` returning `Future<Result<T>>`
-- Receives repository interface via constructor injection (never the impl)
+
+Moved to the `flutter-usecase` skill.
 
 ### Retrofit services
 - `abstract class [Name]Service` — singular. The two that exist are
@@ -115,27 +94,12 @@ Never create files named `utils.dart`, `helpers.dart`, or `common.dart` — use 
   `features/games/services/`
 
 ### DTO models
-- `@freezed sealed class [ModelName] with _$[ModelName]`
-- Private constructor `const [ModelName]._();` only when custom methods are needed
-- `factory [ModelName].fromJson(Map<String, dynamic> json) => _$[ModelName]FromJson(json);`
-- `toEntity()` method on the model itself (not a separate mapper class)
-- `@JsonKey(name: 'snake_case_field')` for API fields that differ from Dart names
+
+Moved to the `flutter-dto` skill.
 
 ### Domain entities
-- `@freezed sealed class [EntityName]Entity with _$[EntityName]Entity`
-- Named `[EntityName]Entity`
-- **Freezed for immutability and `copyWith` — but no JSON.** Entities never get
-  `fromJson`/`toJson`; serialisation belongs to the DTO. An entity that knows how
-  to parse an API response has crossed a layer boundary.
-- Private constructor `const [EntityName]Entity._();` when the entity needs
-  computed getters or methods
-- Shared entities live in `lib/core/domain/entities/`; feature-only entities in
-  `lib/features/[feature]/domain/entities/`
 
-Plain-Dart entities are also present in older code (`LibrarySnapshotEntity`,
-`GenrePreferencesEntity`). They are fine where they are — a plain `final`-field
-class that never needs `copyWith` is not worth converting. Use freezed for new
-entities.
+Moved to the `flutter-usecase` skill.
 
 ### Enums
 - `enum [EnumName]` in `UpperCamelCase`
@@ -154,25 +118,9 @@ entities.
 - Grouped by type extended: one extension per file section
 - All in `lib/core/utils/extensions.dart` — do not create new extension files
 
-### Screens
-- `@RoutePage()` annotation required
-- Extend `StatelessWidget` by default; use `StatefulWidget` only when local ephemeral state is needed and cannot be in a Cubit/BLoC
-- Class name: `[Feature]Screen`
-- File-private sub-widgets use `_ClassName` (leading underscore)
+### Screens & presentation component placement
 
-### Presentation component placement
-
-Ownership and extraction rules — when to keep a fragment beside its screen vs.
-extract to `presentation/widgets/` vs. promote to `lib/widgets/`, and the ban on
-Widget-returning helper functions — are defined once in `flutter-arch.md`. Read
-that; this file does not restate them.
-
-A feature-private component may remain private through a `part` file:
-
-```dart
-part '../widgets/legal_footer.dart';
-part '../widgets/provider_action_button.dart';
-```
+Moved to the `flutter-widgets` skill.
 
 ---
 
@@ -264,15 +212,7 @@ Do not call `Theme.of(context)` directly — always use `context.themeData`.
 
 ## BLoC/Cubit access in widgets
 
-- `context.read<T>()` — to call methods (inside callbacks, outside `build`)
-- `context.watch<T>()` — to watch state (inside `build`)
-- `BlocBuilder<B, S>` — preferred for conditional rebuilds
-- `BlocProvider` — provide at the screen level using `getIt<T>()`
-- Do not use `BlocProvider.of<T>(context)` — use extension methods
-
-Reactive-boundary placement (lowest subtree, no passthrough views) is defined
-once in `flutter-arch.md § Reactive boundary convention` — read that, not a
-restatement here.
+Moved to the `flutter-state` skill.
 
 ---
 

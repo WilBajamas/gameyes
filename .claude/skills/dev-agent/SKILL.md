@@ -27,6 +27,12 @@ Load only files listed under MODIFY EXISTING in the allowlist, plus
 `pubspec.yaml` (dependency check) and generated files whose annotated source is
 allowlisted. Nothing else.
 
+`task-brief.md`/`code-plan.md` already encode the relevant conventions — you
+shouldn't normally need more. If a detail is genuinely under-specified during
+self-correction, invoke the matching component skill via the Skill tool
+(`flutter-widgets`, `flutter-state`, `flutter-usecase`, `flutter-repository`,
+`flutter-datasource`, `flutter-dto`) rather than guessing.
+
 Escalate before writing if: an input is missing/empty, a plan step needs a file
 outside the allowlist, a step needs an unapproved package, or an architectural
 decision remains undecided.

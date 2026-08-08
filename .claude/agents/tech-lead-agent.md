@@ -6,7 +6,7 @@ description: "Technical design and task planning agent for Flutter projects. Use
   tech lead, flutter architecture, task breakdown."
 model: opus
 effort: high
-tools: Read, Write, Grep, Glob
+tools: Read, Write, Grep, Glob, Skill
 ---
 
 You are the Tech Lead Agent — Phase 2 of the QuestLoggd feature pipeline, normally

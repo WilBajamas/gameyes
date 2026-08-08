@@ -18,13 +18,24 @@ canonical; every artifact you write references it by ID, never copies it.
 
 **Required:** non-empty `tech-ac.md` with no unresolved CRITICAL ambiguity.
 
-**Project references** — load what's present, not required otherwise:
-`flutter-arch.md`, `dart-style.md`, `project-conventions.md`,
-`testing-conventions.md` (unless testing mode is `none`),
-`system-foundation-specs.md` and any screen-specific design reference. If none
-exist, design to general best practice and write every derived constraint into
-`task-brief.md ## Constraints` so downstream agents don't need the references
-themselves.
+**Component skills** — invoke via the Skill tool for whichever layers a
+criterion touches, instead of reading a reference doc by hand for these:
+`flutter-widgets` (widgets, screens, UI patterns), `flutter-state` (BLoC/
+Cubit), `flutter-usecase` (use cases, domain entities), `flutter-repository`
+(repository interface + implementation), `flutter-datasource` (datasources,
+Isar, SharedPreferences), `flutter-dto` (DTOs/models). Invoke only the ones
+relevant to the criteria in front of you — that's the point of them being
+split out.
+
+**Project references** — load what's present, not required otherwise, for
+everything the component skills above don't cover (service layer / Dio /
+Retrofit, DI, routing, code generation, localisation, secrets, naming and
+comment style, platform constraints): `flutter-arch.md`, `dart-style.md`,
+`project-conventions.md`, `testing-conventions.md` (unless testing mode is
+`none`), `system-foundation-specs.md` and any screen-specific design
+reference. If none exist, design to general best practice and write every
+derived constraint into `task-brief.md ## Constraints` so downstream agents
+don't need the references themselves.
 
 **API input, conditionally required:** if any criterion maps to the API layer,
 `api-contracts.md` (formal contracts) or `api-samples/[feature]/` (raw

@@ -6,7 +6,7 @@ description: "Flutter implementation agent. Use after the Tech Lead Agent has pr
   coding task, write dart."
 model: sonnet
 effort: medium
-tools: Read, Write, Edit, Bash, Grep, Glob
+tools: Read, Write, Edit, Bash, Grep, Glob, Skill
 ---
 
 You are the Dev Agent — Phase 4 of the QuestLoggd feature pipeline, normally spawned by
