@@ -291,6 +291,55 @@ Rules for fragment placement (`presentation/widgets/` vs. `lib/widgets/`), the
 ban on Widget-returning helpers, and routing directly to a reusable page instead
 of a passthrough screen all live in `flutter-arch.md` — not restated here.
 
+### Building a new reusable widget (2026-08-07)
+
+Rules for anything going in `lib/widgets/`, written for the component-library
+push but permanent, not tied to any one week.
+
+- **Location.** `lib/widgets/`. Nothing else — this is already `flutter-arch.md`'s
+  rule, restated here because it matters most for this kind of work.
+
+- **One file per widget family.** A small helper widget that only its parent
+  uses lives as a private class in the same file. It only gets promoted to its
+  own file once something else also needs it. Don't split a widget into
+  multiple files just because it has parts.
+
+- **Match the hand-written `default_*` widgets' style.** They're the house
+  style: plain, common Flutter widgets (`Container`, `Row`, `Column`, `Text`,
+  `InkWell`, and the like), no cleverness, easy to read top to bottom. Match
+  that — not their name prefix. New widgets do **not** get a `default` prefix;
+  name them for what they are, categorically: `PrimaryButton`,
+  `SecondaryButton`, `StatusChip`, not `DefaultButton` or `ButtonWidget`. A
+  third-party package is fine when the widget genuinely needs one (an
+  animation, an effect nothing in Flutter's own toolkit does cleanly) — prefer
+  the common built-in first, reach for a package only when there's a real gap.
+
+- **Keep them simple.** Build for what the current screens actually need.
+  Don't add a parameter, a variant, or a branch for a case nothing calls yet.
+
+- **Few comments.** Same project-wide rule as everywhere else (see "Comments —
+  plain English only" above) — the widget's structure and naming should make
+  its purpose obvious without narration.
+
+- **Stateful widgets — think before defaulting to `StatefulWidget`.** Small,
+  purely visual state (an animation, a toggle, a drag position) is a normal
+  `StatefulWidget`. If the state is doing anything more than that — something
+  closer to real logic — stop and consider whether it actually needs its own
+  Cubit instead. Doesn't need a formal pipeline escalation each time; just
+  think it through rather than reaching for `StatefulWidget` by habit.
+
+- **Configurable, not hardcoded.** Whatever changes between callers — text,
+  colors, callbacks, sizes — comes in as a constructor parameter. A widget
+  that only works for one screen's exact copy and behaviour isn't reusable,
+  it's just misplaced.
+
+- **Reuse before rebuilding.** If an existing widget is close — wrong size,
+  wrong color, a couple of parameters short — adjust it rather than writing a
+  new one next to it. If a full rebuild really is the right call, mark the old
+  widget `@Deprecated` with one line saying what replaced it, rather than
+  deleting it outright. Same pattern already used for `NetworkModule` and
+  `TwitchAuthInterceptor` elsewhere in this project.
+
 ---
 
 ## System bars and SafeArea

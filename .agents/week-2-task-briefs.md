@@ -27,6 +27,14 @@ vendor consoles, no SQL, no Edge Functions. It's all Flutter.
 running it — this checklist gives the sequencing and the gap against what already
 exists, not the full spec text.
 
+**Source of truth for how to build it:**
+`.agents/references/project-conventions.md`'s "Building a new reusable widget"
+section — file placement, naming (no `default` prefix on new widgets — name
+them categorically: `PrimaryButton`, `StatusChip`), matching the hand-written
+style, keeping them simple and configurable, and reuse-before-rebuild with
+`@Deprecated` rather than deletion. Every item in this checklist should be read
+against those rules, not just the visual spec.
+
 **Out of scope entirely — §3.1.** `system-foundation-specs.md` §3.1 ("From the
 bound bundle — compose, never recreate": `Button`, `Badge`, `NavBar`, `Hero`,
 `FeatureCard`, `PricingTable`, `FaqAccordion`, `CtaBand`, `MarqueeBand`, `DataTable`,
