@@ -55,9 +55,15 @@ consumed inside a BLoC/Cubit handler.
 ## Domain entities
 
 - File: `[entity_name]_entity.dart`. Class: `@freezed sealed class [EntityName]Entity with _$[EntityName]Entity`.
+- **No dependencies outside the domain layer.** An entity is the innermost,
+  most stable thing in the app — nothing about it should ever need to change
+  because a database, a package, or a screen changed. It may depend on Dart
+  core types and `freezed` only. No Flutter widget types, no Dio, no Isar, no
+  JSON, no data-layer or presentation-layer imports of any kind.
 - Freezed for immutability and `copyWith` — **but no JSON.** Entities never
   get `fromJson`/`toJson`; that's the DTO's job. An entity that knows how to
-  parse an API response has crossed a layer boundary.
+  parse an API response has crossed a layer boundary. This is one specific
+  case of the no-outside-dependencies rule above, not the whole of it.
 - Private constructor `const [EntityName]Entity._();` only when the entity
   needs computed getters or methods.
 - Shared entities: `lib/core/domain/entities/`. Feature-only entities:
