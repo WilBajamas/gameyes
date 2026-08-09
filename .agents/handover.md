@@ -44,8 +44,14 @@ this is what's left):
   churn, `coverage/` untracked, a wrong `envied` TODO removed, 14 zero-reference
   `static const` members deleted from `const.dart`, and the three run folders
   above retired (their record migrated here and into what was
-  `week-1-task-briefs.md` first). One QA cycle used — a dangling sentence
-  fragment left over from that record migration, fixed same day.
+  `week-1-task-briefs.md` first). Dev commit `37f82ee`, QA cycle 1 fix
+  `12d08d9` (the dangling-sentence fragment above). One resolved escalation:
+  `task_detail_screen.dart`'s unused `_TaskReminder` class is the entire
+  2-warning analyzer baseline — human chose to leave it alone rather than have
+  the unused-code scan delete it, so it's still there, on purpose, not missed
+  by a future sweep. Two deviations approved beyond REQ-11.1–11.6 itself: this
+  file's "Where things stand" and "Next-session prompt" sections were edited
+  directly, both normally out of this item's stated scope.
 
 **One open item, carried from item 3:** the on-device cross-account RLS
 check. Schema, RLS policies and the account-picker sign-in fix are all done
