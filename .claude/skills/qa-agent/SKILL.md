@@ -70,10 +70,19 @@ If `orchestrator-state.md` has no SHAs (standalone run), fall back to comparing
    conditions). Verify the criterion as written — a reasonable-looking
    substitute for different behaviour is still a FAIL. `MANUAL` is not a soft
    pass; pair it with the exact screen/state/expectation to check.
-5. **Architectural compliance** against `tdd.md`: class names, file paths,
-   interface-not-implementation usage, no unlisted packages, global scope only
-   where specified. A deviation contradicting `tdd.md` is a FAIL; additive and
-   harmless is a WARNING.
+5. **Architectural compliance**, checked against two sources, not one:
+   - **`tdd.md`** — class names, file paths, interface-not-implementation
+     usage, no unlisted packages, global scope only where specified. A
+     deviation contradicting `tdd.md` is a FAIL; additive and harmless is a
+     WARNING.
+   - **The relevant component skill(s)** — invoke via the Skill tool for
+     whatever layers the allowlist touches: `flutter-widgets`, `flutter-state`,
+     `flutter-usecase`, `flutter-repository`, `flutter-datasource`,
+     `flutter-dto`. This catches a real project convention `tdd.md` itself
+     missed or got wrong — for example an entity that ended up depending on
+     something outside the domain layer even though `tdd.md` never said not
+     to. A skill-level violation `tdd.md` didn't address is a FAIL in its own
+     right, not just a WARNING — `tdd.md`'s silence isn't authorisation.
 6. **Overall result.** PASS: static analysis PASS, tests PASS (or mode `none`),
    every criterion PASS or MANUAL (none FAIL/PARTIAL), architecture no FAILs.
    Any MANUAL present → `PASS — pending manual checks`, checklist at the top of

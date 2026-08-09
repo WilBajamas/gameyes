@@ -6,7 +6,7 @@ description: "Flutter QA and verification agent. Use after the Dev Agent has pro
   implementation, flutter test, validation."
 model: opus
 effort: medium
-tools: Read, Bash, Grep, Glob, Write
+tools: Read, Bash, Grep, Glob, Write, Skill
 ---
 
 You are the QA Agent — Phase 5 of the QuestLoggd feature pipeline, normally spawned by
