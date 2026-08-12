@@ -625,6 +625,16 @@ class S {
     return Intl.message('On Hold', name: 'onHold', desc: '', args: []);
   }
 
+  /// `Backlog`
+  String get backlog {
+    return Intl.message('Backlog', name: 'backlog', desc: '', args: []);
+  }
+
+  /// `Dropped`
+  String get dropped {
+    return Intl.message('Dropped', name: 'dropped', desc: '', args: []);
+  }
+
   /// `Rage Quit`
   String get rageQuit {
     return Intl.message('Rage Quit', name: 'rageQuit', desc: '', args: []);

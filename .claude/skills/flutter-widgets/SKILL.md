@@ -131,6 +131,7 @@ actually match the requirement.
 | `ScrolledNavigationBar` | `scrolled_navigation_bar.dart` | Navigation bar that hides on scroll |
 | `AddContentDialog` | `add_content_dialog.dart` | Dialog for adding tracker content |
 | `ZoneLabel` | `zone_label.dart` | Caps section heading with optional trailing link; adds no spacing of its own |
+| `StatusChip` | `status_chip.dart` | Six-status pill: dot + label + optional count, list or on-media variant; adds no spacing of its own |
 
 ## UI patterns every screen reuses
 

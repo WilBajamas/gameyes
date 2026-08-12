@@ -321,6 +321,7 @@ Everything below is used in this project and has no token in the bound system. P
 | `radius 38px` | device frame | Hardware geometry, not a UI radius |
 | Error ramp (§2.1) | error states | Five named tokens, promote as a set — otherwise a second product on this system invents a different red |
 | `#7d4ee0` / `#00b0f4` as status dots | status chips | **Open decision** — see the app doc's status-hue section |
+| `rgba(0,0,0,.42)` | status chip, on-media variant | Glass capsule over cover art; tokenised as `glass42` beside the .30/.32/.34 ramp |
 
 ## 7. Open decisions
 

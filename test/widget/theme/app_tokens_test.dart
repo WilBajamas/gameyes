@@ -66,6 +66,7 @@ void main() {
       expect(colors.glass30, const Color.fromRGBO(0, 0, 0, 0.3));
       expect(colors.glass32, const Color.fromRGBO(0, 0, 0, 0.32));
       expect(colors.glass34, const Color.fromRGBO(0, 0, 0, 0.34));
+      expect(colors.glass42, const Color.fromRGBO(0, 0, 0, 0.42));
       expect(colors.countdownColon, const Color.fromRGBO(255, 255, 255, 0.4));
     });
   });

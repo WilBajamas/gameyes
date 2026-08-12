@@ -42,6 +42,7 @@ class AppColorTokens {
     required this.glass30,
     required this.glass32,
     required this.glass34,
+    required this.glass42,
     required this.countdownColon,
     required this.hairline,
     required this.error,
@@ -82,6 +83,7 @@ class AppColorTokens {
   final Color glass30;
   final Color glass32;
   final Color glass34;
+  final Color glass42;
   final Color countdownColon;
 
   final Color hairline;
@@ -124,6 +126,7 @@ class AppColorTokens {
     glass30: Color.fromRGBO(0, 0, 0, 0.3),
     glass32: Color.fromRGBO(0, 0, 0, 0.32),
     glass34: Color.fromRGBO(0, 0, 0, 0.34),
+    glass42: Color.fromRGBO(0, 0, 0, 0.42),
     countdownColon: Color.fromRGBO(255, 255, 255, 0.4),
     hairline: _ink12,
     error: Color(0xFFF8443C),
@@ -190,6 +193,7 @@ class AppColorTokens {
     Color? glass30,
     Color? glass32,
     Color? glass34,
+    Color? glass42,
     Color? countdownColon,
     Color? hairline,
     Color? error,
@@ -224,6 +228,7 @@ class AppColorTokens {
       glass30: glass30 ?? this.glass30,
       glass32: glass32 ?? this.glass32,
       glass34: glass34 ?? this.glass34,
+      glass42: glass42 ?? this.glass42,
       countdownColon: countdownColon ?? this.countdownColon,
       hairline: hairline ?? this.hairline,
       error: error ?? this.error,
@@ -269,6 +274,7 @@ class AppColorTokens {
       glass30: Color.lerp(a.glass30, b.glass30, t)!,
       glass32: Color.lerp(a.glass32, b.glass32, t)!,
       glass34: Color.lerp(a.glass34, b.glass34, t)!,
+      glass42: Color.lerp(a.glass42, b.glass42, t)!,
       countdownColon: Color.lerp(a.countdownColon, b.countdownColon, t)!,
       hairline: Color.lerp(a.hairline, b.hairline, t)!,
       error: Color.lerp(a.error, b.error, t)!,

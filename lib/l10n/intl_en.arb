@@ -84,6 +84,8 @@
   "cancel": "Cancel",
   "completed": "Completed",
   "onHold": "On Hold",
+  "backlog": "Backlog",
+  "dropped": "Dropped",
   "rageQuit": "Rage Quit",
   "toBuy": "To Buy",
   "inProgress": "In Progress",

@@ -84,6 +84,8 @@
   "cancel": "Cancel",
   "completed": "Completed",
   "onHold": "On Hold",
+  "backlog": "待玩",
+  "dropped": "弃坑",
   "rageQuit": "Rage Quit",
   "toBuy": "To Buy",
   "inProgress": "In Progress",

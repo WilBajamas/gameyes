@@ -78,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "auth_terms": MessageLookupByLibrary.simpleMessage("Terms"),
     "auth_title": MessageLookupByLibrary.simpleMessage("Sign in"),
     "back": MessageLookupByLibrary.simpleMessage("Back"),
+    "backlog": MessageLookupByLibrary.simpleMessage("Backlog"),
     "best_metacritic": MessageLookupByLibrary.simpleMessage("Best Metacritic"),
     "best_of_the_year": MessageLookupByLibrary.simpleMessage(
       "Best of the year",
@@ -113,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "details": MessageLookupByLibrary.simpleMessage("Details"),
     "developers": MessageLookupByLibrary.simpleMessage("Developers"),
     "done": MessageLookupByLibrary.simpleMessage("Done"),
+    "dropped": MessageLookupByLibrary.simpleMessage("Dropped"),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "error_results": MessageLookupByLibrary.simpleMessage(
       "Error retrieving results",

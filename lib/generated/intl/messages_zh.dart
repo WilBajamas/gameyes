@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "auth_terms": MessageLookupByLibrary.simpleMessage("条款"),
     "auth_title": MessageLookupByLibrary.simpleMessage("登录"),
     "back": MessageLookupByLibrary.simpleMessage("Back"),
+    "backlog": MessageLookupByLibrary.simpleMessage("待玩"),
     "best_metacritic": MessageLookupByLibrary.simpleMessage("最佳元评论家"),
     "best_of_the_year": MessageLookupByLibrary.simpleMessage(
       "Best of the year",
@@ -99,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "details": MessageLookupByLibrary.simpleMessage("Details"),
     "developers": MessageLookupByLibrary.simpleMessage("游戏开发者"),
     "done": MessageLookupByLibrary.simpleMessage("Done"),
+    "dropped": MessageLookupByLibrary.simpleMessage("弃坑"),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "error_results": MessageLookupByLibrary.simpleMessage("获取结果失败"),
     "failed_to_load_countdown_game": MessageLookupByLibrary.simpleMessage(
