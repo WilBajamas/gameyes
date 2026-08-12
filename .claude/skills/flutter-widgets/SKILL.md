@@ -74,6 +74,15 @@ Written for the component-library push, permanent, not tied to any one week.
   colors, callbacks, sizes — comes in as a constructor parameter. A widget
   that only works for one screen's exact copy isn't reusable, it's just
   misplaced.
+- **No spacing of its own.** A reusable widget renders flush inside the bounds
+  its parent gives it — no outer padding, margin, or spacer around its content,
+  and no `EdgeInsets`/`padding`/gap constructor parameter reintroducing the same
+  concern through its API. Separation between components belongs to the layout
+  that places them: a `Column`'s spacing, a gap widget, the screen's own
+  gutters — per §1.3's "stacks use flex `gap`, never margins between siblings".
+  Padding *inside* a surface the widget itself draws (a card, chip or button's
+  interior) is that widget's own anatomy and is fine; the rule is about space
+  *around* the widget. One that bakes in its outer spacing only fits one layout.
 - **Reuse before rebuilding.** If an existing widget is close — wrong size,
   wrong color, a couple of parameters short — adjust it rather than writing
   a new one next to it. If a full rebuild really is the right call, mark the
@@ -121,6 +130,7 @@ actually match the requirement.
 | `NavigationDestination` | `navigation_destination.dart` | Bottom nav destination item |
 | `ScrolledNavigationBar` | `scrolled_navigation_bar.dart` | Navigation bar that hides on scroll |
 | `AddContentDialog` | `add_content_dialog.dart` | Dialog for adding tracker content |
+| `ZoneLabel` | `zone_label.dart` | Caps section heading with optional trailing link; adds no spacing of its own |
 
 ## UI patterns every screen reuses
 
