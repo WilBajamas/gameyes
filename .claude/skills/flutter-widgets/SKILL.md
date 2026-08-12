@@ -203,9 +203,12 @@ over relative ones outside that exception.
 
 All user-facing strings use `S.current.[key]` — never hardcode. Add new keys
 to both `lib/l10n/intl_en.arb` and `lib/l10n/intl_zh.arb`; the `S` class
-regenerates via the Flutter Intl IDE plugin, not `build_runner`, not
-`flutter gen-l10n`. Code using a brand-new key won't compile until that
-regen happens — that's expected, not a failure to self-correct.
+normally regenerates via the Flutter Intl IDE plugin, not `build_runner`, not
+`flutter gen-l10n`. An agent can instead run the CLI generator the plugin
+wraps (`dart pub global run intl_utils:generate`, see
+`.claude/pipeline/rules/generation.md`) so the tree compiles immediately
+rather than waiting on a human IDE pass — sanctioned path, record which one
+was taken as a deviation either way.
 
 ## Theme access
 
