@@ -3,19 +3,36 @@ Source: Week 2 task brief item 1.3 · `system-foundation-specs.md` §3.3 "Cover 
 Date: 2026-08-12
 BA Agent version: 1.0
 
+## Revision note — 2026-08-12 (Phase 3, human override)
+
+The artwork colour filter is removed. `system-foundation-specs.md` §3.3 specifies a
+`saturate(.5) contrast(1.05)` colour matrix over loaded cover art; the human overrode that
+wording at the Phase 3 gate because loaded artwork must keep its original colours. This
+revision deliberately contradicts §3.3 — intended, not an oversight; the spec text is the
+thing now out of date. Affected: the feature summary, [1.3-AC7] (reversed — it now forbids
+any filter), [1.3-AC8] and [1.3-AC9] (wash wording untangled from the filter), [1.3-AC20]
+(test bullet reversed), plus one new `## Out of scope` entry.
+
+Not affected: the `coverWash` indigo overlay — the human did not object to it and it stays
+required. Sizes, radii, fallback treatment, status chip overlay and the
+`DefaultCachedNetworkImage` extension approach are untouched. AC numbering is preserved so
+downstream references stay valid. `ambiguities.md` still carries a Phase 1 assumption naming
+"the saturate/contrast treatment"; left as the historical record — this file governs.
+
 ## Feature summary
 
 Add one app-wide presentation primitive for game cover art: a fixed-size media tile that
-crops its image to fill, halves its saturation and lifts contrast slightly, lays a flat
-indigo wash over it, clips everything to the tile's radius, and optionally carries a status
-chip in its bottom-left corner. One anatomy, four sizes that differ only in dimensions and
-(for the smallest) radius. Missing or failed art falls back to a flat onyx block with a
-hairline and a gamepad glyph rather than the error PNG used elsewhere today. Every colour
-and radius it needs already exists in `lib/config/theme/tokens/` — including `coverWash`
-and the `mini` radius step — so this run adds no token, and the status chip it hosts was
-built in item 1.2. The tile owns no spacing outside its own box. No screen is rewired and
-`DefaultCachedNetworkImage`'s behaviour for its six current callers is unchanged: the
-deliverable is the component, its tests, and its catalogue entry.
+crops its image to fill, lays a flat indigo wash over it, clips everything to the tile's
+radius, and optionally carries a status chip in its bottom-left corner. Loaded artwork keeps
+its own colours — no colour filter is applied (see the revision note). One anatomy, four
+sizes that differ only in dimensions and (for the smallest) radius. Missing or failed art
+falls back to a flat onyx block with a hairline and a gamepad glyph rather than the error PNG
+used elsewhere today. Every colour and radius it needs already exists in
+`lib/config/theme/tokens/` — including `coverWash` and the `mini` radius step — so this run
+adds no token, and the status chip it hosts was built in item 1.2. The tile owns no spacing
+outside its own box. No screen is rewired and `DefaultCachedNetworkImage`'s behaviour for its
+six current callers is unchanged: the deliverable is the component, its tests, and its
+catalogue entry.
 
 ## Technical acceptance criteria
 
@@ -57,23 +74,25 @@ source image's own dimensions.
   Failure case: bars beside or above the artwork, a distorted image, or a source image
   narrower than the tile leaving the tile's fill showing through.
 
-[1.3-AC7] PRESENTATION: A colour treatment is applied to the artwork — saturation reduced
-to 50% and contrast multiplied by 1.05 — at every size, before the wash is composited. The
-treatment applies to the artwork only: it does not alter the wash, the status chip, or the
-missing-art fallback.
-  Failure case: unfiltered artwork, the filter applied over the chip so its dot hue shifts,
-  or the filter applied at some sizes only.
+[1.3-AC7] PRESENTATION: Loaded artwork renders in its original colours at every size. No
+colour filter, colour matrix, saturation or contrast adjustment, blend mode or opacity change
+is applied to the artwork — the only thing composited over it is the wash of [1.3-AC8]. This
+criterion overrides §3.3's `saturate(.5) contrast(1.05)` wording by human decision at Phase 3
+(see the revision note); the filter is not to be reintroduced from the spec.
+  Failure case: a `ColorFiltered`, `ColorFilter.matrix`/`.mode`, `saturation`/`contrast`
+  adjustment or blend mode wrapping the artwork at any size, or the artwork's pixels
+  differing in hue or saturation from the source image.
 
 [1.3-AC8] PRESENTATION: A flat indigo wash from the existing `coverWash` token
 (`rgba(10,13,58,.42)`) covers the full artwork area at a single uniform opacity, above the
-filtered image and below any overlay. No gradient, no scrim ramp, no per-size opacity, no
-new colour value declared in the widget.
+artwork and below any overlay. No gradient, no scrim ramp, no per-size opacity, no new colour
+value declared in the widget.
   Failure case: a `LinearGradient`/scrim of any kind, a wash covering only part of the
-  tile, or a literal `Color`/`Colors.*` value in the widget file.
+  tile, a wash missing entirely, or a literal `Color`/`Colors.*` value in the widget file.
 
-[1.3-AC9] PRESENTATION: The wash and the colour treatment apply to loaded artwork only.
-The missing-art fallback renders its own colours untouched by either.
-  Failure case: the fallback darkened by the wash or desaturated by the filter.
+[1.3-AC9] PRESENTATION: The wash applies to loaded artwork only. The missing-art fallback
+renders its own colours untouched by it.
+  Failure case: the fallback darkened by the wash.
 
 [1.3-AC10] PRESENTATION: An optional status chip renders in the tile's bottom-left corner,
 using the existing status-chip primitive's on-media variant, inset from the tile's bottom
@@ -129,10 +148,10 @@ inside the tile's own bounds and is the widget's anatomy, not outer spacing.
   Failure case: any outer padding/margin/spacer baked in, or a spacing parameter on the
   constructor.
 
-[1.3-AC18] PRESENTATION: All colour, radius and effect values come from the existing
-tokens, read through the project's context extension — never `Theme.of(context)` directly,
-never a re-declared duplicate of an existing token. The only literal numbers in the widget
-are the four sizes' dimensions and the chip inset.
+[1.3-AC18] PRESENTATION: All colour and radius values come from the existing tokens, read
+through the project's context extension — never `Theme.of(context)` directly, never a
+re-declared duplicate of an existing token. The only literal numbers in the widget are the
+four sizes' dimensions and the chip inset.
   Failure case: a direct `Theme.of(context)` call, a `Color(0x…)`/`Colors.*` literal, or a
   hardcoded corner radius.
 
@@ -143,10 +162,10 @@ user-facing is hardcoded because nothing user-facing is drawn.
 
 [1.3-AC20] TESTS: Widget tests cover — each of the four sizes rendering its stated
 dimensions; the mini size rendering the smaller radius and the other three the `lg` radius;
-the wash rendering at `coverWash` above the artwork; the colour treatment being applied to
-the artwork; a supplied status chip rendering bottom-left in the on-media variant and
-nothing rendering when none is supplied; the fallback rendering for a null URL and for a
-load failure, with no `error_404.png` and no title initial; the loading state rendering no
+the wash rendering at `coverWash` above the artwork; no colour filter wrapping the artwork at
+any size; a supplied status chip rendering bottom-left in the on-media variant and nothing
+rendering when none is supplied; the fallback rendering for a null URL and for a load
+failure, with no `error_404.png` and no title initial; the loading state rendering no
 `CircularProgressIndicator`. No golden test and no `matchesGoldenFile`, whatever the
 criteria above say about appearance.
   Failure case: a new test failure beyond the recorded baseline, or a golden test added.
@@ -157,6 +176,10 @@ the new widget, noting it adds no spacing of its own.
 
 ## Out of scope
 
+- §3.3's `saturate(.5) contrast(1.05)` colour treatment on loaded artwork. Removed by human
+  override at Phase 3 (see the revision note) — artwork keeps its original colours. Not
+  deferred to a later item: it is not being built at all, here or downstream, unless the
+  human reverses the decision. The wash is unaffected and still required ([1.3-AC8]).
 - Rewiring any screen or widget. The tile ships with no caller, per the task brief — the
   game card (item 2.1) is its first consumer. `lib/widgets/game_item.dart` keeps its
   `AspectRatio(4/4.8)` cover, its top-only 8px radius and its `error_404.png` fallback

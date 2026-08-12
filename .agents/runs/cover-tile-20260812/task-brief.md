@@ -2,6 +2,16 @@
 Source: Week 2 task brief item 1.3 · `system-foundation-specs.md` §3.3 "Cover tile"
 Date: 2026-08-12
 
+## Revision note — 2026-08-12 (Phase 3, human override)
+
+Corrected in place against BA's revised `tech-ac.md` of the same date. [1.3-AC7] is
+reversed: loaded artwork keeps its original colours and no colour filter is applied.
+Changed here — step 3 no longer declares a `ColorFilter` constant, step 4's `_CoverArtwork`
+is the plain image under the wash, the colour matrix is struck from the permitted-literals
+constraint and a new constraint forbids the filter outright, and the cover-tile test file's
+summary line now covers the filter's absence. The allowlist, the testing mode and the step
+count are otherwise unchanged; `coverWash` is still required.
+
 ## Context
 
 Ship the app-wide cover-tile primitive — four fixed sizes, one anatomy — so item 2.1's
@@ -28,8 +38,8 @@ parameters, each defaulting to today's exact behaviour.
 the new optional overrides on the existing `DefaultCachedNetworkImage` row.
 
 ### TEST FILES
-`test/widget/components/cover_tile_test.dart` — sizes, radii, wash, colour filter,
-chip slot, fallback, loading, no spacing of its own.
+`test/widget/components/cover_tile_test.dart` — sizes, radii, wash, the absence of any
+colour filter over the artwork, chip slot, fallback, loading, no spacing of its own.
 `test/widget/components/default_cached_network_image_test.dart` — the untouched
 default placeholder and error rendering ([1.3-AC15]).
 
@@ -49,13 +59,14 @@ branches read from one definition.
 Step 3: In the same file, add `CoverTile` — `SizedBox` at the enum's dimensions,
 `ClipRRect` at `radius.mini` for mini and `radius.lg` otherwise, and a `Stack` holding
 the artwork-or-fallback branch and the optional chip. Null or empty `imageUrl` goes
-straight to the fallback without a network call. Include the `static const ColorFilter`
-for the artwork treatment.
+straight to the fallback without a network call. Declare no colour filter or colour
+constant of any kind ([1.3-AC7]).
 
 Step 4: In the same file, add the three private branch widgets — `_CoverArtwork`
-(the filtered image under the flat `coverWash`), `_CoverFallback` (onyx fill, hairline
-border at the tile's radius, centred outline gamepad glyph, glyph omitted at mini) and
-`_CoverLoading` (`Skeletonizer` over a box at the tile's size and radius).
+(the image drawn as-is, in its source colours, under the flat `coverWash`),
+`_CoverFallback` (onyx fill, hairline border at the tile's radius, centred outline
+gamepad glyph, glyph omitted at mini) and `_CoverLoading` (`Skeletonizer` over a box
+at the tile's size and radius).
 
 Step 5: Create `test/widget/components/cover_tile_test.dart`.
 
@@ -81,13 +92,19 @@ IDs in scope: [1.3-AC1] – [1.3-AC21]
 
 ## Constraints
 
+- **No colour treatment on loaded artwork.** The `Image` renders in its source colours
+  with nothing wrapping it — no `ColorFiltered`, no `ColorFilter.matrix`/`.mode`, no
+  saturation/contrast adjustment, no blend mode, no opacity change. §3.3's
+  `saturate(.5) contrast(1.05)` wording is overridden by human decision and must not be
+  reintroduced from the spec ([1.3-AC7]). The `coverWash` overlay above the artwork is
+  unaffected and still required ([1.3-AC8]).
 - **No spacing of its own.** No outer padding, margin or spacer, and no `EdgeInsets`,
   `padding` or gap constructor parameter. The chip's 8px inset is inside the tile's own
   bounds and is fine (`flutter-widgets`, [1.3-AC17]).
 - **Tokens only, via `context.tokens`.** Never `Theme.of(context)`, never a `Color(0x…)`
   or `Colors.*` literal, never a hardcoded radius. The only literal numbers permitted in
-  the widget are the four dimension pairs, the 8px chip inset, and the artwork colour
-  matrix (`dart-style.md`, [1.3-AC18]).
+  the widget are the four dimension pairs and the 8px chip inset (`dart-style.md`,
+  [1.3-AC18]).
 - **No new package** — `cached_network_image` and `skeletonizer` are both already in
   `pubspec.yaml`. Escalate rather than adding one.
 - **`DefaultCachedNetworkImage` is additive-only.** Every new parameter optional,

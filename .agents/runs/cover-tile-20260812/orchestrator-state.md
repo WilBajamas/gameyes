@@ -12,14 +12,19 @@ Branch: claude/questloggd-week-2-components-ha43qm
 Base branch: develop
 Base SHA: 8c9c38b (HEAD after item 1.2's docs and the generation.md/flutter-widgets doc fix)
 Dev commit: NONE
-Last updated: 2026-08-12T17:50:00Z
-BA phase done, 21 ACs, no criticals. Two spec conflicts resolved (flat wash
-over gradient veil; onyx+hairline+gamepad fallback over surfaceArt fills, the
-latter tokens never existed). Flagged for Tech Lead: DefaultCachedNetworkImage
-can't be reused as-is (spinner + Icons.error violate §3.2's "never spinners"
-and the fallback spec) without breaking its 6 existing callers via optional
-params only; size set closed at spec's 4 sizes, item 2.1's game card sizing
-need is explicitly not pre-solved here.
+Last updated: 2026-08-12T18:10:00Z
+
+## Phase 3 revision (round 1)
+Human rejected the artworkFilter color matrix (saturate(.5) contrast(1.05)) at
+the design gate: wants the image to stay original colors, no filter. Routed
+back to BA to correct tech-ac.md in place. coverWash (the indigo overlay) is
+untouched — only the pixel-level filter is being removed.
+BA revision done: AC7 reversed (no filter, original colors), AC8/AC9/AC18/AC20
+untangled from the filter reference, wash requirement (AC8) kept intact. No
+new criticals. Re-entering Tech Lead with corrected tech-ac.md.
+Tech Lead revision round 1 done: artworkFilter and ColorFiltered wrapper
+removed from code-plan.md, artwork renders as-is under the wash. tdd/
+task-brief corrected in place. Ready for Phase 3 gate, round 2.
 
 ## Escalation history
 NONE
