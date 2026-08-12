@@ -2,12 +2,20 @@
 Source: Week 2 task brief item 1.1 · `system-foundation-specs.md` §3.2 "Zone label"
 Date: 2026-08-09
 
+Revised 2026-08-12 (Phase 3 human revision, corrected in place per
+`handover.md`): [1.1-AC8] reversed — the widget owns no vertical spacing. The
+`Padding(top: 40, bottom: 16)` is gone from step 1, and step 4 now makes two
+edits to the same allowlisted skill file. Reasoning in `tdd.md ## Revision
+decisions`.
+
 ## Context
 
 Ships the app-wide zone-label primitive — caps heading in the `zoneLabel`
-token, optional trailing cyan link in the `zoneLink` token, and the vertical
-gap that separates zones — so screens stop hand-rolling section headers. The
-component is delivered unwired; no screen changes in this run.
+token, optional trailing cyan link in the `zoneLink` token — so screens stop
+hand-rolling section headers. The widget renders flush: it adds no vertical or
+horizontal spacing of its own, and exposes no way to ask it for any. The zone
+separation §3.2 describes belongs to the caller's layout. The component is
+delivered unwired; no screen changes in this run.
 
 ## Testing mode
 
@@ -16,7 +24,9 @@ dependencies" — Justification: a stateless presentation widget with no data,
 domain or state layer, no persistence, and no current caller. It is not yet a
 shared utility used by 3+ features, so the `coverage` rule does not trigger.
 [1.1-AC11] enumerates the behaviours the widget test must cover; that list is
-the required scope, not a suggestion.
+the required scope, not a suggestion. One test beyond that list is required
+here — the flush-render guard for the revised [1.1-AC8], listed in
+`code-plan.md ## TEST FILES`.
 
 ## File allowlist
 
@@ -25,28 +35,33 @@ the required scope, not a suggestion.
 `_ZoneLink` helper.
 
 ### MODIFY EXISTING
-`.claude/skills/flutter-widgets/SKILL.md` — add one row to the "Existing
-reusable widgets catalogue" table for `ZoneLabel`. Table row only; change
-nothing else in that file.
+`.claude/skills/flutter-widgets/SKILL.md` — two separate edits, both specified
+in `code-plan.md ## MODIFY EXISTING`, and nothing else in that file:
+1. one new bullet in the "Building a new reusable widget" section stating the
+   standing no-own-spacing convention (human-directed at the Phase 3 gate);
+2. one new row in the "Existing reusable widgets catalogue" table for
+   `ZoneLabel` ([1.1-AC12]).
 
 ### TEST FILES
 `test/widget/components/zone_label_test.dart` — covers uppercase rendering,
-label style, link style, link presence/absence, single callback invocation, and
-the absence of a divider.
+label style, link style, link presence/absence, single callback invocation, the
+absence of a divider, and flush rendering with no vertical padding.
 
 ## Implementation plan
 
 Step 1: Create `lib/widgets/zone_label.dart` — `ZoneLabel` (StatelessWidget,
 `const` constructor, required `label`, optional `linkLabel` and
-`onLinkPressed`) rendering `Padding(top: 40, bottom: 16)` → `Row` →
-`Expanded(Text)` with the label formatted and styled by
+`onLinkPressed`, and no spacing parameter of any kind) whose root widget is the
+`Row` itself — no `Padding`, `Container`, `SizedBox` or other wrapper above it
+— containing `Expanded(Text)` with the label formatted and styled by
 `context.tokens.typography.zoneLabel`, single-line with ellipsis, followed by
 the link through a collection `if` only when both link parameters are non-null.
 
 Step 2: In the same file, add the file-private `_ZoneLink` StatelessWidget —
 `GestureDetector` (`HitTestBehavior.opaque`) → `ConstrainedBox(minHeight: 44)`
 → `Center` → `Text` styled from `context.tokens.typography.zoneLink.style`, no
-horizontal padding, no decoration.
+horizontal padding, no decoration. `44` is the [1.1-AC6] hit-target floor and
+is the only numeric literal in the file.
 
 Step 3: Create `test/widget/components/zone_label_test.dart` — pump
 `MaterialApp(theme: buildDarkTheme(), home: Scaffold(body: ZoneLabel(...)))`
@@ -57,9 +72,12 @@ listed in `code-plan.md ## TEST FILES`. Compare individual style fields
 `AppTokens.dark.typography.<token>.style` rather than whole-`TextStyle`
 equality — the font family will not resolve identically in a test environment.
 
-Step 4: Modify `.claude/skills/flutter-widgets/SKILL.md` — add the `ZoneLabel`
-row to the catalogue table, alphabetically irrelevant, append at the end of the
-table.
+Step 4: Modify `.claude/skills/flutter-widgets/SKILL.md` twice, exactly as
+written in `code-plan.md ## MODIFY EXISTING`: insert the no-own-spacing bullet
+between the "Configurable, not hardcoded." and "Reuse before rebuilding."
+bullets (currently line 77 is where "Reuse before rebuilding." starts), and
+append the `ZoneLabel` row at the end of the catalogue table. Change nothing
+else in the file.
 
 Final step: run `flutter analyze` and `flutter test`, then compare against
 `orchestrator-state.md`, quoted verbatim: `Analyzer baseline: 0 errors, 2
@@ -76,12 +94,19 @@ applies: the widget contains no user-facing string.
 
 ## Acceptance criteria source
 
-Canonical: `tech-ac.md ## Technical acceptance criteria`
+Canonical: `tech-ac.md ## Technical acceptance criteria` (revised 2026-08-12 —
+read [1.1-AC8] there, not any earlier copy of it)
 IDs in scope: 1.1-AC1, 1.1-AC2, 1.1-AC3, 1.1-AC4, 1.1-AC5, 1.1-AC6, 1.1-AC7,
 1.1-AC8, 1.1-AC9, 1.1-AC10, 1.1-AC11, 1.1-AC12
 
 ## Constraints
 
+- The widget imposes no spacing and offers no way to request any: no `Padding`
+  wrapper, no margin, no `SizedBox`/spacer around the row, and **no**
+  `EdgeInsets`, `padding`, `topGap` or similar constructor parameter. A caller
+  that wants separation uses its own layout (`Column` spacing, a gap widget).
+  This was decided explicitly at the Phase 3 gate — do not reintroduce spacing
+  as a parameter (1.1-AC8, 1.1-AC9, `tdd.md ## Revision decisions`).
 - Theme access is `context.tokens` / `context.themeData` from
   `lib/core/utils/extensions.dart`. Never `Theme.of(context)`
   (`dart-style.md`, `flutter-widgets`).

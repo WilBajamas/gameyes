@@ -3,15 +3,17 @@ Source: Week 2 task brief item 1.1 · `system-foundation-specs.md` §3.2 "Zone l
 Date: 2026-08-09
 BA Agent version: 1.0
 
+Revised 2026-08-12: [1.1-AC8] reversed by human feedback at the Phase 3 gate — the widget no longer owns its own vertical spacing; the caller does, because a reusable widget that bakes in its own external spacing is harder to reuse in contexts with different layout needs. Feature summary, the "large vertical gap" assumptions and one Out-of-scope bullet corrected to match.
+
 ## Feature summary
 
 Add one app-wide presentation primitive for a zone (section) heading: a caps label in
 the existing `zoneLabel` type token, optionally paired with a right-aligned tappable
-link in the existing `zoneLink` token, and the vertical spacing that does the zone
-separation. The pattern is currently unenforced — the type tokens exist but every
-screen supplies its own header markup and spacing. The widget carries no rule, divider,
-border, fill or numbering; spacing alone separates zones. No screen is rewired in this
-run: the deliverable is the component, its tests, and its catalogue entry.
+link in the existing `zoneLink` token. The pattern is currently unenforced — the type
+tokens exist but every screen supplies its own header markup and spacing. The widget
+carries no rule, divider, border, fill or numbering, and no spacing of its own: spacing
+alone separates zones, but the caller supplies it. No screen is rewired in this run: the
+deliverable is the component, its tests, and its catalogue entry.
 
 ## Technical acceptance criteria
 
@@ -55,11 +57,15 @@ fill, shadow, index or numbering in any configuration — with a link and withou
   Failure case: any `Divider`, `Border`, `BoxDecoration` fill/shadow, or ordinal prefix
   appears in the widget's subtree.
 
-[1.1-AC8] PRESENTATION: The widget owns the zone separation itself: 40 of vertical space
-above the label and 16 below it, both from the §1.3 spacing scale, so a caller dropping it
-into a column between two zones needs no additional spacer.
-  Failure case: the widget renders flush with zero vertical space, or a caller has to add
-  a spacer to reach the spec's separation.
+[1.1-AC8] PRESENTATION: The widget imposes no vertical spacing of its own — no top or
+bottom padding, margin or spacer around the label row — and renders flush within the
+bounds its parent gives it. The zone separation §3.2 describes is the caller's to apply,
+on the same principle as the horizontal padding in [1.1-AC9], and consistent with §1.3's
+"stacks use flex `gap`, never margins between siblings". A caller placing the widget in a
+column between two zones supplies that gap itself.
+  Failure case: any fixed vertical padding, margin or spacer baked into the widget; or a
+  caller unable to seat the widget flush against adjacent content because the widget
+  reserves vertical space of its own.
 
 [1.1-AC9] PRESENTATION: The widget adds no horizontal padding of its own; it fills the
 width its parent gives it so the screen's 24px gutters apply unchanged.
@@ -94,16 +100,18 @@ the new widget.
 - Screen-reader header semantics — not in the spec, not invented here.
 - §1.8 hover and focus treatments for the link. Android-only target, no hover to verify;
   the sanctioned green focus ring is a form-field concern (item 2.5).
-- A suppressed-gap variant for the first zone on a screen, a second link slot, an icon
-  slot, a count slot, or a leading glyph — no current caller.
+- A second link slot, an icon slot, a count slot, or a leading glyph — no current caller.
+  (A suppressed-gap variant for the first zone on a screen is not just out of scope but
+  moot under [1.1-AC8]: a caller that wants no gap simply adds none.)
 - iOS verification of any criterion.
 
 ## Assumptions
 
-ASSUMPTION: "Large vertical gap" is unnumbered in the spec; using 40 above and 16 below,
-both from §1.3's 8px scale.
-ASSUMPTION: The large gap sits above the label, the small one below, because the label
-belongs to the content that follows it.
+ASSUMPTION: "Large vertical gap" is unnumbered in the spec, and under [1.1-AC8] it is the
+caller's to apply — the widget contributes none. 40 above and 16 below, both from §1.3's
+8px scale, stand as recommended values for callers, not as widget behaviour.
+ASSUMPTION: Of those recommended values, the large gap sits above the label and the small
+one below, because the label belongs to the content that follows it.
 ASSUMPTION: Horizontal gutters belong to the screen frame (§1.3), so the widget adds none.
 ASSUMPTION: The link requires both text and callback; the spec defines no non-tappable or
 disabled link form.
