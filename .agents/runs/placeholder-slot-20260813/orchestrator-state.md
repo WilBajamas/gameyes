@@ -22,6 +22,22 @@ r-xs) ships unwired, no current caller, (4) no Flutter dashed-border
 primitive and no new package allowed -- needs a paint-based (CustomPainter)
 approach.
 
+## Phase 3 revision (round 1)
+Human rejected the dashed outline at the design gate: use a solid outline
+instead, and codify "no dashed/dotted outlines" as a standing convention (not
+just this widget). Routed back to BA to correct tech-ac.md plus every "dashed"
+mention across system-foundation-specs.md and onboarding-auth-design-spec.md,
+then Tech Lead to simplify code-plan.md (drops the CustomPainter entirely —
+Border.all suffices) and add the standing rule to the flutter-widgets skill.
+BA revision done: AC7 reversed (solid outline), AC8 repurposed (forbids dash
+pattern), AC15 widened to 6 sub-items across 3 files (found a third dashed
+mention at system-foundation-specs.md:159, §1.9), AC18 added (standing rule
+in §0 Principles). No new criticals. Re-entering Tech Lead.
+Tech Lead revision round 1 done: CustomPainter deleted entirely, plain
+Border.all(color: ink24) replaces it. Allowlist widened to 3 doc files. §0
+principle appended as item 6 (no renumbering). Ready for Phase 3 gate, round
+2.
+
 ## Escalation history
 NONE
 
