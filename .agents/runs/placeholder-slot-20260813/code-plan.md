@@ -39,7 +39,6 @@ class PlaceholderSlot extends StatelessWidget {
         decoration: BoxDecoration(
           color: tokens.color.ink12,
           borderRadius: BorderRadius.circular(switch (size) {
-            // 20 is not in the radius scale; it is a local addition per §6.
             PlaceholderSlotSize.appMark => 20,
             PlaceholderSlotSize.providerMark => tokens.radius.xs,
           }),
@@ -49,7 +48,6 @@ class PlaceholderSlot extends StatelessWidget {
             ? Center(
                 child: Text(
                   'LOGO',
-                  // 14 x 0.16em
                   style: marker.style.copyWith(
                     fontSize: 14,
                     letterSpacing: 2.24,
@@ -69,6 +67,11 @@ nothing else is needed for [1.4-AC7]. `width` is deliberately not passed: `Borde
 already defaults to 1.0, and `avoid_redundant_argument_values` is enabled in
 `analysis_options.yaml`, so spelling it out would add a new analyzer info beyond the
 recorded baseline. The border is 1px either way, and the test asserts 1px.
+
+The app mark's radius of 20 is a local value, not a step on the shared radius scale
+(`§6`); the provider mark uses `radius.xs` from the scale. The `LOGO` marker's
+`letterSpacing` of 2.24 is the spec's `0.16em` at the 14px size. Neither fact is carried as
+an inline comment in the file — see the feedback delta below.
 
 The `_DashedOutline` `CustomPainter` this plan carried before the revision is **deleted,
 not rewritten**: no painter, no `Path`, no `PathMetrics`, no `dart:math` import, no dash or
@@ -241,3 +244,10 @@ Two tests from the pre-revision plan are **removed, not adapted**: the dashed-ou
   [1.4-AC18].
 - Test list: dash-geometry assertions removed, solid-border assertion added, plus a new
   "no `CustomPaint` in the subtree" guard ([1.4-AC16]).
+- 2026-08-13 — Style-only (human instruction at Phase 3): both inline comments are dropped
+  from `placeholder_slot.dart` — the radius-20 note above the `appMark` case and the
+  `14 x 0.16em` note above the marker's `style:`. The file ships with no comments at all,
+  matching `CLAUDE.md` and item 1.3's cover tile; the `// ...` in the `auth_screen.dart`
+  snippet is this document's elision marker, not code, and is unaffected. No criterion,
+  file allowlist, step order or test changes, so `tdd.md` and `task-brief.md` are
+  untouched.
