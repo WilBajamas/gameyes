@@ -98,7 +98,8 @@ actually match the requirement.
 
 | Widget | File | Purpose |
 |---|---|---|
-| `DefaultCachedNetworkImage` | `default_cached_network_image.dart` | Remote image with cache, loader, error fallback |
+| `DefaultCachedNetworkImage` | `default_cached_network_image.dart` | Remote image with cache, loader, error fallback; optional builders override the loaded/loading/error rendering |
+| `CoverTile` | `cover_tile.dart` | Game cover at one of four fixed sizes: cropped art in its original colours, indigo wash, optional bottom-left status chip, onyx+glyph fallback; adds no spacing of its own |
 | `ErrorRetryWidget` | `error_retry_widget.dart` | Error + retry button for any error state |
 | `DefaultSnackbar` | `default_snackbar.dart` | Themed snackbar |
 | `DefaultAlertDialog` | `default_alert_dialog.dart` | Confirmation dialog with positive/negative actions |
