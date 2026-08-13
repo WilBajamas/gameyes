@@ -84,9 +84,6 @@ class CoverTile extends StatelessWidget {
   }
 }
 
-// The wash sits here, not around the whole tile, so the fallback and the
-// loading block keep their own colours. The artwork itself is drawn
-// untouched — no colour filter, by human decision at the Phase 3 gate.
 class _CoverArtwork extends StatelessWidget {
   const _CoverArtwork({required this.image});
 
@@ -158,9 +155,6 @@ class _CoverLoading extends StatelessWidget {
 ```dart
 class DefaultCachedNetworkImage extends StatelessWidget {
   final String? imageUrl;
-
-  // Optional overrides for callers that draw their own states; unset
-  // leaves the rendering every existing caller already gets.
   final ImageWidgetBuilder? imageBuilder;
   final PlaceholderWidgetBuilder? placeholder;
   final LoadingErrorWidgetBuilder? errorWidget;
@@ -232,3 +226,4 @@ class DefaultCachedNetworkImage extends StatelessWidget {
 - Same revision: the cover-tile test that asserted `CoverTile.artworkFilter` is replaced by one asserting no colour filter wraps the artwork at any size; the fallback test now asserts the wash's absence only.
 - Same revision: the `flutter-widgets` catalogue row drops "saturate/contrast filter" and says the art keeps its original colours.
 - `tdd.md` and `task-brief.md` were corrected in place for this revision (handover's in-place rule for substantial Phase 3 changes), so they do not conflict with the above.
+- 2026-08-13, Phase 3 human style request: the two explanatory comments are dropped — the block comment above `_CoverArtwork` in `cover_tile.dart` and the comment above the three optional builder fields in `DefaultCachedNetworkImage`. Neither is load-bearing and both restate what the code shows; write both files with no comments. Behaviour is unchanged.
