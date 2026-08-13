@@ -68,15 +68,15 @@ of mode from marketing to transaction.
 A single centred logo placeholder, no wordmark beside it.
 
 - `88 × 88`, `border-radius: 20px`, centred via `justify-content: center` on its row
-- Fill `var(--color-ink-12)`, `1px dashed rgba(255,255,255,.24)`
+- Fill `var(--color-ink-12)`, `1px solid rgba(255,255,255,.24)`
 - Label: display 700, `14px`, `letter-spacing:.16em`, `--color-ink-55`, reading `LOGO`
 
 **This is a reserved slot, not a design.** The design system states no logo or wordmark
-exists; the dashed outline is the explicit signal that real art must be dropped in. When a
-real mark ships, replace the span with the SVG at the same 88px box and drop the dashed
-border. The word `QuestLoggd` in Space Grotesk 700 remains the sanctioned text stand-in
-elsewhere in the app, but this screen shows the mark alone — the app name is already
-established by the two screens before it.
+exists; the box is deliberately empty, and that emptiness is the signal that real art must
+be dropped in. When a real mark ships, replace the span with the SVG at the same 88px box
+and drop the placeholder fill and border with it. The word `QuestLoggd` in Space Grotesk
+700 remains the sanctioned text stand-in elsewhere in the app, but this screen shows the
+mark alone — the app name is already established by the two screens before it.
 
 ---
 
@@ -132,13 +132,13 @@ holds.
 Each row carries a **provider mark placeholder** at the left of its label:
 
 - `20 × 20`, `--radius-xs`
-- Fill `rgba(255,255,255,.18)`, `1px dashed rgba(255,255,255,.32)`
+- Fill `rgba(255,255,255,.18)`, `1px solid rgba(255,255,255,.32)`
 
 Same reserved-slot logic as the header. Official provider marks are third-party trademarks —
 they are **not** drawn or approximated in this system. Drop the licensed SVGs into these boxes
-at 20px; nothing else changes. Until then the dashed square is honest about being empty, which
-is why a generic outline icon (globe, screen, etc.) is explicitly rejected: a wrong glyph reads
-as a bug, an empty slot reads as pending.
+at 20px; nothing else changes. Until then the slot stays empty, which is honest, and is why a
+generic outline icon (globe, screen, etc.) is explicitly rejected: a wrong glyph reads as a
+bug, an empty slot reads as pending.
 
 Labels are the full `Continue with {Provider}` phrasing on all three rows — never a bare
 provider name, and never mixed forms across rows.
@@ -190,7 +190,7 @@ top-anchored — the screen has one hinge, not two.
 
 Before ship, all placeholders must be resolved:
 
-- [ ] `88px` app mark — use the global solid-border `LogoPlaceholder` until the
+- [ ] `88px` app mark — use the global `PlaceholderSlot` at its app-mark preset until the
       final app mark is supplied.
 - [x] `20px` Discord mark — `assets/icons/discord-logo.png`
 - [x] `20px` Google mark — `assets/icons/google-logo.png`. Render the official
@@ -218,6 +218,8 @@ wording, mark size), that row's chrome changes, not the layout.
   state-dependent authentication content.
 - `_LegalFooter` and `_ProviderActionButton` are cohesive feature-private widgets
   stored in separate files under `auth/presentation/widgets/`.
-- `LogoPlaceholder` is a global reusable widget under `lib/widgets/`. It accepts
-  explicit width and height and uses a solid border.
+- `PlaceholderSlot` is a global reusable widget under `lib/widgets/`. It takes one of two
+  fixed presets — app mark (`88`, radius 20) and provider mark (`20`, `--radius-xs`) — and
+  draws a `--color-ink-12` fill with a solid 1px `rgba(255,255,255,.24)` border. It has no
+  width or height input and adds no spacing of its own.
 - `AppWebView` is routed directly. Do not add a `LegalWebViewScreen` passthrough.

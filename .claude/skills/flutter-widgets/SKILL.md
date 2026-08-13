@@ -83,6 +83,11 @@ Written for the component-library push, permanent, not tied to any one week.
   Padding *inside* a surface the widget itself draws (a card, chip or button's
   interior) is that widget's own anatomy and is fine; the rule is about space
   *around* the widget. One that bakes in its outer spacing only fits one layout.
+- **Outlines are always solid.** Borders, outlines and hairlines are continuous strokes.
+  No dashed or dotted edge anywhere, and nothing custom-painted to draw one — a `Border` in
+  a `BoxDecoration` covers every case in this system. That includes reserved placeholder
+  boxes: an empty slot reads as pending because it is empty, not because its edge is
+  broken. Full rule: `system-foundation-specs.md` §0.
 - **Reuse before rebuilding.** If an existing widget is close — wrong size,
   wrong color, a couple of parameters short — adjust it rather than writing
   a new one next to it. If a full rebuild really is the right call, mark the
@@ -133,6 +138,7 @@ actually match the requirement.
 | `AddContentDialog` | `add_content_dialog.dart` | Dialog for adding tracker content |
 | `ZoneLabel` | `zone_label.dart` | Caps section heading with optional trailing link; adds no spacing of its own |
 | `StatusChip` | `status_chip.dart` | Six-status pill: dot + label + optional count, list or on-media variant; adds no spacing of its own |
+| `PlaceholderSlot` | `placeholder_slot.dart` | Reserved empty box signalling art is still owed: ink-12 fill, solid 1px ink-24 border, two presets (app mark 88 r20 with a `LOGO` marker, provider mark 20 r-xs, no label); adds no spacing of its own |
 
 ## UI patterns every screen reuses
 

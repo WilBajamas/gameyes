@@ -22,6 +22,10 @@ that bundle's token files — never restated by hand in a design. Always `var(--
 3. **Accents stay closed; error is a signal, not an accent.** Indigo, magenta and link cyan carry the interface. When a component needs to signal "nearly done", it uses proportion and copy, not a new hue. Red is added for failure only (see §2.1) and is rationed harder than green: never a card fill, never a zone accent, never twice on one screen.
 4. **Colour steps separate, not lines or shadows.** Cards get a real fill and a large radius. Hairlines appear only inside dense structures (session rows, price rows, settings groups).
 5. **Personal data outranks global data.** Wherever a component can show either, the user's own number wins the prominent slot.
+6. **Outlines are always solid.** Every border, outline and hairline in the system is a
+   continuous stroke. Dashed and dotted strokes are not used anywhere in the app — including
+   reserved placeholder boxes, which read as pending because they are empty, not because
+   their edge is broken.
 
 ---
 
@@ -156,7 +160,7 @@ Always label-paired except the hamburger and circular icon buttons.
 No emoji. No unicode dingbats. The middot `·` is punctuation, not an icon.
 
 Platform marks are text abbreviations — `PS5`, `XSX`, `PC`, `NSW`. Third-party brand marks
-(platforms, auth providers) are **never drawn or approximated**: reserve a dashed placeholder box
+(platforms, auth providers) are **never drawn or approximated**: reserve a placeholder box
 at the final size and drop licensed art in.
 
 ---
@@ -256,7 +260,7 @@ One anatomy per concept, **sized rather than redrawn**.
 | **Countdown tile** | Glass `--radius-xs`, `min-width:52px`, `8px 12px`, display 700 30px + 10px `.1em` caps label | colons display 22px at 40% |
 | **Provider / list row** | Full-width `52px`, `--radius-sm`, fill `#2f333c`, centred `15px/500` label, 20px leading mark slot | 44px hit target floor |
 | **Progress dots** | Active `22×5` pill `--color-ink`; inactive `5×5` `--color-ink-12`, `gap:6px` | never numbers or a bar |
-| **Placeholder slot** | Dashed reserved box: `--color-ink-12` fill, `1px dashed rgba(255,255,255,.24)`, display 700 caps label | app mark `88` r20 · provider mark `20` r`xs` |
+| **Placeholder slot** | Reserved empty box: `--color-ink-12` fill, `1px solid rgba(255,255,255,.24)`, display 700 caps label | app mark `88` r20 · provider mark `20` r`xs` |
 | **Error field / action / screen / item** | Per §2.1 — signal hairline + `#ff8f88` message; destructive fill `#d92d20` | one destructive action per screen |
 
 ### 3.4 Error states — four levels

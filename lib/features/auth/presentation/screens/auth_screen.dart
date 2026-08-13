@@ -9,7 +9,7 @@ import 'package:gaming_library_assessment_flutter/features/auth/presentation/blo
 import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_in_state.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:gaming_library_assessment_flutter/widgets/button_press_scale.dart';
-import 'package:gaming_library_assessment_flutter/widgets/logo_placeholder.dart';
+import 'package:gaming_library_assessment_flutter/widgets/placeholder_slot.dart';
 
 part '../widgets/legal_footer.dart';
 part '../widgets/provider_action_button.dart';
@@ -54,7 +54,9 @@ class _AuthContent extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(child: LogoPlaceholder(width: 88, height: 88)),
+              const Center(
+                child: PlaceholderSlot(size: PlaceholderSlotSize.appMark),
+              ),
               const SizedBox(height: 32),
               Text(
                 tokens.typography.welcomeHeadline.format(S.current.auth_title),
