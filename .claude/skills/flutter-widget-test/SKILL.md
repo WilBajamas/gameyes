@@ -9,7 +9,7 @@ description: Write, review, and simplify Flutter widget tests that protect meani
 
 Test behaviour, not implementation.
 
-Make every widget test read like a short description of something a user can observe or a caller can rely on. Protect outcomes such as conditional content, interaction, state changes, navigation, accessibility, and explicit component contracts.
+Make every widget test read like a description of something a user can observe or a caller can rely on. Protect outcomes such as conditional content, interaction, state changes, navigation, accessibility, and explicit component contracts.
 
 Do not reverse-engineer the widget tree or reproduce internal framework behaviour merely to increase coverage.
 
@@ -41,9 +41,13 @@ Use a concise Given/When/Then mindset:
 - **When:** Perform one meaningful user action or state transition.
 - **Then:** Assert the observable outcome or public contract.
 
-The comments themselves are optional. Prefer code clear enough that these phases are obvious.
+Do not add Given, When, Then, Arrange, Act, or Assert comments.
 
-Name tests as behaviour statements:
+Do not use comments to explain what a test is doing. The test name, setup, action, and expectations must communicate the behaviour clearly without commentary.
+
+If a test needs comments to make its purpose or setup understandable, simplify or redesign the test.
+
+Name tests as detailed behaviour statements:
 
 ```text
 shows <outcome> when <condition>
@@ -56,69 +60,189 @@ For example:
 
 ```dart
 testWidgets('shows retry action when loading fails', (tester) async {
-  // ...
+  // Test body
 });
 
 testWidgets('calls onSelected when the tile is tapped', (tester) async {
-  // ...
+  // Test body
 });
 ```
 
-Avoid names that describe construction or internals:
+The placeholder comments above demonstrate the naming format only. Do not include them in real tests.
+
+Avoid vague or implementation-focused names:
 
 ```text
 builds correctly
 contains a Row
 invokes imageBuilder
 renders without errors
+works as expected
 ```
 
 ## Keep setup proportional
 
-Start with `pumpWidget`, a small subject builder, one action, and direct expectations. Add machinery only when the behaviour genuinely requires it.
+Start with `pumpWidget`, a small subject builder, one action, and direct expectations. Add only the setup required by the behaviour.
 
-Avoid by default:
+Do not use:
 
-- Handcrafted image bytes used only to make an image decoder succeed.
-- `Completer` objects used to orchestrate implementation timing.
+- `Completer` to control widget-test timing or manufacture asynchronous states.
+- Handcrafted or embedded encoded image bytes.
+- `Uint8List.fromList` containing GIF, PNG, JPEG, or other image data.
+- `MemoryImage` created from fake bytes solely to make decoding succeed.
+- Manual invocation of image builders, placeholder builders, error builders, or internal callbacks.
 - Arbitrary `Future.delayed` calls.
 - Repeated pumps with guessed durations.
-- Zones or `runZonedGuarded` used to suppress incidental errors.
-- Manually extracting or invoking internal builders or callbacks.
-- Deep descendant finders that mirror the current widget hierarchy.
-- Mocks and stubs unrelated to the behaviour under test.
+- Zones or `runZonedGuarded` used to suppress errors.
+- Deep descendant finders that mirror the widget hierarchy.
+- Mocks and stubs unrelated to the behaviour being tested.
 
-These techniques are not forbidden. Use one only when:
+These techniques make tests harder to read and couple them to implementation details rather than behaviour.
 
-1. The widget owns the corresponding contract.
-2. Simpler public interaction cannot exercise it.
-3. The extra setup is essential to prove the behaviour.
+### Do not manufacture image-loading success
 
-State the reason in a short comment when it is not self-evident.
+Never create fake encoded image data like this:
 
-### Image behaviour
+```dart
+final _fakeImageBytes = Uint8List.fromList([
+  0x47,
+  0x49,
+  0x46,
+  0x38,
+  0x39,
+  0x61,
+  0x01,
+  0x00,
+  0x01,
+  0x00,
+  0x80,
+  0x00,
+  0x00,
+  0xFF,
+  0xFF,
+  0xFF,
+  0x00,
+  0x00,
+  0x00,
+  0x21,
+  0xF9,
+  0x04,
+  0x01,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x2C,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x01,
+  0x00,
+  0x01,
+  0x00,
+  0x00,
+  0x02,
+  0x02,
+  0x44,
+  0x01,
+  0x00,
+  0x3B,
+]);
+```
 
-Control the image-loading boundary rather than simulating image internals.
+Do not extract an image widget and invoke its builder manually:
 
-Prefer an injectable image widget, loader, provider, or small fake that directly represents loading, success, or failure.
+```dart
+Future<Widget> pumpLoadedArtwork(
+  WidgetTester tester,
+  CoverTileSize size,
+) async {
+  await tester.pumpWidget(
+    buildSubject(
+      size: size,
+      imageUrl: 'https://example.com/cover.png',
+    ),
+  );
 
-Use real encoded image bytes only when image decoding itself is the responsibility under test. A tile that displays artwork usually does not own that responsibility.
+  final dcni = tester.widget<DefaultCachedNetworkImage>(
+    find.byType(DefaultCachedNetworkImage),
+  );
 
-Do not add a production abstraction solely to satisfy a trivial test. If no suitable public seam exists, consider testing the behaviour at the feature boundary that owns it.
+  final context = tester.element(
+    find.byType(DefaultCachedNetworkImage),
+  );
+
+  final artwork = dcni.imageBuilder!(
+    context,
+    MemoryImage(_fakeImageBytes),
+  );
+
+  await tester.pumpWidget(wrap(artwork));
+
+  return artwork;
+}
+```
+
+This does not test how a user or caller interacts with `CoverTile`. It extracts an implementation detail, manually calls it, and then tests the resulting widget in isolation.
+
+It is coupled to:
+
+- `DefaultCachedNetworkImage`.
+- The presence and signature of `imageBuilder`.
+- Image decoding.
+- `MemoryImage`.
+- The current widget hierarchy.
+- The implementation of `CoverTile`.
+
+A harmless refactor could break this test even when the observable behaviour remains correct.
+
+If `CoverTile` only delegates image loading and rendering to another component, do not reproduce that component’s internals in the `CoverTile` test.
+
+Instead:
+
+- Test behaviour that `CoverTile` owns.
+- Control the image state through an existing public boundary.
+- Test image-loading behaviour in the component that owns it.
+- Test the complete behaviour at the parent feature boundary.
+- Do not create the test if no meaningful `CoverTile` behaviour remains.
+
+Do not add a production abstraction solely to make a trivial test possible.
+
+### Do not use completers
+
+Do not use `Completer` to force loading, success, failure, or timing states in ordinary widget tests.
+
+Avoid patterns such as:
+
+```dart
+final completer = Completer<void>();
+
+await tester.pumpWidget(
+  buildSubject(future: completer.future),
+);
+
+completer.complete();
+
+await tester.pump();
+```
+
+Represent the required state directly through the widget’s public inputs or existing dependency boundary.
+
+If asynchronous orchestration is the main thing being tested, place that test at the layer responsible for the asynchronous contract rather than forcing it through an unrelated presentational widget.
 
 ### Asynchronous behaviour
 
-Wait for a meaningful state:
+Wait for meaningful framework state:
 
 ```dart
 await tester.tap(find.text('Load more'));
-await tester.pump();
 await tester.pumpAndSettle();
 
 expect(find.text('Next page'), findsOneWidget);
 ```
 
-Use a precise `pump(duration)` only when elapsed time is part of the public behaviour, such as a debounce or animation contract.
+Use a precise `pump(duration)` only when elapsed time is part of public behaviour, such as a documented debounce or animation duration.
 
 Never add a delay merely to make a flaky test pass.
 
@@ -154,16 +278,28 @@ Acceptable examples include:
 - A reusable design-system component promises a public configuration.
 
 ```dart
-final button = tester.widget<ElevatedButton>(find.text('Save'));
+testWidgets('disables save when the form is invalid', (tester) async {
+  await tester.pumpWidget(
+    buildSubject(isValid: false),
+  );
 
-expect(button.onPressed, isNull);
+  final button = tester.widget<ElevatedButton>(
+    find.widgetWithText(ElevatedButton, 'Save'),
+  );
+
+  expect(button.onPressed, isNull);
+});
 ```
 
 Do not inspect properties merely to duplicate constructor arguments or freeze internal styling and layout.
 
-Prefer interaction when it communicates the contract more clearly. For example, tap the control and assert the result instead of inspecting its callback.
+Do not use `tester.widget<T>()` to retrieve a widget so its internal builder or callback can be invoked manually.
 
-## Good example
+Prefer interaction when it communicates the contract more clearly. Tap the control and assert its observable result instead of extracting and invoking its callback.
+
+## Good examples
+
+### Conditional behaviour and interaction
 
 ```dart
 testWidgets('shows retry action when loading fails', (tester) async {
@@ -186,79 +322,49 @@ testWidgets('shows retry action when loading fails', (tester) async {
 });
 ```
 
-This test describes a visible state and proves the result of a user action. It does not depend on layout, private methods, or asynchronous plumbing.
+This test describes a visible state and proves the result of a user action. It does not depend on layout, private methods, completers, fake bytes, or asynchronous plumbing.
 
-### Testing an image through a public boundary
+### Conditional rendering
 
 ```dart
-testWidgets('shows artwork when the image succeeds', (tester) async {
+testWidgets('hides remove action when removal is not allowed', (tester) async {
   await tester.pumpWidget(
-    MaterialApp(
-      home: CoverTile(
-        imageBuilder: (_) => const Placeholder(
-          key: Key('artwork'),
-        ),
-      ),
+    buildSubject(canRemove: false),
+  );
+
+  expect(find.text('Remove'), findsNothing);
+});
+```
+
+### Callback behaviour
+
+```dart
+testWidgets('calls onSelected when the tile is tapped', (tester) async {
+  var selected = false;
+
+  await tester.pumpWidget(
+    buildSubject(
+      onSelected: () => selected = true,
     ),
   );
 
-  expect(find.byKey(const Key('artwork')), findsOneWidget);
+  await tester.tap(find.byType(CoverTile));
+
+  expect(selected, isTrue);
 });
 ```
 
-Use the project’s actual public seam or test override. The important point is to represent the successful state directly rather than manually performing image decoding.
+## Overcoupled tests
 
-## Overcoupled example
+Do not write tests that:
 
-```dart
-testWidgets('renders imageBuilder', (tester) async {
-  final bytes = Uint8List.fromList(<int>[
-    // Encoded image bytes...
-  ]);
-  final completer = Completer<ImageInfo>();
-
-  await runZonedGuarded(() async {
-    await tester.pumpWidget(buildSubject(bytes));
-
-    final cachedImage =
-        tester.widget<DefaultCachedNetworkImage>(
-      find.byType(DefaultCachedNetworkImage),
-    );
-
-    final built = cachedImage.imageBuilder!(
-      tester.element(
-        find.byType(DefaultCachedNetworkImage),
-      ),
-      MemoryImage(bytes),
-    );
-
-    await tester.pumpWidget(built);
-    await Future<void>.delayed(
-      const Duration(milliseconds: 100),
-    );
-
-    expect(find.byType(Image), findsOneWidget);
-
-    completer.complete(/* ... */);
-  }, (_, __) {});
-});
-```
-
-Do not write this for a widget whose contract is simply “show artwork on success.”
-
-The test is coupled to:
-
-- Encoded image bytes.
-- Image decoding.
-- Arbitrary timing.
-- An internal builder.
-- A specific image implementation.
-- Manual callback invocation.
-- Error suppression.
-
-A harmless implementation refactor could break this test while the user-visible behaviour remains correct. Suppressing errors could also allow a real defect to pass.
-
-## Avoid structural assertions
+- Decode fake images to trigger a builder.
+- Retrieve a production widget and manually invoke one of its properties.
+- Replace the subject with the widget returned by an internal builder.
+- Use completers to manufacture a state transition.
+- Suppress exceptions through a zone.
+- Wait for arbitrary durations.
+- Assert internal layout instead of visible outcomes.
 
 Do not mirror the widget hierarchy:
 
@@ -281,19 +387,22 @@ If the contract is that the title is visible, write:
 expect(find.text('Games'), findsOneWidget);
 ```
 
-Only assert structure when structure itself is an explicit contract, such as semantics, focus order, or a reusable layout component with documented guarantees.
+Only assert structure when the structure is itself an explicit contract, such as semantics or focus order.
 
 ## Review checklist
 
 Before keeping a widget test, verify:
 
 - The widget owns meaningful behaviour or a contract.
-- The test name states the condition and observable outcome.
-- The setup contains only what that behaviour needs.
+- The test name states the condition and observable outcome in detail.
+- The test is understandable without comments.
+- The setup contains only what the behaviour needs.
 - The action uses the public UI whenever possible.
 - The expectations protect outcomes rather than tree structure.
-- No arbitrary timing, swallowed errors, or manual internal invocation hides the intent.
-- A reader can understand the test without decoding a wall of machinery.
+- The test contains no completers.
+- The test contains no fake encoded image bytes.
+- The test does not manually invoke internal builders or callbacks.
+- The test contains no arbitrary delays or swallowed errors.
 - Removing the behaviour would make the test fail.
 - Refactoring the implementation without changing behaviour would not make the test fail.
 
