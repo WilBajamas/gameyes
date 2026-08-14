@@ -6,8 +6,19 @@ Started: 2026-08-13T13:38:44Z
 Current phase: CODE_REVIEW
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-13T13:39:30Z
-Test baseline: +265 -11 — captured 2026-08-13T13:43:00Z
-Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3), test/widget_test.dart (1)
+Test baseline: +265 -11 — captured 2026-08-13T13:43:00Z (SUPERSEDED — see note below)
+Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3), test/widget_test.dart (1) (SUPERSEDED)
+
+**Baseline superseded 2026-08-14** by an out-of-band detour (human-directed
+widget-test revision against the new `flutter-widget-test` skill, applied to
+ALL existing widget tests project-wide, unrelated to this run's own Dev
+commit which added no test files). New baseline: **+256 -10**, out of 266
+total. `test/widget_test.dart` deleted entirely (vestigial, tested nothing
+real) — the 4th pre-existing failure it represented is gone; the remaining 3
+files/10 failures are unchanged: test/repository/tracker/tracker_repository_test.dart
+(4), test/cubit/game_detail/game_detail_cubit_test.dart (3),
+test/cubit/games/games_bloc_test.dart (3). Whoever runs QA on this branch
+should compare against this new baseline, not the one above.
 Branch: claude/questloggd-week-2-components-ha43qm
 Base branch: develop
 Base SHA: e1d3126 (HEAD after item 1.4's run-folder docs commit)
