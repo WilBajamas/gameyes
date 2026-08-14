@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/game_ordering.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/data/models/games_platform.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_choice_chip.dart';
+import 'package:gaming_library_assessment_flutter/widgets/filter_count_chip.dart';
 
 class TypeValuesSelection<T> extends StatelessWidget {
   const TypeValuesSelection({
@@ -34,22 +34,17 @@ class TypeValuesSelection<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: context.themeData.textTheme.displaySmall,
-        ),
+        Text(title, style: context.themeData.textTheme.displaySmall),
         const SizedBox(height: 2),
         Wrap(
           spacing: 5,
-          children: typeList.map(
-            (type) {
-              return DefaultChoiceChip(
-                label: getTypeNames(type),
-                isSelected: typeSelection == type,
-                onSelected: () => onTypeSelected(type),
-              );
-            },
-          ).toList(),
+          children: typeList.map((type) {
+            return FilterCountChip(
+              label: getTypeNames(type),
+              isSelected: typeSelection == type,
+              onSelected: () => onTypeSelected(type),
+            );
+          }).toList(),
         ),
       ],
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/interface/selection.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_choice_chip.dart';
+import 'package:gaming_library_assessment_flutter/widgets/filter_count_chip.dart';
 
 class MultiTypeValuesSelection<T extends EnumSelection>
     extends StatelessWidget {
@@ -23,22 +23,17 @@ class MultiTypeValuesSelection<T extends EnumSelection>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: context.themeData.textTheme.displaySmall,
-        ),
+        Text(title, style: context.themeData.textTheme.displaySmall),
         const SizedBox(height: 2),
         Wrap(
           spacing: 4,
-          children: selections.map(
-            (type) {
-              return DefaultChoiceChip(
-                label: type.valueName,
-                isSelected: selectedItems.contains(type),
-                onSelected: () => onSelect(type),
-              );
-            },
-          ).toList(),
+          children: selections.map((type) {
+            return FilterCountChip(
+              label: type.valueName,
+              isSelected: selectedItems.contains(type),
+              onSelected: () => onSelect(type),
+            );
+          }).toList(),
         ),
       ],
     );

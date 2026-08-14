@@ -132,7 +132,6 @@ actually match the requirement.
 | `DefaultBorderTextField` | `default_border_text_field.dart` | Outlined text input field |
 | `DefaultFilledButtonFullWidth` | `default_filled_button_full_width.dart` | Full-width filled button |
 | `DefaultOutlinedButton` | `default_outlined_button.dart` | Outlined button |
-| `DefaultChoiceChip` | `default_choice_chip.dart` | Single choice chip |
 | `DefaultPopUpButton` | `default_pop_up_button.dart` | Pop-up menu button |
 | `GameItem` | `game_item.dart` | Game card (cover image, name, platforms/date) |
 | `GameItemLoadingShimmer` | `game_item_loading_shimmer.dart` | Shimmer placeholder for GameItem |
@@ -157,6 +156,9 @@ actually match the requirement.
 | `ZoneLabel` | `zone_label.dart` | Caps section heading with optional trailing link; adds no spacing of its own |
 | `StatusChip` | `status_chip.dart` | Six-status pill: dot + label + optional count, list or on-media variant; adds no spacing of its own |
 | `PlaceholderSlot` | `placeholder_slot.dart` | Reserved empty box signalling art is still owed: ink-12 fill, solid 1px ink-24 border, two presets (app mark 88 r20 with a `LOGO` marker, provider mark 20 r-xs, no label); adds no spacing of its own |
+| `FilterCountChip` | `filter_count_chip.dart` | Filter chip: pill capsule, indigo fill + white label when active, 8% ink + full-ink label when inactive, optional count after the label; adds no spacing of its own |
+| `ContextChip` | `context_chip.dart` | Glass pill naming where the user is inside a hero: required 12px leading icon + 11px caps label, display-only; adds no spacing of its own |
+| `StatTile` / `StatPill` | `stat_pill.dart` | Stat pill in two forms sharing one figure-over-label pair: `StatTile` on 8% ink at r16 (laid out in threes by its caller), `StatPill` as a glass capsule of 2-3 pairs; adds no spacing of its own |
 
 ## UI patterns every screen reuses
 

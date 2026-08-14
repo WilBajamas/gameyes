@@ -7,6 +7,7 @@ import 'package:gaming_library_assessment_flutter/features/featured/domain/repos
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
+import 'package:gaming_library_assessment_flutter/widgets/stat_pill.dart';
 
 /// TODO: Refactor this widget - too long and many redundant things
 class LibraryStatsWidget extends StatelessWidget {
@@ -35,7 +36,8 @@ class LibraryStatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showChecklist = !isChecklistDismissed &&
+    final showChecklist =
+        !isChecklistDismissed &&
         (snapshot == null || snapshot!.totalGamesCount == 0);
 
     if (showChecklist) {
@@ -54,8 +56,9 @@ class LibraryStatsWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              context.themeData.colorScheme.surfaceContainerHighest
-                  .withValues(alpha: 0.6),
+              context.themeData.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.6,
+              ),
               context.themeData.colorScheme.surface.withValues(alpha: 0.9),
             ],
             begin: Alignment.topLeft,
@@ -175,8 +178,9 @@ class LibraryStatsWidget extends StatelessWidget {
               fontWeight: completed ? FontWeight.w500 : FontWeight.normal,
               decoration: completed ? TextDecoration.lineThrough : null,
               color: completed
-                  ? context.themeData.colorScheme.onSurfaceVariant
-                      .withValues(alpha: 0.6)
+                  ? context.themeData.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.6,
+                    )
                   : context.themeData.colorScheme.onSurface,
             ),
           ),
@@ -186,8 +190,9 @@ class LibraryStatsWidget extends StatelessWidget {
             onPressed: onTap,
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              backgroundColor:
-                  context.themeData.colorScheme.primary.withValues(alpha: 0.1),
+              backgroundColor: context.themeData.colorScheme.primary.withValues(
+                alpha: 0.1,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -212,7 +217,8 @@ class LibraryStatsWidget extends StatelessWidget {
 
     final formattedHours = weeklyHours > 0.0
         ? S.current.hours_abbreviation(
-            weeklyHours.toStringAsFixed(1).replaceFirst(RegExp(r'\.0$'), ''))
+            weeklyHours.toStringAsFixed(1).replaceFirst(RegExp(r'\.0$'), ''),
+          )
         : S.current.hours_abbreviation('0');
 
     return Column(
@@ -221,32 +227,23 @@ class LibraryStatsWidget extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _buildStatTile(
-                context,
-                title: S.current.total_games,
-                value: totalGames.toString(),
-                icon: Icons.gamepad_outlined,
-                color: Colors.blueAccent,
+              child: StatTile(
+                figure: totalGames.toString(),
+                label: S.current.total_games,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: _buildStatTile(
-                context,
-                title: S.current.wishlist,
-                value: wishlistCount.toString(),
-                icon: Icons.star_border_rounded,
-                color: Colors.orangeAccent,
+              child: StatTile(
+                figure: wishlistCount.toString(),
+                label: S.current.wishlist,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: _buildStatTile(
-                context,
-                title: S.current.this_week,
-                value: formattedHours,
-                icon: Icons.access_time_rounded,
-                color: Colors.green,
+              child: StatTile(
+                figure: formattedHours,
+                label: S.current.this_week,
               ),
             ),
           ],
@@ -263,48 +260,6 @@ class LibraryStatsWidget extends StatelessWidget {
         const SizedBox(height: 10),
         _buildNowPlayingCard(context, playingGames),
       ],
-    );
-  }
-
-  Widget _buildStatTile(
-    BuildContext context, {
-    required String title,
-    required String value,
-    required IconData icon,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-      decoration: BoxDecoration(
-        color: context.themeData.colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: context.themeData.colorScheme.outline.withValues(alpha: 0.08),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 26),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              color: context.themeData.colorScheme.onSurfaceVariant
-                  .withValues(alpha: 0.7),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -327,8 +282,9 @@ class LibraryStatsWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: CustomPaint(
             painter: _DashedBorderPainter(
-              color:
-                  context.themeData.colorScheme.outline.withValues(alpha: 0.5),
+              color: context.themeData.colorScheme.outline.withValues(
+                alpha: 0.5,
+              ),
               strokeWidth: 1.5,
               dashWidth: 6.0,
               dashSpace: 4.0,
@@ -391,7 +347,8 @@ class LibraryStatsWidget extends StatelessWidget {
     if (topGame.manualProgressPercentage != null) {
       progressPercent = topGame.manualProgressPercentage! / 100.0;
       progressLabel = S.current.completed_percentage(
-          topGame.manualProgressPercentage!.toInt().toString());
+        topGame.manualProgressPercentage!.toInt().toString(),
+      );
     } else if (topGame.hoursLogged != null &&
         topGame.averageCompletionHours != null &&
         topGame.averageCompletionHours! > 0) {
@@ -403,8 +360,9 @@ class LibraryStatsWidget extends StatelessWidget {
         topGame.averageCompletionHours!.toStringAsFixed(0),
       );
     } else if (topGame.hoursLogged != null) {
-      progressLabel =
-          S.current.played_hours(topGame.hoursLogged!.toStringAsFixed(1));
+      progressLabel = S.current.played_hours(
+        topGame.hoursLogged!.toStringAsFixed(1),
+      );
     }
 
     return Card(
@@ -473,7 +431,9 @@ class LibraryStatsWidget extends StatelessWidget {
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: context
-                                .themeData.colorScheme.onSecondaryContainer,
+                                .themeData
+                                .colorScheme
+                                .onSecondaryContainer,
                           ),
                         ),
                       )
@@ -515,8 +475,9 @@ class LibraryStatsWidget extends StatelessWidget {
                           minHeight: 6,
                           backgroundColor:
                               context.themeData.colorScheme.surfaceContainer,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.green),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.green,
+                          ),
                         ),
                       ),
                   ],
