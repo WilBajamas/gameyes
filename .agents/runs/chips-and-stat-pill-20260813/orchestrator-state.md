@@ -12,7 +12,22 @@ Branch: claude/questloggd-week-2-components-ha43qm
 Base branch: develop
 Base SHA: e1d3126 (HEAD after item 1.4's run-folder docs commit)
 Dev commit: NONE
-Last updated: 2026-08-13T14:05:00Z
+Last updated: 2026-08-13T14:40:00Z
+
+## Phase 3 revision (round 1)
+Human wants to write the widget tests for these 3 items themselves, then have
+QA/orchestrator grade/review them afterward, rather than Dev writing them.
+Routed back to BA to correct tech-ac.md (drops ALL-AC7's Dev-authored-tests
+requirement, replaces with "tests deferred to human authorship, reviewed once
+supplied"), then Tech Lead to drop the 3 test files from task-brief.md's
+allowlist and code-plan.md's TEST FILES section.
+BA revision done: ALL-AC7 rewritten -- Dev writes no widget test file for the
+three components, state matrix kept verbatim as the checklist human-supplied
+tests get reviewed against. No new criticals. Re-entering Tech Lead.
+Tech Lead revision round 1 done: 3 test files removed from allowlist and
+code-plan.md, replaced with a deferred-to-human note pointing at ALL-AC7's
+state matrix. Dev's regression obligation (run full suite) unchanged. Ready
+for Phase 3 gate, round 2.
 BA phase done, 41 ACs namespaced (1.5/1.6/1.7/ALL), no criticals. Flagged for
 Tech Lead: (1) context chip + stat pill's glass hero form have no current
 caller (welcome heroes went flat PNG in item 6.1) -- ship unwired, cheap

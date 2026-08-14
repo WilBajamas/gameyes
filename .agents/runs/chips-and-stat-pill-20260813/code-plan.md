@@ -1,6 +1,8 @@
 # Code Plan
 Source: Week 2 task briefs items 1.5, 1.6, 1.7 (combined run) · `tech-ac.md` 2026-08-13
 Date: 2026-08-13
+Revised: 2026-08-14 (Phase 3, human override — `## TEST FILES` deferred; see the delta at
+the end)
 
 ## CREATE NEW
 
@@ -349,81 +351,37 @@ The `DefaultChoiceChip` row is removed, not left beside these.
 
 ## TEST FILES
 
-### test/widget/components/filter_count_chip_test.dart
+**Deferred to the human — Dev writes none this run.** [ALL-AC7] as revised 2026-08-14
+moves test authorship for `FilterCountChip`, `ContextChip` and `StatTile`/`StatPill` to
+the human, who supplies `test/widget/components/filter_count_chip_test.dart`,
+`context_chip_test.dart` and `stat_pill_test.dart` afterwards for separate review. The
+Dev-ready test outlines that stood here are removed so nothing reads as a work item.
 
-- `'should fill the capsule with indigo and render a white label when selected'` — capsule
-  `BoxDecoration.color` is `accentIndigo`, label `Text.style.color` is `ink`.
-- `'should fill the capsule with ink08 and render a full ink label when not selected'` —
-  capsule colour is `ink08`, label colour is `ink`.
-- `'should round the capsule to the pill radius in both states'` — `borderRadius` equals
-  `BorderRadius.circular(radius.pill)` selected and unselected.
-- `'should render the label at 14px weight 500 in the body face'` — size, weight and font
-  family match `typography.meta.style`.
-- `'should render the count after the label when a count is supplied'` — `find.text('7')`
-  is one widget and sits inside the capsule.
-- `'should render no count widget when no count is supplied'` — exactly one `Text`
-  descendant.
-- `'should render the count when the count is zero'` — `find.text('0')` is one widget.
-- `'should render the count in ink55 when not selected and in ink when selected'` — count
-  `Text.style.color` per state.
-- `'should truncate the label with an ellipsis when the parent is too narrow'` — a
-  `SizedBox(width: 60)` parent leaves the label `maxLines: 1` /
-  `TextOverflow.ellipsis`, the count still findable, and `tester.takeException()` null.
-- `'should size itself to its content when the parent is wide'` — chip width is far
-  below a 400px parent's width.
-- `'should fire its callback once per tap in each state'` — a counter increments by
-  exactly one per `tester.tap`, selected and unselected.
-- `'should give the chip a hit target of at least 44 logical pixels'` —
-  `tester.getSize(find.byType(FilterCountChip)).height >= 44`, with the capsule's own
-  `DecoratedBox` shorter than that.
-- `'should render no checkmark, icon or border when selected'` — no `Icon`, no
-  `CustomPaint`, `BoxDecoration.border` is null, `boxShadow` is null.
-- `'should add no spacing of its own'` — no `Padding` ancestor around the widget.
+What those files should cover is `tech-ac.md`'s **[ALL-AC7] state matrix** — the per-
+component list under 1.5, 1.6 and 1.7 there is canonical and is the checklist the
+human-supplied tests are reviewed against. Do not re-derive it from this file.
 
-### test/widget/components/context_chip_test.dart
+Two rules bind the human's files as much as Dev's: **no golden test and no
+`matchesGoldenFile`**, whatever the criteria say about appearance; and the established
+shape in `test/widget/components/` applies — `GoogleFonts.config.allowRuntimeFetching =
+false`, the `setUpAll` font warm-up, a `MaterialApp(theme: buildDarkTheme())` wrapper with
+the `S` delegates, and `'should [expected behaviour] when [condition]'` test names.
 
-- `'should fill the capsule with the glass32 token behind a blur'` — `GlassSurface.fill`
-  is `glass32` and one `BackdropFilter` is present.
-- `'should clip the blur to the capsule'` — a `ClipRRect` ancestor of the `BackdropFilter`
-  carries the pill radius.
-- `'should round the capsule to the pill radius'` — `GlassSurface.borderRadius` equals
-  `BorderRadius.circular(radius.pill)`.
-- `'should render the label uppercase at 11px weight 500 in full ink'` — rendered text is
-  the uppercased input; size, weight, letter spacing match `typography.pill.style`;
-  colour is `ink`.
-- `'should render a 13px leading icon in the label colour before the label'` — `Icon.size`
-  is 13, `Icon.color` is `ink`, and the icon precedes the text in the row.
-- `'should truncate the label with an ellipsis in a narrow parent'` — `maxLines: 1`,
-  ellipsis, no exception.
-- `'should expose no tap handler'` — no `GestureDetector`, `InkWell` or `InkResponse`
-  descendant.
-- `'should apply no position of its own'` — no `Positioned`, `Align`, `Transform` or
-  `Padding` ancestor/descendant applying an offset.
+Dev's own obligation is unchanged and is not a test file: run the full existing suite and
+confirm the two call-site migrations and the deleted `default_choice_chip.dart` cause no
+regression against `orchestrator-state.md`'s recorded baseline (`task-brief.md` Step 9).
 
-### test/widget/components/stat_pill_test.dart
+## Approved feedback delta
 
-- `'should fill the tile with ink08 at the lg radius'` — tile `BoxDecoration.color` is
-  `ink08`, `borderRadius` is `BorderRadius.circular(radius.lg)`, `border` is null.
-- `'should render the figure above the label in the tile form'` — the figure's global `dy`
-  is less than the label's, and both are horizontally centred in the tile.
-- `'should render the tile figure in the stat figure token and its label at 11px ink55'` —
-  figure style matches `typography.statFigure.style`; label size 11, weight 500, colour
-  `ink55`.
-- `'should adopt the parent width in the tile form'` — inside a 300px `SizedBox` the tile
-  measures 300 wide; inside a three-`Expanded` row the three tiles measure equal.
-- `'should fill the glass form with glass30 behind a clipped blur at the pill radius'` —
-  `GlassSurface.fill`, one `BackdropFilter`, `borderRadius` equals the pill radius.
-- `'should render the glass form label at 10px in ink70'` — matches
-  `typography.microLabel.style`.
-- `'should distribute the glass form pairs with space between them'` — the `Row`'s
-  `mainAxisAlignment` is `spaceBetween` and no `SizedBox`/spacer sits between pairs.
-- `'should accept two and three pairs in the glass form'` — both build with no exception
-  and render the expected figures and labels.
-- `'should reject one pair and four pairs in the glass form'` — constructing `StatPill`
-  with 1 and with 4 entries throws an `AssertionError`.
-- `'should render figures and labels verbatim in both forms'` — `'1,204'` and `'3.5h'`
-  appear exactly as supplied, with no `S.current` lookup or reformatting.
-- `'should truncate a long figure or label with an ellipsis'` — `maxLines: 1` and
-  ellipsis in a narrow parent, `tester.takeException()` null in both forms.
-- `'should add no spacing of its own in either form'` — no `Padding` ancestor around
-  either widget.
+- 2026-08-14 — [ALL-AC7] revised by the BA at the human's direction: **Dev writes no
+  widget test file for the three components.** Authorship moves to the human, for review
+  in a later pass. Deferred, not waived.
+- The three test files are removed from `task-brief.md`'s allowlist and its plan steps 9,
+  10 and 11 are gone; the verification step is now Step 9. Creating any file under `test/`
+  in this run is an allowlist breach.
+- `## TEST FILES` above no longer carries test outlines — `tech-ac.md`'s [ALL-AC7] matrix
+  is the checklist for the human's files.
+- `tdd.md` and `task-brief.md` were corrected in place rather than by delta alone, per the
+  substantial-revision rule in `.agents/handover.md`; both carry a dated revision note.
+- Unchanged by this revision: the 8 source files, both call-site migrations, the catalogue
+  update, every design and reuse decision, and Dev's full-suite regression check.

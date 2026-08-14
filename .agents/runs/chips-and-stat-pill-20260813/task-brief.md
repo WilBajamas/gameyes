@@ -1,6 +1,20 @@
 # Task Brief
 Source: Week 2 task briefs items 1.5, 1.6, 1.7 (combined run) · `tech-ac.md` 2026-08-13
 Date: 2026-08-13
+Revised: 2026-08-14 (Phase 3, human override)
+
+## Revision note — 2026-08-14
+
+Corrected in place against the BA's 2026-08-14 revision of `tech-ac.md` [ALL-AC7]: **the
+Dev Agent writes no widget test file for the three components this run.** The three test
+files are gone from the allowlist below and the three test-writing steps are gone from the
+implementation plan. The human authors them afterwards for separate review.
+
+Creating any of `test/widget/components/filter_count_chip_test.dart`,
+`context_chip_test.dart` or `stat_pill_test.dart` in this run is an allowlist breach.
+
+Unchanged: the 8 source files, both call-site migrations, the catalogue update, and Dev's
+obligation to run the full suite and confirm no regression against the recorded baseline.
 
 ## Context
 
@@ -11,12 +25,21 @@ row) onto them in the same run.
 
 ## Testing mode
 
-`smoke` — Rule applied: "UI-only with no new logic; isolated with no shared dependencies."
-Justification: no authorisation, payments, persistence or offline sync is touched, and no
-component here reaches three features, so `coverage` does not fire; the zone label, status
-chip and placeholder slot shipped `smoke` for the same reason. Breadth is covered anyway —
-[ALL-AC7] lists the required state matrix as a canonical criterion and is binding at this
-mode. One test file per implementation file. **No golden test, no `matchesGoldenFile`.**
+`smoke`, **with no Dev-authored test file this run.** Rule applied: "UI-only with no new
+logic; isolated with no shared dependencies." Justification: no authorisation, payments,
+persistence or offline sync is touched, and no component here reaches three features, so
+`coverage` does not fire; the zone label, status chip and placeholder slot shipped `smoke`
+for the same reason.
+
+Test authorship for all three components is deferred to the human by [ALL-AC7] — the mode
+label stays `smoke` because coverage is deferred to a named author, not waived. Dev writes
+**no** test file for the three components; the allowlist below has no `### TEST FILES`
+section, and adding one is a breach.
+
+Dev's test-side obligation is the regression check only: run the full existing suite after
+the two call-site migrations and the deletion of `default_choice_chip.dart`, and confirm
+the recorded baseline still holds. No existing test may be weakened, skipped or deleted.
+**No golden test, no `matchesGoldenFile`** — ever, and that binds the human's files too.
 
 ## File allowlist
 
@@ -43,17 +66,10 @@ mode. One test file per implementation file. **No golden test, no `matchesGolden
   the stat-pill family; each of the three notes it adds no spacing of its own ([ALL-AC6]).
 
 ### TEST FILES
-- `test/widget/components/filter_count_chip_test.dart` — the chip's two fills and label
-  colours, the three count cases and their colours, the pill radius, truncation, one
-  callback per tap in each state, the 44px hit target, and that no checkmark or icon is in
-  the tree.
-- `test/widget/components/context_chip_test.dart` — the glass fill token, blur present and
-  clipped, the pill radius, the uppercase 11px label, the 13px icon in the label's colour,
-  no tap handler, and no positioning applied by the widget.
-- `test/widget/components/stat_pill_test.dart` — the tile form's fill, radius, order,
-  label style and parent-width behaviour; the glass form's fill, blur, radius,
-  space-between distribution and 10px `ink70` label; 2 and 3 pairs accepted, 1 and 4
-  rejected; strings rendered verbatim.
+
+None. Per [ALL-AC7] as revised 2026-08-14, the human authors the widget tests for all
+three components after this run. **No test file may be created or modified in this run** —
+the existing suite is run, not extended.
 
 ## Implementation plan
 
@@ -84,34 +100,31 @@ file's `// TODO` ([1.7-AC10], [1.7-AC11]).
 Step 8: Update the catalogue table in `.claude/skills/flutter-widgets/SKILL.md`
 ([ALL-AC6]).
 
-Step 9: Create `test/widget/components/filter_count_chip_test.dart` covering [ALL-AC7]'s
-1.5 list.
-
-Step 10: Create `test/widget/components/context_chip_test.dart` covering [ALL-AC7]'s
-1.6 list.
-
-Step 11: Create `test/widget/components/stat_pill_test.dart` covering [ALL-AC7]'s
-1.7 list.
-
-Step 12: Run `flutter analyze` and `flutter test`. Compare against
-`orchestrator-state.md`'s recorded baselines, quoted verbatim: **Analyzer baseline:
-"0 errors, 2 warnings, 32 info — captured 2026-08-13T13:39:30Z"**; **Test baseline:
-"+265 -11 — captured 2026-08-13T13:43:00Z"**, with pre-existing failures in
-`test/repository/tracker/tracker_repository_test.dart` (4),
+Step 9: Run `flutter analyze` and `flutter test` — the **full existing** suite, writing no
+new test. Confirm the two migrated call sites and the deleted chip file caused no
+regression: everything still compiles (nothing else imports `default_choice_chip.dart`)
+and the numbers still match `orchestrator-state.md`'s recorded baselines, quoted verbatim:
+**Analyzer baseline: "0 errors, 2 warnings, 32 info — captured 2026-08-13T13:39:30Z"**;
+**Test baseline: "+265 -11 — captured 2026-08-13T13:43:00Z"**, with pre-existing failures
+in `test/repository/tracker/tracker_repository_test.dart` (4),
 `test/cubit/game_detail/game_detail_cubit_test.dart` (3),
 `test/cubit/games/games_bloc_test.dart` (3) and `test/widget_test.dart` (1). Neither
 "all tests pass" nor "the analyzer is clean" is true here — only a new, in-scope
 regression against those numbers is yours to fix.
 
-No `build_runner` step: nothing in this run is an annotated source, and none of the three
-widget tests mocks anything, so no `*.mocks.dart` is generated. No `.arb` edit and no `S`
-regeneration: no component holds a user-facing string ([ALL-AC4]).
+No `build_runner` step: nothing in this run is an annotated source and no mock is
+generated, so no `*.mocks.dart` exists to build. No `.arb` edit and no `S` regeneration:
+no component holds a user-facing string ([ALL-AC4]).
 
 ## Acceptance criteria source
 
 Canonical: `tech-ac.md ## Technical acceptance criteria`
 IDs in scope: 1.5-AC1 … 1.5-AC11, 1.6-AC1 … 1.6-AC8, 1.7-AC1 … 1.7-AC12,
 ALL-AC1 … ALL-AC7.
+
+Note on [ALL-AC7]: its state matrix is binding as **behaviour the three widgets must
+exhibit**, not as a list of tests to write. Build so every line of it is verifiable at
+widget-test level; the human's own test files check it later.
 
 ## Constraints
 
@@ -160,13 +173,17 @@ ALL-AC1 … ALL-AC7.
 - No `dynamic`, no `var` for class fields, no `late`, no `print`.
 
 **Testing** (`testing-conventions.md`)
-- Widget tests live in `test/widget/components/` — the established bucket for these global
-  widgets (`zone_label_test.dart`, `status_chip_test.dart`, `cover_tile_test.dart`,
-  `placeholder_slot_test.dart`). Follow their shape: `GoogleFonts.config.allowRuntimeFetching
-  = false`, the `setUpAll` font warm-up, and a `MaterialApp(theme: buildDarkTheme())`
-  wrapper with the `S` delegates.
-- Test names: `'should [expected behaviour] when [condition]'`.
+- **Write no test file in this run**, and modify none. The three component test files are
+  the human's to author afterwards ([ALL-AC7], revised 2026-08-14).
+- Run the full existing suite and compare to the baseline. If a pre-existing test breaks,
+  fix the cause in the source, inside the allowlist — never by editing the test.
 - Never a golden test.
+- For reference when the human's files land later, the established shape in
+  `test/widget/components/` (`zone_label_test.dart`, `status_chip_test.dart`,
+  `cover_tile_test.dart`, `placeholder_slot_test.dart`) is
+  `GoogleFonts.config.allowRuntimeFetching = false`, the `setUpAll` font warm-up, a
+  `MaterialApp(theme: buildDarkTheme())` wrapper with the `S` delegates, and test names
+  reading `'should [expected behaviour] when [condition]'`. Nothing for Dev to do here.
 
 **Scope boundaries**
 - `pubspec.yaml` is read-only — no new package ([ALL-AC5]).
@@ -176,6 +193,7 @@ ALL-AC1 … ALL-AC7.
   a follow-up item, not this run's work. Do not convert them.
 - No screen file changes. `featured_screen.dart` and `filter_bottom_sheet.dart` are not in
   the allowlist.
+- No file under `test/` is in the allowlist.
 
 ## Self-correction budget
 

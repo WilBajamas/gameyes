@@ -1,6 +1,20 @@
 # Technical Design Document
 Source: Week 2 task briefs items 1.5, 1.6, 1.7 (combined run) · `tech-ac.md` 2026-08-13
 Date: 2026-08-13
+Revised: 2026-08-14 (Phase 3, human override)
+
+## Revision note — 2026-08-14
+
+Corrected in place against the BA's 2026-08-14 revision of `tech-ac.md` [ALL-AC7]: **the
+Dev Agent writes no widget test file for the three components this run.** The human
+authors `filter_count_chip_test.dart`, `context_chip_test.dart` and `stat_pill_test.dart`
+separately, to be reviewed and graded in a later pass. Coverage is deferred, not waived —
+[ALL-AC7]'s state matrix stands as the checklist those files are reviewed against.
+
+Changed here: `## Layer map`'s ALL-AC7 line and `## Testing mode`. Everything else — the
+three widgets' design, both call-site migrations, the catalogue update, and every reuse
+and design decision — is unchanged. The design is still written to be verifiable at
+widget-test level, so the human's tests have something to bite on.
 
 ## Feature summary
 
@@ -27,7 +41,10 @@ All 41 criteria are UI-layer. Nothing touches API, repository, use case, state o
 - ALL-AC1, ALL-AC2, ALL-AC3: UI (standing rules across the three new files)
 - ALL-AC4, ALL-AC5: no layer — assertions that l10n and `pubspec.yaml` stay untouched
 - ALL-AC6: docs (`.claude/skills/flutter-widgets/SKILL.md` catalogue)
-- ALL-AC7: tests (three widget test files)
+- ALL-AC7: UI behaviour, no Dev deliverable — the state matrix is behaviour each of the
+  three widgets must exhibit and the checklist for the human's own test files. Dev writes
+  no test file for them; Dev's only test-side obligation is that the existing suite still
+  passes at baseline after the two call-site migrations.
 
 ## Data layer
 
@@ -203,28 +220,46 @@ Phase 3 gate:
 
 ## Testing mode
 
-`smoke`. Working the first-match rule mechanically: no criterion touches authorisation,
-payments, persistence, offline sync, or a shared utility used by three or more features —
-`FilterCountChip` reaches one feature, `StatTile` one, `ContextChip` none — so `coverage`
-does not fire. `smoke`'s "UI-only with no new logic" does. This also matches the three
-directly comparable runs in this component-library push: the zone label, status chip and
-placeholder slot all shipped `smoke`.
+`smoke`, and **for this run smoke carries no Dev-authored test file.** Per the BA's
+2026-08-14 revision of [ALL-AC7], test authorship for all three components moves to the
+human, who writes `filter_count_chip_test.dart`, `context_chip_test.dart` and
+`stat_pill_test.dart` after this run for separate review. The Dev Agent creates no test
+file; `task-brief.md`'s allowlist has no `### TEST FILES` section, so writing one is an
+allowlist breach, not a bonus.
 
-The BA's case for overriding to `coverage` was breadth, not criticality, and breadth is
-already handled without the label: [ALL-AC7] enumerates the whole state matrix as a
-canonical criterion, so the Dev Agent must satisfy it whatever the mode is called. Three
-test files, one per implementation file, each covering its component's full list in
-[ALL-AC7] — the same depth `status_chip_test.dart` already carries under `smoke`. Unit
-and widget tests only; no golden test and no `matchesGoldenFile`, whatever the criteria
-say about appearance.
+Why the mode label stays `smoke` rather than dropping to `none`: `none` means
+cosmetic/config-only work that warrants no coverage at all, and that is not what happened
+here — coverage is deferred to a named author, not waived. Recording `smoke` keeps the
+mode honest for QA and for whoever reads this after the human's files land. Working the
+first-match rule mechanically also still gives `smoke`: no criterion touches
+authorisation, payments, persistence, offline sync, or a shared utility used by three or
+more features — `FilterCountChip` reaches one feature, `StatTile` one, `ContextChip`
+none — so `coverage` does not fire, matching the three comparable runs in this
+component-library push (zone label, status chip, placeholder slot).
 
-No new test is written for either migrated call site: no test covers
-`filter_bottom_sheet.dart` or `LibraryStatsWidget` today, so [ALL-AC7]'s "still pass
-whatever tests already cover them" is satisfied by the existing suite compiling and the
-baseline holding.
+**What the deferral does not change: the design must still be testable.** Every item in
+[ALL-AC7]'s matrix has to be independently verifiable at widget-test level against the
+implementation as designed above — the fills, radii, type styles and the assert are all
+reachable through public constructors and the rendered tree, with no private-only state to
+reach past. The matrix in `tech-ac.md` is the checklist the human's files get reviewed
+against; nothing in it is optional behaviour.
+
+**Dev's remaining verification obligation, unchanged by this revision:** run the full
+existing suite and confirm the two migrated call sites did not regress it. No test covers
+`filter_bottom_sheet.dart` or `LibraryStatsWidget` directly today, so the check is that
+the suite still compiles and the recorded baseline still holds after
+`type_values_selection.dart`, `multi_type_values_selection.dart` and `library_stats.dart`
+change and `default_choice_chip.dart` is deleted — in particular that nothing else in the
+repo still imports the deleted file. No existing test may be weakened, skipped or deleted
+to make the run pass.
+
+Unit and widget tests only in this project. **No golden test and no `matchesGoldenFile`**,
+whatever the criteria say about appearance — that rule binds the human-supplied files too.
 
 ## Out of scope
 
+- **Dev-authored widget tests for the three components** — moved to the human by the
+  2026-08-14 [ALL-AC7] revision; see `## Testing mode`. Deferred, not waived.
 - **The `_DashedBorderPainter` in `library_stats.dart`.** A real, pre-existing violation
   of the standing "outlines are always solid" rule (`system-foundation-specs.md` §0.6):
   it draws a dashed edge around the empty now-playing card behind

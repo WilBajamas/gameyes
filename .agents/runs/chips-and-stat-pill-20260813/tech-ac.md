@@ -3,6 +3,28 @@ Source: Week 2 task briefs items 1.5, 1.6, 1.7 (combined run) · `system-foundat
 Date: 2026-08-13
 BA Agent version: 1.0
 
+## Revision note — 2026-08-14 (Phase 3, human override)
+
+**Widget test authorship for these three components moves to the human.** The Dev Agent still
+implements the three widgets, both call-site migrations and the catalogue update exactly as
+specified below, but writes no test file for them this run — `filter_count_chip_test.dart`,
+`context_chip_test.dart` and `stat_pill_test.dart` are authored by the human afterwards, to be
+reviewed and graded in a later pass.
+
+This is deferred authorship, not waived coverage. The state matrix [ALL-AC7] previously required
+Dev to cover is kept verbatim, restated as behaviour each component must exhibit and as the
+checklist the human-supplied tests are reviewed against. Dev's remaining test-side obligation is
+unchanged: the two migrated call sites must still build, the tests already covering them must
+still pass, no existing test is weakened or deleted, and no golden test is added.
+
+Corrected by this note: [ALL-AC7] only. No per-item criterion (1.5-ACn, 1.6-ACn, 1.7-ACn) referred
+to Dev-authored tests, so none needed rewording. Everything else is untouched — every behavioural
+and visual criterion for the three components, the decision to ship the context chip and the glass
+stat-pill form unwired, the `_DashedBorderPainter` follow-up, "Out of scope" and "Assumptions".
+
+Consequential for Phase 2: the three test files come out of `task-brief.md`'s allowlist and
+`code-plan.md`'s test section before Phase 4.
+
 ## Feature summary
 
 Three independent Stage 1 primitives in one run. **1.5** reworks the existing global choice
@@ -262,7 +284,12 @@ three rows notes that the widget adds no spacing of its own, matching the existi
   Failure case: a stale `DefaultChoiceChip` row surviving, a component missing from the catalogue
   so the next agent rebuilds it, or a row omitting the no-spacing note.
 
-[ALL-AC7] TESTS: Widget tests cover, per component —
+[ALL-AC7] TESTS: **Dev writes no widget test file for the three components in this run.** Test
+authorship for the filter/count chip, the context chip and the stat pill is deferred to the human,
+who supplies those files separately for review in a later pass (see the revision note at the top of
+this document). Coverage is deferred, not waived, and nothing below is optional behaviour — each of
+the following must hold and must be independently verifiable at widget-test level. This list is
+also the checklist the human-supplied tests are reviewed against:
   · 1.5: active fill and white label; inactive `ink08` fill and `ink` label; count present, count
     absent, and count `0`; count colour in each state; the pill radius; label truncation in a
     narrow parent; one callback per tap in each state; a hit target of at least 44px; no checkmark
@@ -274,11 +301,13 @@ three rows notes that the widget adds no spacing of its own, matching the existi
     label; the tile adopting its parent's width; the glass form's glass fill, blur, pill radius,
     space-between distribution and 10px `ink70` label; 2 and 3 pairs accepted; fewer or more
     rejected per [1.7-AC7]; strings rendered verbatim with no formatting.
-  The migrated call sites keep working: the filter bottom sheet's three groups and the featured
-  screen's stat row still build and still pass whatever tests already cover them. No golden test
-  and no `matchesGoldenFile`, whatever the criteria above say about appearance.
-  Failure case: a new test failure beyond the recorded baseline, an existing test weakened or
-  deleted to make the run pass, or a golden test added.
+  Dev's own test-side obligation is unchanged and still applies: the migrated call sites keep
+  working — the filter bottom sheet's three groups and the featured screen's stat row still build
+  and still pass whatever tests already cover them. No golden test and no `matchesGoldenFile`,
+  whatever the criteria above say about appearance; that rule binds the human-supplied files too.
+  Failure case: Dev committing a widget test file for any of the three this run, a new test failure
+  beyond the recorded baseline, an existing test weakened or deleted to make the run pass, or a
+  golden test added.
 
 ## Out of scope
 
