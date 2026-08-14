@@ -7,7 +7,7 @@ void main() {
   Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 
   testWidgets(
-    'should render the spinner placeholder when no placeholder is supplied',
+    'shows the default spinner when no placeholder is supplied',
     (tester) async {
       await tester.pumpWidget(
         wrap(const DefaultCachedNetworkImage(imageUrl: 'https://x.test/a.png')),
@@ -28,7 +28,7 @@ void main() {
     },
   );
 
-  testWidgets('should render the error icon when no errorWidget is supplied', (
+  testWidgets('shows the default error icon when no errorWidget is supplied', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -50,7 +50,7 @@ void main() {
     expect(find.byIcon(Icons.error), findsOneWidget);
   });
 
-  testWidgets('should pass no imageBuilder when none is supplied', (
+  testWidgets('leaves imageBuilder null when none is supplied', (
     tester,
   ) async {
     await tester.pumpWidget(

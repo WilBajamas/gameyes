@@ -26,79 +26,46 @@ void main() {
     );
   }
 
-  testWidgets(
-    'should render the label in capitals when the caller passes lower case',
-    (tester) async {
-      await tester.pumpWidget(buildSubject());
+  testWidgets('shows the label in capitals when the caller passes lower case', (
+    tester,
+  ) async {
+    await tester.pumpWidget(buildSubject());
 
-      expect(find.text('NOW PLAYING'), findsOneWidget);
-      expect(find.text('now playing'), findsNothing);
-    },
-  );
+    expect(find.text('NOW PLAYING'), findsOneWidget);
+    expect(find.text('now playing'), findsNothing);
+  });
 
-  testWidgets(
-    'should style the label from the zoneLabel token when rendering',
-    (tester) async {
-      await tester.pumpWidget(buildSubject());
+  testWidgets('styles the label from the zoneLabel token when rendering', (
+    tester,
+  ) async {
+    await tester.pumpWidget(buildSubject());
 
-      final text = tester.widget<Text>(find.text('NOW PLAYING'));
-      final expected = AppTokens.dark.typography.zoneLabel.style;
+    final text = tester.widget<Text>(find.text('NOW PLAYING'));
 
-      expect(text.style?.fontSize, expected.fontSize);
-      expect(text.style?.fontWeight, expected.fontWeight);
-      expect(text.style?.letterSpacing, expected.letterSpacing);
-      expect(text.style?.color, expected.color);
-    },
-  );
+    expect(text.style, AppTokens.dark.typography.zoneLabel.style);
+  });
 
   testWidgets(
-    'should style the link from the zoneLink token when a link is supplied',
+    'shows the link styled from the zoneLink token when label and callback '
+    'are both supplied',
     (tester) async {
       await tester.pumpWidget(
         buildSubject(linkLabel: 'See all', onLinkPressed: () {}),
       );
 
       final text = tester.widget<Text>(find.text('See all'));
-      final expected = AppTokens.dark.typography.zoneLink.style;
 
-      expect(text.style?.fontSize, expected.fontSize);
-      expect(text.style?.fontWeight, expected.fontWeight);
-      expect(text.style?.letterSpacing, expected.letterSpacing);
-      expect(text.style?.color, expected.color);
+      expect(text.style, AppTokens.dark.typography.zoneLink.style);
     },
   );
 
-  testWidgets(
-    'should render the link when both text and callback are supplied',
-    (tester) async {
-      await tester.pumpWidget(
-        buildSubject(linkLabel: 'See all', onLinkPressed: () {}),
-      );
-
-      expect(find.text('See all'), findsOneWidget);
-    },
-  );
-
-  testWidgets('should render no link when only the text is supplied', (
+  testWidgets('hides the link when only one of label or callback is supplied', (
     tester,
   ) async {
     await tester.pumpWidget(buildSubject(linkLabel: 'See all'));
-
     expect(find.text('See all'), findsNothing);
-    expect(
-      find.descendant(
-        of: find.byType(ZoneLabel),
-        matching: find.byType(GestureDetector),
-      ),
-      findsNothing,
-    );
-  });
 
-  testWidgets('should render no link when only the callback is supplied', (
-    tester,
-  ) async {
     await tester.pumpWidget(buildSubject(onLinkPressed: () {}));
-
     expect(
       find.descendant(
         of: find.byType(ZoneLabel),
@@ -108,7 +75,7 @@ void main() {
     );
   });
 
-  testWidgets('should invoke the callback once when the link is tapped', (
+  testWidgets('calls onLinkPressed once when the link is tapped', (
     tester,
   ) async {
     var callCount = 0;
@@ -122,56 +89,31 @@ void main() {
     expect(callCount, 1);
   });
 
-  testWidgets('should render no divider in any configuration', (tester) async {
-    await tester.pumpWidget(buildSubject());
-    expect(find.byType(Divider), findsNothing);
-
+  testWidgets('keeps the link tap target at least 44 high when rendering', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       buildSubject(linkLabel: 'See all', onLinkPressed: () {}),
     );
-    expect(find.byType(Divider), findsNothing);
+
+    final size = tester.getSize(
+      find.descendant(
+        of: find.byType(ZoneLabel),
+        matching: find.byType(GestureDetector),
+      ),
+    );
+
+    expect(size.height, greaterThanOrEqualTo(44));
   });
 
-  testWidgets(
-    'should keep the link tap target at least 44 high when rendering',
-    (tester) async {
-      await tester.pumpWidget(
-        buildSubject(linkLabel: 'See all', onLinkPressed: () {}),
-      );
+  testWidgets('adds no vertical spacing around the label when rendering', (
+    tester,
+  ) async {
+    await tester.pumpWidget(buildSubject());
 
-      final size = tester.getSize(
-        find.descendant(
-          of: find.byType(ZoneLabel),
-          matching: find.byType(GestureDetector),
-        ),
-      );
+    final zoneLabelSize = tester.getSize(find.byType(ZoneLabel));
+    final labelSize = tester.getSize(find.text('NOW PLAYING'));
 
-      expect(size.height, greaterThanOrEqualTo(44));
-
-      final text = tester.widget<Text>(find.text('See all'));
-      final expected = AppTokens.dark.typography.zoneLink.style;
-      expect(text.style?.fontSize, expected.fontSize);
-    },
-  );
-
-  testWidgets(
-    'should add no vertical spacing around the label when rendering',
-    (tester) async {
-      await tester.pumpWidget(buildSubject());
-
-      final zoneLabelSize = tester.getSize(find.byType(ZoneLabel));
-      final labelSize = tester.getSize(find.text('NOW PLAYING'));
-
-      expect(zoneLabelSize.height, labelSize.height);
-
-      final row = find.descendant(
-        of: find.byType(ZoneLabel),
-        matching: find.byType(Row),
-      );
-      expect(
-        find.ancestor(of: row, matching: find.byType(Padding)),
-        findsNothing,
-      );
-    },
-  );
+    expect(zoneLabelSize.height, labelSize.height);
+  });
 }

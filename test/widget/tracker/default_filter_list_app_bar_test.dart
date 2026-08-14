@@ -10,7 +10,10 @@ void main() {
     (SavedGameFilterTag.date, 'Date Added', null),
   ];
 
-  Widget buildSubject({SavedGameFilterTag? initialSelection}) {
+  Widget buildSubject({
+    SavedGameFilterTag? initialSelection,
+    void Function(SavedGameFilterTag)? selected,
+  }) {
     return MaterialApp(
       home: Scaffold(
         body: CustomScrollView(
@@ -18,7 +21,7 @@ void main() {
             DefaultFilterListAppBar<SavedGameFilterTag>(
               filterList: filterList,
               initialSelection: initialSelection,
-              selected: (_) {},
+              selected: selected ?? (_) {},
             ),
           ],
         ),
@@ -68,5 +71,21 @@ void main() {
     expect(isChipSelected(tester, 'Recently Changed'), isTrue);
     expect(isChipSelected(tester, 'Name'), isFalse);
     expect(isChipSelected(tester, 'Date Added'), isFalse);
+  });
+
+  testWidgets('calls selected and switches the selected chip when a chip is '
+      'tapped', (tester) async {
+    SavedGameFilterTag? tapped;
+
+    await tester.pumpWidget(
+      buildSubject(selected: (tag) => tapped = tag),
+    );
+
+    await tester.tap(find.text('Date Added'));
+    await tester.pumpAndSettle();
+
+    expect(tapped, SavedGameFilterTag.date);
+    expect(isChipSelected(tester, 'Date Added'), isTrue);
+    expect(isChipSelected(tester, 'Recently Changed'), isFalse);
   });
 }

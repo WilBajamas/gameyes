@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
-import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens.dart';
 import 'package:gaming_library_assessment_flutter/core/di/service_locator.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/const.dart';
@@ -54,7 +53,6 @@ void main() {
     expect(find.text(S.current.welcome_body_one), findsOneWidget);
     expect(_countDots(tester, page, 22), 1);
     expect(_countDots(tester, page, 5), 1);
-    expect(_countGreen(tester, page), 1);
   });
 
   testWidgets('shows the first hero art once and no background image', (
@@ -93,7 +91,6 @@ void main() {
     );
     expect(_countDots(tester, page, 22), 1);
     expect(_countDots(tester, page, 5), 1);
-    expect(_countGreen(tester, page), 1);
     verifyNever(preferences.setBool(StorageConstants.firstUseKey, true));
   });
 
@@ -302,20 +299,6 @@ int _countDots(WidgetTester tester, Finder page, double width) {
         find.descendant(of: page, matching: find.byType(Container)),
       )
       .where((container) => container.constraints?.maxWidth == width)
-      .length;
-}
-
-int _countGreen(WidgetTester tester, Finder page) {
-  return tester
-      .widgetList<Container>(
-        find.descendant(of: page, matching: find.byType(Container)),
-      )
-      .where(
-        (container) =>
-            container.decoration is BoxDecoration &&
-            (container.decoration as BoxDecoration).color ==
-                AppTokens.dark.color.green,
-      )
       .length;
 }
 

@@ -233,11 +233,12 @@ Two distinct symptoms after a build_runner run — tell them apart with
   last known-good commit and re-verify baselines — never hand-edit.
 
 ### 3. The test suite has never been green
-**11** pre-existing failures on a clean checkout:
+**10** pre-existing failures on a clean checkout (was 11 until `test/widget_test.dart` —
+the leftover Flutter-scaffold counter smoke test, testing a `MyApp()` counter this app
+never had — was deleted during the week 2 widget-test revision, 2026-08-14):
 - `test/repository/tracker/tracker_repository_test.dart` (4)
 - `test/cubit/game_detail/game_detail_cubit_test.dart` (3)
 - `test/cubit/games/games_bloc_test.dart` (3)
-- `test/widget_test.dart` (1)
 
 QA scopes its run to the task-brief's allowlisted files, so these don't
 block a pipeline run — don't read a red suite as evidence something broke.

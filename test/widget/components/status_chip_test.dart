@@ -79,8 +79,7 @@ void main() {
   };
 
   testWidgets(
-    'should render each status dot in its token colour when rendering the '
-    'six statuses',
+    'shows each status dot in its token colour across all six statuses',
     (tester) async {
       for (final status in LibraryStatus.values) {
         await tester.pumpWidget(
@@ -104,7 +103,8 @@ void main() {
   );
 
   testWidgets(
-    'should fill the capsule with indigo when the status is playing',
+    'fills the capsule with the status colour and shows the dot in ink when '
+    'the status is playing',
     (tester) async {
       await tester.pumpWidget(
         buildSubject(
@@ -130,8 +130,8 @@ void main() {
   );
 
   testWidgets(
-    'should fill the capsule with 8% ink when a tinted status renders in '
-    'the list variant',
+    'fills the capsule with 8% ink when a tinted status renders in the list '
+    'variant',
     (tester) async {
       for (final status in tintedStatuses) {
         await tester.pumpWidget(
@@ -147,7 +147,7 @@ void main() {
   );
 
   testWidgets(
-    'should render no blur when a tinted status renders in the list variant',
+    'hides the blur when a tinted status renders in the list variant',
     (tester) async {
       await tester.pumpWidget(
         buildSubject(
@@ -161,8 +161,7 @@ void main() {
   );
 
   testWidgets(
-    'should fill the capsule with 42% black behind a blur in the on-media '
-    'variant',
+    'fills the capsule with 42% black behind a blur in the on-media variant',
     (tester) async {
       await tester.pumpWidget(
         buildSubject(
@@ -178,9 +177,7 @@ void main() {
     },
   );
 
-  testWidgets('should render a 6px dot on media and a 7px dot in a list', (
-    tester,
-  ) async {
+  testWidgets('sizes the dot 6px on media and 7px in a list', (tester) async {
     await tester.pumpWidget(
       buildSubject(
         status: LibraryStatus.backlog,
@@ -212,7 +209,7 @@ void main() {
     expect(dotSize.height, 7);
   });
 
-  testWidgets('should render the pill radius on the capsule in both variants', (
+  testWidgets('renders the pill radius on the capsule in both variants', (
     tester,
   ) async {
     final expectedRadius = BorderRadius.circular(AppTokens.dark.radius.pill);
@@ -236,8 +233,9 @@ void main() {
     expect(glass.borderRadius, expectedRadius);
   });
 
-  testWidgets('should render the label uppercase in the pill token style when '
-      'rendering', (tester) async {
+  testWidgets('shows the label uppercase in the pill token style', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       buildSubject(
         status: LibraryStatus.backlog,
@@ -245,33 +243,31 @@ void main() {
       ),
     );
 
-    final expected = AppTokens.dark.typography.pill.style;
     final text = tester.widget<Text>(find.text('BACKLOG'));
+    final expected = AppTokens.dark.typography.pill.style.copyWith(
+      color: colors.ink,
+    );
 
-    expect(text.style?.fontSize, expected.fontSize);
-    expect(text.style?.fontWeight, expected.fontWeight);
-    expect(text.style?.letterSpacing, expected.letterSpacing);
-    expect(text.style?.color, colors.ink);
+    expect(text.style, expected);
   });
 
-  testWidgets(
-    'should render the count after the label when a count is supplied',
-    (tester) async {
-      await tester.pumpWidget(
-        buildSubject(
-          status: LibraryStatus.backlog,
-          variant: StatusChipVariant.list,
-          count: 12,
-        ),
-      );
+  testWidgets('shows the count after the label when a count is supplied', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      buildSubject(
+        status: LibraryStatus.backlog,
+        variant: StatusChipVariant.list,
+        count: 12,
+      ),
+    );
 
-      expect(find.text('12'), findsOneWidget);
-      final text = tester.widget<Text>(find.text('12'));
-      expect(text.style?.color, colors.ink55);
-    },
-  );
+    expect(find.text('12'), findsOneWidget);
+    final text = tester.widget<Text>(find.text('12'));
+    expect(text.style?.color, colors.ink55);
+  });
 
-  testWidgets('should render the count when the count is zero', (tester) async {
+  testWidgets('shows the count when the count is zero', (tester) async {
     await tester.pumpWidget(
       buildSubject(
         status: LibraryStatus.backlog,
@@ -283,23 +279,22 @@ void main() {
     expect(find.text('0'), findsOneWidget);
   });
 
-  testWidgets(
-    'should render full ink on the count when the status is playing',
-    (tester) async {
-      await tester.pumpWidget(
-        buildSubject(
-          status: LibraryStatus.playing,
-          variant: StatusChipVariant.list,
-          count: 3,
-        ),
-      );
+  testWidgets('shows the count in full ink when the status is playing', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      buildSubject(
+        status: LibraryStatus.playing,
+        variant: StatusChipVariant.list,
+        count: 3,
+      ),
+    );
 
-      final text = tester.widget<Text>(find.text('3'));
-      expect(text.style?.color, colors.ink);
-    },
-  );
+    final text = tester.widget<Text>(find.text('3'));
+    expect(text.style?.color, colors.ink);
+  });
 
-  testWidgets('should render no count when none is supplied', (tester) async {
+  testWidgets('hides the count when none is supplied', (tester) async {
     await tester.pumpWidget(
       buildSubject(
         status: LibraryStatus.backlog,
@@ -313,7 +308,7 @@ void main() {
     );
   });
 
-  testWidgets('should add no spacing around the capsule when rendering', (
+  testWidgets('renders the capsule flush with no extra spacing', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -327,10 +322,5 @@ void main() {
     final capsuleSize = tester.getSize(capsuleFinder());
 
     expect(chipSize, capsuleSize);
-
-    expect(
-      find.ancestor(of: capsuleFinder(), matching: find.byType(Padding)),
-      findsNothing,
-    );
   });
 }

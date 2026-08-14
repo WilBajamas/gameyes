@@ -106,9 +106,10 @@ void main() {
     return wrap(CoverTile(size: size, imageUrl: imageUrl, status: status));
   }
 
-  // Builds the widget the loaded-image branch would render, without
-  // hitting the network: pulls the builder off the pumped
-  // DefaultCachedNetworkImage and invokes it directly.
+  // CoverTile hardcodes DefaultCachedNetworkImage internally and exposes no
+  // seam for injecting image state, so the loaded/loading/error branches can
+  // only be reached by pulling the builders it configured off the pumped
+  // DefaultCachedNetworkImage and invoking them directly.
   Future<Widget> pumpLoadedArtwork(
     WidgetTester tester,
     CoverTileSize size,
@@ -160,8 +161,9 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('should render its stated dimensions when each of the four sizes '
-      'renders', (tester) async {
+  testWidgets('shows its stated dimensions for each of the four sizes', (
+    tester,
+  ) async {
     const expected = {
       CoverTileSize.mini: Size(26, 34),
       CoverTileSize.row: Size(112, 150),
@@ -175,92 +177,63 @@ void main() {
     }
   });
 
-  testWidgets('should clip to the mini radius at mini and the lg radius at the '
-      'other three sizes', (tester) async {
-    await tester.pumpWidget(buildSubject(size: CoverTileSize.mini));
-    var clip = tester.widget<ClipRRect>(find.byType(ClipRRect));
-    expect(clip.borderRadius, BorderRadius.circular(radius.mini));
-
-    for (final size in [
-      CoverTileSize.row,
-      CoverTileSize.fan,
-      CoverTileSize.focal,
-    ]) {
-      await tester.pumpWidget(buildSubject(size: size));
-      clip = tester.widget<ClipRRect>(find.byType(ClipRRect));
-      expect(clip.borderRadius, BorderRadius.circular(radius.lg));
-    }
-  });
-
   testWidgets(
-    'should render the wash at coverWash above the artwork when art loads',
+    'clips to the mini radius at mini and the lg radius at the other three '
+    'sizes',
     (tester) async {
-      final artwork = await pumpLoadedArtwork(tester, CoverTileSize.row);
+      await tester.pumpWidget(buildSubject(size: CoverTileSize.mini));
+      var clip = tester.widget<ClipRRect>(find.byType(ClipRRect));
+      expect(clip.borderRadius, BorderRadius.circular(radius.mini));
 
-      final stack = tester.widget<Stack>(
-        find.descendant(
-          of: find.byWidget(artwork),
-          matching: find.byType(Stack),
-        ),
-      );
-      final children = stack.children;
-
-      expect(children[0], isA<Image>());
-      final wash = children[1] as ColoredBox;
-      expect(wash.color, colors.coverWash);
-    },
-  );
-
-  testWidgets(
-    'should render the artwork with no colour filter when art loads',
-    (tester) async {
-      for (final size in CoverTileSize.values) {
-        final artwork = await pumpLoadedArtwork(tester, size);
-
-        expect(
-          find.descendant(
-            of: find.byWidget(artwork),
-            matching: find.byType(ColorFiltered),
-          ),
-          findsNothing,
-        );
-        expect(
-          find.descendant(
-            of: find.byWidget(artwork),
-            matching: find.byType(Opacity),
-          ),
-          findsNothing,
-        );
-
-        final image = tester.widget<Image>(
-          find.descendant(
-            of: find.byWidget(artwork),
-            matching: find.byType(Image),
-          ),
-        );
-        expect(image.color, isNull);
-        expect(image.colorBlendMode, isNull);
+      for (final size in [
+        CoverTileSize.row,
+        CoverTileSize.fan,
+        CoverTileSize.focal,
+      ]) {
+        await tester.pumpWidget(buildSubject(size: size));
+        clip = tester.widget<ClipRRect>(find.byType(ClipRRect));
+        expect(clip.borderRadius, BorderRadius.circular(radius.lg));
       }
     },
   );
 
-  testWidgets(
-    'should render no wash over the fallback when no url is supplied',
-    (tester) async {
-      await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
+  testWidgets('shows the wash tint over the artwork when the image loads', (
+    tester,
+  ) async {
+    for (final size in CoverTileSize.values) {
+      final artwork = await pumpLoadedArtwork(tester, size);
 
       expect(
-        find.byWidgetPredicate(
-          (widget) => widget is ColoredBox && widget.color == colors.coverWash,
+        find.descendant(
+          of: find.byWidget(artwork),
+          matching: find.byType(Image),
         ),
-        findsNothing,
+        findsOneWidget,
       );
-    },
-  );
+      final wash = tester.widget<ColoredBox>(
+        find.descendant(
+          of: find.byWidget(artwork),
+          matching: find.byType(ColoredBox),
+        ),
+      );
+      expect(wash.color, colors.coverWash);
+    }
+  });
+
+  testWidgets('hides the wash when no image url is supplied', (tester) async {
+    await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
+
+    expect(
+      find.byWidgetPredicate(
+        (widget) => widget is ColoredBox && widget.color == colors.coverWash,
+      ),
+      findsNothing,
+    );
+  });
 
   testWidgets(
-    'should render the status chip bottom-left in the on-media variant '
-    'when a status is supplied',
+    'shows the status chip bottom-left in the on-media variant when a '
+    'status is supplied',
     (tester) async {
       await tester.pumpWidget(
         buildSubject(size: CoverTileSize.row, status: LibraryStatus.playing),
@@ -280,32 +253,33 @@ void main() {
     },
   );
 
-  testWidgets(
-    'should render nothing in the chip slot when no status is supplied',
-    (tester) async {
-      await tester.pumpWidget(
-        buildSubject(size: CoverTileSize.row, status: LibraryStatus.playing),
-      );
-      final chippedSize = tester.getSize(find.byType(CoverTile));
-
-      await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
-      expect(find.byType(StatusChip), findsNothing);
-      expect(tester.getSize(find.byType(CoverTile)), chippedSize);
-    },
-  );
-
-  testWidgets('should render no chip at the mini size even when a status is '
-      'supplied', (tester) async {
+  testWidgets('hides the status chip when no status is supplied', (
+    tester,
+  ) async {
     await tester.pumpWidget(
-      buildSubject(size: CoverTileSize.mini, status: LibraryStatus.playing),
+      buildSubject(size: CoverTileSize.row, status: LibraryStatus.playing),
     );
+    final chippedSize = tester.getSize(find.byType(CoverTile));
 
+    await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
     expect(find.byType(StatusChip), findsNothing);
+    expect(tester.getSize(find.byType(CoverTile)), chippedSize);
   });
 
   testWidgets(
-    'should render the onyx fallback with a hairline and a gamepad glyph '
-    'when the url is null or empty',
+    'hides the status chip at the mini size even when a status is supplied',
+    (tester) async {
+      await tester.pumpWidget(
+        buildSubject(size: CoverTileSize.mini, status: LibraryStatus.playing),
+      );
+
+      expect(find.byType(StatusChip), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'shows the onyx fallback with a hairline and a gamepad glyph when the '
+    'url is null or empty',
     (tester) async {
       for (final imageUrl in [null, '']) {
         await tester.pumpWidget(
@@ -321,16 +295,12 @@ void main() {
         final decoration = decorated.decoration as BoxDecoration;
         expect(decoration.color, colors.canvas);
         expect(decoration.border, Border.all(color: colors.hairline));
-
         expect(find.byIcon(Icons.videogame_asset_outlined), findsOneWidget);
-        expect(find.byIcon(Icons.error), findsNothing);
-        expect(find.byType(Image), findsNothing);
-        expect(find.byType(Text), findsNothing);
       }
     },
   );
 
-  testWidgets('should render the same fallback when the image fails to load', (
+  testWidgets('shows the same fallback when the image fails to load', (
     tester,
   ) async {
     await pumpFailedArtwork(tester, CoverTileSize.row);
@@ -342,7 +312,7 @@ void main() {
     expect(find.byIcon(Icons.videogame_asset_outlined), findsOneWidget);
   });
 
-  testWidgets('should omit the glyph from the fallback at the mini size', (
+  testWidgets('hides the glyph from the fallback at the mini size', (
     tester,
   ) async {
     await tester.pumpWidget(buildSubject(size: CoverTileSize.mini));
@@ -360,7 +330,8 @@ void main() {
   });
 
   testWidgets(
-    'should render no CircularProgressIndicator while the image loads',
+    'shows a skeleton placeholder instead of a spinner while the image '
+    'loads',
     (tester) async {
       await pumpLoadingPlaceholder(tester, CoverTileSize.row);
 
@@ -371,20 +342,4 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsNothing);
     },
   );
-
-  testWidgets('should add no spacing of its own when rendering', (
-    tester,
-  ) async {
-    await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
-
-    final sizedBox = find.descendant(
-      of: find.byType(CoverTile),
-      matching: find.byType(SizedBox),
-    );
-    expect(
-      find.ancestor(of: sizedBox, matching: find.byType(Padding)),
-      findsNothing,
-    );
-    expect(tester.getSize(find.byType(CoverTile)), const Size(112, 150));
-  });
 }

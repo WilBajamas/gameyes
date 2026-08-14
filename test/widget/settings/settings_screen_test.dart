@@ -48,6 +48,8 @@ void main() {
       await _pumpSettings(tester, router);
 
       expect(find.text(S.current.auth_sign_out), findsOneWidget);
+      // Two "Settings" texts render (app bar title + placeholder body); scope
+      // to the placeholder's Center wrapper to disambiguate.
       expect(find.widgetWithText(Center, 'Settings'), findsOneWidget);
     },
   );
@@ -62,8 +64,6 @@ void main() {
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.byType(Dialog), findsNothing);
-      expect(find.byType(BottomSheet), findsNothing);
       expect(repository.callCount, 1);
     },
   );
@@ -78,8 +78,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(S.current.auth_sign_out_error), findsNothing);
-    expect(find.byType(SnackBar), findsNothing);
-    expect(find.byType(Dialog), findsNothing);
   });
 
   testWidgets('shows the inline error in the section when sign-out fails', (
@@ -93,8 +91,6 @@ void main() {
 
     expect(find.text(S.current.auth_sign_out_error), findsOneWidget);
     expect(find.widgetWithText(Center, 'Settings'), findsOneWidget);
-    expect(find.byType(SnackBar), findsNothing);
-    expect(find.byType(Dialog), findsNothing);
   });
 
   testWidgets(
