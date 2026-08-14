@@ -3,7 +3,7 @@ Feature: Week 2 items 1.5, 1.6, 1.7 combined — Filter/count chip, Context chip
 Run ID: chips-and-stat-pill-20260813
 Run folder: .agents/runs/chips-and-stat-pill-20260813/
 Started: 2026-08-13T13:38:44Z
-Current phase: TECH_LEAD
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-13T13:39:30Z
 Test baseline: +265 -11 — captured 2026-08-13T13:43:00Z
@@ -66,6 +66,12 @@ decision on all three together. Spread operator applied in StatPill, not
 codified as a standing rule (Tech Lead's judgment call, human can override).
 Two new flutter-widgets skill bullets added: "Dimensions are even numbers",
 "Prefer Expanded over Flexible, unless the widget hugs its content".
+Human decided: keep FilterCountChip and ContextChip at Flexible (hug-content
+exception applies to both, same as status_chip.dart) -- no further Expanded
+change needed, plan already correct. Comments removed (round 3, small delta).
+Proceeding to Dev. IMPORTANT: human is writing the widget tests themselves --
+do NOT spawn QA after Dev/Phase 4B until human explicitly confirms their
+tests are ready. Hold at Phase 4B complete, awaiting human signal.
 
 ## Escalation history
 NONE

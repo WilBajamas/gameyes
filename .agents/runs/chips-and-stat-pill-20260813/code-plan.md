@@ -2,8 +2,8 @@
 Source: Week 2 task briefs items 1.5, 1.6, 1.7 (combined run) · `tech-ac.md` 2026-08-13
 Date: 2026-08-13
 Revised: 2026-08-14 (Phase 3, human override — `## TEST FILES` deferred; then a second
-Phase 3 pass for even dimensions, `Expanded`, and the spread operator; see the delta at
-the end)
+Phase 3 pass for even dimensions, `Expanded`, and the spread operator; then a third for
+comment removal; see the delta at the end)
 
 ## CREATE NEW
 
@@ -31,15 +31,12 @@ class FilterCountChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final colors = tokens.color;
-    // Inter 14/500 already; only the colour changes per state.
     final labelStyle = tokens.typography.meta.style;
     final count = this.count;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onSelected,
-      // Height only - the 44px floor is the tap area, not the capsule, and
-      // widthFactor keeps the chip at its content width inside a Wrap.
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 44),
         child: Center(
@@ -55,8 +52,6 @@ class FilterCountChip extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
                 children: [
-                  // Stays Flexible - see the 2026-08-14 delta. Expanded here
-                  // would stretch every chip to the Wrap's full width.
                   Flexible(
                     child: Text(
                       label,
@@ -112,8 +107,6 @@ class ContextChip extends StatelessWidget {
           spacing: 6,
           children: [
             Icon(icon, size: 12, color: colors.ink),
-            // Stays Flexible - see the 2026-08-14 delta. Expanded here would
-            // stretch the capsule to whatever width the hero offers it.
             Flexible(
               child: Text(
                 pill.format(label),
@@ -145,7 +138,6 @@ class StatEntry {
   final String label;
 }
 
-// The tile form: one pair on 8% ink, laid out in threes by its caller.
 class StatTile extends StatelessWidget {
   const StatTile({super.key, required this.figure, required this.label});
 
@@ -166,8 +158,6 @@ class StatTile extends StatelessWidget {
         child: _StatPair(
           figure: figure,
           label: label,
-          // The pill token's size, weight and tracking; the stat label is not
-          // a caps role, so its uppercase flag is not applied.
           labelStyle: tokens.typography.pill.style.copyWith(
             color: tokens.color.ink55,
           ),
@@ -177,7 +167,6 @@ class StatTile extends StatelessWidget {
   }
 }
 
-// The glass hero form: 2-3 pairs in one capsule.
 class StatPill extends StatelessWidget {
   const StatPill({super.key, required this.stats})
     : assert(
@@ -197,8 +186,6 @@ class StatPill extends StatelessWidget {
       borderRadius: BorderRadius.circular(tokens.radius.pill),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        // Each pair takes an equal share of the capsule and centres in it, so
-        // a long pair truncates instead of overflowing.
         child: Row(
           children: [
             ...stats.map(
@@ -265,7 +252,7 @@ import 'package:gaming_library_assessment_flutter/widgets/filter_count_chip.dart
 
         // ... unchanged title Text and SizedBox(height: 2) above ...
         Wrap(
-          spacing: 5, // pre-existing, untouched by this run - see the delta
+          spacing: 5,
           children: typeList.map(
             (type) {
               return FilterCountChip(
@@ -284,7 +271,7 @@ import 'package:gaming_library_assessment_flutter/widgets/filter_count_chip.dart
 import 'package:gaming_library_assessment_flutter/widgets/filter_count_chip.dart';
 
         Wrap(
-          spacing: 4, // pre-existing, untouched by this run - see the delta
+          spacing: 4,
           children: selections.map(
             (type) {
               return FilterCountChip(
@@ -456,7 +443,7 @@ both change:
   Both are the exact exception `status_chip.dart` is being held for. If the human wants
   `Expanded` in them anyway, the fix is to bound the width at the parent, not to swap the
   flex — worth a separate decision alongside the `status_chip.dart` one. Until then Dev
-  writes `Flexible` in these two, with the one-line comment shown in the skeletons.
+  writes `Flexible` in these two; the reasoning lives here in the delta, not in the file.
 
 **3. Spread operator in `StatPill`.** `for (final stat in stats) Flexible(...)` becomes
 `...stats.map((stat) => Expanded(child: _StatPair(...)))`, combined with change 2 in the
@@ -484,3 +471,19 @@ Lead, in the "Building a new reusable widget" list beside "No spacing of its own
 
   A matching "Do not introduce an odd-numbered dimension" line was added to that skill's
   *What NOT to do* list. Dev's own SKILL.md edit is still the catalogue table only.
+
+### 2026-08-14 (third pass) — no shipped comments
+
+- Style only, same as the comment removals already applied to items 1.3 and 1.4: every
+  comment that would land in a shipped file is deleted from the skeletons above —
+  `filter_count_chip.dart` (the `labelStyle`, `ConstrainedBox` and `Flexible` comments),
+  `context_chip.dart` (the `Flexible` comment), `stat_pill.dart` (the `StatTile`,
+  `labelStyle`, `StatPill` and `Row` comments), and the trailing "pre-existing, untouched"
+  notes on the `Wrap` spacing lines in `type_values_selection.dart` and
+  `multi_type_values_selection.dart` (code unchanged, `spacing: 5` and `spacing: 4` stay).
+  Dev writes these files with no comments in them. The `// ...` elision markers and the
+  `_buildStatTile is deleted` note are this plan's own annotations, not file content, and
+  stay. The second pass's "with the one-line comment shown in the skeletons" instruction
+  for `Flexible` is withdrawn — the reasoning stays in this delta only. No criterion,
+  allowlist entry, plan step or test-scope changed, so `tdd.md` and `task-brief.md` are
+  not rewritten.
