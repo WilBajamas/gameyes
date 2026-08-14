@@ -18,18 +18,8 @@ void main() {
 
   late final AppColorTokens colors;
 
-  // Fonts can't actually load in a test environment, and that failure
-  // happens in the background where nothing's watching for it - so without
-  // this warm-up it can crash a later, unrelated test. Same fix as
-  // test/widget/theme/app_tokens_test.dart.
   setUpAll(() async {
-    final completer = Completer<AppTokens>();
-    runZonedGuarded<Future<void>>(() async {
-      final tokens = AppTokens.dark;
-      await Future<void>.delayed(const Duration(milliseconds: 250));
-      completer.complete(tokens);
-    }, (error, stack) {});
-    colors = (await completer.future).color;
+    colors = (await resolveDarkTokensAfterFontsSettle()).color;
   });
 
   Widget buildSubject({
@@ -52,9 +42,6 @@ void main() {
     );
   }
 
-  // The chip's own capsule DecoratedBox, distinguished from the dot's
-  // internal one (Container renders a DecoratedBox too) by its border
-  // radius — only the capsule has one.
   Finder capsuleFinder() => find.byWidgetPredicate(
     (widget) =>
         widget is DecoratedBox &&
@@ -323,4 +310,14 @@ void main() {
 
     expect(chipSize, capsuleSize);
   });
+}
+
+Future<AppTokens> resolveDarkTokensAfterFontsSettle() {
+  final completer = Completer<AppTokens>();
+  runZonedGuarded<Future<void>>(() async {
+    final tokens = AppTokens.dark;
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    completer.complete(tokens);
+  }, (error, stack) {});
+  return completer.future;
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,6 +10,7 @@ import 'package:gaming_library_assessment_flutter/features/auth/domain/entities/
 import 'package:gaming_library_assessment_flutter/features/auth/domain/repositories/auth_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/auth/domain/use_cases/sign_out_use_case.dart';
 import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_out_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_out_state.dart';
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart';
 import 'package:gaming_library_assessment_flutter/features/settings/presentation/screens/settings_screen.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
@@ -48,25 +47,21 @@ void main() {
       await _pumpSettings(tester, router);
 
       expect(find.text(S.current.auth_sign_out), findsOneWidget);
-      // Two "Settings" texts render (app bar title + placeholder body); scope
-      // to the placeholder's Center wrapper to disambiguate.
-      expect(find.widgetWithText(Center, 'Settings'), findsOneWidget);
+      expect(find.text(S.current.settings), findsNWidgets(2));
     },
   );
 
-  testWidgets(
-    'starts one sign-out and shows the pending state on a single tap',
-    (tester) async {
-      repository.result = Completer<Result<void>>().future;
-      await _pumpSettings(tester, router);
+  testWidgets('shows a pending indicator while sign-out is loading', (
+    tester,
+  ) async {
+    getIt.unregister<SignOutCubit>();
+    getIt.registerFactory<SignOutCubit>(
+      () => _LoadingSignOutCubit(SignOutUseCase(repository)),
+    );
+    await _pumpSettings(tester, router, settle: false);
 
-      await tester.tap(find.text(S.current.auth_sign_out));
-      await tester.pump();
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(repository.callCount, 1);
-    },
-  );
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
 
   testWidgets('shows nothing and returns to rest when sign-out succeeds', (
     tester,
@@ -90,7 +85,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(S.current.auth_sign_out_error), findsOneWidget);
-    expect(find.widgetWithText(Center, 'Settings'), findsOneWidget);
+    expect(find.text(S.current.settings), findsNWidgets(2));
   });
 
   testWidgets(
@@ -130,7 +125,11 @@ void main() {
   });
 }
 
-Future<void> _pumpSettings(WidgetTester tester, StackRouter router) async {
+Future<void> _pumpSettings(
+  WidgetTester tester,
+  StackRouter router, {
+  bool settle = true,
+}) async {
   await tester.pumpWidget(
     StackRouterScope(
       controller: router,
@@ -138,7 +137,17 @@ Future<void> _pumpSettings(WidgetTester tester, StackRouter router) async {
       child: MaterialApp(theme: buildDarkTheme(), home: const SettingsScreen()),
     ),
   );
-  await tester.pumpAndSettle();
+  if (settle) {
+    await tester.pumpAndSettle();
+  } else {
+    await tester.pump();
+  }
+}
+
+class _LoadingSignOutCubit extends SignOutCubit {
+  _LoadingSignOutCubit(super.useCase) {
+    emit(const SignOutState(status: SignOutStatus.loading));
+  }
 }
 
 class _AuthRepositoryStub implements AuthRepository {

@@ -283,9 +283,6 @@ Future<void> _swipe(WidgetTester tester, {required bool forward}) async {
   await tester.pumpAndSettle();
 }
 
-// The `WelcomeContainer` ancestor of a page's own headline — used to scope
-// widget counts to the visible page, since the paging viewport may keep the
-// offscreen page mounted.
 Finder _page(String headline) {
   return find.ancestor(
     of: find.text(headline),

@@ -29,7 +29,6 @@ void main() {
     );
   }
 
-  /// A chip renders bold when selected and normal weight otherwise.
   bool isChipSelected(WidgetTester tester, String label) {
     final text = tester.widget<Text>(find.text(label));
 

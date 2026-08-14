@@ -12,8 +12,6 @@ import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_type_t
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  // Both must run before AppTokens.dark is touched: resolving the type
-  // tokens calls GoogleFonts, which reads the asset bundle.
   TestWidgetsFlutterBinding.ensureInitialized();
   GoogleFonts.config.allowRuntimeFetching = false;
 
@@ -474,10 +472,6 @@ void main() {
   });
 }
 
-// Fonts can't actually load in a test environment (no network, no bundled
-// files), and that failure happens in the background where nothing's
-// watching for it - so without this wrapper it would silently crash a
-// totally unrelated test. This catches it safely instead.
 Future<AppTokens> _resolveTokens() {
   final completer = Completer<AppTokens>();
 

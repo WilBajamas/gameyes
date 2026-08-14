@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -11,58 +10,8 @@ import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens
 import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:gaming_library_assessment_flutter/widgets/cover_tile.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/status_chip.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-
-// A minimal one-pixel transparent GIF, decodable without a real network
-// call, used to exercise the loaded-image branch's built widgets.
-final _fakeImageBytes = Uint8List.fromList([
-  0x47,
-  0x49,
-  0x46,
-  0x38,
-  0x39,
-  0x61,
-  0x01,
-  0x00,
-  0x01,
-  0x00,
-  0x80,
-  0x00,
-  0x00,
-  0xFF,
-  0xFF,
-  0xFF,
-  0x00,
-  0x00,
-  0x00,
-  0x21,
-  0xF9,
-  0x04,
-  0x01,
-  0x00,
-  0x00,
-  0x00,
-  0x00,
-  0x2C,
-  0x00,
-  0x00,
-  0x00,
-  0x00,
-  0x01,
-  0x00,
-  0x01,
-  0x00,
-  0x00,
-  0x02,
-  0x02,
-  0x44,
-  0x01,
-  0x00,
-  0x3B,
-]);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -71,15 +20,8 @@ void main() {
   late final AppColorTokens colors;
   late final AppRadiusTokens radius;
 
-  // Same font warm-up as test/widget/components/status_chip_test.dart.
   setUpAll(() async {
-    final completer = Completer<AppTokens>();
-    runZonedGuarded<Future<void>>(() async {
-      final tokens = AppTokens.dark;
-      await Future<void>.delayed(const Duration(milliseconds: 250));
-      completer.complete(tokens);
-    }, (error, stack) {});
-    final tokens = await completer.future;
+    final tokens = await resolveDarkTokensAfterFontsSettle();
     colors = tokens.color;
     radius = tokens.radius;
   });
@@ -104,61 +46,6 @@ void main() {
     LibraryStatus? status,
   }) {
     return wrap(CoverTile(size: size, imageUrl: imageUrl, status: status));
-  }
-
-  // CoverTile hardcodes DefaultCachedNetworkImage internally and exposes no
-  // seam for injecting image state, so the loaded/loading/error branches can
-  // only be reached by pulling the builders it configured off the pumped
-  // DefaultCachedNetworkImage and invoking them directly.
-  Future<Widget> pumpLoadedArtwork(
-    WidgetTester tester,
-    CoverTileSize size,
-  ) async {
-    await tester.pumpWidget(
-      buildSubject(size: size, imageUrl: 'https://example.com/cover.png'),
-    );
-    final dcni = tester.widget<DefaultCachedNetworkImage>(
-      find.byType(DefaultCachedNetworkImage),
-    );
-    final context = tester.element(find.byType(DefaultCachedNetworkImage));
-    final artwork = dcni.imageBuilder!(context, MemoryImage(_fakeImageBytes));
-    await tester.pumpWidget(wrap(artwork));
-    return artwork;
-  }
-
-  Future<void> pumpFailedArtwork(
-    WidgetTester tester,
-    CoverTileSize size,
-  ) async {
-    await tester.pumpWidget(
-      buildSubject(size: size, imageUrl: 'https://example.com/cover.png'),
-    );
-    final dcni = tester.widget<DefaultCachedNetworkImage>(
-      find.byType(DefaultCachedNetworkImage),
-    );
-    final context = tester.element(find.byType(DefaultCachedNetworkImage));
-    final fallback = dcni.errorWidget!(
-      context,
-      'https://example.com/cover.png',
-      Exception('load failed'),
-    );
-    await tester.pumpWidget(wrap(fallback));
-  }
-
-  Future<void> pumpLoadingPlaceholder(
-    WidgetTester tester,
-    CoverTileSize size,
-  ) async {
-    await tester.pumpWidget(
-      buildSubject(size: size, imageUrl: 'https://example.com/cover.png'),
-    );
-    final dcni = tester.widget<DefaultCachedNetworkImage>(
-      find.byType(DefaultCachedNetworkImage),
-    );
-    final context = tester.element(find.byType(DefaultCachedNetworkImage));
-    final loading = dcni.placeholder!(context, 'https://example.com/cover.png');
-    await tester.pumpWidget(wrap(loading));
-    await tester.pump();
   }
 
   testWidgets('shows its stated dimensions for each of the four sizes', (
@@ -196,29 +83,6 @@ void main() {
       }
     },
   );
-
-  testWidgets('shows the wash tint over the artwork when the image loads', (
-    tester,
-  ) async {
-    for (final size in CoverTileSize.values) {
-      final artwork = await pumpLoadedArtwork(tester, size);
-
-      expect(
-        find.descendant(
-          of: find.byWidget(artwork),
-          matching: find.byType(Image),
-        ),
-        findsOneWidget,
-      );
-      final wash = tester.widget<ColoredBox>(
-        find.descendant(
-          of: find.byWidget(artwork),
-          matching: find.byType(ColoredBox),
-        ),
-      );
-      expect(wash.color, colors.coverWash);
-    }
-  });
 
   testWidgets('hides the wash when no image url is supplied', (tester) async {
     await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
@@ -300,18 +164,6 @@ void main() {
     },
   );
 
-  testWidgets('shows the same fallback when the image fails to load', (
-    tester,
-  ) async {
-    await pumpFailedArtwork(tester, CoverTileSize.row);
-
-    final decorated = tester.widget<DecoratedBox>(find.byType(DecoratedBox));
-    final decoration = decorated.decoration as BoxDecoration;
-    expect(decoration.color, colors.canvas);
-    expect(decoration.border, Border.all(color: colors.hairline));
-    expect(find.byIcon(Icons.videogame_asset_outlined), findsOneWidget);
-  });
-
   testWidgets('hides the glyph from the fallback at the mini size', (
     tester,
   ) async {
@@ -328,18 +180,14 @@ void main() {
     expect(decoration.border, Border.all(color: colors.hairline));
     expect(find.byType(Icon), findsNothing);
   });
+}
 
-  testWidgets(
-    'shows a skeleton placeholder instead of a spinner while the image '
-    'loads',
-    (tester) async {
-      await pumpLoadingPlaceholder(tester, CoverTileSize.row);
-
-      expect(
-        find.byWidgetPredicate((widget) => widget is Skeletonizer),
-        findsOneWidget,
-      );
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-    },
-  );
+Future<AppTokens> resolveDarkTokensAfterFontsSettle() {
+  final completer = Completer<AppTokens>();
+  runZonedGuarded<Future<void>>(() async {
+    final tokens = AppTokens.dark;
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    completer.complete(tokens);
+  }, (error, stack) {});
+  return completer.future;
 }

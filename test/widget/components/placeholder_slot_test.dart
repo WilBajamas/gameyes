@@ -19,15 +19,8 @@ void main() {
   late final AppRadiusTokens radius;
   late final TextStyle zoneLabelStyle;
 
-  // Same font warm-up as test/widget/components/cover_tile_test.dart.
   setUpAll(() async {
-    final completer = Completer<AppTokens>();
-    runZonedGuarded<Future<void>>(() async {
-      final tokens = AppTokens.dark;
-      await Future<void>.delayed(const Duration(milliseconds: 250));
-      completer.complete(tokens);
-    }, (error, stack) {});
-    final tokens = await completer.future;
+    final tokens = await resolveDarkTokensAfterFontsSettle();
     colors = tokens.color;
     radius = tokens.radius;
     zoneLabelStyle = tokens.typography.zoneLabel.style;
@@ -113,4 +106,14 @@ void main() {
       expect(find.byType(Text), findsNothing);
     },
   );
+}
+
+Future<AppTokens> resolveDarkTokensAfterFontsSettle() {
+  final completer = Completer<AppTokens>();
+  runZonedGuarded<Future<void>>(() async {
+    final tokens = AppTokens.dark;
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    completer.complete(tokens);
+  }, (error, stack) {});
+  return completer.future;
 }

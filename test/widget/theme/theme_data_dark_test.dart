@@ -9,8 +9,6 @@ import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  // Both must run before the themes are built: they resolve their faces
-  // through GoogleFonts, which reads the asset bundle.
   TestWidgetsFlutterBinding.ensureInitialized();
   GoogleFonts.config.allowRuntimeFetching = false;
 
@@ -231,11 +229,6 @@ void main() {
   });
 }
 
-// Fonts can't actually load in a test environment (no network, no bundled
-// files), and that failure happens in the background where nothing's
-// watching for it - so without this wrapper it would silently crash a
-// totally unrelated test. This catches it safely instead, and every test
-// below reuses these same built themes.
 Future<({ThemeData light, ThemeData dark})> _buildThemes() {
   final completer = Completer<({ThemeData light, ThemeData dark})>();
 

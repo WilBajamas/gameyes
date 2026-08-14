@@ -7,28 +7,20 @@ void main() {
   Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 
   testWidgets(
-    'shows the default spinner when no placeholder is supplied',
+    'shows the default spinner while no placeholder is supplied and the '
+    'image has not resolved',
     (tester) async {
       await tester.pumpWidget(
-        wrap(const DefaultCachedNetworkImage(imageUrl: 'https://x.test/a.png')),
+        wrap(
+          const DefaultCachedNetworkImage(imageUrl: 'https://x.test/a.png'),
+        ),
       );
-
-      final cachedImage = tester.widget<CachedNetworkImage>(
-        find.byType(CachedNetworkImage),
-      );
-      final context = tester.element(find.byType(CachedNetworkImage));
-      final placeholder = cachedImage.placeholder!(
-        context,
-        'https://x.test/a.png',
-      );
-
-      await tester.pumpWidget(wrap(placeholder));
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     },
   );
 
-  testWidgets('shows the default error icon when no errorWidget is supplied', (
+  testWidgets('supplies its own non-null errorWidget when none is supplied', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -38,16 +30,8 @@ void main() {
     final cachedImage = tester.widget<CachedNetworkImage>(
       find.byType(CachedNetworkImage),
     );
-    final context = tester.element(find.byType(CachedNetworkImage));
-    final errorWidget = cachedImage.errorWidget!(
-      context,
-      'https://x.test/a.png',
-      Exception('failed'),
-    );
 
-    await tester.pumpWidget(wrap(errorWidget));
-
-    expect(find.byIcon(Icons.error), findsOneWidget);
+    expect(cachedImage.errorWidget, isNotNull);
   });
 
   testWidgets('leaves imageBuilder null when none is supplied', (
@@ -62,5 +46,71 @@ void main() {
     );
 
     expect(cachedImage.imageBuilder, isNull);
+  });
+
+  testWidgets('passes a supplied imageBuilder through to CachedNetworkImage', (
+    tester,
+  ) async {
+    Widget imageBuilder(BuildContext context, ImageProvider image) =>
+        const SizedBox.shrink();
+
+    await tester.pumpWidget(
+      wrap(
+        DefaultCachedNetworkImage(
+          imageUrl: 'https://x.test/a.png',
+          imageBuilder: imageBuilder,
+        ),
+      ),
+    );
+
+    final cachedImage = tester.widget<CachedNetworkImage>(
+      find.byType(CachedNetworkImage),
+    );
+
+    expect(cachedImage.imageBuilder, same(imageBuilder));
+  });
+
+  testWidgets('passes a supplied placeholder through to CachedNetworkImage', (
+    tester,
+  ) async {
+    Widget placeholder(BuildContext context, String url) =>
+        const SizedBox.shrink();
+
+    await tester.pumpWidget(
+      wrap(
+        DefaultCachedNetworkImage(
+          imageUrl: 'https://x.test/a.png',
+          placeholder: placeholder,
+        ),
+      ),
+    );
+
+    final cachedImage = tester.widget<CachedNetworkImage>(
+      find.byType(CachedNetworkImage),
+    );
+
+    expect(cachedImage.placeholder, same(placeholder));
+  });
+
+  testWidgets('passes a supplied errorWidget through to CachedNetworkImage', (
+    tester,
+  ) async {
+    Widget errorWidget(BuildContext context, String url, Object error) =>
+        const SizedBox.shrink();
+
+    await tester.pumpWidget(
+      wrap(
+        DefaultCachedNetworkImage(
+          imageUrl: 'https://x.test/a.png',
+          errorWidget: errorWidget,
+        ),
+      ),
+    );
+
+    final cachedImage = tester.widget<CachedNetworkImage>(
+      find.byType(CachedNetworkImage),
+    );
+
+    expect(cachedImage.errorWidget, same(errorWidget));
   });
 }

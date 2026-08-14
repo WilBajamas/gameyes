@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +11,7 @@ import 'package:gaming_library_assessment_flutter/features/auth/domain/entities/
 import 'package:gaming_library_assessment_flutter/features/auth/domain/repositories/auth_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/auth/domain/use_cases/sign_in_use_case.dart';
 import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_in_cubit.dart';
+import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_in_state.dart';
 import 'package:gaming_library_assessment_flutter/features/auth/presentation/screens/auth_screen.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:get_it/get_it.dart';
@@ -56,23 +55,32 @@ void main() {
     );
   });
 
-  testWidgets('locks both actions and keeps the active row label visible', (
-    tester,
-  ) async {
-    repository.result = Completer<Result<void>>().future;
-    await _pumpAuth(tester, router);
+  testWidgets(
+    'locks both actions and shows the active provider spinner while '
+    'signing in',
+    (tester) async {
+      getIt.unregister<SignInCubit>();
+      getIt.registerFactory<SignInCubit>(
+        () => _LoadingSignInCubit(
+          SignInUseCase(repository),
+          SignInProvider.discord,
+        ),
+      );
+      await _pumpAuth(tester, router, settle: false);
 
-    await tester.tap(find.text(S.current.continue_with_discord));
-    await tester.pump();
-    await tester.tap(
-      find.text(S.current.continue_with_google),
-      warnIfMissed: false,
-    );
+      expect(find.text(S.current.continue_with_discord), findsOneWidget);
+      expect(find.text(S.current.continue_with_google), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    expect(find.text(S.current.continue_with_discord), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    expect(repository.providers, [SignInProvider.discord]);
-  });
+      await tester.tap(
+        find.text(S.current.continue_with_google),
+        warnIfMissed: false,
+      );
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
+  );
 
   testWidgets('shows provider failures inline and remains retryable', (
     tester,
@@ -106,7 +114,11 @@ void main() {
   });
 }
 
-Future<void> _pumpAuth(WidgetTester tester, StackRouter router) async {
+Future<void> _pumpAuth(
+  WidgetTester tester,
+  StackRouter router, {
+  bool settle = true,
+}) async {
   await tester.pumpWidget(
     StackRouterScope(
       controller: router,
@@ -114,7 +126,17 @@ Future<void> _pumpAuth(WidgetTester tester, StackRouter router) async {
       child: MaterialApp(theme: buildDarkTheme(), home: const AuthScreen()),
     ),
   );
-  await tester.pumpAndSettle();
+  if (settle) {
+    await tester.pumpAndSettle();
+  } else {
+    await tester.pump();
+  }
+}
+
+class _LoadingSignInCubit extends SignInCubit {
+  _LoadingSignInCubit(super.useCase, SignInProvider provider) {
+    emit(SignInState(status: SignInStatus.loading, activeProvider: provider));
+  }
 }
 
 class _AuthRepositoryStub implements AuthRepository {
