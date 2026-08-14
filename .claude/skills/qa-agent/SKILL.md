@@ -83,6 +83,13 @@ If `orchestrator-state.md` has no SHAs (standalone run), fall back to comparing
      something outside the domain layer even though `tdd.md` never said not
      to. A skill-level violation `tdd.md` didn't address is a FAIL in its own
      right, not just a WARNING — `tdd.md`'s silence isn't authorisation.
+   - **`flutter-widget-test`**, whenever the allowlist includes a widget test
+     file — check each test independently against its review checklist
+     (behaviour-named, proportional setup, observable-outcome assertions, no
+     structural/implementation coupling). A test that would still pass after a
+     harmless refactor, or that fails only because of unrelated implementation
+     detail, is a skill-level violation — same FAIL treatment as above, not a
+     WARNING, whether or not `tdd.md` said anything about it.
 6. **Overall result.** PASS: static analysis PASS, tests PASS (or mode `none`),
    every criterion PASS or MANUAL (none FAIL/PARTIAL), architecture no FAILs.
    Any MANUAL present → `PASS — pending manual checks`, checklist at the top of

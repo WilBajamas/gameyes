@@ -23,9 +23,11 @@ criterion touches, instead of reading a reference doc by hand for these:
 `flutter-widgets` (widgets, screens, UI patterns), `flutter-state` (BLoC/
 Cubit), `flutter-usecase` (use cases, domain entities), `flutter-repository`
 (repository interface + implementation), `flutter-datasource` (datasources,
-Isar, SharedPreferences), `flutter-dto` (DTOs/models). Invoke only the ones
-relevant to the criteria in front of you — that's the point of them being
-split out.
+Isar, SharedPreferences), `flutter-dto` (DTOs/models), `flutter-widget-test`
+(deciding whether a widget needs a dedicated widget test at all — invoke this
+one whenever the criteria touch the UI layer, not just when they touch tests).
+Invoke only the ones relevant to the criteria in front of you — that's the
+point of them being split out.
 
 **Project references** — load what's present, not required otherwise, for
 everything the component skills above don't cover (service layer / Dio /
@@ -75,6 +77,14 @@ extends the architecture (see below), or an API criterion has no contract/sample
    Unit and widget tests only, **never golden**. Test paths are layer-based —
    `test/api|repository|use_case|cubit|widget/[feature]/` — never mirrored
    from `lib/`.
+
+   For each widget/screen in scope, invoke `flutter-widget-test` and apply its
+   "Decide whether to create a test file" question — a widget existing or
+   lowering coverage is not sufficient justification; a passive wrapper that
+   only forwards text/padding/theme/children usually needs none. List which
+   allowlisted widgets get a dedicated test file and which deliberately don't,
+   with a one-line reason for each "don't." This is a scoping decision, not
+   test design — see "Do not design tests" below.
 8. **File allowlist.** Every file the Dev Agent may create or modify, grouped
    CREATE NEW / MODIFY EXISTING / TEST FILES. Never list generated outputs —
    they're implicit for any allowlisted annotated source.
@@ -140,6 +150,8 @@ contradicting `task-brief.md`.
 - Do not make business decisions — escalate architectural ambiguities
 - Do not design beyond what the acceptance criteria require
 - Do not choose a state-management pattern other than `flutter-arch.md`'s
-- Do not design tests — specify testing mode only
+- Do not design tests — specify testing mode and, per `flutter-widget-test`,
+  which widgets get a dedicated test file at all. Naming, setup, and
+  assertions are Dev's job, guided by that same skill.
 - Do not infer an API shape without a source document
 - Do not proceed past step 12

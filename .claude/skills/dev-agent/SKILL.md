@@ -31,7 +31,10 @@ allowlisted. Nothing else.
 shouldn't normally need more. If a detail is genuinely under-specified during
 self-correction, invoke the matching component skill via the Skill tool
 (`flutter-widgets`, `flutter-state`, `flutter-usecase`, `flutter-repository`,
-`flutter-datasource`, `flutter-dto`) rather than guessing.
+`flutter-datasource`, `flutter-dto`) rather than guessing. Always invoke
+`flutter-widget-test` before writing any widget test file — it governs test
+naming, setup, and assertion style regardless of what task-brief.md's test
+list already spells out.
 
 Escalate before writing if: an input is missing/empty, a plan step needs a file
 outside the allowlist, a step needs an unapproved package, or an architectural
@@ -53,9 +56,13 @@ decision remains undecided.
    logic-bearing implementation file. `coverage` — every criterion (success +
    failure), every error type, every state variant. Test paths come from the
    allowlist, layer-grouped — follow the brief even if a path looks unusual, and
-   note it under Deviations rather than silently relocating it. Write all test
-   files first, then run build_runner once for `@GenerateMocks` output, then run
-   `flutter test [file]` per file.
+   note it under Deviations rather than silently relocating it. For widget
+   tests, apply `flutter-widget-test`: behaviour-named tests
+   (`shows/hides/calls/navigates <outcome> when <condition>`), setup
+   proportional to the behaviour under test, assertions on observable outcomes
+   rather than tree structure — see that skill for the full contract. Write all
+   test files first, then run build_runner once for `@GenerateMocks` output,
+   then run `flutter test [file]` per file.
 4. Verify every criterion in `tech-ac.md ## Technical acceptance criteria`
    (scoped to the IDs task-brief.md names) is satisfied. Self-correct within
    budget; escalate if the budget is exhausted.
