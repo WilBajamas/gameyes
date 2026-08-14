@@ -88,6 +88,24 @@ Written for the component-library push, permanent, not tied to any one week.
   a `BoxDecoration` covers every case in this system. That includes reserved placeholder
   boxes: an empty slot reads as pending because it is empty, not because its edge is
   broken. Full rule: `system-foundation-specs.md` §0.
+- **Dimensions are even numbers.** Every dimension a widget writes itself — width,
+  height, icon size, interior padding, a `Row`/`Column` gap, a font size declared in
+  code — is an even number. The system already runs on 6 / 8 / 10 / 12 / 14 / 16 / 20;
+  an odd value like 13 buys nothing and lands on a half-pixel at odd device ratios.
+  When a spec hands you an odd number, round to whichever neighbour reads better
+  against the values already around it and say why in one line. This binds new code:
+  odd values in already-shipped widgets and in the theme tokens are a follow-up to
+  raise, not something to rewrite inside an unrelated run.
+- **Prefer `Expanded` over `Flexible`, unless the widget hugs its content.** In a row
+  or column that fills its parent, a child meant to take the leftover space is
+  `Expanded`; `Flexible` there only loosens the child's constraint and is usually not
+  what was meant. The real exception is a widget that deliberately sizes to its own
+  content — a chip, pill, badge or tag using `mainAxisSize: MainAxisSize.min` so it
+  stays at its label's width inside a `Wrap` or a `Stack`. An `Expanded` in that row
+  makes it swell to the full width it was offered, which is a visible shape change,
+  not a refactor. So: reach for `Expanded` first, and when you meet the hug-content
+  pattern, flag it and get the trade-off confirmed rather than swapping it blind.
+  `StatusChip` is the live example.
 - **Reuse before rebuilding.** If an existing widget is close — wrong size,
   wrong color, a couple of parameters short — adjust it rather than writing
   a new one next to it. If a full rebuild really is the right call, mark the
@@ -231,3 +249,4 @@ Use `context.themeData` (from `ContextExtensions`) — never call
 - Do not call `Theme.of(context)` directly
 - Do not write golden tests or `matchesGoldenFile` for any of this
 - Do not add a `default` prefix to a newly built widget
+- Do not introduce an odd-numbered dimension

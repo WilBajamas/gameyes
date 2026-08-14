@@ -45,6 +45,28 @@ Combined at human request — three Stage 1 primitives in one pipeline run
 instead of three separate orchestrate runs, since none of the three depend
 on each other.
 
+## Phase 3 revision (round 2)
+Human requests: (1) no odd-numbered dimensions anywhere (sizes/padding/
+spacing/font sizes) -- context_chip.dart's icon size 13 and stat_pill.dart's
+StatTile padding 13 are the two introduced by this run's own new code, (2)
+Expanded instead of Flexible in this run's 3 new widgets -- also requested
+retroactively for all of week 2, but status_chip.dart's existing Flexible
+usage would visibly balloon the chip's shape if swapped (Row uses
+mainAxisSize.min to hug content), flagged back to human for confirmation
+before touching a shipped/QA'd widget, (3) spread operator instead of a for
+loop in stat_pill.dart's StatPill build method. Routed to Tech Lead only (no
+tech-ac.md criteria reversed, pure implementation-style refinement) --
+standing rules also added to flutter-widgets skill.
+Tech Lead revision round 2 done: odd values fixed (context_chip icon 13->12,
+stat_pill StatTile padding 13->14, both new code -- Wrap spacing 5/4 confirmed
+pre-existing, left alone, flagged as follow-up). Expanded applied to StatPill
+(no mainAxisSize.min, safe). FilterCountChip and ContextChip HELD at Flexible
+-- both hit the same hug-content pattern as status_chip.dart, awaiting human
+decision on all three together. Spread operator applied in StatPill, not
+codified as a standing rule (Tech Lead's judgment call, human can override).
+Two new flutter-widgets skill bullets added: "Dimensions are even numbers",
+"Prefer Expanded over Flexible, unless the widget hugs its content".
+
 ## Escalation history
 NONE
 
