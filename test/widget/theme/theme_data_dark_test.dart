@@ -229,14 +229,10 @@ void main() {
   });
 }
 
-Future<({ThemeData light, ThemeData dark})> _buildThemes() {
-  final completer = Completer<({ThemeData light, ThemeData dark})>();
-
-  runZonedGuarded<Future<void>>(() async {
-    final themes = (light: buildTheme(), dark: buildDarkTheme());
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    completer.complete(themes);
-  }, (error, stack) {});
-
-  return completer.future;
+Future<({ThemeData light, ThemeData dark})> _buildThemes() async {
+  final future =
+      runZonedGuarded<Future<({ThemeData light, ThemeData dark})>>(() async {
+        return (light: buildTheme(), dark: buildDarkTheme());
+      }, (error, stack) {});
+  return await future!;
 }

@@ -472,16 +472,11 @@ void main() {
   });
 }
 
-Future<AppTokens> _resolveTokens() {
-  final completer = Completer<AppTokens>();
-
-  runZonedGuarded<Future<void>>(() async {
-    final tokens = AppTokens.dark;
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    completer.complete(tokens);
+Future<AppTokens> _resolveTokens() async {
+  final future = runZonedGuarded<Future<AppTokens>>(() async {
+    return AppTokens.dark;
   }, (error, stack) {});
-
-  return completer.future;
+  return await future!;
 }
 
 List<Color> _allColors(AppColorTokens colors) {

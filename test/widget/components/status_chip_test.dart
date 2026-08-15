@@ -312,12 +312,9 @@ void main() {
   });
 }
 
-Future<AppTokens> resolveDarkTokensAfterFontsSettle() {
-  final completer = Completer<AppTokens>();
-  runZonedGuarded<Future<void>>(() async {
-    final tokens = AppTokens.dark;
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-    completer.complete(tokens);
+Future<AppTokens> resolveDarkTokensAfterFontsSettle() async {
+  final future = runZonedGuarded<Future<AppTokens>>(() async {
+    return AppTokens.dark;
   }, (error, stack) {});
-  return completer.future;
+  return await future!;
 }
