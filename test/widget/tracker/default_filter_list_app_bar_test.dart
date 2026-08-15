@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/saved_game_filter_tag.dart';
@@ -30,9 +32,9 @@ void main() {
   }
 
   bool isChipSelected(WidgetTester tester, String label) {
-    final text = tester.widget<Text>(find.text(label));
+    final data = tester.getSemantics(find.text(label)).getSemanticsData();
 
-    return text.style?.fontWeight == FontWeight.bold;
+    return data.flagsCollection.isSelected == Tristate.isTrue;
   }
 
   testWidgets('renders every filter label', (tester) async {
@@ -45,6 +47,8 @@ void main() {
 
   testWidgets('the chip matching initialSelection renders as selected',
       (tester) async {
+    final handle = tester.ensureSemantics();
+
     await tester.pumpWidget(
       buildSubject(initialSelection: SavedGameFilterTag.date),
     );
@@ -52,28 +56,39 @@ void main() {
     expect(isChipSelected(tester, 'Date Added'), isTrue);
     expect(isChipSelected(tester, 'Recently Changed'), isFalse);
     expect(isChipSelected(tester, 'Name'), isFalse);
+
+    handle.dispose();
   });
 
   testWidgets('the middle entry can be the initial selection', (tester) async {
+    final handle = tester.ensureSemantics();
+
     await tester.pumpWidget(
       buildSubject(initialSelection: SavedGameFilterTag.name),
     );
 
     expect(isChipSelected(tester, 'Name'), isTrue);
     expect(isChipSelected(tester, 'Recently Changed'), isFalse);
+
+    handle.dispose();
   });
 
   testWidgets('the first chip is selected when initialSelection is omitted',
       (tester) async {
+    final handle = tester.ensureSemantics();
+
     await tester.pumpWidget(buildSubject());
 
     expect(isChipSelected(tester, 'Recently Changed'), isTrue);
     expect(isChipSelected(tester, 'Name'), isFalse);
     expect(isChipSelected(tester, 'Date Added'), isFalse);
+
+    handle.dispose();
   });
 
   testWidgets('calls selected and switches the selected chip when a chip is '
       'tapped', (tester) async {
+    final handle = tester.ensureSemantics();
     SavedGameFilterTag? tapped;
 
     await tester.pumpWidget(
@@ -86,5 +101,7 @@ void main() {
     expect(tapped, SavedGameFilterTag.date);
     expect(isChipSelected(tester, 'Date Added'), isTrue);
     expect(isChipSelected(tester, 'Recently Changed'), isFalse);
+
+    handle.dispose();
   });
 }
