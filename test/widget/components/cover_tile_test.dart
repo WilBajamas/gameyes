@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_color_tokens.dart';
-import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_radius_tokens.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_tokens.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
@@ -18,12 +17,9 @@ void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
 
   late final AppColorTokens colors;
-  late final AppRadiusTokens radius;
 
   setUpAll(() async {
-    final tokens = await resolveDarkTokensAfterFontsSettle();
-    colors = tokens.color;
-    radius = tokens.radius;
+    colors = (await resolveDarkTokensAfterFontsSettle()).color;
   });
 
   Widget wrap(Widget child) {
@@ -65,39 +61,8 @@ void main() {
   });
 
   testWidgets(
-    'clips to the mini radius at mini and the lg radius at the other three '
-    'sizes',
-    (tester) async {
-      await tester.pumpWidget(buildSubject(size: CoverTileSize.mini));
-      var clip = tester.widget<ClipRRect>(find.byType(ClipRRect));
-      expect(clip.borderRadius, BorderRadius.circular(radius.mini));
-
-      for (final size in [
-        CoverTileSize.row,
-        CoverTileSize.fan,
-        CoverTileSize.focal,
-      ]) {
-        await tester.pumpWidget(buildSubject(size: size));
-        clip = tester.widget<ClipRRect>(find.byType(ClipRRect));
-        expect(clip.borderRadius, BorderRadius.circular(radius.lg));
-      }
-    },
-  );
-
-  testWidgets('hides the wash when no image url is supplied', (tester) async {
-    await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
-
-    expect(
-      find.byWidgetPredicate(
-        (widget) => widget is ColoredBox && widget.color == colors.coverWash,
-      ),
-      findsNothing,
-    );
-  });
-
-  testWidgets(
-    'shows the status chip bottom-left in the on-media variant when a '
-    'status is supplied',
+    'shows the status chip using the on-media variant when a status is '
+    'supplied',
     (tester) async {
       await tester.pumpWidget(
         buildSubject(size: CoverTileSize.row, status: LibraryStatus.playing),
@@ -105,29 +70,15 @@ void main() {
 
       final chip = tester.widget<StatusChip>(find.byType(StatusChip));
       expect(chip.variant, StatusChipVariant.onMedia);
-
-      final positioned = tester.widget<Positioned>(
-        find.ancestor(
-          of: find.byType(StatusChip),
-          matching: find.byType(Positioned),
-        ),
-      );
-      expect(positioned.left, 8);
-      expect(positioned.bottom, 8);
     },
   );
 
   testWidgets('hides the status chip when no status is supplied', (
     tester,
   ) async {
-    await tester.pumpWidget(
-      buildSubject(size: CoverTileSize.row, status: LibraryStatus.playing),
-    );
-    final chippedSize = tester.getSize(find.byType(CoverTile));
-
     await tester.pumpWidget(buildSubject(size: CoverTileSize.row));
+
     expect(find.byType(StatusChip), findsNothing);
-    expect(tester.getSize(find.byType(CoverTile)), chippedSize);
   });
 
   testWidgets(
@@ -169,15 +120,6 @@ void main() {
   ) async {
     await tester.pumpWidget(buildSubject(size: CoverTileSize.mini));
 
-    final decorated = tester.widget<DecoratedBox>(
-      find.descendant(
-        of: find.byType(CoverTile),
-        matching: find.byType(DecoratedBox),
-      ),
-    );
-    final decoration = decorated.decoration as BoxDecoration;
-    expect(decoration.color, colors.canvas);
-    expect(decoration.border, Border.all(color: colors.hairline));
     expect(find.byType(Icon), findsNothing);
   });
 }

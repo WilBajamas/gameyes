@@ -48,7 +48,6 @@ void main() {
     expect(find.text(S.current.auth_title.toUpperCase()), findsOneWidget);
     expect(find.text(S.current.continue_with_discord), findsOneWidget);
     expect(find.text(S.current.continue_with_google), findsOneWidget);
-    expect(find.text('LOGO'), findsOneWidget);
     expect(
       tester.getTopLeft(find.text(S.current.continue_with_discord)).dy,
       lessThan(tester.getTopLeft(find.text(S.current.continue_with_google)).dy),

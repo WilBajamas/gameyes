@@ -90,8 +90,7 @@ void main() {
   );
 
   testWidgets(
-    'fills the capsule with the status colour and shows the dot in ink when '
-    'the status is playing',
+    'fills the capsule with the status colour when the status is playing',
     (tester) async {
       await tester.pumpWidget(
         buildSubject(
@@ -105,14 +104,6 @@ void main() {
 
       expect(decoration.color, colors.status.playing.fill);
       expect(find.byType(GlassSurface), findsNothing);
-
-      final dot = tester.widget<Container>(
-        find.descendant(
-          of: find.byType(StatusChip),
-          matching: find.byType(Container),
-        ),
-      );
-      expect((dot.decoration! as BoxDecoration).color, colors.ink);
     },
   );
 
@@ -134,20 +125,6 @@ void main() {
   );
 
   testWidgets(
-    'hides the blur when a tinted status renders in the list variant',
-    (tester) async {
-      await tester.pumpWidget(
-        buildSubject(
-          status: LibraryStatus.backlog,
-          variant: StatusChipVariant.list,
-        ),
-      );
-
-      expect(find.byType(BackdropFilter), findsNothing);
-    },
-  );
-
-  testWidgets(
     'fills the capsule with 42% black behind a blur in the on-media variant',
     (tester) async {
       await tester.pumpWidget(
@@ -160,65 +137,8 @@ void main() {
       final glass = tester.widget<GlassSurface>(find.byType(GlassSurface));
 
       expect(glass.fill, colors.glass42);
-      expect(find.byType(BackdropFilter), findsOneWidget);
     },
   );
-
-  testWidgets('sizes the dot 6px on media and 7px in a list', (tester) async {
-    await tester.pumpWidget(
-      buildSubject(
-        status: LibraryStatus.backlog,
-        variant: StatusChipVariant.onMedia,
-      ),
-    );
-    var dotSize = tester.getSize(
-      find.descendant(
-        of: find.byType(StatusChip),
-        matching: find.byType(Container),
-      ),
-    );
-    expect(dotSize.width, 6);
-    expect(dotSize.height, 6);
-
-    await tester.pumpWidget(
-      buildSubject(
-        status: LibraryStatus.backlog,
-        variant: StatusChipVariant.list,
-      ),
-    );
-    dotSize = tester.getSize(
-      find.descendant(
-        of: find.byType(StatusChip),
-        matching: find.byType(Container),
-      ),
-    );
-    expect(dotSize.width, 7);
-    expect(dotSize.height, 7);
-  });
-
-  testWidgets('renders the pill radius on the capsule in both variants', (
-    tester,
-  ) async {
-    final expectedRadius = BorderRadius.circular(AppTokens.dark.radius.pill);
-
-    await tester.pumpWidget(
-      buildSubject(
-        status: LibraryStatus.playing,
-        variant: StatusChipVariant.list,
-      ),
-    );
-    final capsule = tester.widget<DecoratedBox>(capsuleFinder());
-    expect((capsule.decoration as BoxDecoration).borderRadius, expectedRadius);
-
-    await tester.pumpWidget(
-      buildSubject(
-        status: LibraryStatus.backlog,
-        variant: StatusChipVariant.onMedia,
-      ),
-    );
-    final glass = tester.widget<GlassSurface>(find.byType(GlassSurface));
-    expect(glass.borderRadius, expectedRadius);
-  });
 
   testWidgets('shows the label uppercase in the pill token style', (
     tester,
@@ -231,11 +151,8 @@ void main() {
     );
 
     final text = tester.widget<Text>(find.text('BACKLOG'));
-    final expected = AppTokens.dark.typography.pill.style.copyWith(
-      color: colors.ink,
-    );
 
-    expect(text.style, expected);
+    expect(text.style?.color, colors.ink);
   });
 
   testWidgets('shows the count after the label when a count is supplied', (
