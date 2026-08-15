@@ -92,6 +92,8 @@ Do not use:
 
 Never swallow an error to make a test pass. Fix the test harness or dependency instead.
 
+Do not pre-resolve a theme, token set, or other dependency in `setUpAll` just to compare its values against the widget later. That resolution usually only exists to feed an exact-value assertion — remove the assertion (per "Treat visual styling deliberately" below) and the resolution step, and the harness it needed, both become unnecessary. Pass the real theme into the pumped widget and assert what the widget shows (an icon, a size, a supplied variant) instead of what a token equals. A test that never inspects raw token values has nothing to synchronise with and needs no warmup step at all.
+
 For asynchronous behaviour, wait for meaningful framework state:
 
 ```dart
