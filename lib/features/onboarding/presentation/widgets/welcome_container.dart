@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_state.dart';
+import 'package:gaming_library_assessment_flutter/widgets/progress_dots.dart';
 
 class WelcomeContainer extends StatelessWidget {
   const WelcomeContainer({
@@ -54,31 +55,7 @@ class WelcomeContainer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: isFirstStep ? 22 : 5,
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: isFirstStep ? colors.ink : colors.ink12,
-                              borderRadius: BorderRadius.circular(
-                                tokens.radius.pill,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Container(
-                            width: isFirstStep ? 5 : 22,
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: isFirstStep ? colors.ink12 : colors.ink,
-                              borderRadius: BorderRadius.circular(
-                                tokens.radius.pill,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      ProgressDots(count: 2, activeIndex: isFirstStep ? 0 : 1),
                       SizedBox(height: isFirstStep ? 22 : 18),
                       Text(
                         tokens.typography.welcomeHeadline.format(headline),
