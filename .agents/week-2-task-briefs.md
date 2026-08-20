@@ -61,14 +61,14 @@ now means building it twice. Revisit alongside week 3's Library design spec.
 Small, mostly self-contained pieces other components in Stage 2 build on. Build
 these first so Stage 2 items compose them rather than duplicating ad hoc styling.
 
-- [ ] **1.1 — Zone label.** `system-foundation-specs.md` §3.2 "Zone label" row.
+- [x] **1.1 — Zone label.** `system-foundation-specs.md` §3.2 "Zone label" row.
       A text-style token already exists
       (`lib/config/theme/tokens/app_type_tokens.dart`'s `zoneLabel`) but nothing
       enforces the pattern itself: the label plus a large vertical gap **is** the
       separation — no rules, no dividers, no numbering, optional right-aligned
       cyan link at 13px/500. Build the widget so screens stop hand-rolling this.
 
-- [ ] **1.2 — Status chip / Status system.** `system-foundation-specs.md` §3.2
+- [x] **1.2 — Status chip / Status system.** `system-foundation-specs.md` §3.2
       "Status system" + §3.3 "Status chip" primitive. Missing entirely —
       `lib/widgets/saved_game_status_tag.dart` is a solid-color rect tag, not a
       glass pill with dot + label + count. Six status pills, Playing the only
@@ -76,28 +76,28 @@ these first so Stage 2 items compose them rather than duplicating ad hoc styling
       variant (7px dot). Counts are load-bearing per spec — never a dead-end
       filter.
 
-- [ ] **1.3 — Cover tile.** `system-foundation-specs.md` §3.3 "Cover tile"
+- [x] **1.3 — Cover tile.** `system-foundation-specs.md` §3.3 "Cover tile"
       primitive. Missing — `default_cached_network_image.dart` has no
       `saturate(.5) contrast(1.05)` + flat indigo wash treatment, and none of the
       four sizes (mini/row/fan/focal). This is the image treatment Game card
       (2.1) will need, so it comes first.
 
-- [ ] **1.4 — Placeholder slot.** `system-foundation-specs.md` §3.3 "Placeholder
+- [x] **1.4 — Placeholder slot.** `system-foundation-specs.md` §3.3 "Placeholder
       slot" primitive. Rework — `lib/widgets/logo_placeholder.dart` is close
       (uses `ink12`/`ink24` tokens, r20) but the border is solid, not dashed, and
       it isn't constrained to the spec's two presets (app mark `88` r20 · provider
       mark `20` r-xs).
 
-- [ ] **1.5 — Filter / count chip.** `system-foundation-specs.md` §3.3
+- [x] **1.5 — Filter / count chip.** `system-foundation-specs.md` §3.3
       "Filter / count chip" primitive. Rework —
       `lib/widgets/default_choice_chip.dart` wraps stock `ChoiceChip` with no
       active/inactive ink-token treatment and no count slot.
 
-- [ ] **1.6 — Context chip.** `system-foundation-specs.md` §3.3 "Context chip"
+- [x] **1.6 — Context chip.** `system-foundation-specs.md` §3.3 "Context chip"
       primitive. Missing entirely — no matches anywhere in the repo. Glass, one
       per hero, `top:54px`.
 
-- [ ] **1.7 — Stat pill.** `system-foundation-specs.md` §3.2 "Stat pill" row +
+- [x] **1.7 — Stat pill.** `system-foundation-specs.md` §3.2 "Stat pill" row +
       §3.3 "Stat pill" primitive (same component, two size contexts). Rework —
       `lib/features/featured/presentation/widgets/library_stats.dart`'s
       `_buildStatTile` is a plain bordered container (carries a `// TODO: Refactor

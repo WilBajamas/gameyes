@@ -146,7 +146,7 @@ full `ink` token, from the app's existing chip/pill type token rather than a loc
   Failure case: sentence-case output, a font family or weight declared inside the widget file, or
   a colour dimmer than full ink.
 
-[1.6-AC5] PRESENTATION: A leading icon renders at 13 logical pixels, in the same colour as the
+[1.6-AC5] PRESENTATION: A leading icon renders at 12 logical pixels, in the same colour as the
 label, before the label inside the capsule, separated from it by a fixed 6px gap. The icon is
 required — there is no iconless variant.
   Failure case: an icon at 16px/20px, an icon tinted differently from the label, an optional icon
@@ -177,7 +177,7 @@ same file.
   form, or one form built as a special case of a screen rather than of the component.
 
 [1.7-AC2] PRESENTATION: The tile form renders exactly one figure/label pair on an `ink08` fill at
-the `lg` radius token (16), with 13 logical pixels of interior padding on all sides. The figure
+the `lg` radius token (16), with 14 logical pixels of interior padding on all sides. The figure
 renders above the label, both horizontally centred. It never draws its own siblings, separators or
 row.
   Failure case: a border or shadow on the tile, a radius other than `lg`, the label above the

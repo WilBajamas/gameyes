@@ -1,9 +1,11 @@
 # Handover — QuestLoggd
 
 Written 2026-07-29. Last updated 2026-08-20: **week 2 Stage 1 (primitives) is
-fully shipped** — items 1.1 through 1.7 (9 components across 7 pipeline runs,
-1.5/1.6/1.7 combined into one) all done, merged to `develop`. Stage 2
-(composites, 8 items) hasn't started. A new `flutter-widget-test` skill landed
+mostly shipped** — items 1.1 through 1.7 (7 components across 5 pipeline runs,
+1.5/1.6/1.7 combined into one) all done, merged to `develop`. **Items 1.8 and
+1.9 have NOT been built** — corrected 2026-08-20 after a resume session found
+this file previously claimed Stage 1 was complete; see "Where things stand".
+Stage 2 (composites, 8 items) hasn't started. A new `flutter-widget-test` skill landed
 mid-Stage-1 and every existing widget test in the repo was revised against it,
 through several rounds as the human iterated the skill itself — see "Skills
 restructuring" and gotcha #10. Full detail below.
@@ -67,11 +69,22 @@ Supabase project yet (0.1b, still deferred on the free-plan cap). Every
 item's dev-only work (schema, RLS, Edge Function, provider config) will need
 repeating there once it exists.
 
-**Week 2 Stage 1 (primitives) — done, merged to `develop`.** All 9 items
-(1.1–1.7, with 1.5/1.6/1.7 run as one combined pipeline run at human request).
-`.agents/week-2-task-briefs.md` still exists — do NOT delete it yet, Stage 2
-(8 composite items) hasn't started and the checklist's own top note says
-delete only once the whole week ships.
+**Week 2 Stage 1 (primitives) — 7 of 9 items done, merged to `develop`.**
+Items 1.1–1.7, with 1.5/1.6/1.7 run as one combined pipeline run at human
+request. `.agents/week-2-task-briefs.md` still exists — do NOT delete it yet,
+Stage 2 (8 composite items) hasn't started and the checklist's own top note
+says delete only once the whole week ships. Its Stage 1 boxes for 1.1–1.7 were
+ticked 2026-08-20 (they had stayed unticked through every merge).
+
+**Stage 1's two remaining items — 1.8 and 1.9 — were never built.** Both are
+"already exists correctly, extract and promote to `lib/widgets/`" jobs, and
+both were missed rather than deferred: this file claimed Stage 1 was complete
+until a resume session checked and found no `lib/widgets/progress_dots.dart`,
+the dots still hardcoded inline at `welcome_container.dart:57–81`, and
+`_ProviderActionButton` still private inside the auth feature. Neither blocks
+any Stage 2 item (2.1 composes 1.2 and 1.4, not these). **Lesson, same shape
+as gotcha #9: a "stage complete" claim is worth one grep before the next
+stage inherits it.**
 
 **Condensed record of items 1.1–1.7** (run folders still live under
 `.agents/runs/`, not yet retired):
@@ -235,9 +248,10 @@ uncovered.
   live caller; `count == 0` unexercised in `filter_count_chip_test.dart`
   despite `tech-ac.md` naming it explicitly; two color assertions there
   hardcode literal hex instead of referencing the design token.
-- **Doc drift**: `tech-ac.md` in the 1.5/1.6/1.7 run folder still has two
-  stale `13`s (pre-revision literal, superseded by the even-dimension fix
-  applied to the actual code) in `[1.6-AC5]`/`[1.7-AC2]`'s text.
+- ~~**Doc drift**: `tech-ac.md` in the 1.5/1.6/1.7 run folder's two stale
+  `13`s.~~ Fixed 2026-08-20 — `[1.6-AC5]` now reads 12 (the icon size in
+  `context_chip.dart`), `[1.7-AC2]` reads 14 (the tile padding in
+  `stat_pill.dart`).
 - **A live "outlines are always solid" violation already exists**,
   independent of anything built this week: `library_stats.dart` has a
   `_DashedBorderPainter` (`BorderStyle.none, // We want dashed border`)
@@ -267,8 +281,8 @@ uncovered.
   session (item 10.1's four Phase 3 revision rounds) when the delta would
   otherwise leave the Dev Agent's literal allowlist check reading a stale
   file list. Small/naming-only revisions still just get a delta entry, per
-  the original rule. The `tech-lead-agent` skill's own text hasn't been
-  updated to reflect this yet — worth doing.
+  the original rule. The `tech-lead-agent` skill's "Revision mode" section
+  was updated to say this on 2026-08-20.
 - **Tech Lead, Dev, and QA invoke component skills** (see "Skills
   restructuring" above) for widget/state/use-case/repository/datasource/DTO
   work, instead of reading `.agents/references/*.md` by hand for those
@@ -433,6 +447,24 @@ requires adding binary font files and touching `pubspec.yaml`'s asset list,
 changing the app's real shipped asset footprint, not just a test file. Left
 as an open question if a future session wants to pursue it.
 
+### 11. Remote branch deletion is blocked in these containers
+Cleaning up merged `claude/*` branches on GitHub cannot be done from a session:
+`git push origin --delete` fails with `HTTP 403` from the egress proxy, and the
+REST `DELETE /git/refs/heads/...` returns *"Write access to this GitHub API
+path is not permitted through this proxy."* Not a credential problem and not
+worth retrying — the branches have to be deleted by hand in the GitHub UI.
+Merged as of 2026-08-20 and safe to delete there: `questloggd-item-10-1-igdb-ogvf5r`,
+`questloggd-resume-e1e0fi`, `questloggd-week-2-components-ha43qm`,
+`questloggd-week1-item3-rls-x334sm`, `questloggd-week1-item8-sosqs6`.
+
+Note the last three share **no merge base** with `develop` (`--merged` won't
+list them) because `develop`'s history was rebuilt at some point. They're still
+fully merged by content — verified by diffing their trees against `develop`,
+where the only files they hold that `develop` lacks are ones deliberately
+deleted later (`supabase_igdb_client.dart`, `logo_placeholder.dart`,
+`widget_test.dart`, `coverage/`). Use a content diff, not `--merged`, before
+deleting anything here.
+
 ---
 
 ## What this project is
@@ -443,10 +475,11 @@ tracker. Product brief, design conventions and per-screen specs live in
 then `roadmap-deferred.md` (every decision consciously put aside, and the
 fastest way to understand why the plan looks the way it does).
 
-**Current phase: week 2, component library, Stage 1 done, Stage 2 next.**
+**Current phase: week 2, component library, Stage 1 nearly done, Stage 2 next.**
 Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it when the
-whole week is done, same convention as week 1's). Stage 1's 9 primitives are
-built and merged; Stage 2's 8 composites haven't started. Target is a
+whole week is done, same convention as week 1's). 7 of Stage 1's 9 primitives
+are built and merged (1.8 and 1.9 outstanding); Stage 2's 8 composites haven't
+started. Target is a
 TestFlight-equivalent Android beta around week 4.
 
 **Hard constraints** (both in `project-conventions.md`):

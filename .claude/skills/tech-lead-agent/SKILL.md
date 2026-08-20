@@ -104,10 +104,20 @@ extends the architecture (see below), or an API criterion has no contract/sample
 
 ## Revision mode
 
-After the human reviews the initial plan at Phase 3, apply feedback only to
-`code-plan.md ## Approved feedback delta` (see the template) — do not rewrite
-`tdd.md` or `task-brief.md`. The delta is what the Dev Agent treats as
-authoritative on conflict. Return directly to the Phase 3 gate.
+After the human reviews the initial plan at Phase 3, apply feedback to
+`code-plan.md ## Approved feedback delta` (see the template). The delta is what
+the Dev Agent treats as authoritative on conflict. Return directly to the
+Phase 3 gate.
+
+**Small or naming-only feedback: delta only** — do not rewrite `tdd.md` or
+`task-brief.md`.
+
+**Substantial feedback may correct `tdd.md`/`task-brief.md` in place**, in
+addition to the delta entry. Use this when the delta alone would leave those
+files saying something now false — most importantly `task-brief.md`'s file
+allowlist, which the Dev Agent checks literally, so a stale list silently
+blocks or misdirects implementation. Correct the file, and still record the
+change in the delta so the Phase 3 diff stays readable.
 
 ## Extending vs. changing the architecture
 
