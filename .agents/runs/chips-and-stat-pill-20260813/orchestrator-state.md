@@ -3,22 +3,26 @@ Feature: Week 2 items 1.5, 1.6, 1.7 combined — Filter/count chip, Context chip
 Run ID: chips-and-stat-pill-20260813
 Run folder: .agents/runs/chips-and-stat-pill-20260813/
 Started: 2026-08-13T13:38:44Z
-Current phase: QA
+Current phase: COMPLETE
+Result: PASS — pending manual checks
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-13T13:39:30Z
-Test baseline: +265 -11 — captured 2026-08-13T13:43:00Z (SUPERSEDED — see note below)
-Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3), test/widget_test.dart (1) (SUPERSEDED)
+Test baseline: +259 -10 (final, at run completion) — see below for the two
+earlier superseded readings and why they moved.
 
-**Baseline superseded 2026-08-14** by an out-of-band detour (human-directed
-widget-test revision against the new `flutter-widget-test` skill, applied to
-ALL existing widget tests project-wide, unrelated to this run's own Dev
-commit which added no test files). New baseline: **+256 -10**, out of 266
-total. `test/widget_test.dart` deleted entirely (vestigial, tested nothing
-real) — the 4th pre-existing failure it represented is gone; the remaining 3
-files/10 failures are unchanged: test/repository/tracker/tracker_repository_test.dart
+**Baseline history, oldest first:**
+1. `+265 -11` — captured 2026-08-13T13:43:00Z, at run start.
+2. `+256 -10` — 2026-08-14, after an out-of-band detour adopted the
+   `flutter-widget-test` skill project-wide and revised all existing widget
+   tests against it (unrelated to this run's own Dev commit, which added no
+   test files). `test/widget_test.dart` was deleted (vestigial, tested
+   nothing real), dropping the failure count by one.
+3. `+259 -10` — after the human wrote and pushed the three deferred test
+   files (`1b669d2`): 9 new passing tests, same 10 pre-existing failures.
+
+Pre-existing failures (unchanged since step 2): test/repository/tracker/tracker_repository_test.dart
 (4), test/cubit/game_detail/game_detail_cubit_test.dart (3),
-test/cubit/games/games_bloc_test.dart (3). Whoever runs QA on this branch
-should compare against this new baseline, not the one above.
+test/cubit/games/games_bloc_test.dart (3).
 Branch: claude/questloggd-week-2-components-ha43qm
 Base branch: develop
 Base SHA: e1d3126 (HEAD after item 1.4's run-folder docs commit)
@@ -94,6 +98,15 @@ recount here). Human then wrote the three deferred test files themselves
 pushed as 1b669d2. Verified: analyze clean, full suite +259 -10 (baseline
 moved again from the +256 -10 note above -- 9 new tests, same 10
 pre-existing failures, no regressions). Proceeding to QA.
+QA PASS — pending manual checks. 37/41 criteria pass, 4 MANUAL (visual only:
+filter sheet, featured stat row, glass blur, StatPill distribution). QA
+cycles used: 0. Advisory test-quality review of the human-authored tests
+(not gating, those files aren't in this run's allowlist): real gap is no
+StatTile test at all despite it being the only one of the three with a live
+caller; count==0 not exercised despite ALL-AC7 naming it explicitly; two
+colour tests hardcode literal hex instead of the token. Doc-drift warnings:
+tech-ac.md still says 13 in two spots (stale pre-revision literal), this
+state file's header still carries 3 layered baselines. Run complete.
 
 ## Escalation history
 NONE
