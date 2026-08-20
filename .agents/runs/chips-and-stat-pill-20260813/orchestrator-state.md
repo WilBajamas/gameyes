@@ -3,7 +3,7 @@ Feature: Week 2 items 1.5, 1.6, 1.7 combined — Filter/count chip, Context chip
 Run ID: chips-and-stat-pill-20260813
 Run folder: .agents/runs/chips-and-stat-pill-20260813/
 Started: 2026-08-13T13:38:44Z
-Current phase: CODE_REVIEW
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 32 info — captured 2026-08-13T13:39:30Z
 Test baseline: +265 -11 — captured 2026-08-13T13:43:00Z (SUPERSEDED — see note below)
@@ -85,6 +85,15 @@ do NOT spawn QA after Dev/Phase 4B until human explicitly confirms their
 tests are ready. Hold at Phase 4B complete, awaiting human signal.
 Dev implemented and committed bb9b6e5, pushed, no test files created (per
 prohibition). Awaiting Phase 4B code-review gate.
+Phase 4B approved by human. Extensive out-of-band detour followed: pipeline
+wired to a new flutter-widget-test skill, all existing widget tests revised
+against it through several rounds as the skill itself evolved (see git log
+between e1d3126 and 1b669d2 on this branch for full detail -- too long to
+recount here). Human then wrote the three deferred test files themselves
+(context_chip_test.dart, filter_count_chip_test.dart, stat_pill_test.dart),
+pushed as 1b669d2. Verified: analyze clean, full suite +259 -10 (baseline
+moved again from the +256 -10 note above -- 9 new tests, same 10
+pre-existing failures, no regressions). Proceeding to QA.
 
 ## Escalation history
 NONE
@@ -93,4 +102,4 @@ NONE
 NONE
 
 ## Code review outcomes
-NONE
+2026-08-14T00:00:00Z bb9b6e596fa4b136bd1aa683c4c7d0b33adbc937 — Reviewed and approved by human
