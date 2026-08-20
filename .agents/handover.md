@@ -1,10 +1,12 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-07: **week 1 is fully shipped** —
-items 1 through 11 all done and merged to `develop`. Week 2 (component
-library) has a drafted checklist but nothing built yet. Pipeline restructuring
-also landed today: Dart conventions for widgets through datasources are now
-invokable skills, not just reference docs. Full detail below.
+Written 2026-07-29. Last updated 2026-08-20: **week 2 Stage 1 (primitives) is
+fully shipped** — items 1.1 through 1.7 (9 components across 7 pipeline runs,
+1.5/1.6/1.7 combined into one) all done, merged to `develop`. Stage 2
+(composites, 8 items) hasn't started. A new `flutter-widget-test` skill landed
+mid-Stage-1 and every existing widget test in the repo was revised against it,
+through several rounds as the human iterated the skill itself — see "Skills
+restructuring" and gotcha #10. Full detail below.
 
 ---
 
@@ -65,15 +67,49 @@ Supabase project yet (0.1b, still deferred on the free-plan cap). Every
 item's dev-only work (schema, RLS, Edge Function, provider config) will need
 repeating there once it exists.
 
-**Week 2 (component library) — checklist drafted, nothing built.**
-`.agents/week-2-task-briefs.md`, 17 items across two stages (9 primitives,
-8 composites), all `[PIPELINE]`. Read its own "How to use this" section — it
-points at both the visual spec (`system-foundation-specs.md` §3) and the new
-`flutter-widgets` skill for how to actually build one. Explicitly out of
-scope there: `system-foundation-specs.md` §3.1 (an external, bound design
-bundle for a different property — not a Flutter build target, confirmed by
-grepping the repo for its import mechanism), and the Add-to-library sheet
-(needs week 3's Library feature first).
+**Week 2 Stage 1 (primitives) — done, merged to `develop`.** All 9 items
+(1.1–1.7, with 1.5/1.6/1.7 run as one combined pipeline run at human request).
+`.agents/week-2-task-briefs.md` still exists — do NOT delete it yet, Stage 2
+(8 composite items) hasn't started and the checklist's own top note says
+delete only once the whole week ships.
+
+**Condensed record of items 1.1–1.7** (run folders still live under
+`.agents/runs/`, not yet retired):
+- **1.1 Zone label** (`lib/widgets/zone_label.dart`) — one Phase 3 reversal:
+  human rejected the widget owning its own vertical spacing; established the
+  **"No spacing of its own"** standing convention now in `flutter-widgets`
+  skill. Dev commit `2a220f6`.
+- **1.2 Status chip** (`status_chip.dart`) — six status pills, glass on-media
+  variant. No revisions. Dev commit `dd940a5`.
+- **1.3 Cover tile** (`cover_tile.dart`) — one Phase 3 reversal: human
+  rejected the spec's `saturate(.5) contrast(1.05)` artwork filter, artwork
+  keeps original colours (only the indigo wash overlay remains). Dev commit
+  `c2ab32f`.
+- **1.4 Placeholder slot** (`placeholder_slot.dart`, renamed from
+  `logo_placeholder.dart`) — one Phase 3 reversal: human rejected the spec's
+  dashed border, solid outline instead; established **"Outlines are always
+  solid"** as a standing convention (`system-foundation-specs.md` §0 item 6
+  plus a `flutter-widgets` bullet). Corrected two design docs that had
+  described the old dashed treatment as if it were still current. Dev commit
+  `482a319`.
+- **1.5/1.6/1.7 combined** (`filter_count_chip.dart`, `context_chip.dart`,
+  `stat_pill.dart`) — one BA/Tech-Lead/Dev/QA run covering all three, human
+  request (none of the three depend on each other). Notable: human wrote the
+  three widget test files personally rather than Dev — established via a
+  Phase 3 revision reversing `tech-ac.md`'s test-authorship criterion, not a
+  standing rule for future items unless asked again. Also established
+  **"Dimensions are even numbers"** and **"Prefer Expanded over Flexible,
+  unless the widget hugs its content"** as standing conventions. Dev commit
+  `bb9b6e5`. `ContextChip` and `StatPill` (the glass form) ship unwired — no
+  caller since the welcome heroes went to flat PNG art before Stage 1 started.
+
+**Week 2 Stage 2 (composites) — not started.** 8 items in
+`.agents/week-2-task-briefs.md`, building on the Stage 1 primitives above.
+Read its own "How to use this" section — points at the visual spec
+(`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
+skills. Explicitly out of scope there: `system-foundation-specs.md` §3.1 (an
+external, bound design bundle for a different property — not a Flutter build
+target), and the Add-to-library sheet (needs week 3's Library feature first).
 
 ---
 
@@ -120,6 +156,32 @@ folder-structure overview, the service layer, DI, routing, code generation,
 localisation, secrets, platform constraints, and naming/comment rules. Read
 them for anything the six skills don't cover.
 
+### `flutter-widget-test` skill (added 2026-08-14/15, human-authored)
+
+A seventh skill, but different from the six above: it's a widget-*testing*
+convention (naming, setup proportionality, what earns a dedicated test file,
+banned patterns like fake image bytes/`Completer`/zones), not a code-layer
+skill. Wired into all three agents: Tech Lead now decides per-widget whether
+a dedicated test file is warranted (not just testing mode), Dev applies its
+naming/setup/assertion rules when writing tests, QA checks tests against it
+independently — same "skill silence isn't authorisation" treatment as the
+six code skills.
+
+**The human revised this skill three times in one session**, each revision
+retroactively invalidating the prior full-suite pass and triggering another
+complete re-check of every existing widget test file. Expect this skill to
+keep evolving — always re-read it in full before trusting prior compliance,
+never assume a file that passed last time still passes.
+
+The skill got progressively stricter: v1 allowed occasional comments and
+didn't address image testing; v2 banned comments entirely and forbade
+manufacturing image-loading success (fake bytes, manual builder invocation);
+v3 added "treat visual styling deliberately" (don't assert an exact
+color/radius/position unless it's a documented contract, not just because it
+matches the widget's own implementation) and "reject redundant setup and
+assertions." See gotcha #10 for the specific async-testing trap this
+uncovered.
+
 ---
 
 ## Known non-blocking gaps (carried forward)
@@ -159,6 +221,33 @@ them for anything the six skills don't cover.
     project host (visible in the dev build's logger output).
   - `10.1-AC-10` — with an expired access token, or a forced 401, the games
     list still loads with no error shown to the user.
+- **Week 2 Stage 1's manual-check backlog** — every item shipped
+  `PASS — pending manual checks`, none performed yet, need a device:
+  zone label's long-label ellipsis, status chip (none outstanding), cover
+  tile's crop/wash/fallback/shimmer across all 4 sizes and its 6
+  `DefaultCachedNetworkImage` callers, placeholder slot's `LOGO` label fit at
+  the new 14px size, and the combined run's filter sheet render / featured
+  stat row / glass blur / `StatPill` distribution. Full checklists are in
+  each run's `qa-report.md` under `.agents/runs/`.
+- **Human-authored test gaps from the 1.5/1.6/1.7 run**, flagged by QA as
+  advisory (not blocking, QA doesn't gate on files outside Dev's allowlist):
+  no `StatTile` test at all despite it being the only one of the three with a
+  live caller; `count == 0` unexercised in `filter_count_chip_test.dart`
+  despite `tech-ac.md` naming it explicitly; two color assertions there
+  hardcode literal hex instead of referencing the design token.
+- **Doc drift**: `tech-ac.md` in the 1.5/1.6/1.7 run folder still has two
+  stale `13`s (pre-revision literal, superseded by the even-dimension fix
+  applied to the actual code) in `[1.6-AC5]`/`[1.7-AC2]`'s text.
+- **A live "outlines are always solid" violation already exists**,
+  independent of anything built this week: `library_stats.dart` has a
+  `_DashedBorderPainter` (`BorderStyle.none, // We want dashed border`)
+  around the empty now-playing card. Belongs to Stage 2 item 2.8's empty
+  state, deliberately left untouched by every run that has since edited that
+  file for unrelated reasons — don't fix it in passing, it's 2.8's to own.
+- **Two more off-spec filter chips** exist beyond what item 1.5 named:
+  `_SelectionChip` in both `default_filter_list_app_bar.dart` and
+  `filter_list_app_bar.dart`. Not migrated to `FilterCountChip`, flagged as a
+  follow-up, not silently expanded into scope.
 
 ---
 
@@ -196,6 +285,21 @@ them for anything the six skills don't cover.
   run) can go straight to `develop`** rather than riding along on whatever
   branch happens to be checked out, established this session for the skills
   restructuring and the entity DIP addition.
+- **A human can defer widget-test authorship to themselves for a given
+  run**, via a Phase 3 revision reversing the BA's test-coverage criterion
+  (not a Tech Lead-only delta, since it changes what `tech-ac.md` requires).
+  Established for the 1.5/1.6/1.7 run — one-off by request, not a standing
+  default; ask again each time rather than assuming it repeats.
+- **The orchestrator can commit run-folder planning docs directly**, ahead
+  of Dev's own commit, when the human explicitly asks to review `code-plan.md`
+  on GitHub before approving at a gate — a deliberate, requested deviation
+  from "only the Dev Agent commits," not a standing practice to repeat
+  unprompted.
+- **A Phase 3 revision that changes implementation style but no acceptance
+  criterion** (e.g. "remove this comment," "use `Expanded` not `Flexible`")
+  is Tech Lead-only — append to `code-plan.md`'s delta, no BA involvement.
+  Only route back to BA when the fix actually reverses or adds a criterion
+  in `tech-ac.md` itself.
 
 ---
 
@@ -292,6 +396,43 @@ is now under "Where things stand" above). **Before deleting any file whose
 own note says "promote first, then delete," actually grep the destination for
 the content, don't just trust that an earlier step must have handled it.**
 
+### 10. Widget tests that pre-resolve `AppTokens.dark`/theme values hit a real async trap
+`google_fonts` throws inside a detached, unawaited background `Future` when
+a font isn't bundled and `allowRuntimeFetching` is false (the norm in this
+project's test files, to avoid slow/flaky network-dependent tests) — nothing
+else awaits that future, so it leaks as an unhandled exception into whatever
+test happens to be running when it fires, not necessarily the one that
+triggered it.
+
+**First-choice fix, and usually sufficient**: don't pre-resolve the theme at
+all. If a test doesn't assert exact token values (which the `flutter-widget-test`
+skill now discourages anyway — see "Treat visual styling deliberately"),
+nothing needs synchronising, and the theme resolves naturally inside
+`pumpWidget`'s own zone with no helper of any kind. This is what `cover_tile_test.dart`
+looks like today — the human's own rewrite, treated as the benchmark.
+
+**If a test genuinely needs pre-resolved tokens** (asserting an exact
+`AppTokens.dark.color.x`), empirically verified, in order of what was tried:
+- Draining `google_fonts`' own internal `pendingFontFutures` set (via a deep
+  `src/` import) — doesn't work reliably; font loading cascades into new
+  futures faster than a bounded drain catches them, and an unbounded drain
+  hangs.
+- Setting `allowRuntimeFetching = true` and letting the real fetch happen
+  (matches the package's own official example test, zero workaround) — works
+  *only* if the resolution stays inside `setUpAll`; hoisting it to bare
+  top-level `main()` code breaks with "no current invoker," because the real
+  HTTP path needs `package:test`'s zone machinery.
+- `runZonedGuarded` (returning its own async body's `Future` directly,
+  **no** `Completer`, **no** artificial `Future.delayed`) is the only
+  mechanism that reliably worked across every case tried, verified over
+  multiple repeated runs with no flakiness.
+
+The real, fully-clean fix — bundling actual `.ttf` files as test assets so
+neither network nor the exception path is ever hit — was **not done**: it
+requires adding binary font files and touching `pubspec.yaml`'s asset list,
+changing the app's real shipped asset footprint, not just a test file. Left
+as an open question if a future session wants to pursue it.
+
 ---
 
 ## What this project is
@@ -302,9 +443,10 @@ tracker. Product brief, design conventions and per-screen specs live in
 then `roadmap-deferred.md` (every decision consciously put aside, and the
 fastest way to understand why the plan looks the way it does).
 
-**Current phase: week 2, component library.** Checklist is
-`.agents/week-2-task-briefs.md` (ephemeral — delete it when week 2 is done,
-same convention as week 1's). Nothing in it has been built yet. Target is a
+**Current phase: week 2, component library, Stage 1 done, Stage 2 next.**
+Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it when the
+whole week is done, same convention as week 1's). Stage 1's 9 primitives are
+built and merged; Stage 2's 8 composites haven't started. Target is a
 TestFlight-equivalent Android beta around week 4.
 
 **Hard constraints** (both in `project-conventions.md`):
@@ -317,9 +459,11 @@ TestFlight-equivalent Android beta around week 4.
 ## Where things live
 
 - `.claude/skills/` — the pipeline skills (`ba-agent`, `tech-lead-agent`,
-  `dev-agent`, `qa-agent`, `orchestrate`), plus the six Dart component skills
+  `dev-agent`, `qa-agent`, `orchestrate`), the six Dart component skills
   added 2026-08-07 (`flutter-widgets`, `flutter-state`, `flutter-usecase`,
-  `flutter-repository`, `flutter-datasource`, `flutter-dto`).
+  `flutter-repository`, `flutter-datasource`, `flutter-dto`), and
+  `flutter-widget-test` (added 2026-08-14/15, testing conventions — see
+  "Skills restructuring").
 - `.agents/references/` — product brief, design conventions, per-screen
   specs, project conventions, deferred roadmap. Trimmed 2026-08-07 where
   content moved into the component skills above.
@@ -346,40 +490,43 @@ TestFlight-equivalent Android beta around week 4.
 
 ```text
 Resume QuestLoggd. Checkout develop first. Read .agents/handover.md in full
-(it's short).
+(it's not as short as it used to be, read it anyway).
 
 Before anything else:
 - Check `git status` is clean. `.agents/`, `.claude/` and `.codex/` are tracked.
-- No Flutter in a fresh container. Install 3.41.4 to match `.fvmrc`, then
-  `flutter pub get` and
-  `dart run build_runner build --delete-conflicting-outputs` before trusting
-  any baseline. Expect 11 pre-existing test failures (gotcha #3 in
-  handover.md) -- the suite is not green and never has been.
+- No Flutter in a fresh container. Install 3.41.4 to match `.fvmrc` (a
+  /etc/profile.d/flutter.sh script works well so every login shell picks it
+  up automatically, including subagents' Bash calls), then `flutter pub get`
+  and `dart run build_runner build --delete-conflicting-outputs` before
+  trusting any baseline. Expect 10 pre-existing test failures (gotcha #3) --
+  the suite is not green and never has been. (Was 11; test/widget_test.dart,
+  a vestigial Flutter-scaffold test that verified nothing about this app, was
+  deleted during week 2 Stage 1.)
 
-Current state: week 1 is fully done -- items 1 through 11, all merged to
-develop. week-1-task-briefs.md is deleted; a condensed record of items 9/10/10.1
-lives in handover.md's "Where things stand" section now, since that's the only
-place it survives (see gotcha #9 for why).
+Current state: week 2 Stage 1 (component-library primitives) is fully done
+-- items 1.1 through 1.7 (9 components, 7 pipeline runs), all merged to
+develop. Condensed per-item record is in handover.md's "Where things stand".
+Stage 2 (8 composite items, e.g. Game card, Completion ring) hasn't started
+-- read .agents/week-2-task-briefs.md's own "How to use this" section before
+running anything, and start with item 2.1 in order since later composites
+build on earlier ones.
 
-Pipeline restructuring also landed: Dart conventions for widgets through
-datasources are now six invokable skills under .claude/skills/
-(flutter-widgets, flutter-state, flutter-usecase, flutter-repository,
-flutter-datasource, flutter-dto), wired into tech-lead-agent/dev-agent/qa-agent.
-Service-layer conventions (Dio clients, Retrofit services, auth interceptors)
-are deliberately NOT skill-ified yet -- still in flutter-arch.md, revisit later
-if asked.
+A new flutter-widget-test skill landed mid-Stage-1 and got revised three
+times by the human in one session -- always re-read it in full before
+trusting any prior widget test's compliance, per "Skills restructuring" in
+handover.md. Gotcha #10 has the specific async font-loading trap it
+surfaced and what actually worked to fix it (short version: don't
+pre-resolve theme/token values in setUpAll unless a test genuinely needs to
+assert an exact token value -- most don't, and skipping that resolution
+entirely sidesteps the whole problem).
 
-Week 2 (component library) has a drafted checklist, .agents/week-2-task-briefs.md
--- 17 items across two stages (9 primitives, 8 composites), all [PIPELINE],
-none started. Read its "How to use this" section before running anything --
-it points at both the visual spec and the flutter-widgets skill for how to
-build one. Normal PIPELINE runs through /orchestrate, starting with Stage 1
-(primitives) in order, since Stage 2 composites build on them.
-
-Still open regardless: item 3's on-device cross-account RLS check, blocked
-until something writes to library_entries (week 3's Library feature). Item
-10.1 left a dead-code follow-up and four never-performed manual checks behind
--- both in handover.md's "Known non-blocking gaps". Gotcha #7 in handover.md
-if the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types aren't
-available yet when you try to spawn one.
+Known follow-ups, none blocking: item 3's on-device cross-account RLS check
+(blocked on week 3's Library feature), item 10.1's dead-code cleanup and four
+manual checks, week 2 Stage 1's own manual-check backlog (one qa-report.md
+per run under .agents/runs/), a couple of human-authored-test coverage gaps
+and one doc-drift item from the 1.5/1.6/1.7 run, and a pre-existing dashed-
+border violation in library_stats.dart that's Stage 2 item 2.8's to fix, not
+a stray bug to patch in passing -- all itemised in "Known non-blocking gaps".
+Gotcha #7 if the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types
+aren't available yet when you try to spawn one.
 ```
