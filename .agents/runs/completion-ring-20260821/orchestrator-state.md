@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.2 — Completion ring
 Run ID: completion-ring-20260821
 Run folder: .agents/runs/completion-ring-20260821/
 Started: 2026-08-21
-Current phase: CODE_REVIEW
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 issues) — captured 2026-08-21
 Test baseline: +284 -10 — captured 2026-08-21
@@ -11,7 +11,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/questloggd-stage-2-game-card-nxg2vg
 Base branch: develop
 Base SHA: b6d9020
-Dev commit: 3790a71
+Dev commit: a3a918a (revision of 3790a71)
 Last updated: 2026-08-21
 
 Note: this run starts from the tree left by the completed `game-card-20260821`
@@ -32,3 +32,4 @@ NONE
 ## Code review outcomes
 2026-08-21 3790a71 — Sent back to Dev at Phase 4B, two human revisions: (1) remove the "switches the arc to accentMagenta only at 100 and leaves the ink12 track" test, taking the file from 5 tests to 4; (2) split `CompletionRingSize` and `CompletionRingPainter` into their own files under a `lib/widgets/completion_ring/` module, mirroring the shape the human set for `game_card/`. Revision (2) reverses tdd.md Design decision 2 (one flat file) — human-directed, not a Dev error. The new paths are human-authorised additions to task-brief.md's allowlist, which still names the pre-split flat path.
 NOTE, flagged to the human and accepted by them: the removed test was the ONLY automated assertion of the indigo→magenta contract ([2.2-C8]), and `CompletionRingPainter` was made public specifically so that contract could be asserted without a golden test. After removal the 100% colour switch is covered by manual check only, and the painter's public visibility no longer has that justification.
+2026-08-21 a3a918a — Revision commit reviewed and approved by human at Phase 4B; released to QA. Orchestrator re-verified before handoff: analyzer 33 issues (baseline), tests +288 -10 (the expected one-test drop, same 10 pre-existing failures), zero comments across all three module files, 4 tests remaining.
