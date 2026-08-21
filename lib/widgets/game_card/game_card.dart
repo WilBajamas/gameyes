@@ -6,7 +6,7 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/critic_badge.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card_footer.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card_size.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/enum/game_card_size.dart';
 import 'package:gaming_library_assessment_flutter/widgets/library_tick.dart';
 import 'package:gaming_library_assessment_flutter/widgets/status_chip.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card_size.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/enum/game_card_size.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class GameItemLoadingShimmer extends StatelessWidget {

@@ -11,7 +11,7 @@ import 'package:gaming_library_assessment_flutter/features/games/presentation/bl
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card_size.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/enum/game_card_size.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 
 import '../../../../generated/l10n.dart';
