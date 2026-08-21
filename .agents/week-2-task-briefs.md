@@ -129,16 +129,25 @@ these first so Stage 2 items compose them rather than duplicating ad hoc styling
 Built on Stage 1's primitives. Do these after Stage 1 so they compose rather than
 duplicate.
 
-- [ ] **2.1 — Game card.** `system-foundation-specs.md` §3.2 "Game card" row.
+- [x] **2.1 — Game card.** `system-foundation-specs.md` §3.2 "Game card" row.
       Rework — `lib/widgets/game_item.dart` has one anatomy (spec wants three
       sizes: `xs` 64px no footer / `sm` 132px / `md` 220px+), wrong aspect ratio
       (4:4.8, spec wants 3:4 at r16), no overlays (indigo library tick, status
       chip, green critic badge), and missing-art falls back to an `error404` PNG
       instead of an onyx fill + hairline + gamepad glyph. Builds on 1.2 (status
-      chip) and 1.4 (placeholder slot). `GameItem`'s current callers (games,
-      tracker, featured) are real — scope whether this item also rewires them or
-      ships the new component unwired for a later swap; don't guess, let this
-      item's own BA/Tech Lead phase decide based on blast radius.
+      chip) and 1.4 (placeholder slot). **Done 2026-08-21** (run
+      `game-card-20260821`, Dev commit `26b5951`).
+      **This bullet's caller list was wrong** — tracker and featured never
+      referenced `GameItem` at all. The three real direct references were
+      `games_screen.dart` and the two shimmer widgets, and the human chose to
+      rewire all three in-run (Option B). `critics_grid.dart` is an inline
+      *duplicate* of the anatomy rather than a caller, and `saved_game_item.dart`
+      is a different anatomy entirely; both were deliberately deferred. Three
+      things ship knowingly off-spec by human decision, all recorded in the run's
+      `ambiguities.md` and `tdd.md` — the §3.2 desaturation filter (rejected at
+      1.3, absence is the pass condition), platform marks staying as
+      `PlatformRowList` logo images rather than §1.9 text abbreviations, and
+      `md`'s 220px being a design reference rather than an enforced minimum.
 
 - [ ] **2.2 — Completion ring.** `system-foundation-specs.md` §3.2 "Completion
       ring" row. Missing entirely — no ring widget anywhere in the codebase. A
@@ -221,9 +230,12 @@ duplicate.
 
 ## Open decisions that could block
 
-- [ ] **Rewiring scope for 2.1 (Game card) and 2.5 (Form fields)** — both have
-      multiple existing callers across features. Each item's own BA/Tech Lead
-      phase should size the blast radius and decide whether rewiring belongs in
-      the same run or ships as a follow-up, rather than this checklist guessing.
+- [x] **Rewiring scope for 2.1 (Game card)** — settled 2026-08-21: rewired in the
+      same run (Option B). Note the checklist's own caller list for 2.1 was wrong;
+      verify 2.5's before trusting it too.
+- [ ] **Rewiring scope for 2.5 (Form fields)** — has multiple existing callers.
+      That item's own BA/Tech Lead phase should size the blast radius and decide
+      whether rewiring belongs in the same run or ships as a follow-up, rather
+      than this checklist guessing.
 - [ ] **2.7's grain** — four error-state levels in one task-brief vs. four. Tech
       Lead's call when that item runs.
