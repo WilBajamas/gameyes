@@ -146,6 +146,103 @@ gotcha #8.
 
 ---
 
+## Week 2 Stage 2 — item 2.1 (Game card)
+
+From the `game-card-20260821` run, QA `PASS — pending manual checks`. The card
+replaced `GameItem` on the games grid and both shimmers, so most of these are
+about a shipped screen changing appearance, not a new component in isolation.
+
+- **2.1-C1** — Open Games, loaded grid, plus any `sm`/`xs` surface — expect `xs`
+  64 wide and `sm` 132 wide; `md` fills its column. `md`'s 220 is a design
+  reference, not enforced: two columns on a 360dp phone give each card ~168.
+  Do not raise the shortfall as a defect.
+- **2.1-C2** — Open Games, loaded grid, a game with cover art — expect a 3:4
+  cover at r16 carrying the flat indigo→canvas wash, and expect the
+  saturate/contrast desaturation to be **visibly absent**. The spec's 50%
+  desaturation clause ships deliberately unmet by human decision; its absence is
+  the pass condition, matching 1.3-AC7. Also expect no gradient scrim.
+- **2.1-C12** — Open Games with a game whose title is long enough to truncate and
+  whose platform list exceeds the size's cap, at `sm` and at `md` — expect
+  ellipsis truncation, no yellow overflow stripe, the platform row clipped rather
+  than scrolling, and the card's height identical to a short-title card in the
+  same row.
+- **2.1-C13** — Any surface rendering a `GameCard` with no `onTap` (both
+  shimmers) — expect no ripple or press response on touch. The invocation half is
+  covered by test; only the "inert card shows no press response" half is manual.
+- **2.1-R2** — Open Games, loaded grid, at a narrow (~320dp) and a wide (~430dp)
+  device — expect two columns, no clipped footer, no stretched cover, no overflow
+  stripe. Note the card now draws **no surface fill** — `GameItem`'s Material
+  `Card` wrapper is gone, so the grid reads as covers on the canvas. That is
+  intended, and the leftover vertical space should read as whitespace, not as an
+  empty box.
+- **2.1-R4** — **Highest-value check of this set.** Tap a games grid card, then go
+  back, twice: once for a game with cover art and once for a game with none —
+  expect a shared-element cover transition in both directions in both cases, not
+  a cross-fade and not a flash of the missing-art fallback. This is the path that
+  fails silently: no analyzer error and no test catches a broken hero tag beyond
+  the string assertion.
+- **2.1-R5** — Open Games while the first page is loading — expect the skeleton
+  cells to be the same shape and pitch as the loaded grid's cells, with no
+  visible jump at the moment data arrives.
+- **2.1-C4/C5/C6 at `xs`** — Any surface rendering a `GameCard` at `xs` (64px
+  cover) with all three overlays supplied — expect the critic badge (top-left),
+  library tick (top-right) and on-media status chip (bottom-left) to sit inside
+  the cover without colliding or clipping. Overlay insets are a fixed 8 at every
+  size, so `xs` is the tightest case and the only one no automated check covers.
+
+---
+
+## Week 2 Stage 2 — item 2.2 (Completion ring)
+
+From the `completion-ring-20260821` run, QA `PASS — pending manual checks`. The
+ring ships **unwired** — no caller until Game Detail in week 3/4 — so these need
+a scratch harness or the first real caller before they can be performed.
+
+Six are tech-ac's own manual lines. **Four (C8, C9's colour, C10's colour, C5's
+magenta) exist because the single indigo→magenta test was removed at Phase 4B by
+human decision** — that one test was carrying more than the colour switch, so
+these are now the only verification of those criteria. Recorded, not raised as a
+defect.
+
+- **2.2-C1** — Render all three sizes side by side — expect outer boxes measuring
+  exactly 60×60, 80×80 and 88×88, fixed rather than minimums, and no way for a
+  caller to pass a fourth diameter.
+- **2.2-C4** — Render at 0 / 25 / 50 / 75 / 100 — expect the sweep to start at 12
+  o'clock, run clockwise, and be proportional at each step. At 0 expect an
+  untouched track with no round-cap dot anywhere on it. At 100 expect a fully
+  closed circle.
+- **2.2-C5** — Render at `-5` and `140` — expect `-5` to look identical to 0
+  (track only) and `140` identical to 100 (closed magenta ring, `100%` label).
+- **2.2-C8** — **Now the only verification of this criterion.** Render at 99, then
+  99.9, then 100 — expect the arc `accentIndigo` at 99 and 99.9, switching to
+  `accentMagenta` at exactly 100 and above. Expect one flat colour at a time: no
+  gradient, no blend, no transition across the arc. Confirm the `100%` label and
+  the magenta appear together and never one without the other.
+- **2.2-C9** — Render at several values including 0 and 100 — expect the track to
+  be the `ink12` token at every size and value, one continuous solid stroke for
+  the full circle, never dashed or dotted, and never recoloured by value (at 100
+  it is simply covered by the magenta ring). Confirm stroke weight 6 at the 60
+  size and 8 at 80 and 88, and that the arc's cap is round.
+- **2.2-C10** — Sweep the value across its whole range — expect magenta only at
+  exactly 100 and above, and no value to produce red or any warning/error
+  treatment.
+- **2.2-C12** — Render all three sizes — expect the centre percentage at **14** at
+  the 60 inline size (not §3.2's 15 — approved deviation, the even-number
+  convention binds new code), 18 at 80 and 22 at 88, all display face 700 in ink.
+  Confirm the widest label `100%` clears the ring stroke at the 60 size,
+  including at a text scale above 1.0.
+- **2.2-C13** — Render the 80 and 88 sizes with a caption — expect the caption at
+  10 in the `ink55` token beneath the percentage, and dropped entirely at 60.
+- **2.2-C2 / C3** — Render each size inside a `Row` with no width and inside a
+  loose-constrained parent — expect no overflow stripe or layout exception,
+  identical anatomy at all three sizes (track, then arc over it, then centred
+  percentage), and no stretching or collapsing with the parent.
+- **2.2-C14** — With a screen reader on, focus the ring at 37 — expect a single
+  announcement of `37% completed` (approved copy, not `37% complete`), with the
+  centre text not read a second time and the caption not announced.
+
+---
+
 ## Also deferred, for a different reason
 
 Not QA manual checks, but the same "needs a device or a thing that doesn't exist

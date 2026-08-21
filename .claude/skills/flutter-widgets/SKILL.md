@@ -136,9 +136,12 @@ actually match the requirement.
 | `DefaultFilledButtonFullWidth` | `default_filled_button_full_width.dart` | Full-width filled button |
 | `DefaultOutlinedButton` | `default_outlined_button.dart` | Outlined button |
 | `DefaultPopUpButton` | `default_pop_up_button.dart` | Pop-up menu button |
-| `GameItem` | `game_item.dart` | Game card (cover image, name, platforms/date) |
-| `GameItemLoadingShimmer` | `game_item_loading_shimmer.dart` | Shimmer placeholder for GameItem |
-| `GameItemGridLoadingShimmer` | `game_item_grid_loading_shimmer.dart` | Shimmer for full grid load |
+| `GameCard` | `game_card/game_card.dart` | Game card in three sizes (`xs` 64 no footer, `sm` 132, `md` fills its parent): 3:4 cover at r16 with an indigo wash and an onyx missing-art fallback, optional library tick / status chip / critic badge overlays, optional shared-element hero, constructible with no data for shimmers. Multi-file module — only `GameCard` and `GameCardSize` are public surface; the footer classes beside them are internal and are not imported from outside the folder. Adds no spacing of its own |
+| `LibraryTick` | `library_tick.dart` | 20px indigo circle with a check, marking a cover as already in the library; no parameters, display-only; adds no spacing of its own |
+| `CriticBadge` | `critic_badge.dart` | Green pill showing a critic score rounded to a whole number. `score` is the only parameter — no colour, threshold, variant or score ramp. Its green is one of §2 rule 1's two sanctioned exceptions (with the focus ring) because it is data, not an affordance: do not copy the green out of this widget and do not reuse it for a badge that is not a critic score |
+| `GameItem` | `game_item.dart` | **Deprecated** — replaced by `GameCard`. Kept as reference only, no callers |
+| `GameItemLoadingShimmer` | `game_item_loading_shimmer.dart` | Horizontal shimmer of dataless `GameCard`s at `sm` |
+| `GameItemGridLoadingShimmer` | `game_item_grid_loading_shimmer.dart` | Grid shimmer of dataless `GameCard`s at `md`, matching the games grid's cell geometry |
 | `GameDetailTopContentShimmer` | `game_detail_top_content_shimmer.dart` | Shimmer for game detail top section |
 | `GameDetailMidContentShimmer` | `game_detail_mid_content_shimmer.dart` | Shimmer for game detail mid section |
 | `GameScreenshot` | `game_screenshot.dart` | Single screenshot viewer |
@@ -164,6 +167,7 @@ actually match the requirement.
 | `StatTile` / `StatPill` | `stat_pill.dart` | Stat pill in two forms sharing one figure-over-label pair: `StatTile` on 8% ink at r16 (laid out in threes by its caller), `StatPill` as a glass capsule of 2-3 pairs; adds no spacing of its own |
 | `ProgressDots` | `progress_dots.dart` | Step dots for a paged flow: caller supplies the dot count and which index is active; 22x5 ink pill for the active dot, 5x5 ink-12 for the rest, 6px apart, display-only and unanimated; hugs its content and adds no spacing of its own |
 | `ActionRow` | `action_row.dart` | Full-width 52px r-sm row on a caller-supplied flat fill: required 20px leading mark and label centred together as a pair, optional trailing 16px busy indicator, press-scale and focus ring, disabled without dimming; adds no spacing of its own |
+| `CompletionRing` | `completion_ring/completion_ring.dart` | Circular completion ring at three fixed sizes (60 inline, 80 specimen, 88 detail): ink-12 track with a proportional arc over it and the truncated percentage centred inside, plus an optional caption at the two larger sizes. Indigo below 100, a closed magenta ring at exactly 100; value clamps to 0–100 and never throws. Display-only, unanimated, not a hit target; adds no spacing of its own |
 
 ## UI patterns every screen reuses
 

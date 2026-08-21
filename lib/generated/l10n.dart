@@ -1194,6 +1194,16 @@ class S {
       args: [hours],
     );
   }
+
+  /// `Add to library`
+  String get add_to_library {
+    return Intl.message(
+      'Add to library',
+      name: 'add_to_library',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -10,7 +10,8 @@ import 'package:gaming_library_assessment_flutter/features/filter/presentation/w
 import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/enum/game_card_size.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_item_grid_loading_shimmer.dart';
 
 import '../../../../generated/l10n.dart';
@@ -35,8 +36,8 @@ class GamesScreen extends StatelessWidget {
                       metrics.pixels >= (metrics.maxScrollExtent * 0.9);
                   if (isBottom) {
                     context.read<GamesBloc>().scrolledBottom(
-                          isBottom: isBottom,
-                        );
+                      isBottom: isBottom,
+                    );
                   }
                   return false;
                 },
@@ -45,21 +46,16 @@ class GamesScreen extends StatelessWidget {
                     const GamesAppBar(),
                     if (state.status == GamesStatus.success)
                       CupertinoSliverRefreshControl(
-                        onRefresh: () async => context.read<GamesBloc>().add(
-                              const GamesFetched(),
-                            ),
+                        onRefresh: () async =>
+                            context.read<GamesBloc>().add(const GamesFetched()),
                       ),
                     if (state.status == GamesStatus.success)
                       const GamesSliverGrid(),
                     if (state.nextPageStatus == GamesNextPageStatus.loading)
                       const SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 14,
-                          ),
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          child: Center(child: CircularProgressIndicator()),
                         ),
                       ),
                     if (state.nextPageStatus == GamesNextPageStatus.failed)
@@ -71,8 +67,8 @@ class GamesScreen extends StatelessWidget {
                           ),
                           child: ErrorRetryWidget(
                             onRetryClicked: () => context.read<GamesBloc>().add(
-                                  const GamesNextPage(),
-                                ),
+                              const GamesNextPage(),
+                            ),
                           ),
                         ),
                       ),
@@ -81,8 +77,8 @@ class GamesScreen extends StatelessWidget {
                         child: Center(
                           child: ErrorRetryWidget(
                             onRetryClicked: () => context.read<GamesBloc>().add(
-                                  const GamesFetched(),
-                                ),
+                              const GamesFetched(),
+                            ),
                           ),
                         ),
                       ),
@@ -92,8 +88,8 @@ class GamesScreen extends StatelessWidget {
                           child: ErrorRetryWidget(
                             text: S.current.no_results_found,
                             onRetryClicked: () => context.read<GamesBloc>().add(
-                                  const GamesFetched(),
-                                ),
+                              const GamesFetched(),
+                            ),
                           ),
                         ),
                       ),
@@ -113,38 +109,47 @@ class GamesScreen extends StatelessWidget {
 }
 
 class GamesSliverGrid extends StatelessWidget {
-  const GamesSliverGrid({
-    super.key,
-  });
+  const GamesSliverGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<GamesBloc>().state;
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      sliver: SliverGrid.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.6,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-        ),
-        itemCount: state.games.length,
-        itemBuilder: (context, index) => GameItem(
-          fromScreen: RouteConstants.games,
-          game: state.games[index],
-          onItemClick: () {
-            final extra = (
-              state.games[index].id,
-              RouteConstants.games,
-              state.games[index].cover.url
-            );
-            context.router.push(
-              GameDetailRoute(gameExtra: extra),
-            );
-          },
-        ),
-      ),
+
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        final columnWidth = GamesGridConstants.columnWidth(
+          constraints.crossAxisExtent,
+        );
+
+        return SliverPadding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: GamesGridConstants.gutter,
+          ),
+          sliver: SliverGrid.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: GamesGridConstants.columnCount,
+              mainAxisSpacing: GamesGridConstants.gutter,
+              crossAxisSpacing: GamesGridConstants.gutter,
+              mainAxisExtent: GameCardSize.md.cellHeightFor(columnWidth),
+            ),
+            itemCount: state.games.length,
+            itemBuilder: (context, index) => GameCard(
+              size: GameCardSize.md,
+              game: state.games[index],
+              fromScreen: RouteConstants.games,
+              criticScore: state.games[index].criticScore,
+              onTap: () {
+                final extra = (
+                  state.games[index].id,
+                  RouteConstants.games,
+                  state.games[index].cover.url,
+                );
+                context.router.push(GameDetailRoute(gameExtra: extra));
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -164,16 +169,16 @@ class GamesAppBar extends StatelessWidget {
               context: context,
               builder: (bottomSheetContext) => FilterBottomSheet(
                 onSaveClick: (filter) => context.read<GamesBloc>().add(
-                      GamesFetched(
-                        searchTerm: filter.searchTerm,
-                        dateFrom: filter.dateFrom,
-                        dateTo: filter.dateTo,
-                        platforms: filter.platforms,
-                        ordering: filter.ordering,
-                        genres: filter.genres,
-                        ascending: filter.ascending,
-                      ),
-                    ),
+                  GamesFetched(
+                    searchTerm: filter.searchTerm,
+                    dateFrom: filter.dateFrom,
+                    dateTo: filter.dateTo,
+                    platforms: filter.platforms,
+                    ordering: filter.ordering,
+                    genres: filter.genres,
+                    ascending: filter.ascending,
+                  ),
+                ),
                 filterState: context.read<GamesBloc>().state.filterState,
               ),
               isScrollControlled: true,
@@ -185,7 +190,7 @@ class GamesAppBar extends StatelessWidget {
             color: context.themeData.colorScheme.onSurface,
           ),
         ),
-        null
+        null,
       ),
     );
   }

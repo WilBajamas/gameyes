@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
+import 'package:gaming_library_assessment_flutter/core/res/const.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/enum/game_card_size.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class GameItemGridLoadingShimmer extends StatelessWidget {
@@ -8,18 +10,24 @@ class GameItemGridLoadingShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Skeletonizer(
-      child: GridView.builder(
-        padding: const EdgeInsets.all(8),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.6,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-        ),
-        itemCount: 4,
-        itemBuilder: (_, i) => const GameItem(
-          fromScreen: '',
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final columnWidth = GamesGridConstants.columnWidth(
+            constraints.maxWidth,
+          );
+
+          return GridView.builder(
+            padding: const EdgeInsets.all(GamesGridConstants.gutter),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: GamesGridConstants.columnCount,
+              mainAxisSpacing: GamesGridConstants.gutter,
+              crossAxisSpacing: GamesGridConstants.gutter,
+              mainAxisExtent: GameCardSize.md.cellHeightFor(columnWidth),
+            ),
+            itemCount: 4,
+            itemBuilder: (_, index) => const GameCard(size: GameCardSize.md),
+          );
+        },
       ),
     );
   }

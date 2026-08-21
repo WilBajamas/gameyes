@@ -1,13 +1,9 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-20: **week 2 Stage 1 (primitives) is
-now genuinely complete** — all 9 items, 1.1 through 1.9, merged to `develop`.
-1.8 and 1.9 shipped on 2026-08-20 after that same session found this file
-falsely claiming Stage 1 was already done with those two never built; see
-"Where things stand". Stage 2 (composites, 8 items) hasn't started. A new `flutter-widget-test` skill landed
-mid-Stage-1 and every existing widget test in the repo was revised against it,
-through several rounds as the human iterated the skill itself — see "Skills
-restructuring" and gotcha #10. Full detail below.
+Written 2026-07-29. Last updated 2026-08-21: **week 2 Stage 2 is under way — 2
+of 8 composites done.** Item 2.1 (Game card) and 2.2 (Completion ring) both
+shipped this session and are merged to `develop`. Stage 1's 9 primitives were
+already complete. Full detail below.
 
 ---
 
@@ -76,13 +72,12 @@ the checklist's own top note says delete only once the whole week ships. Every
 Stage 1 box in it was ticked 2026-08-20; they had stayed unticked through
 every merge until then.
 
-**How 1.8 and 1.9 nearly got lost.** This file claimed Stage 1 was complete
-while those two had never been built — no `lib/widgets/progress_dots.dart`,
-the dots still hardcoded inline at `welcome_container.dart:57–81`,
-`_ProviderActionButton` still private inside the auth feature. A resume
-session caught it by checking rather than inheriting the claim, and shipped
-both the same day. **Lesson, same shape as gotcha #9: a "stage complete"
-claim is worth one grep before the next stage inherits it.**
+**A "stage complete" claim is worth one grep before the next stage inherits
+it.** This file once claimed Stage 1 was done while 1.8 and 1.9 had never been
+built; a resume session caught it by checking rather than believing, and shipped
+both the same day. Same shape as gotcha #9. The 2.1 run then found the checklist
+misnaming `GameItem`'s callers — so this applies to any inherited claim about
+what exists, not just stage status.
 
 **Condensed record of items 1.1–1.9** (run folders retired 2026-08-20 — this
 is what's left, plus `.agents/manual-check-backlog.md`):
@@ -133,13 +128,56 @@ is what's left, plus `.agents/manual-check-backlog.md`):
   - **`Flexible` over `Expanded`** around the row's label, under the
     hug-content exception, approved at Phase 3.
 
-**Week 2 Stage 2 (composites) — not started.** 8 items in
-`.agents/week-2-task-briefs.md`, building on the Stage 1 primitives above.
-Read its own "How to use this" section — points at the visual spec
+**Week 2 Stage 2 (composites) — 2 of 8 done.** Both shipped 2026-08-21, run
+folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
+section before the next one — it points at the visual spec
 (`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
 skills. Explicitly out of scope there: `system-foundation-specs.md` §3.1 (an
 external, bound design bundle for a different property — not a Flutter build
 target), and the Add-to-library sheet (needs week 3's Library feature first).
+
+**Condensed record of items 2.1 and 2.2:**
+- **2.1 Game card** (`lib/widgets/game_card/`, Dev commit `26b5951`) — three
+  sizes, 3:4 cover at r16, three overlays, onyx missing-art fallback. Rewired
+  `games_screen` and both shimmers; `GameItem` is `@Deprecated`, not deleted.
+  **The checklist's caller list for this item was wrong** — it named tracker and
+  featured, neither of which ever referenced `GameItem`; the real ones were
+  `games_screen` and the two shimmers. That bullet is now corrected in place, and
+  it is worth verifying 2.5's caller list before trusting it. `LibraryTick` and
+  `CriticBadge` were promoted to app-wide primitives at the human's request.
+  Three things ship knowingly off-spec, all deliberate: §3.2's desaturation filter
+  (see below), platform marks staying as `PlatformRowList` logo images rather than
+  §1.9 abbreviations, and `md`'s 220px being a design reference rather than an
+  enforced minimum (two columns on a 360dp phone give ~168 each — C1 and R2 cannot
+  both hold literally).
+  **The desaturation reversal repeated item 1.3's.** BA wrote a criterion straight
+  from §3.2 demanding the 50% desaturation; the human had already rejected exactly
+  that filter at 1.3, and `1.3-AC7` stands as a live check that it be *visibly
+  absent*. Tech Lead caught it. §3.2 still describes the filter and was NOT
+  corrected — see the follow-ups below.
+- **2.2 Completion ring** (`lib/widgets/completion_ring/`, Dev commit `a3a918a`) —
+  three fixed sizes (60/80/88), `ink12` track, indigo arc, closed magenta ring at
+  exactly 100. Ships **unwired** by design; groundwork for Game Detail in week
+  3/4. The project's first real `CustomPainter`. Two approved deviations: the
+  semantics label reuses the existing `completed_percentage` key so it announces
+  "37% completed", and the 60px centre type is 14 rather than §3.2's 15.
+  **The `linear_progress_bar` package was evaluated at the human's request and
+  rejected**, as was Material's `CircularProgressIndicator` — don't re-open
+  without new information; the reasoning is in the checklist bullet.
+  The single indigo→magenta test was removed at Phase 4B by human decision; it
+  turned out to be carrying C8, C9's colour and C10's colour as well, so all three
+  are manual-only now. `CompletionRingPainter` is still public, which was
+  justified *only* by that test — worth revisiting.
+
+**Two conventions worth knowing before the next Stage 2 item**, both learned the
+hard way this session:
+- **§3's type steps keep colliding with "dimensions are even numbers."** Item 1.9
+  hit it at 15px and left the gap open for want of a token; 2.2 hit it again and
+  shipped 14. A 15px type token still doesn't exist. Expect a third collision.
+- **A "one file per widget family" flat `lib/widgets/` is no longer true.** The
+  human directed module folders for both 2.1 and 2.2 (`game_card/`,
+  `completion_ring/`, each with an `enum/` subfolder). The `flutter-widgets` skill
+  still says the opposite — see the follow-ups.
 
 ---
 
@@ -251,21 +289,44 @@ uncovered.
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
 - **The whole on-device manual-check backlog now lives in
-  `.agents/manual-check-backlog.md`** — 24 checks, item 10.1's four plus all
-  nine week 2 Stage 1 items', every one still unperformed. That file is the
-  only copy: it was written when the run folders were retired (2026-08-20),
-  precisely so the checks would outlive the `qa-report.md` files that had been
-  holding them. Don't summarise it back into here — point at it.
+  `.agents/manual-check-backlog.md`** — **44 checks** as of 2026-08-21 (item
+  10.1's four, all nine week 2 Stage 1 items', 2.1's eight and 2.2's ten), every
+  one still unperformed. That file is the only copy: it was written when the run
+  folders were retired, precisely so the checks would outlive the `qa-report.md`
+  files that had been holding them. Don't summarise it back into here — point at
+  it. Note 2.2's ten need a scratch harness or its first real caller, since the
+  ring ships unwired.
 - **Human-authored test gaps from the 1.5/1.6/1.7 run**, flagged by QA as
   advisory (not blocking, QA doesn't gate on files outside Dev's allowlist):
   no `StatTile` test at all despite it being the only one of the three with a
   live caller; `count == 0` unexercised in `filter_count_chip_test.dart`
   despite `tech-ac.md` naming it explicitly; two color assertions there
   hardcode literal hex instead of referencing the design token.
-- ~~**Doc drift**: `tech-ac.md` in the 1.5/1.6/1.7 run folder's two stale
-  `13`s.~~ Fixed 2026-08-20 — `[1.6-AC5]` now reads 12 (the icon size in
-  `context_chip.dart`), `[1.7-AC2]` reads 14 (the tile padding in
-  `stat_pill.dart`).
+- **`.claude/skills/flutter-widgets/SKILL.md`'s "one file per widget family" rule
+  text contradicts two shipped modules** (`game_card/`, `completion_ring/`). Both
+  folders were human-directed; the rule sentence was deliberately not updated in
+  either run. Flagged by QA in both. Whoever next edits that skill should settle
+  the wording rather than leave a rule the codebase openly breaks.
+- **`system-foundation-specs.md` §3.2 still describes the cover-art desaturation
+  filter** that was rejected at item 1.3 and rejected again at 2.1. Two runs have
+  now had a BA write a criterion straight from that stale text. Correcting the
+  doc would stop it happening a third time — item 1.4 set the precedent for fixing
+  a design doc when a decision reverses it.
+- **§1.9 conformance for platform marks** — `PlatformRowList` renders IGDB logo
+  images where §1.9 calls for text abbreviations (`PS5`, `XSX`). Deliberately not
+  converted in 2.1, because it would have changed a shipped screen beyond the card
+  swap and the row is shared with `saved_game_item.dart`. Worth one follow-up
+  converting both callers together, sequenced against week 3's tracker migration.
+- **`lib/widgets/primary_button.dart:29` defaults its fill to `tokens.color.green`**
+  — a third `color.green` resolution beyond `critic_badge.dart` and the focus
+  ring, where §2's colour law names only two sanctioned exceptions. Either the
+  button is a legitimate third (and the catalogue wording needs widening) or it is
+  a leak. Pre-existing, found by 2.1's compliance sweep, owned by nobody yet.
+- **Import blocks in six of item 2.1's files are no longer alphabetised** — the
+  human's `enum/` rename moved `game_card_size.dart` without resorting them.
+  Cosmetic, no diagnostic. Sweep when something else edits those files.
+- **`enum/` (singular) vs the repo's `lib/core/enums/` (plural)** — both new module
+  folders use the singular. Noted so it reads as a deliberate choice, not drift.
 - **A live "outlines are always solid" violation already exists**,
   independent of anything built this week: `library_stats.dart` has a
   `_DashedBorderPainter` (`BorderStyle.none, // We want dashed border`)
@@ -479,11 +540,14 @@ Cleaning up merged `claude/*` branches on GitHub cannot be done from a session:
 REST `DELETE /git/refs/heads/...` returns *"Write access to this GitHub API
 path is not permitted through this proxy."* Not a credential problem and not
 worth retrying — the branches have to be deleted by hand in the GitHub UI.
-Merged as of 2026-08-20 and safe to delete there — all six `claude/*` branches:
+Merged and safe to delete there — seven `claude/*` branches:
 `questloggd-item-10-1-igdb-ogvf5r`, `questloggd-resume-e1e0fi`,
 `questloggd-week-2-components-ha43qm`, `questloggd-week1-item3-rls-x334sm`,
-`questloggd-week1-item8-sosqs6`, and `questloggd-stage-2-resume-ikpjd6`
-(the 1.8/1.9 session branch, merged at `52c9528`).
+`questloggd-week1-item8-sosqs6`, `questloggd-stage-2-resume-ikpjd6`
+(the 1.8/1.9 session branch, merged at `52c9528`), and
+`questloggd-stage-2-game-card-nxg2vg` (the 2.1/2.2 session branch, merged
+2026-08-21). Whether the first six have actually been deleted in the UI yet is
+unknown to any session — check before assuming this list is still current.
 
 Note the last three share **no merge base** with `develop` (`--merged` won't
 list them) because `develop`'s history was rebuilt at some point. They're still
@@ -503,11 +567,11 @@ tracker. Product brief, design conventions and per-screen specs live in
 then `roadmap-deferred.md` (every decision consciously put aside, and the
 fastest way to understand why the plan looks the way it does).
 
-**Current phase: week 2, component library, Stage 1 done, Stage 2 next.**
-Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it when the
-whole week is done, same convention as week 1's). All 9 Stage 1 primitives are
-built and merged; Stage 2's 8 composites haven't started. Target is a
-TestFlight-equivalent Android beta around week 4.
+**Current phase: week 2, component library, Stage 1 done, Stage 2 in progress
+(2 of 8).** Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it
+when the whole week is done, same convention as week 1's). All 9 Stage 1
+primitives plus composites 2.1 and 2.2 are built and merged; 2.3 through 2.8
+remain. Target is a TestFlight-equivalent Android beta around week 4.
 
 **Hard constraints** (both in `project-conventions.md`):
 - **Android only.** No Mac, no iPhone. iOS cannot be built or verified here.
@@ -534,10 +598,10 @@ TestFlight-equivalent Android beta around week 4.
 - `.agents/runs/<run-id>/` — one folder per pipeline run; removed once a run
   is complete with no open escalations, its record migrated somewhere durable
   first (see gotcha #9 — verify this actually happened, don't assume).
-  **The directory doesn't currently exist** — all six week 2 Stage 1 run
-  folders were retired 2026-08-20 (per-item record already condensed into
-  "Where things stand" above, manual checks moved to the backlog file), and
-  git doesn't keep empty directories. The next run's Phase 0 recreates it;
+  **The directory doesn't currently exist** — Stage 1's six folders were retired
+  2026-08-20, and 2.1's and 2.2's on 2026-08-21, each with its record condensed
+  into "Where things stand" above and its manual checks moved to the backlog file
+  first. Git doesn't keep empty directories. The next run's Phase 0 recreates it;
   nothing to restore first.
 - `.agents/`, `.claude/`, and `.codex/` are all **git-tracked**, not ignored.
 
@@ -570,34 +634,48 @@ Before anything else:
   any baseline. Expect 10 pre-existing test failures across three files
   (gotcha #3) -- the suite is not green and never has been.
 
-Current state: week 2 Stage 1 is FULLY done -- all 9 primitives, 1.1 through
-1.9, merged to develop. Stage 2 (8 composite items) hasn't started. Start with
-item 2.1 (Game card) and work in order, since later composites build on earlier
-ones -- read .agents/week-2-task-briefs.md's own "How to use this" section
-first. Note 2.1 has an open scoping question the checklist deliberately leaves
-to its own BA/Tech Lead phase: GameItem has real callers in games, tracker and
-featured, so that run decides whether it rewires them or ships the new
-component unwired.
+Current state: week 2 Stage 1 (9 primitives) is fully done, and Stage 2 is 2 of
+8 -- items 2.1 (Game card) and 2.2 (Completion ring) shipped 2026-08-21 and are
+merged to develop. Next is 2.3 (Countdown + Countdown tile). Work in order,
+since later composites build on earlier ones -- read
+.agents/week-2-task-briefs.md's own "How to use this" section first. Unlike 2.1,
+2.3 has a single known caller (featured's countdown section) and the checklist
+says to rewire it in the same run.
 
-Two conventions changed on 2026-08-20, both stricter than what older code and
-older run artifacts show -- re-read the skills, don't pattern-match off
-existing files:
+Three things that repeated themselves across 2.1 and 2.2, so expect them again:
+- The checklist's caller lists are not reliable. 2.1's named tracker and
+  featured, and neither ever referenced GameItem. Grep before believing one --
+  2.5's is the next unverified claim.
+- BAs write criteria straight from system-foundation-specs.md §3 even where a
+  human decision has already overruled that text. It happened twice on the same
+  desaturation filter (items 1.3 and 2.1). §3.2 still describes it.
+- §3's type steps keep colliding with "dimensions are even numbers" (1.9 at 15px,
+  2.2 again at 15px). A 15px token still doesn't exist.
+
+Conventions, stricter than what older code and older run artifacts show --
+re-read the skills, don't pattern-match off existing files:
 - Widgets carry NO comments at all (flutter-widgets, and execution.md's Code
   quality section). Not "few" -- none.
 - Widget tests never assert dimensions, gaps, radii or positions, and colour
   assertions must carry meaning and name a token. context_chip_test.dart and
   stat_pill_test.dart are the reference files for shape and length; read one
-  before writing a new test file. The flutter-widget-test skill has now been
-  revised four times -- always re-read it in full rather than trusting a prior
-  compliance pass.
+  before writing a new test file. The flutter-widget-test skill has been revised
+  four times -- always re-read it in full rather than trusting a prior compliance
+  pass. Keep test plans proportionate: 2.1's card was trimmed from 19 tests to 10
+  at the gate, and it is a far bigger component than most.
+- lib/widgets/ is no longer flat. 2.1 and 2.2 both ship module folders with an
+  enum/ subfolder, human-directed. The flutter-widgets skill still says the
+  opposite; that contradiction is a live follow-up.
 
 Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
 item 3's on-device cross-account RLS check (blocked on week 3's Library
 feature), item 10.1's dead-code cleanup, the on-device manual-check backlog in
-.agents/manual-check-backlog.md (24 checks, none performed yet -- that file is
-the only copy, the run folders it came from were retired), _SignOutButton as a
-third copy of the ActionRow anatomy, two comment-rule leftovers the new
-convention created, a couple of human-authored-test coverage gaps, and a
+.agents/manual-check-backlog.md (44 checks, none performed yet -- that file is
+the only copy, the run folders it came from were retired), the flutter-widgets
+rule text contradicting two shipped modules, §3.2's stale desaturation text,
+§1.9 platform-mark conformance, primary_button.dart's unexplained third
+color.green, _SignOutButton as a third copy of the ActionRow anatomy, two
+comment-rule leftovers, a couple of human-authored-test coverage gaps, and a
 pre-existing dashed-border violation in library_stats.dart that is Stage 2 item
 2.8's to fix, not a stray bug to patch in passing.
 
