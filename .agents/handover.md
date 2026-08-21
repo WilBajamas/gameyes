@@ -1,11 +1,10 @@
 # Handover — QuestLoggd
 
 Written 2026-07-29. Last updated 2026-08-20: **week 2 Stage 1 (primitives) is
-mostly shipped** — items 1.1 through 1.7 (7 components across 5 pipeline runs,
-1.5/1.6/1.7 combined into one) all done, merged to `develop`. **Items 1.8 and
-1.9 have NOT been built** — corrected 2026-08-20 after a resume session found
-this file previously claimed Stage 1 was complete; see "Where things stand".
-Stage 2 (composites, 8 items) hasn't started. A new `flutter-widget-test` skill landed
+now genuinely complete** — all 9 items, 1.1 through 1.9, merged to `develop`.
+1.8 and 1.9 shipped on 2026-08-20 after that same session found this file
+falsely claiming Stage 1 was already done with those two never built; see
+"Where things stand". Stage 2 (composites, 8 items) hasn't started. A new `flutter-widget-test` skill landed
 mid-Stage-1 and every existing widget test in the repo was revised against it,
 through several rounds as the human iterated the skill itself — see "Skills
 restructuring" and gotcha #10. Full detail below.
@@ -69,22 +68,21 @@ Supabase project yet (0.1b, still deferred on the free-plan cap). Every
 item's dev-only work (schema, RLS, Edge Function, provider config) will need
 repeating there once it exists.
 
-**Week 2 Stage 1 (primitives) — 7 of 9 items done, merged to `develop`.**
-Items 1.1–1.7, with 1.5/1.6/1.7 run as one combined pipeline run at human
-request. `.agents/week-2-task-briefs.md` still exists — do NOT delete it yet,
-Stage 2 (8 composite items) hasn't started and the checklist's own top note
-says delete only once the whole week ships. Its Stage 1 boxes for 1.1–1.7 were
-ticked 2026-08-20 (they had stayed unticked through every merge).
+**Week 2 Stage 1 (primitives) — all 9 items done, merged to `develop`.**
+Items 1.1–1.9, across 6 pipeline runs (1.5/1.6/1.7 combined into one, 1.8/1.9
+into another, both at human request). `.agents/week-2-task-briefs.md` still
+exists — do NOT delete it yet, Stage 2 (8 composite items) hasn't started and
+the checklist's own top note says delete only once the whole week ships. Every
+Stage 1 box in it was ticked 2026-08-20; they had stayed unticked through
+every merge until then.
 
-**Stage 1's two remaining items — 1.8 and 1.9 — were never built.** Both are
-"already exists correctly, extract and promote to `lib/widgets/`" jobs, and
-both were missed rather than deferred: this file claimed Stage 1 was complete
-until a resume session checked and found no `lib/widgets/progress_dots.dart`,
-the dots still hardcoded inline at `welcome_container.dart:57–81`, and
-`_ProviderActionButton` still private inside the auth feature. Neither blocks
-any Stage 2 item (2.1 composes 1.2 and 1.4, not these). **Lesson, same shape
-as gotcha #9: a "stage complete" claim is worth one grep before the next
-stage inherits it.**
+**How 1.8 and 1.9 nearly got lost.** This file claimed Stage 1 was complete
+while those two had never been built — no `lib/widgets/progress_dots.dart`,
+the dots still hardcoded inline at `welcome_container.dart:57–81`,
+`_ProviderActionButton` still private inside the auth feature. A resume
+session caught it by checking rather than inheriting the claim, and shipped
+both the same day. **Lesson, same shape as gotcha #9: a "stage complete"
+claim is worth one grep before the next stage inherits it.**
 
 **Condensed record of items 1.1–1.7** (run folders still live under
 `.agents/runs/`, not yet retired):
@@ -115,6 +113,25 @@ stage inherits it.**
   unless the widget hugs its content"** as standing conventions. Dev commit
   `bb9b6e5`. `ContextChip` and `StatPill` (the glass form) ship unwired — no
   caller since the welcome heroes went to flat PNG art before Stage 1 started.
+- **1.8/1.9 combined** (`progress_dots.dart`, `action_row.dart`) — one run for
+  both promotions, human request. Three Dev commits: `cf6d4d8` built it,
+  `29a516d` applied a Phase 4B revision, `495a27f` fixed QA cycle 1's single
+  defect. `provider_action_button.dart` was deleted (git records it as renamed
+  into `action_row.dart`); both screens rewired in-run with no visual change.
+  Three things settled here that outlive the run:
+  - **The checklist was wrong that the provider row matched spec.** Its label
+    renders Inter 16/400, not §3.3's 15px/500. Resolved as *preserve what
+    ships* — a promotion moves code, it doesn't restyle a live screen — so
+    the gap is still open, and correcting it needs a new 15px type token
+    (none exists). `[1.9-AC5]`'s "full ink" was also wrong: `body` carries no
+    colour and inherits `ink70` via `bodyMedium`→`meta`, so the code pins
+    `ink70` deliberately. Don't "fix" either to match the spec text without
+    asking.
+  - **The dots' 5px dimensions are a recorded exception** to "dimensions are
+    even numbers" — that convention postdates the dots, and the promotion
+    preserved them on purpose.
+  - **`Flexible` over `Expanded`** around the row's label, under the
+    hug-content exception, approved at Phase 3.
 
 **Week 2 Stage 2 (composites) — not started.** 8 items in
 `.agents/week-2-task-briefs.md`, building on the Stage 1 primitives above.
@@ -250,9 +267,13 @@ uncovered.
   zone label's long-label ellipsis, status chip (none outstanding), cover
   tile's crop/wash/fallback/shimmer across all 4 sizes and its 6
   `DefaultCachedNetworkImage` callers, placeholder slot's `LOGO` label fit at
-  the new 14px size, and the combined run's filter sheet render / featured
-  stat row / glass blur / `StatPill` distribution. Full checklists are in
-  each run's `qa-report.md` under `.agents/runs/`.
+  the new 14px size, the 1.5/1.6/1.7 run's filter sheet render / featured
+  stat row / glass blur / `StatPill` distribution, and the 1.8/1.9 run's
+  three: the welcome dots tracking a held partial drag, the sign-in rows'
+  in-flight and failure behaviour, and a before/after comparison of both
+  screens confirming no visible change (labels still at 70% ink, 10px gap
+  between rows). Full checklists are in each run's `qa-report.md` under
+  `.agents/runs/`.
 - **Human-authored test gaps from the 1.5/1.6/1.7 run**, flagged by QA as
   advisory (not blocking, QA doesn't gate on files outside Dev's allowlist):
   no `StatTile` test at all despite it being the only one of the three with a
@@ -269,6 +290,18 @@ uncovered.
   around the empty now-playing card. Belongs to Stage 2 item 2.8's empty
   state, deliberately left untouched by every run that has since edited that
   file for unrelated reasons — don't fix it in passing, it's 2.8's to own.
+- **`_SignOutButton` is a third hand-rolled copy of the `ActionRow` anatomy**
+  (`lib/features/settings/presentation/widgets/sign_out_section.dart`), minus
+  the leading mark. Deliberately left out of the 1.8/1.9 run — folding it in
+  would have forced an optional mark slot and put a third screen's pixels at
+  risk mid-run. It's the natural second caller and the only real argument for
+  that optional slot; worth its own small item.
+- **Two comment-rule leftovers**, both created by the 2026-08-20 convention
+  change rather than by a bad run: `welcome_container.dart` still carries four
+  pre-existing comments that the new "widgets carry no comments" rule now
+  covers (out of the 1.8/1.9 run's allowlist, so it couldn't touch them), and
+  `action_row_test.dart` duplicates its `Text` constructor args around lines
+  64–65. Neither is urgent; sweep them when something else edits those files.
 - **Two more off-spec filter chips** exist beyond what item 1.5 named:
   `_SelectionChip` in both `default_filter_list_app_bar.dart` and
   `filter_list_app_bar.dart`. Not migrated to `FilterCountChip`, flagged as a
@@ -464,9 +497,11 @@ Cleaning up merged `claude/*` branches on GitHub cannot be done from a session:
 REST `DELETE /git/refs/heads/...` returns *"Write access to this GitHub API
 path is not permitted through this proxy."* Not a credential problem and not
 worth retrying — the branches have to be deleted by hand in the GitHub UI.
-Merged as of 2026-08-20 and safe to delete there: `questloggd-item-10-1-igdb-ogvf5r`,
-`questloggd-resume-e1e0fi`, `questloggd-week-2-components-ha43qm`,
-`questloggd-week1-item3-rls-x334sm`, `questloggd-week1-item8-sosqs6`.
+Merged as of 2026-08-20 and safe to delete there — all six `claude/*` branches:
+`questloggd-item-10-1-igdb-ogvf5r`, `questloggd-resume-e1e0fi`,
+`questloggd-week-2-components-ha43qm`, `questloggd-week1-item3-rls-x334sm`,
+`questloggd-week1-item8-sosqs6`, and `questloggd-stage-2-resume-ikpjd6`
+(the 1.8/1.9 session branch, merged at `52c9528`).
 
 Note the last three share **no merge base** with `develop` (`--merged` won't
 list them) because `develop`'s history was rebuilt at some point. They're still
@@ -486,11 +521,10 @@ tracker. Product brief, design conventions and per-screen specs live in
 then `roadmap-deferred.md` (every decision consciously put aside, and the
 fastest way to understand why the plan looks the way it does).
 
-**Current phase: week 2, component library, Stage 1 nearly done, Stage 2 next.**
+**Current phase: week 2, component library, Stage 1 done, Stage 2 next.**
 Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it when the
-whole week is done, same convention as week 1's). 7 of Stage 1's 9 primitives
-are built and merged (1.8 and 1.9 outstanding); Stage 2's 8 composites haven't
-started. Target is a
+whole week is done, same convention as week 1's). All 9 Stage 1 primitives are
+built and merged; Stage 2's 8 composites haven't started. Target is a
 TestFlight-equivalent Android beta around week 4.
 
 **Hard constraints** (both in `project-conventions.md`):
@@ -534,43 +568,51 @@ TestFlight-equivalent Android beta around week 4.
 
 ```text
 Resume QuestLoggd. Checkout develop first. Read .agents/handover.md in full
-(it's not as short as it used to be, read it anyway).
+(it's long now, read it anyway).
 
 Before anything else:
 - Check `git status` is clean. `.agents/`, `.claude/` and `.codex/` are tracked.
 - No Flutter in a fresh container. Install 3.41.4 to match `.fvmrc` (a
-  /etc/profile.d/flutter.sh script works well so every login shell picks it
-  up automatically, including subagents' Bash calls), then `flutter pub get`
-  and `dart run build_runner build --delete-conflicting-outputs` before
-  trusting any baseline. Expect 10 pre-existing test failures (gotcha #3) --
-  the suite is not green and never has been. (Was 11; test/widget_test.dart,
-  a vestigial Flutter-scaffold test that verified nothing about this app, was
-  deleted during week 2 Stage 1.)
+  /etc/profile.d/flutter.sh script works well so every login shell picks it up
+  automatically, including subagents' Bash calls), then `flutter pub get` and
+  `dart run build_runner build --delete-conflicting-outputs` before trusting
+  any baseline. Expect 10 pre-existing test failures across three files
+  (gotcha #3) -- the suite is not green and never has been.
 
-Current state: week 2 Stage 1 (component-library primitives) is fully done
--- items 1.1 through 1.7 (9 components, 7 pipeline runs), all merged to
-develop. Condensed per-item record is in handover.md's "Where things stand".
-Stage 2 (8 composite items, e.g. Game card, Completion ring) hasn't started
--- read .agents/week-2-task-briefs.md's own "How to use this" section before
-running anything, and start with item 2.1 in order since later composites
-build on earlier ones.
+Current state: week 2 Stage 1 is FULLY done -- all 9 primitives, 1.1 through
+1.9, merged to develop. Stage 2 (8 composite items) hasn't started. Start with
+item 2.1 (Game card) and work in order, since later composites build on earlier
+ones -- read .agents/week-2-task-briefs.md's own "How to use this" section
+first. Note 2.1 has an open scoping question the checklist deliberately leaves
+to its own BA/Tech Lead phase: GameItem has real callers in games, tracker and
+featured, so that run decides whether it rewires them or ships the new
+component unwired.
 
-A new flutter-widget-test skill landed mid-Stage-1 and got revised three
-times by the human in one session -- always re-read it in full before
-trusting any prior widget test's compliance, per "Skills restructuring" in
-handover.md. Gotcha #10 has the specific async font-loading trap it
-surfaced and what actually worked to fix it (short version: don't
-pre-resolve theme/token values in setUpAll unless a test genuinely needs to
-assert an exact token value -- most don't, and skipping that resolution
-entirely sidesteps the whole problem).
+Two conventions changed on 2026-08-20, both stricter than what older code and
+older run artifacts show -- re-read the skills, don't pattern-match off
+existing files:
+- Widgets carry NO comments at all (flutter-widgets, and execution.md's Code
+  quality section). Not "few" -- none.
+- Widget tests never assert dimensions, gaps, radii or positions, and colour
+  assertions must carry meaning and name a token. context_chip_test.dart and
+  stat_pill_test.dart are the reference files for shape and length; read one
+  before writing a new test file. The flutter-widget-test skill has now been
+  revised four times -- always re-read it in full rather than trusting a prior
+  compliance pass.
 
-Known follow-ups, none blocking: item 3's on-device cross-account RLS check
-(blocked on week 3's Library feature), item 10.1's dead-code cleanup and four
-manual checks, week 2 Stage 1's own manual-check backlog (one qa-report.md
-per run under .agents/runs/), a couple of human-authored-test coverage gaps
-and one doc-drift item from the 1.5/1.6/1.7 run, and a pre-existing dashed-
-border violation in library_stats.dart that's Stage 2 item 2.8's to fix, not
-a stray bug to patch in passing -- all itemised in "Known non-blocking gaps".
-Gotcha #7 if the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types
-aren't available yet when you try to spawn one.
+Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
+item 3's on-device cross-account RLS check (blocked on week 3's Library
+feature), item 10.1's dead-code cleanup and four manual checks, the whole of
+week 2 Stage 1's manual-check backlog (one qa-report.md per run under
+.agents/runs/, nothing performed on a device yet), _SignOutButton as a third
+copy of the ActionRow anatomy, two comment-rule leftovers the new convention
+created, a couple of human-authored-test coverage gaps, and a pre-existing
+dashed-border violation in library_stats.dart that is Stage 2 item 2.8's to
+fix, not a stray bug to patch in passing.
+
+Two environment things that will waste your time otherwise: remote branch
+deletion is blocked by the egress proxy (gotcha #11 -- the merged claude/*
+branches have to be deleted by hand in the GitHub UI, don't retry the 403),
+and the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types may be
+missing at session start (gotcha #7 has the fallback).
 ```

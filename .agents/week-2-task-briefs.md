@@ -104,7 +104,7 @@ these first so Stage 2 items compose them rather than duplicating ad hoc styling
       this`), not the glass `--radius-pill` shape. Figure display 700, label 55%
       ink, used in threes.
 
-- [ ] **1.8 — Progress dots — promote to `lib/widgets/`.** `system-foundation-specs.md`
+- [x] **1.8 — Progress dots — promote to `lib/widgets/`.** `system-foundation-specs.md`
       §3.3 "Progress dots" primitive. **Already exists correctly** —
       `lib/features/onboarding/presentation/widgets/welcome_container.dart`
       lines 57–81 match spec exactly (22×5 active / 5×5 inactive, `radius.pill`,
@@ -113,7 +113,7 @@ these first so Stage 2 items compose them rather than duplicating ad hoc styling
       app-wide ownership, generic API). Welcome screen becomes its first caller of
       the extracted version, not a rewrite of its own behaviour.
 
-- [ ] **1.9 — Provider / list row — promote to `lib/widgets/`.**
+- [x] **1.9 — Provider / list row — promote to `lib/widgets/`.**
       `system-foundation-specs.md` §3.3 "Provider / list row" primitive.
       **Already exists correctly** —
       `lib/features/auth/presentation/widgets/provider_action_button.dart`'s
