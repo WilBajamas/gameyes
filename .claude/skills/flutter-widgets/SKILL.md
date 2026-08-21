@@ -167,6 +167,7 @@ actually match the requirement.
 | `StatTile` / `StatPill` | `stat_pill.dart` | Stat pill in two forms sharing one figure-over-label pair: `StatTile` on 8% ink at r16 (laid out in threes by its caller), `StatPill` as a glass capsule of 2-3 pairs; adds no spacing of its own |
 | `ProgressDots` | `progress_dots.dart` | Step dots for a paged flow: caller supplies the dot count and which index is active; 22x5 ink pill for the active dot, 5x5 ink-12 for the rest, 6px apart, display-only and unanimated; hugs its content and adds no spacing of its own |
 | `ActionRow` | `action_row.dart` | Full-width 52px r-sm row on a caller-supplied flat fill: required 20px leading mark and label centred together as a pair, optional trailing 16px busy indicator, press-scale and focus ring, disabled without dimming; adds no spacing of its own |
+| `CompletionRing` | `completion_ring.dart` | Circular completion ring at three fixed sizes (60 inline, 80 specimen, 88 detail): ink-12 track with a proportional arc over it and the truncated percentage centred inside, plus an optional caption at the two larger sizes. Indigo below 100, a closed magenta ring at exactly 100; value clamps to 0–100 and never throws. Display-only, unanimated, not a hit target; adds no spacing of its own |
 
 ## UI patterns every screen reuses
 
