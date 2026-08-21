@@ -54,6 +54,9 @@ the 3rd failed attempt: escalate per `escalation.md`, do not attempt a 4th fix.
   `final Color? backgroundColor;`) is a wall of comments, not documentation —
   delete it. Comment the one thing that isn't obvious from the code, once,
   next to where it matters; don't narrate the rest.
+  **Widgets take this further: no comments at all.** A widget file carries
+  none — see the `flutter-widgets` skill. Don't reintroduce one because a
+  criterion or a design doc happened to explain something in prose.
 - **Naming — plain English words.** No invented compound jargon, no
   placeholder-looking values.
 - **Constants — place near their scope.** A constant several features need

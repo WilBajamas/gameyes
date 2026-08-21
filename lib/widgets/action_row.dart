@@ -1,9 +1,12 @@
-part of '../screens/auth_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/widgets/button_press_scale.dart';
 
-class _ProviderActionButton extends StatelessWidget {
-  const _ProviderActionButton({
+class ActionRow extends StatelessWidget {
+  const ActionRow({
+    super.key,
     required this.label,
-    required this.assetPath,
+    required this.markAsset,
     required this.fill,
     required this.enabled,
     required this.loading,
@@ -12,7 +15,7 @@ class _ProviderActionButton extends StatelessWidget {
   });
 
   final String label;
-  final String assetPath;
+  final String markAsset;
   final Color fill;
   final bool enabled;
   final bool loading;
@@ -41,13 +44,22 @@ class _ProviderActionButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    assetPath,
+                    markAsset,
                     width: 20,
                     height: 20,
                     semanticLabel: label,
                   ),
                   const SizedBox(width: 10),
-                  Text(label, style: tokens.typography.body.style),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: tokens.typography.body.style.copyWith(
+                        color: tokens.color.ink70,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   if (loading) ...[
                     const SizedBox(width: 10),
                     SizedBox.square(

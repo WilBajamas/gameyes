@@ -8,11 +8,10 @@ import 'package:gaming_library_assessment_flutter/features/auth/domain/entities/
 import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_in_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/auth/presentation/blocs/sign_in_state.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
-import 'package:gaming_library_assessment_flutter/widgets/button_press_scale.dart';
+import 'package:gaming_library_assessment_flutter/widgets/action_row.dart';
 import 'package:gaming_library_assessment_flutter/widgets/placeholder_slot.dart';
 
 part '../widgets/legal_footer.dart';
-part '../widgets/provider_action_button.dart';
 
 // TODO: Temporary - Replace with actual legal URLs later
 const _temporaryLegalUrl = 'https://google.com';
@@ -65,9 +64,9 @@ class _AuthContent extends StatelessWidget {
               const SizedBox(height: 8),
               Text(S.current.auth_lead, style: tokens.typography.body.style),
               const SizedBox(height: 28),
-              _ProviderActionButton(
+              ActionRow(
                 label: S.current.continue_with_discord,
-                assetPath: 'assets/icons/discord-logo.png',
+                markAsset: 'assets/icons/discord-logo.png',
                 fill: tokens.color.accentIndigo,
                 enabled: !loading,
                 loading: state.activeProvider == SignInProvider.discord,
@@ -76,9 +75,9 @@ class _AuthContent extends StatelessWidget {
                     context.read<SignInCubit>().signIn(SignInProvider.discord),
               ),
               const SizedBox(height: 10),
-              _ProviderActionButton(
+              ActionRow(
                 label: S.current.continue_with_google,
-                assetPath: 'assets/icons/google-logo.png',
+                markAsset: 'assets/icons/google-logo.png',
                 fill: tokens.color.surfaceRaised,
                 enabled: !loading,
                 loading: state.activeProvider == SignInProvider.google,
