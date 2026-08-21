@@ -186,6 +186,17 @@ complete re-check of every existing widget test file. Expect this skill to
 keep evolving — always re-read it in full before trusting prior compliance,
 never assume a file that passed last time still passes.
 
+**A fourth revision landed 2026-08-20**, during the 1.8/1.9 run and prompted
+by the same human trimming that run's tests at the Phase 4B gate: dimensions
+are now simply not tested at all (height, width, padding, gaps, radii,
+offsets, positions — pixel appearance is a manual check), colour assertions
+need to carry meaning and name a token, and the skill now points at two
+**reference files** — `context_chip_test.dart` and `stat_pill_test.dart`,
+both human-written, one and two tests each — as the shape to copy and the
+length to stay near. The same session made widgets **comment-free**: the
+`flutter-widgets` bullet moved from "few comments" to "no comments", with a
+matching line in `execution.md`'s Code quality section.
+
 The skill got progressively stricter: v1 allowed occasional comments and
 didn't address image testing; v2 banned comments entirely and forbade
 manufacturing image-loading success (fake bytes, manual builder invocation);

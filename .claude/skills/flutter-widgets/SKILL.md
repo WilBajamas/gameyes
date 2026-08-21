@@ -62,9 +62,12 @@ Written for the component-library push, permanent, not tied to any one week.
   gap.
 - **Keep them simple.** Build for what the current screens actually need.
   No parameter, variant, or branch for a case nothing calls yet.
-- **Few comments.** The widget's structure and naming should make its
-  purpose obvious without narration — same project-wide rule as everywhere
-  else.
+- **No comments.** Widget files carry none — not a header, not a `///` doc
+  comment, not a note above a `Stack` or a token lookup. A widget is
+  structure and naming; if a line needs explaining, the fix is a clearer
+  name or a smaller widget, never a sentence above it. This is stricter
+  than the project-wide "few comments" rule and it overrides it inside
+  `lib/widgets/` and any feature `presentation/widgets/` file.
 - **Stateful widgets — think before defaulting to `StatefulWidget`.** Small,
   purely visual state (an animation, a toggle, a drag position) is a normal
   `StatefulWidget`. If the state is doing anything closer to real logic,

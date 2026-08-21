@@ -187,11 +187,23 @@ expect(find.text('Games'), findsOneWidget);
 
 ## Treat visual styling deliberately
 
-Test an exact dimension, radius, colour, border, spacing, or position only when it is an explicit public design-system or component contract.
+**Do not test dimensions.** Height, width, padding, gaps, radii, offsets and positions are not behaviour — asserting them copies the implementation into a second file and makes every visual tweak a two-file edit. A component's pixel appearance is a manual check, not a test. This holds even when a criterion states the number: the criterion is the contract, the test is not where it gets enforced.
 
-Do not assert a styling expression merely because it appears in the implementation. For example, asserting both branches of `isMini ? radius.mini : radius.lg` usually duplicates the source rather than protects meaningful behaviour.
+Colour and other styling get the same default. Assert one only when it carries meaning a reader would otherwise miss — an active state distinguished from an inactive one, a destructive action distinguished from a safe one — and reference the design token, never a literal hex.
 
-Treat public size variants as optional contracts. A parameterized dimension test can be reasonable when callers rely on those declared sizes, but omit it when it only repeats enum values with no independent value.
+Do not assert a styling expression merely because it appears in the implementation. For example, asserting both branches of `isMini ? radius.mini : radius.lg` duplicates the source rather than protecting meaningful behaviour.
+
+## Reference files
+
+`test/widget/components/context_chip_test.dart` and
+`test/widget/components/stat_pill_test.dart` are the shape to copy — both
+human-written, both short (one and two tests), both asserting only what the
+widget *does*: the label comes out uppercase, two entries produce two stats,
+an unsupported list length trips the assert. Neither measures anything.
+
+Read one of them before writing a new test file. If a new file is markedly
+longer than these, or spends most of its lines on sizes and offsets, that is
+the signal to cut it back rather than a sign the component is unusually rich.
 
 ## Inspect widget properties only when appropriate
 
@@ -316,7 +328,9 @@ Before keeping a widget test, verify:
 - The setup contains only what the behaviour needs.
 - The action uses the public UI whenever possible.
 - The assertions protect outcomes rather than source structure.
-- Styling assertions correspond to explicit contracts.
+- No assertion measures a dimension, gap, radius or position.
+- Any styling assertion carries meaning and names a design token.
+- The file is no longer than `context_chip_test.dart` or `stat_pill_test.dart` without a reason.
 - The test contains no completers or fake encoded image bytes.
 - The test does not manually invoke internal builders or callbacks.
 - The test contains no arbitrary delays, zones, or swallowed errors.
