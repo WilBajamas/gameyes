@@ -11,8 +11,8 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/questloggd-stage-2-resume-ikpjd6
 Base branch: develop
 Base SHA: edee15fcbb9a38141545050cb6f4ac8b058fbc9e
-Dev commit: cf6d4d81d0845453c183b67d623b0193de308df6
-Last updated: 2026-08-20 (Phase 4 Dev complete and pushed — awaiting Phase 4B code-review gate)
+Dev commit: 29a516d (revision round 1, on top of cf6d4d8)
+Last updated: 2026-08-20 (Phase 4B revision round 1 complete and pushed — awaiting re-review)
 
 ## Notes
 Run on the harness-designated session branch rather than a `feature/<slug>`
@@ -29,4 +29,4 @@ NONE
 2026-08-20 Phase 3 approved as designed — ink70 pinned over [1.9-AC5]'s literal "full ink" to preserve shipped pixels; `Flexible` around the label per the hug-content exception; `_SignOutButton` left out of scope as a follow-up — Approved by human
 
 ## Code review outcomes
-NONE
+2026-08-20 cf6d4d8 — Sent back to Dev: remove comments from both widgets; drop 3 dimension/style tests from action_row_test and 4 from progress_dots_test
