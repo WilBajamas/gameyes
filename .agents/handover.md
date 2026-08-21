@@ -593,10 +593,10 @@ existing files:
 
 Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
 item 3's on-device cross-account RLS check (blocked on week 3's Library
-feature), item 10.1's dead-code cleanup and four manual checks, the whole of
-the whole on-device manual-check backlog in .agents/manual-check-backlog.md
-(24 checks, none performed yet -- .agents/runs/ is empty, those folders were
-retired and that file is the only copy), _SignOutButton as a third
+feature), item 10.1's dead-code cleanup, the on-device manual-check backlog in
+.agents/manual-check-backlog.md (24 checks, none performed yet -- .agents/runs/
+is empty, those folders were retired and that file is the only copy),
+_SignOutButton as a third
 copy of the ActionRow anatomy, two comment-rule leftovers the new convention
 created, a couple of human-authored-test coverage gaps, and a pre-existing
 dashed-border violation in library_stats.dart that is Stage 2 item 2.8's to
