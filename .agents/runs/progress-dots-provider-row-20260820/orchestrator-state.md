@@ -3,7 +3,7 @@ Feature: Week 2 Stage 1 items 1.8 (Progress dots) and 1.9 (Provider / list row) 
 Run ID: progress-dots-provider-row-20260820
 Run folder: .agents/runs/progress-dots-provider-row-20260820/
 Started: 2026-08-20
-Current phase: DEV
+Current phase: CODE_REVIEW
 QA cycles used: 1
 Analyzer baseline: 0 errors, 2 warnings, 31 info — captured 2026-08-20
 Test baseline: +259 -10 — captured 2026-08-20
@@ -11,8 +11,8 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/questloggd-stage-2-resume-ikpjd6
 Base branch: develop
 Base SHA: edee15fcbb9a38141545050cb6f4ac8b058fbc9e
-Dev commit: 29a516d (revision round 1, on top of cf6d4d8)
-Last updated: 2026-08-20 (QA cycle 1 FAIL — one dimension assertion left inside a behaviour test, routed to Dev)
+Dev commit: 495a27f (QA cycle 1 fix, on top of 29a516d and cf6d4d8)
+Last updated: 2026-08-20 (QA cycle 1 fix committed and pushed — back through Phase 4B before QA re-runs)
 
 ## Notes
 Run on the harness-designated session branch rather than a `feature/<slug>`

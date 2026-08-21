@@ -18,6 +18,14 @@ No coverage re-added elsewhere — per `flutter-widget-test`, this is a delibera
 
 Revision commit: 29a516d
 
+## QA cycle 1 fix
+QA (`qa-report.md`) failed the run on one leftover dimension assertion: `test/widget/components/action_row_test.dart` inside `'shows the busy indicator only while loading'` still had `expect(tester.getSize(find.byType(ActionRow)).height, 52);`, missed by the Phase 4B sweep because it sat inside a behaviour test. Deleted that single line as a new commit on top of `29a516d`; nothing else touched. Test count unchanged at `+267 -10` (deleting an assertion doesn't remove a test).
+
+`flutter analyze`: 0 errors, 2 warnings, 31 info — same as baseline.
+`flutter test`: +267 -10, same 10 pre-existing failures, no new failure.
+
+QA cycle 1 fix commit: 495a27fef99db7e401122b18800eef99da7376dd
+
 ## Files created
 lib/widgets/progress_dots.dart — `ProgressDots` + file-private `_Dot`; caller supplies `count` and `activeIndex`, renders `count` dots (22x5 ink pill active, 5x5 ink12 rest) 6px apart, `Row(mainAxisSize: min)`.
 lib/widgets/action_row.dart — `ActionRow`, the promoted full-width 52px `sm`-radius row with a 20px leading mark, centred label (pinned `ink70`, ellipsised in a `Flexible`), and an optional 16px busy indicator.
