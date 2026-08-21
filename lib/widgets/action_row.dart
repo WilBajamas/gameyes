@@ -50,14 +50,9 @@ class ActionRow extends StatelessWidget {
                     semanticLabel: label,
                   ),
                   const SizedBox(width: 10),
-                  // Flexible, not Expanded: the mark and label read as one
-                  // centred pair, and Expanded would push the mark to the edge.
                   Flexible(
                     child: Text(
                       label,
-                      // body carries no colour of its own, so pin the one it
-                      // resolves to today rather than inherit from wherever
-                      // this row is placed.
                       style: tokens.typography.body.style.copyWith(
                         color: tokens.color.ink70,
                       ),

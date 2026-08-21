@@ -17,8 +17,6 @@ class ProgressDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // min + spacing keeps the gap between dots only: nothing before the first
-    // dot, nothing after the last, and the row stays at its content's width.
     return Row(
       mainAxisSize: MainAxisSize.min,
       spacing: 6,

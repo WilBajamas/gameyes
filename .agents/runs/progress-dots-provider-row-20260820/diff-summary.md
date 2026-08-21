@@ -4,6 +4,20 @@ Date: 2026-08-20
 Branch: claude/questloggd-stage-2-resume-ikpjd6
 Commit: cf6d4d81d0845453c183b67d623b0193de308df6
 
+## Phase 4B revision round 1
+Human asked for four changes, made as a new commit on top of `cf6d4d8`:
+1. `lib/widgets/action_row.dart` — removed the comments.
+2. `test/widget/components/action_row_test.dart` — removed the three exact-dimension/layout tests above `'calls onPressed once per tap when enabled'` (dimensions, radius/fill, mark+label sizing); also dropped the now-unused `AppTokens` import. 7 tests → 4.
+3. `lib/widgets/progress_dots.dart` — removed the comments.
+4. `test/widget/components/progress_dots_test.dart` — removed the four exact-dimension/layout tests (active-dot position/size, sizing, gap, content-hugging width). `AppTokens` import still used by the remaining colour test, kept. 8 tests → 4.
+
+No coverage re-added elsewhere — per `flutter-widget-test`, this is a deliberate drop of exact-dimension/layout assertions, not a gap.
+
+`flutter analyze`: 0 errors, 2 warnings, 31 info — same as baseline.
+`flutter test`: +267 -10 (down from +274 -10, as expected: 7 tests removed). Same 10 pre-existing failures, no new failures.
+
+Revision commit: PLACEHOLDER_SHA
+
 ## Files created
 lib/widgets/progress_dots.dart — `ProgressDots` + file-private `_Dot`; caller supplies `count` and `activeIndex`, renders `count` dots (22x5 ink pill active, 5x5 ink12 rest) 6px apart, `Row(mainAxisSize: min)`.
 lib/widgets/action_row.dart — `ActionRow`, the promoted full-width 52px `sm`-radius row with a 20px leading mark, centred label (pinned `ink70`, ellipsised in a `Flexible`), and an optional 16px busy indicator.
