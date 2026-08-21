@@ -16,7 +16,7 @@ No coverage re-added elsewhere — per `flutter-widget-test`, this is a delibera
 `flutter analyze`: 0 errors, 2 warnings, 31 info — same as baseline.
 `flutter test`: +267 -10 (down from +274 -10, as expected: 7 tests removed). Same 10 pre-existing failures, no new failures.
 
-Revision commit: PLACEHOLDER_SHA
+Revision commit: 29a516d
 
 ## Files created
 lib/widgets/progress_dots.dart — `ProgressDots` + file-private `_Dot`; caller supplies `count` and `activeIndex`, renders `count` dots (22x5 ink pill active, 5x5 ink12 rest) 6px apart, `Row(mainAxisSize: min)`.
