@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.1 — Game card
 Run ID: game-card-20260821
 Run folder: .agents/runs/game-card-20260821/
 Started: 2026-08-21
-Current phase: CODE_REVIEW
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info — captured 2026-08-21
 Test baseline: +267 -10 — captured 2026-08-21 (corrected 2026-08-21; first recorded as +257 -10, a transcription error by the orchestrator. Post-implementation is +284 -10, i.e. exactly 17 new passing tests and the same 10 pre-existing failures.)
@@ -23,4 +23,4 @@ Last updated: 2026-08-21
 NONE
 
 ## Code review outcomes
-NONE
+2026-08-21 26b5951 — Reviewed and approved by human at Phase 4B. No deviations to approve (Dev reported none). Human then moved `game_card_size.dart` into `lib/widgets/game_card/enum/` directly (commit `1b8c958`, a pure rename plus 6 import updates) — orchestrator re-verified afterward: analyzer unchanged at 33 issues, all 17 new tests still pass. The task-brief allowlist still names the pre-move path; the new path is human-authored and approved, not an out-of-allowlist write by Dev.
