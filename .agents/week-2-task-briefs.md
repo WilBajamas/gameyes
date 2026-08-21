@@ -149,12 +149,24 @@ duplicate.
       `PlatformRowList` logo images rather than §1.9 text abbreviations, and
       `md`'s 220px being a design reference rather than an enforced minimum.
 
-- [ ] **2.2 — Completion ring.** `system-foundation-specs.md` §3.2 "Completion
+- [x] **2.2 — Completion ring.** `system-foundation-specs.md` §3.2 "Completion
       ring" row. Missing entirely — no ring widget anywhere in the codebase. A
       ring, not a bar; indigo the whole way, closed magenta ring at 100%. Three
       sizes: 60px inline / 80px specimen / 88px detail panel, percentage in the
       display face at centre. No current caller — this is groundwork for the
       Game Detail screen (week 3/4), fine to ship unwired.
+      **Done 2026-08-21** (run `completion-ring-20260821`, Dev commit `a3a918a`).
+      Built as a hand-rolled `CustomPainter`, the project's first — the
+      `linear_progress_bar` package was evaluated at the human's request and
+      rejected, as was Material's `CircularProgressIndicator`; don't re-open
+      without new information. Ships unwired as planned. Two approved deviations:
+      the semantics label reuses the existing `completed_percentage` key so it
+      announces "37% completed", and the 60px centre type is 14 rather than
+      §3.2's 15 (the even-number convention binds new code — the second time §3's
+      type steps have collided with it, after item 1.9's 15px gap). The single
+      indigo→magenta test was removed at Phase 4B by human decision; it turned out
+      to be carrying C8, C9's colour and C10's colour too, so all of those are
+      manual-only now and sit in `manual-check-backlog.md`.
 
 - [ ] **2.3 — Countdown + Countdown tile.** `system-foundation-specs.md` §3.2
       "Countdown" row + §3.3 "Countdown tile" primitive. Rework —

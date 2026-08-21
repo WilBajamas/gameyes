@@ -192,6 +192,57 @@ about a shipped screen changing appearance, not a new component in isolation.
 
 ---
 
+## Week 2 Stage 2 — item 2.2 (Completion ring)
+
+From the `completion-ring-20260821` run, QA `PASS — pending manual checks`. The
+ring ships **unwired** — no caller until Game Detail in week 3/4 — so these need
+a scratch harness or the first real caller before they can be performed.
+
+Six are tech-ac's own manual lines. **Four (C8, C9's colour, C10's colour, C5's
+magenta) exist because the single indigo→magenta test was removed at Phase 4B by
+human decision** — that one test was carrying more than the colour switch, so
+these are now the only verification of those criteria. Recorded, not raised as a
+defect.
+
+- **2.2-C1** — Render all three sizes side by side — expect outer boxes measuring
+  exactly 60×60, 80×80 and 88×88, fixed rather than minimums, and no way for a
+  caller to pass a fourth diameter.
+- **2.2-C4** — Render at 0 / 25 / 50 / 75 / 100 — expect the sweep to start at 12
+  o'clock, run clockwise, and be proportional at each step. At 0 expect an
+  untouched track with no round-cap dot anywhere on it. At 100 expect a fully
+  closed circle.
+- **2.2-C5** — Render at `-5` and `140` — expect `-5` to look identical to 0
+  (track only) and `140` identical to 100 (closed magenta ring, `100%` label).
+- **2.2-C8** — **Now the only verification of this criterion.** Render at 99, then
+  99.9, then 100 — expect the arc `accentIndigo` at 99 and 99.9, switching to
+  `accentMagenta` at exactly 100 and above. Expect one flat colour at a time: no
+  gradient, no blend, no transition across the arc. Confirm the `100%` label and
+  the magenta appear together and never one without the other.
+- **2.2-C9** — Render at several values including 0 and 100 — expect the track to
+  be the `ink12` token at every size and value, one continuous solid stroke for
+  the full circle, never dashed or dotted, and never recoloured by value (at 100
+  it is simply covered by the magenta ring). Confirm stroke weight 6 at the 60
+  size and 8 at 80 and 88, and that the arc's cap is round.
+- **2.2-C10** — Sweep the value across its whole range — expect magenta only at
+  exactly 100 and above, and no value to produce red or any warning/error
+  treatment.
+- **2.2-C12** — Render all three sizes — expect the centre percentage at **14** at
+  the 60 inline size (not §3.2's 15 — approved deviation, the even-number
+  convention binds new code), 18 at 80 and 22 at 88, all display face 700 in ink.
+  Confirm the widest label `100%` clears the ring stroke at the 60 size,
+  including at a text scale above 1.0.
+- **2.2-C13** — Render the 80 and 88 sizes with a caption — expect the caption at
+  10 in the `ink55` token beneath the percentage, and dropped entirely at 60.
+- **2.2-C2 / C3** — Render each size inside a `Row` with no width and inside a
+  loose-constrained parent — expect no overflow stripe or layout exception,
+  identical anatomy at all three sizes (track, then arc over it, then centred
+  percentage), and no stretching or collapsing with the parent.
+- **2.2-C14** — With a screen reader on, focus the ring at 37 — expect a single
+  announcement of `37% completed` (approved copy, not `37% complete`), with the
+  centre text not read a second time and the caption not announced.
+
+---
+
 ## Also deferred, for a different reason
 
 Not QA manual checks, but the same "needs a device or a thing that doesn't exist
