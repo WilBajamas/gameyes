@@ -84,8 +84,8 @@ session caught it by checking rather than inheriting the claim, and shipped
 both the same day. **Lesson, same shape as gotcha #9: a "stage complete"
 claim is worth one grep before the next stage inherits it.**
 
-**Condensed record of items 1.1–1.7** (run folders still live under
-`.agents/runs/`, not yet retired):
+**Condensed record of items 1.1–1.9** (run folders retired 2026-08-20 — this
+is what's left, plus `.agents/manual-check-backlog.md`):
 - **1.1 Zone label** (`lib/widgets/zone_label.dart`) — one Phase 3 reversal:
   human rejected the widget owning its own vertical spacing; established the
   **"No spacing of its own"** standing convention now in `flutter-widgets`
@@ -250,30 +250,12 @@ uncovered.
   `games_repository_test.dart`'s "throws FunctionException" test are all
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
-- Item 10.1's four manual checks have never been performed by anyone, and need
-  a device:
-  - `10.1-AC-16` — debug **dev** build: each IGDB call should print its
-    request line and `{endpoint, query}` body, and a failed call should print
-    status, message and the function's error body. No 50-line trim, no caller
-    stack trace — gone by approved deviation, don't expect them.
-  - `10.1-AC-17` — **release** build and **prod-flavour** build: exercise the
-    games list, expect zero IGDB transport output in the console.
-  - `10.1-AC-2` — a dev build and a prod build each hit their own Supabase
-    project host (visible in the dev build's logger output).
-  - `10.1-AC-10` — with an expired access token, or a forced 401, the games
-    list still loads with no error shown to the user.
-- **Week 2 Stage 1's manual-check backlog** — every item shipped
-  `PASS — pending manual checks`, none performed yet, need a device:
-  zone label's long-label ellipsis, status chip (none outstanding), cover
-  tile's crop/wash/fallback/shimmer across all 4 sizes and its 6
-  `DefaultCachedNetworkImage` callers, placeholder slot's `LOGO` label fit at
-  the new 14px size, the 1.5/1.6/1.7 run's filter sheet render / featured
-  stat row / glass blur / `StatPill` distribution, and the 1.8/1.9 run's
-  three: the welcome dots tracking a held partial drag, the sign-in rows'
-  in-flight and failure behaviour, and a before/after comparison of both
-  screens confirming no visible change (labels still at 70% ink, 10px gap
-  between rows). Full checklists are in each run's `qa-report.md` under
-  `.agents/runs/`.
+- **The whole on-device manual-check backlog now lives in
+  `.agents/manual-check-backlog.md`** — 24 checks, item 10.1's four plus all
+  nine week 2 Stage 1 items', every one still unperformed. That file is the
+  only copy: it was written when the run folders were retired (2026-08-20),
+  precisely so the checks would outlive the `qa-report.md` files that had been
+  holding them. Don't summarise it back into here — point at it.
 - **Human-authored test gaps from the 1.5/1.6/1.7 run**, flagged by QA as
   advisory (not blocking, QA doesn't gate on files outside Dev's allowlist):
   no `StatTile` test at all despite it being the only one of the three with a
@@ -545,9 +527,16 @@ TestFlight-equivalent Android beta around week 4.
 - `.agents/references/` — product brief, design conventions, per-screen
   specs, project conventions, deferred roadmap. Trimmed 2026-08-07 where
   content moved into the component skills above.
+- `.agents/manual-check-backlog.md` — every on-device check QA identified and
+  nobody has performed, across every run. Created 2026-08-20 as the durable
+  home for these; tick one off by deleting it, and if one fails it becomes a
+  bug to file rather than a backlog line.
 - `.agents/runs/<run-id>/` — one folder per pipeline run; removed once a run
   is complete with no open escalations, its record migrated somewhere durable
   first (see gotcha #9 — verify this actually happened, don't assume).
+  **Currently empty** — all six week 2 Stage 1 run folders were retired
+  2026-08-20, their per-item record already condensed into "Where things
+  stand" above and their manual checks moved to the backlog file.
 - `.agents/`, `.claude/`, and `.codex/` are all **git-tracked**, not ignored.
 
 ---
