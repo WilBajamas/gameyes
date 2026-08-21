@@ -89,3 +89,11 @@ class SupabaseIgdbProxyConstants {
   static const gamesEndpoint = 'games';
   static const releaseDatesEndpoint = 'release_dates';
 }
+
+class GamesGridConstants {
+  static const double gutter = 8;
+  static const int columnCount = 2;
+
+  static double columnWidth(double crossAxisExtent) =>
+      (crossAxisExtent - gutter * (columnCount + 1)) / columnCount;
+}

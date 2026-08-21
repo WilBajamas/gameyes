@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/widgets/game_item.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card.dart';
+import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card_size.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class GameItemLoadingShimmer extends StatelessWidget {
@@ -7,13 +8,14 @@ class GameItemLoadingShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Skeletonizer(
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 3,
-        itemBuilder: (_, i) => const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: GameItem(fromScreen: '',),
+    return SizedBox(
+      height: GameCardSize.sm.cellHeightFor(GameCardSize.sm.width),
+      child: Skeletonizer(
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          separatorBuilder: (_, index) => const SizedBox(width: 8),
+          itemBuilder: (_, index) => const GameCard(size: GameCardSize.sm),
         ),
       ),
     );

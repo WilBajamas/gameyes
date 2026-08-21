@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "add_group_task": MessageLookupByLibrary.simpleMessage("Add Group Task"),
     "add_step": MessageLookupByLibrary.simpleMessage("Add step"),
     "add_task": MessageLookupByLibrary.simpleMessage("Add task"),
+    "add_to_library": MessageLookupByLibrary.simpleMessage("添加到游戏库"),
     "all_time_top_100": MessageLookupByLibrary.simpleMessage(
       "All time top 100",
     ),

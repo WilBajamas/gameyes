@@ -6,6 +6,7 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/platform_row_list.dart';
 
+@Deprecated('Use GameCard in lib/widgets/game_card/game_card.dart')
 class GameItem extends StatelessWidget {
   final GameEntity? game;
   final bool showReleaseDate;
@@ -30,10 +31,7 @@ class GameItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _TopStack(
-                game: game,
-                fromScreen: fromScreen,
-              ),
+              _TopStack(game: game, fromScreen: fromScreen),
 
               const SizedBox(height: 4),
 
@@ -45,9 +43,7 @@ class GameItem extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: SizedBox(
                     height: 16,
-                    child: PlatformRowList(
-                      platforms: game!.platforms!,
-                    ),
+                    child: PlatformRowList(platforms: game!.platforms!),
                   ),
                 ),
 
@@ -94,10 +90,7 @@ class _TopStack extends StatelessWidget {
   final GameEntity? game;
   final String fromScreen;
 
-  const _TopStack({
-    this.game,
-    required this.fromScreen,
-  });
+  const _TopStack({this.game, required this.fromScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +104,6 @@ class _TopStack extends StatelessWidget {
               topRight: Radius.circular(8),
             ),
             child: game?.cover.url != null
-
                 //** Image */
                 ? Hero(
                     tag: '${ConfigConstants.heroTag}/${game?.id}/$fromScreen',

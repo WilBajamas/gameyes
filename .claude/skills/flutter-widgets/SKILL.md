@@ -136,9 +136,12 @@ actually match the requirement.
 | `DefaultFilledButtonFullWidth` | `default_filled_button_full_width.dart` | Full-width filled button |
 | `DefaultOutlinedButton` | `default_outlined_button.dart` | Outlined button |
 | `DefaultPopUpButton` | `default_pop_up_button.dart` | Pop-up menu button |
-| `GameItem` | `game_item.dart` | Game card (cover image, name, platforms/date) |
-| `GameItemLoadingShimmer` | `game_item_loading_shimmer.dart` | Shimmer placeholder for GameItem |
-| `GameItemGridLoadingShimmer` | `game_item_grid_loading_shimmer.dart` | Shimmer for full grid load |
+| `GameCard` | `game_card/game_card.dart` | Game card in three sizes (`xs` 64 no footer, `sm` 132, `md` fills its parent): 3:4 cover at r16 with an indigo wash and an onyx missing-art fallback, optional library tick / status chip / critic badge overlays, optional shared-element hero, constructible with no data for shimmers. Multi-file module — only `GameCard` and `GameCardSize` are public surface; the footer classes beside them are internal and are not imported from outside the folder. Adds no spacing of its own |
+| `LibraryTick` | `library_tick.dart` | 20px indigo circle with a check, marking a cover as already in the library; no parameters, display-only; adds no spacing of its own |
+| `CriticBadge` | `critic_badge.dart` | Green pill showing a critic score rounded to a whole number. `score` is the only parameter — no colour, threshold, variant or score ramp. Its green is one of §2 rule 1's two sanctioned exceptions (with the focus ring) because it is data, not an affordance: do not copy the green out of this widget and do not reuse it for a badge that is not a critic score |
+| `GameItem` | `game_item.dart` | **Deprecated** — replaced by `GameCard`. Kept as reference only, no callers |
+| `GameItemLoadingShimmer` | `game_item_loading_shimmer.dart` | Horizontal shimmer of dataless `GameCard`s at `sm` |
+| `GameItemGridLoadingShimmer` | `game_item_grid_loading_shimmer.dart` | Grid shimmer of dataless `GameCard`s at `md`, matching the games grid's cell geometry |
 | `GameDetailTopContentShimmer` | `game_detail_top_content_shimmer.dart` | Shimmer for game detail top section |
 | `GameDetailMidContentShimmer` | `game_detail_mid_content_shimmer.dart` | Shimmer for game detail mid section |
 | `GameScreenshot` | `game_screenshot.dart` | Single screenshot viewer |

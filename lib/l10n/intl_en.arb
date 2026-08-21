@@ -198,5 +198,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "add_to_library": "Add to library"
 }
