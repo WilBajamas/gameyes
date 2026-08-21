@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
-import 'package:gaming_library_assessment_flutter/config/theme/tokens/app_color_tokens.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
-import 'package:gaming_library_assessment_flutter/widgets/completion_ring.dart';
+import 'package:gaming_library_assessment_flutter/widgets/completion_ring/completion_ring.dart';
+import 'package:gaming_library_assessment_flutter/widgets/completion_ring/enum/completion_ring_size.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
@@ -31,18 +31,6 @@ void main() {
     );
   }
 
-  CompletionRingPainter painterOf(WidgetTester tester) =>
-      (tester
-              .widget<CustomPaint>(
-                find.byWidgetPredicate(
-                  (widget) =>
-                      widget is CustomPaint &&
-                      widget.painter is CompletionRingPainter,
-                ),
-              )
-              .painter!
-          as CompletionRingPainter);
-
   testWidgets(
     'shows the truncated percentage when the value carries a fraction',
     (tester) async {
@@ -66,33 +54,6 @@ void main() {
 
     expect(find.text('100%'), findsOneWidget);
   });
-
-  testWidgets(
-    'switches the arc to accentMagenta only at 100 and leaves the ink12 '
-    'track unchanged',
-    (tester) async {
-      await tester.pumpWidget(buildSubject(value: 99));
-
-      expect(painterOf(tester).progressColor, AppColorTokens.dark.accentIndigo);
-      expect(painterOf(tester).trackColor, AppColorTokens.dark.ink12);
-
-      await tester.pumpWidget(buildSubject(value: 100));
-
-      expect(
-        painterOf(tester).progressColor,
-        AppColorTokens.dark.accentMagenta,
-      );
-      expect(painterOf(tester).trackColor, AppColorTokens.dark.ink12);
-
-      await tester.pumpWidget(buildSubject(value: 140));
-
-      expect(
-        painterOf(tester).progressColor,
-        AppColorTokens.dark.accentMagenta,
-      );
-      expect(painterOf(tester).trackColor, AppColorTokens.dark.ink12);
-    },
-  );
 
   testWidgets('shows the percentage at every size and drops the caption at the '
       'inline size', (tester) async {

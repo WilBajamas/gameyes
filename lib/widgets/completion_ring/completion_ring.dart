@@ -1,30 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
-
-const double _ringInset = 2;
-
-enum CompletionRingSize {
-  inline(box: 60, stroke: 6, figureSize: 14, showsCaption: false),
-  specimen(box: 80, stroke: 8, figureSize: 18, showsCaption: true),
-  detail(box: 88, stroke: 8, figureSize: 22, showsCaption: true);
-
-  const CompletionRingSize({
-    required this.box,
-    required this.stroke,
-    required this.figureSize,
-    required this.showsCaption,
-  });
-
-  final double box;
-  final double stroke;
-  final double figureSize;
-  final bool showsCaption;
-
-  double get radius => (box - _ringInset * 2 - stroke) / 2;
-}
+import 'package:gaming_library_assessment_flutter/widgets/completion_ring/completion_ring_painter.dart';
+import 'package:gaming_library_assessment_flutter/widgets/completion_ring/enum/completion_ring_size.dart';
 
 class CompletionRing extends StatelessWidget {
   const CompletionRing({
@@ -89,56 +67,4 @@ class CompletionRing extends StatelessWidget {
       ),
     );
   }
-}
-
-class CompletionRingPainter extends CustomPainter {
-  CompletionRingPainter({
-    required this.progress,
-    required this.radius,
-    required this.stroke,
-    required this.trackColor,
-    required this.progressColor,
-  });
-
-  final double progress;
-  final double radius;
-  final double stroke;
-  final Color trackColor;
-  final Color progressColor;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final centre = size.center(Offset.zero);
-
-    final track = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke
-      ..color = trackColor;
-
-    canvas.drawCircle(centre, radius, track);
-
-    if (progress <= 0) return;
-
-    final arc = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke
-      ..strokeCap = StrokeCap.round
-      ..color = progressColor;
-
-    canvas.drawArc(
-      Rect.fromCircle(center: centre, radius: radius),
-      -pi / 2,
-      2 * pi * progress,
-      false,
-      arc,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CompletionRingPainter oldDelegate) =>
-      oldDelegate.progress != progress ||
-      oldDelegate.radius != radius ||
-      oldDelegate.stroke != stroke ||
-      oldDelegate.trackColor != trackColor ||
-      oldDelegate.progressColor != progressColor;
 }
