@@ -16,9 +16,11 @@ separators, and an optional Remind action; it replaces the inline countdown insi
 ships with no caller. Both forms render a **snapshot** of a remaining duration supplied by the
 caller — no unit smaller than a minute is shown, and the widget owns no timer. The existing
 `CountdownReleasesCubit` already computes `durationRemaining` / `isReleaseDay` on a 60-second
-`Timer.periodic` and cancels it in `close()`; it stays the sole owner of ticking and is not
-reshaped by this item. The rework also removes five §4 content-rule violations and the raw
-Material colours in the current card.
+`Timer.periodic` and cancels it in `close()`; it stays the sole owner of ticking, and its tick and
+its `close()` cancellation are untouched. One data-path change is in scope: a genuine wishlist
+boolean carried from the repository through the use case and state to the card, so the reason line
+stops asserting a wishlist entry that may not exist (C20–C22). The rework also removes five §4
+content-rule violations and the raw Material colours in the current card.
 
 Forms are labelled per criterion: **[both]**, **[card]**, **[tile]**, **[rewire]**.
 
@@ -143,20 +145,58 @@ and no releases exist and the section collapses.
   Failure case: a changed rail, a crash or a blank section under the skeleton loading path, or the
   empty path no longer collapsing is a fail.
 
-C19 [item 2.3] DOMAIN / PRESENTATION-STATE [rewire]: `CountdownReleasesCubit`,
-`CountdownReleasesState`, `GetCountdownGameUseCase` and `GetOutThisWeekUseCase` are not reshaped by
-this item. `countdownGame`, `durationRemaining` and `isReleaseDay` feed the new component as they
-stand, the cubit remains the only owner of the 60-second tick, and it still cancels that timer in
-`close()`.
-  Failure case: a change to the cubit, its state or either use case, or a second ticking timer
-  introduced anywhere, is a fail. (See ASSUMPTION-5 for the one case that would justify a state
-  change and why it is deliberately not taken here.)
+C19 [item 2.3] DOMAIN / PRESENTATION-STATE [rewire]: the countdown data path changes in exactly one
+respect — it carries the wishlist flag of C20/C21. `FeaturedRepository.getCountdownGame` and
+`GetCountdownGameUseCase` return the selected game together with that flag, and
+`CountdownReleasesState` gains one boolean field for it. Nothing else is reshaped:
+`GetOutThisWeekUseCase` is untouched; the cubit's release-date resolution, coming-soon-label logic,
+failure branches and its `durationRemaining` / `isReleaseDay` computation are unchanged; the cubit
+remains the sole owner of the 60-second `Timer.periodic` and still cancels it in `close()`; no
+second timer is introduced anywhere; and no new local or remote read is added to serve the flag.
+  Failure case: a change to `GetOutThisWeekUseCase`, an altered tick interval, a missing `close()`
+  cancellation, a second or widget-owned timer, an extra datasource call, or any state / use-case
+  change beyond the single wishlist flag is a fail.
+
+C20 [item 2.3 · §3.2 · §2 law 3] DATA / DOMAIN [rewire]: countdown-game selection resolves a
+wishlist flag alongside the selected game, computed where the wishlisted ids are already known
+(`featured_repository_impl.dart:66`, `_localDatasource.getWishlistedGames()`). The flag is true only
+when the selected game's id is in that wishlisted set; it is false when selection fell through to
+the globally most-anticipated fallback, and false when no game is selected. `GetCountdownGameUseCase`
+passes the flag through unchanged and derives nothing of its own. The failure branch keeps its
+current shape.
+  Failure case: a flag derived from saved/owned ids rather than wishlisted ids, a true flag on a
+  fallback selection, a flag recomputed in the use case, cubit or widget, or an extra
+  `getWishlistedGames()` call added per load, is a fail.
+
+C21 [item 2.3] PRESENTATION-STATE [rewire]: `CountdownReleasesState` carries the wishlist flag,
+defaulting to false. The cubit sets it from the use case result on every successful load and
+re-sets it on every reload, including the reload triggered when a release date has passed, so a
+newly selected game never inherits the previous game's flag. The 60-second tick emits duration and
+release-day changes only and leaves the flag as it stands; a failed load does not raise it.
+  Failure case: a stale true flag surviving a reload onto a different countdown game, the flag
+  flipping on a tick, or a flag set on the failure path, is a fail.
+
+C22 [§3.2 · home §4.1 · §2 law 3] PRESENTATION [card, rewire]: the card's reason line is determined
+by the wishlist flag alone, and by nothing about local library membership. All three cases are
+defined: (a) flag true — the cyan wishlist reason line of C10; (b) flag false and the game's id is
+in the local library id set — the neutral `ink55` reason line, byte-identical to case (c), with no
+cyan and no copy asserting a wishlist entry; (c) flag false and the game is not in the local library
+— the same neutral reason line. Cases (b) and (c) are one rendered state, not two; the new
+distinction is in the input, since library membership no longer selects the line. `featured` passes
+the state's flag and never re-derives it from `localLibraryGameIds`, which survives only for the
+out-this-week rail's owned marker (`countdown_releases.dart:357`).
+  Failure case: the wishlist line appearing for a library game whose flag is false (today's
+  behaviour at `countdown_releases.dart:76`), any wishlist-specific copy or cyan in cases (b) or (c),
+  a third distinct reason line, or a card that still reads `localLibraryGameIds`, is a fail.
 
 ## Out of scope
 
 - **Reminder scheduling.** No notification package exists in `pubspec.yaml`, and
   `roadmap-deferred.md` defers the notification centre. C11 covers the Remind affordance and its
   handler only — nothing in this item schedules, permissions, or persists a reminder.
+- **Wishlisting from the countdown.** C20–C22 make the flag truthful; nothing in this item lets the
+  user add or remove a wishlist entry, and no other consumer of the wishlisted set changes — the
+  rail's wishlist-first ordering (`featured_repository_impl.dart:147–157`) stays as it is.
 - **The out-this-week rail's own anatomy.** Its filled `Icons.videogame_asset` fallback (§1.9
   outline-only), its green owned marker (§2 law 1) and its 120px tiles stay as they are. That is
   Game card / Cover tile territory, already shipped as items 2.1 and 1.3 with the rail deliberately
@@ -179,11 +219,14 @@ surface `#2F333C`, not the indigo panel `#2F3782`. `system-foundation-specs.md` 
 `home-screen-design-conventions.md` precedence for its own screen, and its §4.1 names
 `--surface-raised`; §3.2's own rationale ("can't out-shout the primary zone") points at the quieter
 step, and §1.1 reserves the indigo panel for the hero card and sheet header. Featured is the first
-destination in the home shell, so §4.1 governs this card.
+destination in the home shell, so §4.1 governs this card. Reviewed at the 2026-08-21 gate and left
+standing.
 
-ASSUMPTION-2: The card carries no cover thumbnail. Neither §3.2 nor home §4.1 lists one; today's
-card has an 80×110 cover at `countdown_releases.dart:105–120`. This is a visible change from what
-ships now, and it also retires the filled `Icons.videogame_asset` fallback at line 117.
+ASSUMPTION-2 (HUMAN-CONFIRMED 2026-08-21): The card carries no cover thumbnail. Neither §3.2 nor
+home §4.1 lists one; today's card has an 80×110 cover at `countdown_releases.dart:105–120`. This is
+a visible change to a shipped screen, so it was put to the human at the gate and confirmed:
+`home-screen-design-conventions.md` §4.1 has authority over §3.2 here, and the thumbnail is dropped.
+It also retires the filled `Icons.videogame_asset` fallback at line 117.
 
 ASSUMPTION-3: Figure sizes follow the screen specs — 22px in the card (home §4.1), 30px in the tile
 (§3.3, welcome §3c). Both are even, so the standing even-number convention holds without the
@@ -195,21 +238,21 @@ precisely so no live timer is needed, and the cubit already refreshes the durati
 seconds — a minute is the smallest unit shown, so that cadence is sufficient. A widget-owned timer
 would duplicate it and risk a leak.
 
-ASSUMPTION-5: Wishlist provenance stays as it is today. `featured` marks the countdown game as
-wishlisted when its id is in the local library id set — the same inference the current card makes
-at `countdown_releases.dart:76`. That set is *every* saved game
-(`featured_local_datasource.dart:31–35`), not just wishlisted ones, so the flag over-triggers for a
-library game that was never wishlisted. The repository already knows the truth — it selects from
-wishlisted games first and falls back to the globally most-anticipated game
-(`featured_repository_impl.dart:66–103`) — so a truthful line needs one provenance boolean carried
-through the use case and state. That is a deliberate non-goal here (C19); raise it if the wording
-of the cyan line matters more than keeping this item inside the presentation layer.
+ASSUMPTION-5 (REVERSED BY HUMAN DECISION 2026-08-21 — the flag is now in scope): the original
+assumption left wishlist provenance as today's inference and is withdrawn. `countdown_releases.dart:76`
+computes `isFallback` from the local library id set, which is *every* saved game
+(`featured_local_datasource.dart:31–35`), so the "Wishlisted" line renders for library games that
+were never wishlisted — user-facing copy asserting something false about the user's own library. The
+human confirmed the finding in the code and widened the run to thread a genuine boolean from the
+repository (which already reads the wishlisted ids) through the use case and state to the card. See
+C20, C21, C22, and the corrected C19; see `ambiguities.md` for the scope-widening rationale.
 
 ASSUMPTION-6: No document specifies the copy. New strings are written to §4 (second person,
 sentence case body ending in a period, caps labels with no terminal period, no exclamation mark, no
 emoji) and added as l10n keys in both existing locales, matching how the section's other strings
 are already localised. Existing keys `wishlist`, `wishlist_upcoming_game` and `reminder` are
-available for reuse.
+available for reuse. This now also covers the neutral reason line shared by C22 cases (b) and (c),
+which must not name the wishlist.
 
 ASSUMPTION-7: Unit labels are `DAYS` / `HRS` / `MIN`, per home §4.1 and welcome §3c, replacing
 today's `Days` / `Hrs` / `Mins`.
