@@ -1,17 +1,22 @@
 # Technical Design Document
 Source: `.agents/runs/game-card-20260821/tech-ac.md` — week 2 Stage 2 item 2.1, Game card
 Date: 2026-08-21
+Revised: 2026-08-21 at the Phase 3 gate. The card became a multi-file module, the two
+cover overlays were promoted to app-wide widgets, and the test plan was trimmed. Full
+reasoning and the authoritative wording are in `code-plan.md ## Approved feedback delta`
+(D1–D4); the sections below are corrected so the design and the file allowlist agree.
 
 ## Feature summary
 
-One new global widget, `GameCard` (`lib/widgets/game_card.dart`), replaces `GameItem`
-at its three call sites. It is presentation-only: no bloc, no use case, no repository,
-no API. Everything it shows is either read off the `GameEntity` it is handed (title,
-release date, platforms, cover url) or passed in as a discrete parameter (critic score,
-status, library membership, tap and add callbacks). Three sizes come from one enum that
-also owns the card's cell geometry, so the games grid and the grid shimmer derive their
-cell height from the card instead of hardcoding an aspect ratio. Composition reuses the
-Stage 1 primitives and existing app widgets — `StatusChip`, `PlatformRowList`,
+One new global widget module, `GameCard` (`lib/widgets/game_card/`), replaces `GameItem`
+at its three call sites, alongside two new app-wide primitives lifted out of it,
+`LibraryTick` and `CriticBadge`. It is presentation-only: no bloc, no use case, no
+repository, no API. Everything it shows is either read off the `GameEntity` it is handed
+(title, release date, platforms, cover url) or passed in as a discrete parameter (critic
+score, status, library membership, tap and add callbacks). Three sizes come from one enum
+that also owns the card's cell geometry, so the games grid and the grid shimmer derive
+their cell height from the card instead of hardcoding an aspect ratio. Composition reuses
+the Stage 1 primitives and existing app widgets — `StatusChip`, `PlatformRowList`,
 `DefaultCachedNetworkImage` — and adds nothing to any of them.
 
 ## Layer map
@@ -42,21 +47,56 @@ None. `GamesBloc` and `GamesState` are unchanged; `GamesSliverGrid` keeps readin
 
 ### Widgets
 
-**`GameCard` (create) — `lib/widgets/game_card.dart` — stateless.**
+**`GameCard` (create) — `lib/widgets/game_card/game_card.dart` — stateless.**
 Consumes: `GameCardSize size` (required), `GameEntity? game`, `String? fromScreen`,
 `double? criticScore`, `LibraryStatus? status`, `bool inLibrary`, `VoidCallback? onTap`,
 `VoidCallback? onAddTap`. Interactions: whole-card tap through an `InkWell` that is
 inert when `onTap` is null (C13); a separate inline add control at `md` that fires only
 `onAddTap` (C9, C10). Registers a `Hero` around the cover box when — and only when —
-both `game` and `fromScreen` are non-null (C14, C15). File-private children:
-`_CardCover`, `_MissingArt`, `_LibraryTick`, `_CriticBadge`, `_CardFooter`,
-`_PlaceholderBar`. No comments anywhere in the file, per `flutter-widgets`.
+both `game` and `fromScreen` are non-null (C14, C15). File-private children that stay in
+this file: `_CardCover`, `_CoverArt`, `_MissingArt`. No comments anywhere in the file,
+per `flutter-widgets`.
 
-**`GameCardSize` (create) — same file — enum, three values.**
+**The card is a multi-file module — `lib/widgets/game_card/`.** The footers each get
+their own file beside the card, and the placeholder bar moves with them because both
+footers use it:
+
+| File | Class | Visibility |
+|---|---|---|
+| `game_card.dart` | `GameCard` | public, module entry point |
+| `game_card_size.dart` | `GameCardSize`, `coverAspectRatio` | public |
+| `game_card_footer.dart` | `GameCardFooter` | module-internal |
+| `game_card_small_footer.dart` | `GameCardSmallFooter` | module-internal |
+| `game_card_medium_footer.dart` | `GameCardMediumFooter` | module-internal |
+| `game_card_placeholder_bar.dart` | `GameCardPlaceholderBar` | module-internal |
+
+"Module-internal" means public in Dart's sense — they are no longer file-private — but not
+app-wide: they carry the `GameCard` prefix, they are not in the reusable-widget catalogue,
+they get no dedicated test file, and nothing outside the folder imports them. The card
+moves into the folder rather than sitting beside it, so the module's entry point is at its
+root. `GameCardSize` moves to its own file because the footers need it and the card
+imports the footers — leaving the enum in `game_card.dart` would close an import circle.
+No barrel file: a caller needing both writes two imports. Naming follows the one rule this
+repo is consistent about — one class per file, file named the snake_case of the class.
+
+**`GameCardSize` (create) — `game_card_size.dart` — enum, three values.**
 `xs` width 64, `sm` width 132, `md` width 220. Carries `width`, `footerHeight`,
-`fillsParent`, and `cellHeightFor(double cardWidth)`. This enum is the single source of
-truth for the card's geometry; the games grid and the grid shimmer both call
+`fillsParent`, `hasFooter` and `cellHeightFor(double cardWidth)`. This enum is the single
+source of truth for the card's geometry; the games grid and the grid shimmer both call
 `cellHeightFor` rather than restating a ratio (R2, R5).
+
+**`LibraryTick` (create) — `lib/widgets/library_tick.dart` — stateless, app-wide.**
+A 20px indigo circle with a check, marking a cover as already in the library (C4). No
+parameters — it is a fixed glyph with nothing a caller varies. Catalogued as a
+component-library primitive; the card composes it, it does not own it.
+
+**`CriticBadge` (create) — `lib/widgets/critic_badge.dart` — stateless, app-wide.**
+A green pill showing a critic score rounded to a whole number (C6). `score` is its only
+parameter — no colour, fill, threshold, variant or size knob, and no score ramp, so a
+caller cannot turn it into a general-purpose green badge or reintroduce featured's 80/60
+ramp. Its green is one of the two exceptions §2 rule 1 sanctions (with the focus ring),
+because the badge is data rather than an affordance; the catalogue row says so, and after
+implementation `color.green` resolves in only two places in `lib/`.
 
 **`GamesSliverGrid` (modify) — `lib/features/games/presentation/screens/games_screen.dart`.**
 Renders `GameCard` at `md` per game, supplying the game, `RouteConstants.games`,
@@ -77,9 +117,10 @@ renaming them is not asked for by any criterion and would ripple into `games_scr
 import for no behavioural gain.
 
 **`GameItem` (modify) — `lib/widgets/game_item.dart`.**
-Gains a `@Deprecated` annotation naming `GameCard` as its replacement. Nothing else in
-the file changes; it keeps its existing body and its existing comments, which belong to
-a retired widget and are not this run's to sweep (R7).
+Gains a `@Deprecated` annotation naming `GameCard` at
+`lib/widgets/game_card/game_card.dart` as its replacement. Nothing else in the file
+changes; it keeps its existing body and its existing comments, which belong to a retired
+widget and are not this run's to sweep (R7).
 
 ### Screens
 
@@ -172,11 +213,13 @@ diagnostic, which is the cheap signal that a caller was missed.
 
 R8's catalogue is the "Existing reusable widgets catalogue" table in
 `.claude/skills/flutter-widgets/SKILL.md` — the only catalogue of reusable widgets this
-project keeps. The edit is three table rows: add `GameCard`, mark `GameItem` deprecated,
-and update the two shimmer rows to say they shimmer the new card. R8's wording asks for
-the shimmer entries to be "marked as deprecated"; they are not deprecated, because R5
-and R6 rewire them, so they are re-described instead. Rule text in that skill is not
-touched — only the catalogue rows.
+project keeps. The edit is six table rows: add `GameCard` at its module path, add
+`LibraryTick`, add `CriticBadge`, mark `GameItem` deprecated, and update the two shimmer
+rows to say they shimmer the new card. R8's wording asks for the shimmer entries to be
+"marked as deprecated"; they are not deprecated, because R5 and R6 rewire them, so they
+are re-described instead. The card's row also records that only `GameCard` and
+`GameCardSize` are its public surface, so the next reader does not adopt a footer class
+as a component. Rule text in that skill is not touched — only the catalogue rows.
 
 ### 5. Card surface and interior
 
@@ -187,6 +230,16 @@ is a colour step" on the onyx canvas. It also makes the grid's leftover vertical
 read as ordinary whitespace rather than as a stretched empty box. `GameItem`'s Material
 `Card` wrapper does not carry over. This is a visible change to the games grid and is
 listed as a manual check.
+
+### 6. Which overlays are the card's and which are the app's
+
+`StatusChip` was already app-wide, and after the gate revision the other two are too.
+`LibraryTick` and `CriticBadge` are component-library citizens on the same footing as the
+Stage 1 primitives, so all three cover overlays now come from `lib/widgets/` and the card
+composes rather than owns them. The footers went the other way: split into files for
+readability, but kept module-internal because nothing outside the card can use a footer
+shaped by `GameCardSize`. The dividing line is whether the widget's API means anything
+without the card — a tick and a score badge do, a card footer does not.
 
 ## Reuse decisions
 
@@ -216,7 +269,9 @@ listed as a manual check.
   card itself, for a primitive whose remaining job is the auth screen's fan. The card's
   cover is therefore a private `_CardCover` that reuses the *same tokens and the same
   composition*, not a second styling. Flagged because the run prompt named the cover
-  tile as something to compose: this is the one primitive that could not be.
+  tile as something to compose: this is the one primitive that could not be. Note that
+  after the gate revision `CoverTile` and `GameCard` do share the two overlay widgets,
+  so the divergence is narrower than it was.
 - **`PlaceholderSlot` (`lib/widgets/placeholder_slot.dart`) — considered, not used.**
   Its two presets are an 88px app mark with a `LOGO` marker and a 20px provider mark,
   both meaning "licensed art is still owed". Neither is the card's missing-art fallback
@@ -224,8 +279,8 @@ listed as a manual check.
   would put the wrong semantics on screen.
 - **`MetacriticIndicator` (`lib/widgets/metacritic_indicator.dart`) — considered,
   rejected.** It is a 40px circle with an off-palette red/yellow/green score ramp —
-  the exact thing C6's failure case forbids. Left untouched; it is not in scope to
-  retire here.
+  the exact thing C6's failure case forbids, and the reason `CriticBadge` ships with no
+  threshold parameter. Left untouched; it is not in scope to retire here.
 - **`Skeletonizer`** — already the project's shimmer mechanism; both shimmers keep it
   and simply wrap the new card.
 
@@ -233,7 +288,8 @@ listed as a manual check.
 
 - `lib/features/featured/presentation/widgets/critics_grid.dart` and
   `lib/widgets/saved_game_item.dart` — deferred by the human's CRITICAL-1 Option B
-  decision; neither appears in the allowlist.
+  decision; neither appears in the allowlist. In particular, `critics_grid.dart` is not
+  rewired onto the new `CriticBadge` in this run even though it now could be.
 - Any change to `PlatformRowList`, including an error or loading builder, and §1.9's
   text-abbreviation conversion (FOLLOW-UP-1).
 - Any change to `CoverTile`, `StatusChip` or `PlaceholderSlot`.
@@ -243,7 +299,18 @@ listed as a manual check.
 
 ## Open questions
 
-**OQ-1 — [2.1-C2]'s 50% desaturation contradicts a recorded human decision, and it is
+**NONE OPEN.** OQ-1 below was settled by the human at the Phase 3 gate on 2026-08-21 —
+recorded here by the orchestrator, analysis left intact for the record.
+
+**RESOLVED 2026-08-21 — wash only, no desaturation.** The human reaffirmed the item 1.3
+decision in their own words ("i rejected the filter for a reason"). The card applies the
+flat indigo wash and no `saturate`/`contrast` filter, matching `CoverTile` and keeping
+manual check `1.3-AC7` valid. [2.1-C2] is amended as written from stale spec text; that
+clause of it ships deliberately unmet, and this is not a defect for QA to raise.
+`system-foundation-specs.md` §3.2 still describes the filter and was NOT corrected in
+this run — recorded as a follow-up.
+
+**OQ-1 (resolved above) — [2.1-C2]'s 50% desaturation contradicts a recorded human decision, and it is
 not the Tech Lead's to overrule.** C2 requires the cover to carry "the 50%
 desaturation and the flat indigo→canvas wash" at every size, and its failure case
 forbids shipping with the treatment omitted. But week 2 item 1.3 ended in a Phase 3
@@ -263,6 +330,7 @@ ships knowingly unmet on that clause. Reinstating it properly would also mean ch
 
 Designed as: **wash only, no saturation filter**, consistent with the 1.3 decision —
 but the plan is written so this is a one-line change either way, and the decision is
-the human's. `escalation.md` is open on this.
+the human's. `escalation.md` is open on this. Confirmed still open and unchanged by the
+Phase 3 revision — the human's three changes did not touch it.
 
 (if non-empty: write escalation.md before halting) — done.

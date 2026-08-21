@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.1 — Game card
 Run ID: game-card-20260821
 Run folder: .agents/runs/game-card-20260821/
 Started: 2026-08-21
-Current phase: HUMAN_GATE
+Current phase: TECH_LEAD
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info — captured 2026-08-21
 Test baseline: +257 -10 — captured 2026-08-21
