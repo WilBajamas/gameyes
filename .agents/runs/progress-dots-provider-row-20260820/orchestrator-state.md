@@ -3,7 +3,7 @@ Feature: Week 2 Stage 1 items 1.8 (Progress dots) and 1.9 (Provider / list row) 
 Run ID: progress-dots-provider-row-20260820
 Run folder: .agents/runs/progress-dots-provider-row-20260820/
 Started: 2026-08-20
-Current phase: CODE_REVIEW
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info — captured 2026-08-20
 Test baseline: +259 -10 — captured 2026-08-20
@@ -12,7 +12,7 @@ Branch: claude/questloggd-stage-2-resume-ikpjd6
 Base branch: develop
 Base SHA: edee15fcbb9a38141545050cb6f4ac8b058fbc9e
 Dev commit: 29a516d (revision round 1, on top of cf6d4d8)
-Last updated: 2026-08-20 (Phase 4B revision round 1 complete and pushed — awaiting re-review)
+Last updated: 2026-08-20 (Phase 4B approved at round 2 — advancing to QA)
 
 ## Notes
 Run on the harness-designated session branch rather than a `feature/<slug>`
@@ -30,3 +30,4 @@ NONE
 
 ## Code review outcomes
 2026-08-20 cf6d4d8 — Sent back to Dev: remove comments from both widgets; drop 3 dimension/style tests from action_row_test and 4 from progress_dots_test
+2026-08-20 29a516d — Reviewed and approved by human
