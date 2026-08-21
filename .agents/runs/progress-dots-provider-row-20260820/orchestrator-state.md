@@ -3,8 +3,8 @@ Feature: Week 2 Stage 1 items 1.8 (Progress dots) and 1.9 (Provider / list row) 
 Run ID: progress-dots-provider-row-20260820
 Run folder: .agents/runs/progress-dots-provider-row-20260820/
 Started: 2026-08-20
-Current phase: QA
-QA cycles used: 1
+Current phase: COMPLETE
+QA cycles used: 2
 Analyzer baseline: 0 errors, 2 warnings, 31 info — captured 2026-08-20
 Test baseline: +259 -10 — captured 2026-08-20
 Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3)
@@ -12,7 +12,9 @@ Branch: claude/questloggd-stage-2-resume-ikpjd6
 Base branch: develop
 Base SHA: edee15fcbb9a38141545050cb6f4ac8b058fbc9e
 Dev commit: 495a27f (QA cycle 1 fix, on top of 29a516d and cf6d4d8)
-Last updated: 2026-08-20 (Phase 4B approved the QA cycle 1 fix — QA re-running, attempt 2 of 2)
+Result: PASS — pending manual checks
+Completed: 2026-08-20
+Last updated: 2026-08-20 (Phase 6 COMPLETE — QA cycle 2 PASS pending manual checks)
 
 ## Notes
 Run on the harness-designated session branch rather than a `feature/<slug>`
