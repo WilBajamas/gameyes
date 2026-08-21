@@ -534,9 +534,11 @@ TestFlight-equivalent Android beta around week 4.
 - `.agents/runs/<run-id>/` — one folder per pipeline run; removed once a run
   is complete with no open escalations, its record migrated somewhere durable
   first (see gotcha #9 — verify this actually happened, don't assume).
-  **Currently empty** — all six week 2 Stage 1 run folders were retired
-  2026-08-20, their per-item record already condensed into "Where things
-  stand" above and their manual checks moved to the backlog file.
+  **The directory doesn't currently exist** — all six week 2 Stage 1 run
+  folders were retired 2026-08-20 (per-item record already condensed into
+  "Where things stand" above, manual checks moved to the backlog file), and
+  git doesn't keep empty directories. The next run's Phase 0 recreates it;
+  nothing to restore first.
 - `.agents/`, `.claude/`, and `.codex/` are all **git-tracked**, not ignored.
 
 ---
@@ -592,8 +594,9 @@ existing files:
 Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
 item 3's on-device cross-account RLS check (blocked on week 3's Library
 feature), item 10.1's dead-code cleanup and four manual checks, the whole of
-week 2 Stage 1's manual-check backlog (one qa-report.md per run under
-.agents/runs/, nothing performed on a device yet), _SignOutButton as a third
+the whole on-device manual-check backlog in .agents/manual-check-backlog.md
+(24 checks, none performed yet -- .agents/runs/ is empty, those folders were
+retired and that file is the only copy), _SignOutButton as a third
 copy of the ActionRow anatomy, two comment-rule leftovers the new convention
 created, a couple of human-authored-test coverage gaps, and a pre-existing
 dashed-border violation in library_stats.dart that is Stage 2 item 2.8's to
