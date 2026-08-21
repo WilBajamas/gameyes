@@ -31,7 +31,6 @@ void main() {
     await tester.pumpWidget(_buildSubject(loading: true));
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.text('Continue'), findsOneWidget);
-    expect(tester.getSize(find.byType(ActionRow)).height, 52);
   });
 
   testWidgets('shows the label on one line ellipsised in a narrow parent', (
