@@ -243,6 +243,66 @@ defect.
 
 ---
 
+## Week 2 Stage 2 — item 2.3 (Countdown + Countdown tile)
+
+From the `countdown-20260821` run, QA `PASS — pending manual checks`. This item
+rewired a **shipped screen** (Featured's countdown section) and changed a second
+element on it (the rail's owned marker), so most of these are regression checks
+on visible UI rather than new-component checks. Two need a scratch host: C11
+(Remind is handler-gated, so it renders nowhere this run) and C13 (the tile ships
+unwired).
+
+- **2.3-C1/C9** — Featured, countdown game with a future release date — three digit
+  blocks on 8% ink at radius `xs`, min width 40, `DAYS`/`HRS`/`MIN` caps at ink55
+  directly under each block, no seconds group.
+- **2.3-C1 (long)** — Featured, countdown game more than 99 days out — the day block
+  shows all digits (e.g. `120`) and grows past its 40px minimum rather than
+  clipping or wrapping.
+- **2.3-C2** — Featured, counting state — the two colons sit on the digit baseline,
+  not the caption baseline, at both figure sizes.
+- **2.3-C4** — Featured, countdown game releasing today — the released label only: no
+  digits, no colons, no unit labels, neutral ink, no green and no magenta.
+- **2.3-C5** — Featured, countdown game with no resolvable release date — the
+  caller's release-date text if IGDB supplied one, otherwise the caps
+  unannounced-date label; no `00` placeholders, no empty box.
+- **2.3-C6** — The same duration through `CountdownCard` and `CountdownTile` side by
+  side — identical digits, labels and colon count; only surface treatment and type
+  scale differ (22px figure on the card, 30px on the tile).
+- **2.3-C7** — Featured with a screen reader on the countdown — one announcement
+  reading the remaining time as a sentence, not three loose numbers. Released and
+  unannounced states announce their own single label.
+- **2.3-C8** — Featured countdown card — flat `#2F333C` fill at radius `lg`, no
+  gradient, no elevation shadow, and **no cover thumbnail** (the 80×110 art is
+  deliberately gone — human-confirmed, not a regression).
+- **2.3-C10** — Featured, a countdown game that IS on the wishlist vs. one that is
+  not — cyan reason line with an outline bookmark glyph in the first case; one
+  neutral ink55 line with no glyph and no cyan in the second. **Needs a real
+  wishlist entry** for the selected game to reach the true branch. This is the
+  check that proves the wishlist-accuracy fix actually works end to end.
+- **2.3-C11** — Not reachable in the app this run: `featured` passes no `onRemind`.
+  When a caller is wired, check the ink12 `radius.xs` control, its outline bell
+  glyph, that it is never green, and a hit target of at least 44px.
+- **2.3-C13** — `CountdownTile` in a harness over a photographic background — glass
+  32% fill with the blur visibly applied at radius `xs`, colons at the 40%
+  countdown-colon token rather than ink12, caps micro labels beneath.
+- **2.3-C15** — Featured, every countdown state — no emoji, no dingbat and no
+  exclamation mark in any rendered string, in both `en` and `zh`.
+- **2.3-C17/C18** — Featured, all four section paths: (a) success with a countdown
+  game and releases; (b) the `Skeletonizer` loading path; (c) the countdown failure
+  path; (d) no countdown game and no releases, where the section must still
+  collapse. The out-this-week rail, its heading and its "n games" count must look
+  and behave exactly as before the rewire.
+- **2.3-Phase4B** — Featured, out-this-week rail with a game already in the local
+  library — the owned marker is now `LibraryTick`'s 20×20 indigo circle with a 12px
+  ink check, replacing the old green circle with a white check. The green→indigo
+  change is the intent; confirm it reads correctly over cover art.
+- **2.3-l10n** — Featured with the device set to Chinese — the nine new keys render
+  at their token sizes without clipping (`发售日期待公布` and `距发售还有 … 分钟` are
+  the longest), and the caps type tokens degrade harmlessly on CJK, which has no
+  uppercase form.
+
+---
+
 ## Also deferred, for a different reason
 
 Not QA manual checks, but the same "needs a device or a thing that doesn't exist
