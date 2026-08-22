@@ -2,7 +2,7 @@
 Source: `.agents/week-2-task-briefs.md` Stage 2 item 2.3 — Countdown + Countdown tile
 Date: 2026-08-22
 Branch: claude/questloggd-stage-2-game-card-nxg2vg
-Commit: PENDING
+Commit: b76f3406c8c718f091902a51af427be4ee692f98
 
 ## Files created
 lib/features/featured/domain/entities/countdown_game_entity.dart — freezed entity pairing the selected countdown game with its wishlist flag (both fields required)
