@@ -26,7 +26,7 @@ have exactly ONE caller between them — `home_screen.dart:30`. The checklist's
 caller list, which named two features that never referenced the component at all.
 
 ## Escalation history
-NONE
+2026-08-22 Phase 1 — BA Agent — CRITICAL: `ScrolledNavigationBar` hides on scroll (an `AnimatedContainer` collapsing height to 0, driven by the `getIt` `ScrollNotifier` singleton). Live on the shipped Home shell for all five tabs. Neither §3.2 nor home §6 decides whether that behaviour survives the rework, and it is a scope decision rather than a style one — the notifier has three writers (`home_screen.dart:61`, `browse_screen.dart:19`, `settings_screen.dart:26`) plus a DI registration and a test registration, all outside this component. Verified by the orchestrator. — Resolved: human chose to DROP the scroll-hide behaviour; the bar becomes static chrome per §3.2 and home §6's "fixed to the bottom of the frame". This is a deliberate, visible behaviour change on a shipped screen, not an oversight. The orphaned `ScrollNotifier` singleton, its DI registration, the three writer sites (`home_screen.dart:61`, `browse_screen.dart:19`, `settings_screen.dart:26`) and `settings_screen_test.dart`'s registration are deliberately left in place as a logged follow-up rather than widening a chrome item into four unrelated files — same call item 2.1 made about `PlatformRowList`.
 
 ## Deviation approvals
 NONE
