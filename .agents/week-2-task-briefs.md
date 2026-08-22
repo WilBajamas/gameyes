@@ -168,7 +168,7 @@ duplicate.
       to be carrying C8, C9's colour and C10's colour too, so all of those are
       manual-only now and sit in `manual-check-backlog.md`.
 
-- [ ] **2.3 — Countdown + Countdown tile.** `system-foundation-specs.md` §3.2
+- [x] **2.3 — Countdown + Countdown tile.** `system-foundation-specs.md` §3.2
       "Countdown" row + §3.3 "Countdown tile" primitive. Rework —
       `lib/features/featured/presentation/widgets/countdown_releases.dart`'s
       `_buildTimeBox` (carries a `// TODO: Refactor this`) has the digit-block
@@ -178,6 +178,25 @@ duplicate.
       section over to the new component in the same item — this is a single
       known caller, low risk to rewire immediately rather than leave parallel
       implementations.
+      **Done 2026-08-21** (run `countdown-20260821`, Dev commit `5c2266b`). Two
+      public widgets — `CountdownCard` and `CountdownTile` — over a shared
+      `CountdownDigitRow`, in `lib/widgets/countdown/`. Provably timer-free: every
+      class in the module is a `StatelessWidget`, so the cubit stays the only clock.
+      Featured's countdown section rewired; the tile ships unwired (the welcome hero
+      that would have hosted it went to flat PNG art in item 6.1).
+      **Scope was deliberately widened past the component at the human's request:**
+      the "Wishlisted" badge was firing on whole-library membership, not the wishlist,
+      so it asserted something false about the user's own library. A genuine wishlist
+      boolean now travels repo → use case → state via a new `CountdownGameEntity`
+      with both fields required, and both repository branches resolve it through one
+      helper — the stale-flag bug is unrepresentable rather than merely avoided.
+      Also at the human's call: the 80×110 cover thumbnail was dropped (the screen
+      doc lists none and has authority over §3.2), `isReleaseDay` left the widget API
+      (the component derives it from the duration), and the rail's hand-rolled green
+      owned-marker was replaced with item 2.1's `LibraryTick` — indigo, per §2's
+      colour law rationing green. All the §4/§1.9 violations are gone: emoji,
+      exclamation marks, `Colors.amber`/`Colors.green`, the gradient and `elevation: 3`,
+      along with the file's `// TODO: Refactor this`.
 
 - [ ] **2.4 — Tab bar.** `system-foundation-specs.md` §3.2 "Tab bar" row.
       Rework — `lib/features/home/presentation/screens/home_screen.dart` +

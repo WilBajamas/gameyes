@@ -199,5 +199,21 @@
       }
     }
   },
-  "add_to_library": "Add to library"
+  "add_to_library": "Add to library",
+  "countdown_days": "Days",
+  "countdown_hours": "Hrs",
+  "countdown_minutes": "Min",
+  "countdown_released": "Out now",
+  "countdown_date_unannounced": "Date to be announced",
+  "countdown_time_remaining": "{days} days, {hours} hours, {minutes} minutes until release",
+  "@countdown_time_remaining": {
+    "placeholders": {
+      "days": {},
+      "hours": {},
+      "minutes": {}
+    }
+  },
+  "on_your_wishlist": "On your wishlist",
+  "most_anticipated": "Most anticipated",
+  "remind": "Remind"
 }

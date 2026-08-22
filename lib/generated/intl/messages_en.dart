@@ -24,15 +24,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(percentage) => "${percentage}% completed";
 
-  static String m2(hours) => "${hours}h";
+  static String m2(days, hours, minutes) =>
+      "${days} days, ${hours} hours, ${minutes} minutes until release";
 
-  static String m3(logged, average) => "${logged}h logged of ${average}h";
+  static String m3(hours) => "${hours}h";
 
-  static String m4(count) => "+ ${count} more playing";
+  static String m4(logged, average) => "${logged}h logged of ${average}h";
 
-  static String m5(hours) => "${hours}h played";
+  static String m5(count) => "+ ${count} more playing";
 
-  static String m6(stepName) =>
+  static String m6(hours) => "${hours}h played";
+
+  static String m7(stepName) =>
       "Are you sure you want to remove step ${stepName}? This action cannot be undone";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -98,6 +101,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_with_google": MessageLookupByLibrary.simpleMessage(
       "Continue with Google",
     ),
+    "countdown_date_unannounced": MessageLookupByLibrary.simpleMessage(
+      "Date to be announced",
+    ),
+    "countdown_days": MessageLookupByLibrary.simpleMessage("Days"),
+    "countdown_hours": MessageLookupByLibrary.simpleMessage("Hrs"),
+    "countdown_minutes": MessageLookupByLibrary.simpleMessage("Min"),
+    "countdown_released": MessageLookupByLibrary.simpleMessage("Out now"),
+    "countdown_time_remaining": m2,
     "critics_choice_title": MessageLookupByLibrary.simpleMessage(
       "Critics Choice Title",
     ),
@@ -159,7 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "group_task_created": MessageLookupByLibrary.simpleMessage(
       "Group task created",
     ),
-    "hours_abbreviation": m2,
+    "hours_abbreviation": m3,
     "improve": MessageLookupByLibrary.simpleMessage("Improve"),
     "inProgress": MessageLookupByLibrary.simpleMessage("In Progress"),
     "keep_it_short": MessageLookupByLibrary.simpleMessage("Keep it short"),
@@ -171,7 +182,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_game_title_placeholder": MessageLookupByLibrary.simpleMessage(
       "Loading Game Title",
     ),
-    "logged_hours_of": m3,
+    "logged_hours_of": m4,
     "mark_button": MessageLookupByLibrary.simpleMessage("+ Mark"),
     "mark_playing_now": MessageLookupByLibrary.simpleMessage(
       "Mark what you\'re playing now",
@@ -183,9 +194,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Metacritic score",
     ),
     "missed": MessageLookupByLibrary.simpleMessage("Missed"),
-    "more_playing": m4,
+    "more_playing": m5,
     "most_anticipated": MessageLookupByLibrary.simpleMessage(
-      "Most Anticipated",
+      "Most anticipated",
     ),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "new_and_trending": MessageLookupByLibrary.simpleMessage("New & Trending"),
@@ -214,12 +225,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "now_playing": MessageLookupByLibrary.simpleMessage("Now Playing"),
     "ok": MessageLookupByLibrary.simpleMessage("Ok"),
     "onHold": MessageLookupByLibrary.simpleMessage("On Hold"),
+    "on_your_wishlist": MessageLookupByLibrary.simpleMessage(
+      "On your wishlist",
+    ),
     "only_10_group_tasks_allowed": MessageLookupByLibrary.simpleMessage(
       "Only a maximum of 10 group tasks are allowed.",
     ),
     "ordering": MessageLookupByLibrary.simpleMessage("Ordering"),
     "platforms": MessageLookupByLibrary.simpleMessage("Platforms"),
-    "played_hours": m5,
+    "played_hours": m6,
     "playing": MessageLookupByLibrary.simpleMessage("Playing"),
     "playtime": MessageLookupByLibrary.simpleMessage("Playtime"),
     "please_enter_value": MessageLookupByLibrary.simpleMessage(
@@ -239,10 +253,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "released_2_days_ago": MessageLookupByLibrary.simpleMessage(
       "Released 2 days ago",
     ),
+    "remind": MessageLookupByLibrary.simpleMessage("Remind"),
     "reminder": MessageLookupByLibrary.simpleMessage("Reminder"),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "remove_step": MessageLookupByLibrary.simpleMessage("Remove step"),
-    "remove_step_desc": m6,
+    "remove_step_desc": m7,
     "remove_step_failed": MessageLookupByLibrary.simpleMessage(
       "Failed removing step",
     ),

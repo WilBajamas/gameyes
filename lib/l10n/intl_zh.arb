@@ -199,5 +199,21 @@
       }
     }
   },
-  "add_to_library": "添加到游戏库"
+  "add_to_library": "添加到游戏库",
+  "countdown_days": "天",
+  "countdown_hours": "小时",
+  "countdown_minutes": "分钟",
+  "countdown_released": "现已推出",
+  "countdown_date_unannounced": "发售日期待公布",
+  "countdown_time_remaining": "距发售还有 {days} 天 {hours} 小时 {minutes} 分钟",
+  "@countdown_time_remaining": {
+    "placeholders": {
+      "days": {},
+      "hours": {},
+      "minutes": {}
+    }
+  },
+  "on_your_wishlist": "在你的愿望单中",
+  "most_anticipated": "最受期待",
+  "remind": "提醒"
 }

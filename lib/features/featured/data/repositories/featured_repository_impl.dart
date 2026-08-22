@@ -16,10 +16,7 @@ class FeaturedRepositoryImpl
   final FeaturedLocalDatasource _localDatasource;
   final FeaturedApiService _featuredApiService;
 
-  FeaturedRepositoryImpl(
-    this._localDatasource,
-    this._featuredApiService,
-  );
+  FeaturedRepositoryImpl(this._localDatasource, this._featuredApiService);
 
   static const _gameFields = [
     'name',
@@ -60,7 +57,7 @@ class FeaturedRepositoryImpl
   }
 
   @override
-  Future<Result<GameEntity?>> getCountdownGame() async {
+  Future<Result<CountdownGameEntity>> getCountdownGame() async {
     try {
       final nowSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       final wishlisted = await _localDatasource.getWishlistedGames();
@@ -68,7 +65,7 @@ class FeaturedRepositoryImpl
           .map((g) => g.gameId)
           .where((id) => id != null)
           .cast<int>()
-          .toList();
+          .toSet();
 
       if (wishlistIds.isNotEmpty) {
         final idsString = wishlistIds.join(',');
@@ -83,7 +80,7 @@ class FeaturedRepositoryImpl
 
         final games = await _featuredApiService.fetchGames(query);
         if (games.isNotEmpty) {
-          return Success(games.first.toEntity());
+          return Success(_countdownFrom(games.first.toEntity(), wishlistIds));
         }
       }
 
@@ -99,16 +96,27 @@ class FeaturedRepositoryImpl
 
       final games = await _featuredApiService.fetchGames(query);
       if (games.isNotEmpty) {
-        return Success(games.first.toEntity());
+        return Success(_countdownFrom(games.first.toEntity(), wishlistIds));
       }
 
-      return Success(null);
+      return Success(
+        const CountdownGameEntity(game: null, isWishlisted: false),
+      );
     } catch (e, stacktrace) {
       debugPrint(
         'Featured Repository getCountdownGame $e | stacktrace: $stacktrace',
       );
       return Failure(const ErrorType.unknown());
     }
+  }
+
+  // The card's reason line claims a wishlist entry, so the flag is membership
+  // of the wishlisted ids, and both selection branches derive it here.
+  CountdownGameEntity _countdownFrom(GameEntity game, Set<int> wishlistIds) {
+    return CountdownGameEntity(
+      game: game,
+      isWishlisted: wishlistIds.contains(game.id),
+    );
   }
 
   @override
@@ -130,8 +138,8 @@ class FeaturedRepositoryImpl
       Future<List<GameEntity>> queryWindow(int days) async {
         final endSeconds =
             todayStart.add(Duration(days: days)).millisecondsSinceEpoch ~/
-                    1000 -
-                1;
+                1000 -
+            1;
         final query = IGDBQueryBuilder()
             .fields(_gameFields)
             .where(
@@ -205,9 +213,7 @@ class FeaturedRepositoryImpl
             .where(
               'first_release_date >= $sevenDaysAgo & first_release_date <= $now & total_rating != null',
             )
-            .sort(
-              'total_rating',
-            )
+            .sort('total_rating')
             .limit(4)
             .build();
         final globalGames = await _featuredApiService.fetchGames(query);
@@ -223,7 +229,8 @@ class FeaturedRepositoryImpl
       return Success(results);
     } catch (e, stacktrace) {
       debugPrint(
-          'Featured Repository getCriticsChoiceGames $e | stacktrace: $stacktrace');
+        'Featured Repository getCriticsChoiceGames $e | stacktrace: $stacktrace',
+      );
       return Failure(const ErrorType.unknown());
     }
   }
@@ -238,7 +245,8 @@ class FeaturedRepositoryImpl
       return Success(null);
     } catch (e, stacktrace) {
       debugPrint(
-          'Featured Repository saveGenrePreferences $e | stacktrace: $stacktrace');
+        'Featured Repository saveGenrePreferences $e | stacktrace: $stacktrace',
+      );
       return Failure(const ErrorType.unknown());
     }
   }
@@ -285,10 +293,12 @@ class FeaturedRepositoryImpl
       await _localDatasource.saveGenrePreferences(finalGenres, false);
 
       return Success(
-          GenrePreferencesEntity(genreIds: finalGenres, isSkipped: false));
+        GenrePreferencesEntity(genreIds: finalGenres, isSkipped: false),
+      );
     } catch (e, stacktrace) {
       debugPrint(
-          'Featured Repository getGenrePreferences $e | stacktrace: $stacktrace');
+        'Featured Repository getGenrePreferences $e | stacktrace: $stacktrace',
+      );
       return Failure(const ErrorType.unknown());
     }
   }

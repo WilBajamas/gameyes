@@ -255,10 +255,10 @@ class S {
     return Intl.message('Settings', name: 'settings', desc: '', args: []);
   }
 
-  /// `Most Anticipated`
+  /// `Most anticipated`
   String get most_anticipated {
     return Intl.message(
-      'Most Anticipated',
+      'Most anticipated',
       name: 'most_anticipated',
       desc: '',
       args: [],
@@ -1203,6 +1203,66 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Days`
+  String get countdown_days {
+    return Intl.message('Days', name: 'countdown_days', desc: '', args: []);
+  }
+
+  /// `Hrs`
+  String get countdown_hours {
+    return Intl.message('Hrs', name: 'countdown_hours', desc: '', args: []);
+  }
+
+  /// `Min`
+  String get countdown_minutes {
+    return Intl.message('Min', name: 'countdown_minutes', desc: '', args: []);
+  }
+
+  /// `Out now`
+  String get countdown_released {
+    return Intl.message(
+      'Out now',
+      name: 'countdown_released',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date to be announced`
+  String get countdown_date_unannounced {
+    return Intl.message(
+      'Date to be announced',
+      name: 'countdown_date_unannounced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{days} days, {hours} hours, {minutes} minutes until release`
+  String countdown_time_remaining(Object days, Object hours, Object minutes) {
+    return Intl.message(
+      '$days days, $hours hours, $minutes minutes until release',
+      name: 'countdown_time_remaining',
+      desc: '',
+      args: [days, hours, minutes],
+    );
+  }
+
+  /// `On your wishlist`
+  String get on_your_wishlist {
+    return Intl.message(
+      'On your wishlist',
+      name: 'on_your_wishlist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remind`
+  String get remind {
+    return Intl.message('Remind', name: 'remind', desc: '', args: []);
   }
 }
 
