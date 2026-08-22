@@ -65,7 +65,7 @@ C22: satisfied
 ## Phase 4B revision
 
 Date: 2026-08-22
-Commit: PENDING
+Commit: 5c2266b4e07f1f1914c27baa4c42ac931ad58e56
 
 Human review of `b76f340` asked for one change: adopt `LibraryTick` (shipped in
 item 2.1) for the rail's owned-game marker instead of the hand-rolled green
