@@ -24,15 +24,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(percentage) => "已完成 ${percentage}%";
 
-  static String m2(hours) => "${hours}小时";
+  static String m2(days, hours, minutes) =>
+      "距发售还有 ${days} 天 ${hours} 小时 ${minutes} 分钟";
 
-  static String m3(logged, average) => "已记录 ${logged}小时，共 ${average}小时";
+  static String m3(hours) => "${hours}小时";
 
-  static String m4(count) => "还有 ${count} 款正在玩";
+  static String m4(logged, average) => "已记录 ${logged}小时，共 ${average}小时";
 
-  static String m5(hours) => "已游玩 ${hours}小时";
+  static String m5(count) => "还有 ${count} 款正在玩";
 
-  static String m6(stepName) =>
+  static String m6(hours) => "已游玩 ${hours}小时";
+
+  static String m7(stepName) =>
       "Are you sure you want to remove step ${stepName}? This action cannot be undone";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -86,6 +89,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "continue_with_google": MessageLookupByLibrary.simpleMessage(
       "使用 Google 继续",
     ),
+    "countdown_date_unannounced": MessageLookupByLibrary.simpleMessage(
+      "发售日期待公布",
+    ),
+    "countdown_days": MessageLookupByLibrary.simpleMessage("天"),
+    "countdown_hours": MessageLookupByLibrary.simpleMessage("小时"),
+    "countdown_minutes": MessageLookupByLibrary.simpleMessage("分钟"),
+    "countdown_released": MessageLookupByLibrary.simpleMessage("现已推出"),
+    "countdown_time_remaining": m2,
     "critics_choice_title": MessageLookupByLibrary.simpleMessage("媒体选择标题"),
     "date": MessageLookupByLibrary.simpleMessage("Date"),
     "date_added": MessageLookupByLibrary.simpleMessage("Date added"),
@@ -139,7 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "group_task_created": MessageLookupByLibrary.simpleMessage(
       "Group task created",
     ),
-    "hours_abbreviation": m2,
+    "hours_abbreviation": m3,
     "improve": MessageLookupByLibrary.simpleMessage("Improve"),
     "inProgress": MessageLookupByLibrary.simpleMessage("In Progress"),
     "keep_it_short": MessageLookupByLibrary.simpleMessage("Keep it short"),
@@ -151,7 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading_game_title_placeholder": MessageLookupByLibrary.simpleMessage(
       "加载游戏标题",
     ),
-    "logged_hours_of": m3,
+    "logged_hours_of": m4,
     "mark_button": MessageLookupByLibrary.simpleMessage("+ 标记"),
     "mark_playing_now": MessageLookupByLibrary.simpleMessage("标记你现在正在玩的游戏"),
     "mark_something_playing": MessageLookupByLibrary.simpleMessage(
@@ -159,8 +170,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "metacritic_score": MessageLookupByLibrary.simpleMessage("综合评分"),
     "missed": MessageLookupByLibrary.simpleMessage("Missed"),
-    "more_playing": m4,
-    "most_anticipated": MessageLookupByLibrary.simpleMessage("最期待"),
+    "more_playing": m5,
+    "most_anticipated": MessageLookupByLibrary.simpleMessage("最受期待"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "new_and_trending": MessageLookupByLibrary.simpleMessage("New & Trending"),
     "new_releases_30_days": MessageLookupByLibrary.simpleMessage(
@@ -184,12 +195,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "now_playing": MessageLookupByLibrary.simpleMessage("正在玩"),
     "ok": MessageLookupByLibrary.simpleMessage("Ok"),
     "onHold": MessageLookupByLibrary.simpleMessage("On Hold"),
+    "on_your_wishlist": MessageLookupByLibrary.simpleMessage("在你的愿望单中"),
     "only_10_group_tasks_allowed": MessageLookupByLibrary.simpleMessage(
       "Only a maximum of 10 group tasks are allowed.",
     ),
     "ordering": MessageLookupByLibrary.simpleMessage("排序"),
     "platforms": MessageLookupByLibrary.simpleMessage("主机选择"),
-    "played_hours": m5,
+    "played_hours": m6,
     "playing": MessageLookupByLibrary.simpleMessage("在玩"),
     "playtime": MessageLookupByLibrary.simpleMessage("Playtime"),
     "please_enter_value": MessageLookupByLibrary.simpleMessage(
@@ -207,10 +219,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "release_date": MessageLookupByLibrary.simpleMessage("上线日期"),
     "released_2_days_ago": MessageLookupByLibrary.simpleMessage("2天前发布"),
+    "remind": MessageLookupByLibrary.simpleMessage("提醒"),
     "reminder": MessageLookupByLibrary.simpleMessage("Reminder"),
     "remove": MessageLookupByLibrary.simpleMessage("Remove"),
     "remove_step": MessageLookupByLibrary.simpleMessage("Remove step"),
-    "remove_step_desc": m6,
+    "remove_step_desc": m7,
     "remove_step_failed": MessageLookupByLibrary.simpleMessage(
       "Failed removing step",
     ),

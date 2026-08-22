@@ -29,11 +29,12 @@ class CountdownReleasesCubit extends Cubit<CountdownReleasesState> {
     _timer?.cancel();
 
     final countdownResult = await _getCountdownGameUseCase();
-    final releasesResult =
-        await _getOutThisWeekUseCase(forceExtendWindow: forceExtendWindow);
+    final releasesResult = await _getOutThisWeekUseCase(
+      forceExtendWindow: forceExtendWindow,
+    );
 
     switch (countdownResult) {
-      case Success(value: final countdownGame):
+      case Success(value: final countdown):
         switch (releasesResult) {
           case Success(value: final releases):
             final now = DateTime.now();
@@ -57,7 +58,8 @@ class CountdownReleasesCubit extends Cubit<CountdownReleasesState> {
             emit(
               state.copyWith(
                 status: CountdownReleasesStatus.success,
-                countdownGame: countdownGame,
+                countdownGame: countdown.game,
+                isWishlisted: countdown.isWishlisted,
                 outThisWeekGames: releases,
                 isComingSoonLabel: isComingSoon,
               ),
@@ -104,33 +106,25 @@ class CountdownReleasesCubit extends Cubit<CountdownReleasesState> {
     }
 
     final now = DateTime.now();
-    final targetMidnight =
-        DateTime(releaseDate.year, releaseDate.month, releaseDate.day);
+    final targetMidnight = DateTime(
+      releaseDate.year,
+      releaseDate.month,
+      releaseDate.day,
+    );
     final todayStart = DateTime(now.year, now.month, now.day);
 
     if (todayStart.isAtSameMomentAs(targetMidnight)) {
       emit(
-        state.copyWith(
-          durationRemaining: Duration.zero,
-          isReleaseDay: true,
-        ),
+        state.copyWith(durationRemaining: Duration.zero, isReleaseDay: true),
       );
     } else if (now.isBefore(targetMidnight)) {
       final remaining = targetMidnight.difference(now);
-      emit(
-        state.copyWith(
-          durationRemaining: remaining,
-          isReleaseDay: false,
-        ),
-      );
+      emit(state.copyWith(durationRemaining: remaining, isReleaseDay: false));
     } else {
       // Release day has passed (the day after release or later).
       // Advance to the next game by re-fetching.
       emit(
-        state.copyWith(
-          durationRemaining: Duration.zero,
-          isReleaseDay: false,
-        ),
+        state.copyWith(durationRemaining: Duration.zero, isReleaseDay: false),
       );
       loadCountdownAndReleases();
     }

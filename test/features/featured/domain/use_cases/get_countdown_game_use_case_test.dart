@@ -7,13 +7,16 @@ import 'package:gaming_library_assessment_flutter/features/featured/domain/repos
 import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_countdown_game_use_case.dart';
 
 class FakeFeaturedRepository implements FeaturedRepository {
-  GameEntity? game;
+  CountdownGameEntity countdown = const CountdownGameEntity(
+    game: null,
+    isWishlisted: false,
+  );
   ErrorType? error;
 
   @override
-  Future<Result<GameEntity?>> getCountdownGame() async {
+  Future<Result<CountdownGameEntity>> getCountdownGame() async {
     if (error != null) return Failure(error!);
-    return Success(game);
+    return Success(countdown);
   }
 
   @override
@@ -30,27 +33,33 @@ void main() {
   });
 
   group('GetCountdownGameUseCase Tests', () {
-    test('returns GameEntity on success', () async {
+    test('returns CountdownGameEntity on success', () async {
       final game = GameEntity(
         id: 1,
         name: 'Countdown Game',
         cover: const GameCoverEntity(),
       );
-      repository.game = game;
+      repository.countdown = CountdownGameEntity(
+        game: game,
+        isWishlisted: false,
+      );
 
       final result = await useCase();
 
-      expect(result, isA<Success<GameEntity?>>());
-      expect((result as Success<GameEntity?>).value, game);
+      expect(result, isA<Success<CountdownGameEntity>>());
+      expect((result as Success<CountdownGameEntity>).value.game, game);
     });
 
-    test('returns null when no game available on success', () async {
-      repository.game = null;
+    test('returns null game when no game available on success', () async {
+      repository.countdown = const CountdownGameEntity(
+        game: null,
+        isWishlisted: false,
+      );
 
       final result = await useCase();
 
-      expect(result, isA<Success<GameEntity?>>());
-      expect((result as Success<GameEntity?>).value, isNull);
+      expect(result, isA<Success<CountdownGameEntity>>());
+      expect((result as Success<CountdownGameEntity>).value.game, isNull);
     });
 
     test('returns Failure on error', () async {
@@ -58,9 +67,33 @@ void main() {
 
       final result = await useCase();
 
-      expect(result, isA<Failure<GameEntity?>>());
-      expect((result as Failure<GameEntity?>).error, const ErrorType.unknown());
+      expect(result, isA<Failure<CountdownGameEntity>>());
+      expect(
+        (result as Failure<CountdownGameEntity>).error,
+        const ErrorType.unknown(),
+      );
     });
+
+    test(
+      'should pass the repository wishlist flag through unchanged',
+      () async {
+        final game = GameEntity(
+          id: 1,
+          name: 'Countdown Game',
+          cover: const GameCoverEntity(),
+        );
+        repository.countdown = CountdownGameEntity(
+          game: game,
+          isWishlisted: true,
+        );
+
+        final result = await useCase();
+
+        expect(
+          (result as Success<CountdownGameEntity>).value.isWishlisted,
+          isTrue,
+        );
+      },
+    );
   });
 }
-

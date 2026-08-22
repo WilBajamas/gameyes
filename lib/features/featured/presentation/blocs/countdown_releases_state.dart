@@ -13,8 +13,8 @@ sealed class CountdownReleasesState with _$CountdownReleasesState {
     @Default(<GameEntity>[]) List<GameEntity> outThisWeekGames,
     Duration? durationRemaining,
     @Default(false) bool isReleaseDay,
+    @Default(false) bool isWishlisted,
     String? errorMessage,
     @Default(false) bool isComingSoonLabel,
   }) = _CountdownReleasesState;
 }
-

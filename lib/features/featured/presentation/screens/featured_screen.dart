@@ -188,7 +188,7 @@ class _RightNowSection extends StatelessWidget {
                   countdownGame: GameLoadingWidgetData.countdownGame,
                   outThisWeekGames: GameLoadingWidgetData.weeklyReleases,
                   durationRemaining: GameLoadingWidgetData.countdownDuration,
-                  isReleaseDay: false,
+                  isWishlisted: false,
                   isComingSoonLabel: false,
                   localLibraryGameIds: ownedIds,
                   onGameClick: (_, __, ___) {},
@@ -204,7 +204,7 @@ class _RightNowSection extends StatelessWidget {
               countdownGame: state.countdownGame,
               outThisWeekGames: state.outThisWeekGames,
               durationRemaining: state.durationRemaining,
-              isReleaseDay: state.isReleaseDay,
+              isWishlisted: state.isWishlisted,
               isComingSoonLabel: state.isComingSoonLabel,
               localLibraryGameIds: ownedIds,
               onGameClick: (id, name, imageUrl) {

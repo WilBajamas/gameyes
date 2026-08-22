@@ -14,14 +14,15 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 
 class FakeGetCountdownGameUseCase extends GetCountdownGameUseCase {
   GameEntity? game;
+  bool isWishlisted = false;
   ErrorType? error;
 
   FakeGetCountdownGameUseCase() : super(FakeFeaturedRepository());
 
   @override
-  Future<Result<GameEntity?>> call() async {
+  Future<Result<CountdownGameEntity>> call() async {
     if (error != null) return Failure(error!);
-    return Success(game);
+    return Success(CountdownGameEntity(game: game, isWishlisted: isWishlisted));
   }
 }
 
@@ -33,8 +34,9 @@ class FakeGetOutThisWeekUseCase extends GetOutThisWeekUseCase {
   FakeGetOutThisWeekUseCase() : super(FakeFeaturedRepository());
 
   @override
-  Future<Result<List<GameEntity>>> call(
-      {required bool forceExtendWindow}) async {
+  Future<Result<List<GameEntity>>> call({
+    required bool forceExtendWindow,
+  }) async {
     lastForceExtendWindow = forceExtendWindow;
     if (error != null) return Failure(error!);
     return Success(games ?? []);
@@ -69,6 +71,7 @@ void main() {
       expect(cubit.state.outThisWeekGames, isEmpty);
       expect(cubit.state.durationRemaining, isNull);
       expect(cubit.state.isReleaseDay, false);
+      expect(cubit.state.isWishlisted, false);
       expect(cubit.state.isComingSoonLabel, false);
     });
 
@@ -78,12 +81,7 @@ void main() {
         id: 1,
         name: 'Test Countdown Game',
         cover: const GameCoverEntity(url: 'https://example.com/cover.jpg'),
-        releaseDates: [
-          ReleaseDateEntity(
-            date: releaseDate,
-            human: 'Q2 2026',
-          ),
-        ],
+        releaseDates: [ReleaseDateEntity(date: releaseDate, human: 'Q2 2026')],
       );
 
       final weekGames = [
@@ -91,7 +89,7 @@ void main() {
           id: 2,
           name: 'Released This Week',
           cover: const GameCoverEntity(),
-        )
+        ),
       ];
 
       fakeGetCountdownGame.game = game;
@@ -113,12 +111,7 @@ void main() {
         id: 1,
         name: 'Test Countdown Game',
         cover: const GameCoverEntity(),
-        releaseDates: [
-          ReleaseDateEntity(
-            date: todayStart,
-            human: 'Today',
-          ),
-        ],
+        releaseDates: [ReleaseDateEntity(date: todayStart, human: 'Today')],
       );
 
       fakeGetCountdownGame.game = game;
@@ -140,6 +133,33 @@ void main() {
       expect(cubit.state.status, CountdownReleasesStatus.failed);
       expect(cubit.state.errorMessage, 'Failed to load countdown game');
     });
+
+    test(
+      'sets isWishlisted from the use case result on a successful load',
+      () async {
+        final game = GameEntity(
+          id: 1,
+          name: 'Test Countdown Game',
+          cover: const GameCoverEntity(),
+        );
+
+        fakeGetCountdownGame.game = game;
+        fakeGetCountdownGame.isWishlisted = true;
+        fakeGetOutThisWeek.games = [];
+
+        await cubit.loadCountdownAndReleases();
+
+        expect(cubit.state.isWishlisted, isTrue);
+      },
+    );
+
+    test('leaves isWishlisted false when the load fails', () async {
+      fakeGetCountdownGame.error = const ErrorType.unknown();
+      fakeGetOutThisWeek.games = [];
+
+      await cubit.loadCountdownAndReleases();
+
+      expect(cubit.state.isWishlisted, isFalse);
+    });
   });
 }
-
