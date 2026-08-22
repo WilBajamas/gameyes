@@ -61,3 +61,44 @@ C19: satisfied
 C20: satisfied
 C21: satisfied
 C22: satisfied
+
+## Phase 4B revision
+
+Date: 2026-08-22
+Commit: PENDING
+
+Human review of `b76f340` asked for one change: adopt `LibraryTick` (shipped in
+item 2.1) for the rail's owned-game marker instead of the hand-rolled green
+circle + white check.
+
+### Files modified
+lib/features/featured/presentation/widgets/countdown_releases.dart — the rail's
+`if (isOwned)` marker now renders `const LibraryTick()` inside the unchanged
+`Positioned(top: 6, right: 6, ...)` wrapper, replacing the inline `Container` /
+`BoxDecoration(color: Colors.green, ...)` / `Icon(Icons.check, ..., color:
+Colors.white)`. Added the `LibraryTick` import; kept the `material.dart` import
+since the file still uses other Material widgets. Deliberate visible change:
+the marker goes from a green 20px-padded circle to `LibraryTick`'s 20x20
+`accentIndigo` circle with a 12px `ink` check — no attempt made to preserve the
+old colour or dimensions.
+
+### Self-corrections
+NONE
+
+### Deviations from implementation plan
+NONE
+
+### Verification against baseline
+`flutter analyze`: 32 issues (2 pre-existing warnings + 30 info) — same count as
+the prior commit's baseline; no new issues.
+`flutter test`: +304 -10, same 10 pre-existing failures
+(`test/repository/tracker/tracker_repository_test.dart` (4),
+`test/cubit/game_detail/game_detail_cubit_test.dart` (3),
+`test/cubit/games/games_bloc_test.dart` (3)), no new failures. No new tests
+added — an owned-marker's appearance is a manual check per the revision
+instruction; `LibraryTick` already has its own coverage from item 2.1.
+
+### Acceptance criteria status
+Unchanged from above — this revision is a human-directed addition outside
+C1-C22's stated scope (the rail's `localLibraryGameIds` marker), not a
+criterion fix.

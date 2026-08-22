@@ -3,6 +3,7 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/game_enti
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/countdown/countdown_card.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
+import 'package:gaming_library_assessment_flutter/widgets/library_tick.dart';
 
 class CountdownReleasesWidget extends StatelessWidget {
   final GameEntity? countdownGame;
@@ -144,21 +145,10 @@ class CountdownReleasesWidget extends StatelessWidget {
                           ),
                         ),
                         if (isOwned)
-                          Positioned(
+                          const Positioned(
                             top: 6,
                             right: 6,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.check,
-                                size: 12,
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: LibraryTick(),
                           ),
                       ],
                     ),
