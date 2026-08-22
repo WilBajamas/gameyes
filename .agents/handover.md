@@ -1,9 +1,9 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-21: **week 2 Stage 2 is under way — 2
-of 8 composites done.** Item 2.1 (Game card) and 2.2 (Completion ring) both
-shipped this session and are merged to `develop`. Stage 1's 9 primitives were
-already complete. Full detail below.
+Written 2026-07-29. Last updated 2026-08-21: **week 2 Stage 2 is under way — 3
+of 8 composites done.** Items 2.1 (Game card), 2.2 (Completion ring) and 2.3
+(Countdown) all shipped this session and are merged to `develop`. Stage 1's 9
+primitives were already complete. Full detail below.
 
 ---
 
@@ -128,7 +128,7 @@ is what's left, plus `.agents/manual-check-backlog.md`):
   - **`Flexible` over `Expanded`** around the row's label, under the
     hug-content exception, approved at Phase 3.
 
-**Week 2 Stage 2 (composites) — 2 of 8 done.** Both shipped 2026-08-21, run
+**Week 2 Stage 2 (composites) — 3 of 8 done.** All shipped 2026-08-21, run
 folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
 section before the next one — it points at the visual spec
 (`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
@@ -168,6 +168,29 @@ target), and the Add-to-library sheet (needs week 3's Library feature first).
   turned out to be carrying C8, C9's colour and C10's colour as well, so all three
   are manual-only now. `CompletionRingPainter` is still public, which was
   justified *only* by that test — worth revisiting.
+
+- **2.3 Countdown + Countdown tile** (`lib/widgets/countdown/`, Dev commit
+  `5c2266b`) — two public widgets, `CountdownCard` and `CountdownTile`, over a
+  shared `CountdownDigitRow`. Featured's countdown section rewired; the tile ships
+  unwired (the welcome hero that would have hosted it went to flat PNG art in item
+  6.1). **Provably timer-free**: every class in the module is a `StatelessWidget`,
+  so there is no lifecycle hook in which to start a timer and the cubit stays the
+  only clock — QA verified no `Timer`/`Ticker`/`AnimationController` anywhere in the
+  folder. `ButtonPressScale` is deliberately not reused for the same reason.
+  **Scope was deliberately widened past the component**, by human decision: the
+  "Wishlisted" badge fired on whole-library membership (`isFallback =
+  !localLibraryGameIds.contains(...)`), so it asserted something false about the
+  user's own library. A real wishlist boolean now travels repo → use case → state
+  via a new `CountdownGameEntity` with both fields `required`, and both repository
+  branches resolve it through one helper — the stale-flag bug is *unrepresentable*,
+  not merely avoided. The card takes no library-membership input at all; the rail
+  keeps `localLibraryGameIds` for its owned marker.
+  Three further human calls: the 80×110 cover thumbnail dropped (the screen doc
+  lists none and outranks §3.2), `isReleaseDay` left the widget API (the component
+  derives it from the duration), and the rail's hand-rolled green owned-marker
+  replaced with 2.1's `LibraryTick`. All §4/§1.9 violations are gone — emoji,
+  exclamation marks, `Colors.amber`/`Colors.green`, the gradient, `elevation: 3`
+  and the file's `// TODO: Refactor this`.
 
 **Two conventions worth knowing before the next Stage 2 item**, both learned the
 hard way this session:
@@ -289,9 +312,9 @@ uncovered.
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
 - **The whole on-device manual-check backlog now lives in
-  `.agents/manual-check-backlog.md`** — **44 checks** as of 2026-08-21 (item
-  10.1's four, all nine week 2 Stage 1 items', 2.1's eight and 2.2's ten), every
-  one still unperformed. That file is the only copy: it was written when the run
+  `.agents/manual-check-backlog.md`** — **59 checks** as of 2026-08-21 (item
+  10.1's four, week 2 Stage 1's twenty, 2.1's eight, 2.2's ten and 2.3's
+  fifteen), every one still unperformed. That file is the only copy: it was written when the run
   folders were retired, precisely so the checks would outlive the `qa-report.md`
   files that had been holding them. Don't summarise it back into here — point at
   it. Note 2.2's ten need a scratch harness or its first real caller, since the
@@ -568,7 +591,7 @@ then `roadmap-deferred.md` (every decision consciously put aside, and the
 fastest way to understand why the plan looks the way it does).
 
 **Current phase: week 2, component library, Stage 1 done, Stage 2 in progress
-(2 of 8).** Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it
+(3 of 8).** Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it
 when the whole week is done, same convention as week 1's). All 9 Stage 1
 primitives plus composites 2.1 and 2.2 are built and merged; 2.3 through 2.8
 remain. Target is a TestFlight-equivalent Android beta around week 4.
@@ -670,7 +693,7 @@ re-read the skills, don't pattern-match off existing files:
 Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
 item 3's on-device cross-account RLS check (blocked on week 3's Library
 feature), item 10.1's dead-code cleanup, the on-device manual-check backlog in
-.agents/manual-check-backlog.md (44 checks, none performed yet -- that file is
+.agents/manual-check-backlog.md (59 checks, none performed yet -- that file is
 the only copy, the run folders it came from were retired), the flutter-widgets
 rule text contradicting two shipped modules, §3.2's stale desaturation text,
 §1.9 platform-mark conformance, primary_button.dart's unexplained third
