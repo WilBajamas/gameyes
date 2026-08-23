@@ -36,4 +36,9 @@ caller list, which named two features that never referenced the component at all
 2026-08-22 C6 ships with no dedicated widget test — after the rewire the bar's constructor exposes only index and callback, so passing scroll state is not expressible and the analyzer enforces it. A real test would mean standing up `AutoTabsRouter`, DI and BLoCs for all five tab screens to assert one wiring line. Approved at the gate.
 
 ## Code review outcomes
-NONE
+2026-08-22 965b5ee — Sent back to Dev at Phase 4B: remove four widget tests, taking the file from 12 to 8. Human-directed trim, not a Dev error.
+Removed: 'reports the destination reached by keyboard traversal when activated' (C12), 'fills the bar with the surfaceTabChrome token' (C14), 'tints the selected destination and cap indigo and the rest ink55' (C15), 'settles a selection change with no running animation under reduced motion'.
+FLAGGED TO THE HUMAN before the removal, and accepted by them — two of the four carry more than their names suggest, same shape as item 2.2 where one removed colour test silently took three criteria with it:
+- The keyboard-traversal test was the ONLY automated coverage of keyboard activation, which is precisely the defect that shaped this design: `ButtonPressScale` was rejected for reuse because its `FocusableActionDetector` registers no `ActivateIntent`. After removal, the bug the design was built to avoid has no regression guard.
+- The colour test was the ONLY automated proof that the pre-existing colour INVERSION is fixed (`CustomNavigationDestination` shipped unselected in `colorScheme.primary` indigo and selected in `Colors.grey[100]`). This run corrects a live bug; after removal nothing automated proves the correction holds.
+Both are carried into the manual-check backlog instead.
