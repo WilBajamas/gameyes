@@ -1,0 +1,267 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
+import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
+import 'package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/bottom_tab_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+List<String> _destinationLabels() => [
+  S.current.featured,
+  S.current.games,
+  S.current.tracker,
+  S.current.browse,
+  S.current.settings,
+];
+
+List<(String label, IconData icon)> _destinationLabelsAndIcons() => [
+  (S.current.featured, Icons.featured_play_list_outlined),
+  (S.current.games, Icons.gamepad_outlined),
+  (S.current.tracker, Icons.format_list_numbered_rtl),
+  (S.current.browse, Icons.search_outlined),
+  (S.current.settings, Icons.settings_outlined),
+];
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  GoogleFonts.config.allowRuntimeFetching = false;
+
+  setUpAll(() async {
+    await S.load(const Locale('en'));
+  });
+
+  Widget buildSubject({
+    required int selectedIndex,
+    required ValueChanged<int> onDestinationSelected,
+    Widget? body,
+    Locale locale = const Locale('en'),
+    double textScaleFactor = 1,
+    EdgeInsets viewPadding = EdgeInsets.zero,
+  }) {
+    return MediaQuery(
+      data: MediaQueryData(
+        textScaler: TextScaler.linear(textScaleFactor),
+        padding: viewPadding,
+      ),
+      child: MaterialApp(
+        theme: buildDarkTheme(),
+        locale: locale,
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        home: Scaffold(
+          body: body ?? const SizedBox.shrink(),
+          bottomNavigationBar: BottomTabBar(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: onDestinationSelected,
+          ),
+        ),
+      ),
+    );
+  }
+
+  testWidgets(
+    'shows every destination label and glyph whichever destination is selected',
+    (tester) async {
+      await tester.pumpWidget(
+        buildSubject(selectedIndex: 0, onDestinationSelected: (_) {}),
+      );
+
+      for (final (label, icon) in _destinationLabelsAndIcons()) {
+        expect(find.text(label), findsOneWidget);
+        expect(find.byIcon(icon), findsOneWidget);
+      }
+
+      await tester.pumpWidget(
+        buildSubject(selectedIndex: 4, onDestinationSelected: (_) {}),
+      );
+
+      for (final (label, icon) in _destinationLabelsAndIcons()) {
+        expect(find.text(label), findsOneWidget);
+        expect(find.byIcon(icon), findsOneWidget);
+      }
+    },
+  );
+
+  testWidgets('reports the tapped destination index once per tap', (
+    tester,
+  ) async {
+    final reported = <int>[];
+    await tester.pumpWidget(
+      buildSubject(selectedIndex: 0, onDestinationSelected: reported.add),
+    );
+
+    await tester.tap(find.text(S.current.games));
+    await tester.tap(find.byIcon(Icons.gamepad_outlined));
+
+    final cell = find.ancestor(
+      of: find.text(S.current.games),
+      matching: find.byType(InkWell),
+    );
+    await tester.tapAt(tester.getTopLeft(cell) + const Offset(2, 2));
+
+    expect(reported, [1, 1, 1]);
+  });
+
+  testWidgets(
+    'moves the selected state to the destination the caller supplies',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+
+      await tester.pumpWidget(
+        buildSubject(selectedIndex: 0, onDestinationSelected: (_) {}),
+      );
+
+      expect(
+        tester.getSemantics(find.text(S.current.featured)),
+        isSemantics(isSelected: true),
+      );
+      expect(
+        tester.getSemantics(find.text(S.current.games)),
+        isSemantics(isSelected: false),
+      );
+
+      await tester.tap(find.text(S.current.games));
+      await tester.pump();
+
+      expect(
+        tester.getSemantics(find.text(S.current.featured)),
+        isSemantics(isSelected: true),
+      );
+      expect(
+        tester.getSemantics(find.text(S.current.games)),
+        isSemantics(isSelected: false),
+      );
+
+      await tester.pumpWidget(
+        buildSubject(selectedIndex: 1, onDestinationSelected: (_) {}),
+      );
+
+      expect(
+        tester.getSemantics(find.text(S.current.featured)),
+        isSemantics(isSelected: false),
+      );
+      expect(
+        tester.getSemantics(find.text(S.current.games)),
+        isSemantics(isSelected: true),
+      );
+
+      handle.dispose();
+    },
+  );
+
+  testWidgets(
+    'announces the destination name once with its localized tab position',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+
+      await tester.pumpWidget(
+        buildSubject(selectedIndex: 0, onDestinationSelected: (_) {}),
+      );
+
+      final label = tester.getSemantics(find.text(S.current.tracker)).label;
+      final context = tester.element(find.text(S.current.tracker));
+      final position = MaterialLocalizations.of(
+        context,
+      ).tabLabel(tabIndex: 3, tabCount: 5);
+
+      expect(label.split(S.current.tracker).length - 1, 1);
+      expect(label, contains(position));
+
+      handle.dispose();
+    },
+  );
+
+  testWidgets(
+    'shows the destination label as a tooltip on long press without selecting',
+    (tester) async {
+      var reportedCount = 0;
+      await tester.pumpWidget(
+        buildSubject(
+          selectedIndex: 0,
+          onDestinationSelected: (_) => reportedCount++,
+        ),
+      );
+
+      await tester.longPress(find.text(S.current.games));
+      await tester.pump(const Duration(seconds: 2));
+
+      expect(find.byTooltip(S.current.games), findsOneWidget);
+      expect(reportedCount, 0);
+    },
+  );
+
+  testWidgets(
+    'keeps all five destinations while the body scrolls with no scroll state',
+    (tester) async {
+      await tester.pumpWidget(
+        buildSubject(
+          selectedIndex: 0,
+          onDestinationSelected: (_) {},
+          body: ListView(
+            children: List.generate(
+              30,
+              (i) => SizedBox(height: 60, child: Text('item $i')),
+            ),
+          ),
+        ),
+      );
+
+      await tester.drag(find.byType(ListView), const Offset(0, -400));
+      await tester.pump();
+      await tester.drag(find.byType(ListView), const Offset(0, 400));
+      await tester.pump();
+
+      for (final label in _destinationLabels()) {
+        expect(find.text(label), findsOneWidget);
+      }
+    },
+  );
+
+  testWidgets('consumes the bottom safe-area inset so its content sees none', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      buildSubject(
+        selectedIndex: 0,
+        onDestinationSelected: (_) {},
+        viewPadding: const EdgeInsets.only(bottom: 40),
+      ),
+    );
+
+    final descendant = tester.element(find.text(S.current.featured));
+    expect(MediaQuery.of(descendant).padding.bottom, 0);
+
+    await tester.pumpWidget(
+      buildSubject(selectedIndex: 0, onDestinationSelected: (_) {}),
+    );
+    expect(find.byType(BottomTabBar), findsOneWidget);
+  });
+
+  testWidgets(
+    'renders every destination without overflow in zh at a raised text scale',
+    (tester) async {
+      await S.load(const Locale('zh'));
+      addTearDown(() => S.load(const Locale('en')));
+
+      await tester.pumpWidget(
+        buildSubject(
+          selectedIndex: 0,
+          onDestinationSelected: (_) {},
+          locale: const Locale('zh'),
+          textScaleFactor: 2,
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+
+      for (final label in _destinationLabels()) {
+        expect(find.text(label), findsOneWidget);
+      }
+    },
+  );
+}

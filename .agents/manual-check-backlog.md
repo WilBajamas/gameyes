@@ -303,6 +303,74 @@ unwired).
 
 ---
 
+## Week 2 Stage 2 — item 2.4 (Tab bar)
+
+From the `tab-bar-20260822` run, QA `PASS — pending manual checks`. This item
+reworked the **home shell's tab bar**, which every screen sits under, and it
+carries more manual weight than any item so far for two reasons: four widget
+tests were removed at Phase 4B by human decision, and the bar deliberately lost
+a shipped behaviour.
+
+**The first two are the highest priority in this whole backlog** — each is the
+only remaining check on something this run either fixed or could silently break.
+
+- **2.4-MC-1** — HIGHEST. Home, with a hardware/Bluetooth keyboard (or a desktop
+  or web build). Tab forward from the body into the bar — expect focus to land on
+  Featured, Games, Tracker, Browse, Settings in that visual order, on nothing else
+  inside the bar, then leave. With Tracker focused press Enter, then Space —
+  expect each to switch to the Tracker tab with no pointer involved. **This is
+  exactly the defect that made `ButtonPressScale` unusable here** (its
+  `FocusableActionDetector` registers no `ActivateIntent`); `InkWell` supplies
+  activation now and nothing automated proves it.
+- **2.4-MC-2** — HIGHEST. Home, on each of the five tabs in turn — expect the
+  SELECTED destination's glyph and label in `accentIndigo` `#5865F2` and the other
+  four in `ink55`. **This run corrects a live shipped inversion** (the old
+  `CustomNavigationDestination` painted unselected indigo and selected grey), and
+  nothing automated proves the correction holds.
+- **2.4-MC-3** — Home, any tab — the bar's fill is onyx `surfaceTabChrome`
+  `#2E3236`, visibly one lightness step off the canvas, with no top border,
+  hairline, shadow or elevation tint. That lightness step is the entire separation
+  mechanism; if the bar reads as the same colour as the canvas it has regressed.
+- **2.4-MC-4** — With OS reduce-motion ON, tap between tabs — colour and cap snap
+  instantly, no fade. Turn it off and repeat — a short 140ms ease.
+- **2.4-MC-5** — With a destination focused from the keyboard — a solid 2px green
+  outline at 2px offset inside the cell, not clipped by the bar's edges, and the
+  row must NOT shift or reflow as focus arrives or leaves.
+- **2.4-MC-6** — Press and hold a destination — scales to 0.97 with no colour
+  change, and NO ripple, splash, hover fill or press highlight at any point. A
+  press with no visible response at all also fails.
+- **2.4-MC-7** — Home — an 18×3 fully-rounded indigo cap directly above the
+  selected glyph and no other. Tap through all five watching the glyph and label
+  baselines — zero vertical shift as the cap moves.
+- **2.4-MC-8** — Home — labels at 10px weight 500 in sentence case ("Featured",
+  not "FEATURED"), identical size, weight and family selected vs unselected, only
+  the colour differing.
+- **2.4-MC-9** — Home — all five glyphs outline-only at 20px, 2px stroke, none
+  filled. Confirm each still reads as the same concept as before this item.
+- **2.4-MC-10** — A device with a home indicator or gesture bar — labels clear the
+  indicator, no overlap and no dead band beneath. Then one reporting a zero bottom
+  inset — the bar must not sit flush to the screen edge (22 fallback).
+- **2.4-MC-11** — Home — the five destinations are exactly equal fifths. Tap in
+  the gap between two labels, and near the top and bottom of a slot — every tap
+  inside a fifth activates that destination, no dead zones, at least 44 in both
+  dimensions at default text scale.
+- **2.4-MC-12** — `zh` at maximum OS text size — each over-long label stays on ONE
+  line and ellipsizes, glyphs stay put, bar height does not grow, no destination
+  squeezes its neighbours.
+- **2.4-MC-13** — Tap between tabs at normal motion — only colours and the cap
+  animate, ~140ms standard ease. No indicator sliding horizontally, no animation
+  of the bar's height, position or background.
+- **2.4-MC-14** — **Deliberate behaviour change.** Scroll each of the five tabs
+  hard, including a fast fling — the bar stays fully visible at all times, never
+  hiding, shrinking, fading or clipping. It used to collapse to zero height on
+  scroll-down; that was dropped by human decision and should be seen once rather
+  than only inferred.
+- **2.4-MC-15** — Open each of the five tabs — same five routes, same content,
+  each still scrolling as before, and the selected destination tracks the active
+  tab in both directions (tap the bar, and change tab via any other route change).
+
+---
+
 ## Also deferred, for a different reason
 
 Not QA manual checks, but the same "needs a device or a thing that doesn't exist

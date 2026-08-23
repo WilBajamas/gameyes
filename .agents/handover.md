@@ -1,8 +1,8 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-21: **week 2 Stage 2 is under way — 3
-of 8 composites done.** Items 2.1 (Game card), 2.2 (Completion ring) and 2.3
-(Countdown) all shipped this session and are merged to `develop`. Stage 1's 9
+Written 2026-07-29. Last updated 2026-08-21: **week 2 Stage 2 is under way — 4
+of 8 composites done.** Items 2.1 (Game card), 2.2 (Completion ring), 2.3
+(Countdown) and 2.4 (Tab bar) all shipped this session and are merged to `develop`. Stage 1's 9
 primitives were already complete. Full detail below.
 
 ---
@@ -128,7 +128,7 @@ is what's left, plus `.agents/manual-check-backlog.md`):
   - **`Flexible` over `Expanded`** around the row's label, under the
     hug-content exception, approved at Phase 3.
 
-**Week 2 Stage 2 (composites) — 3 of 8 done.** All shipped 2026-08-21, run
+**Week 2 Stage 2 (composites) — 4 of 8 done.** All shipped 2026-08-21, run
 folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
 section before the next one — it points at the visual spec
 (`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
@@ -191,6 +191,32 @@ target), and the Add-to-library sheet (needs week 3's Library feature first).
   replaced with 2.1's `LibraryTick`. All §4/§1.9 violations are gone — emoji,
   exclamation marks, `Colors.amber`/`Colors.green`, the gradient, `elevation: 3`
   and the file's `// TODO: Refactor this`.
+
+- **2.4 Tab bar** (`lib/widgets/bottom_tab_bar/`, Dev commit `31d3f55`) — six-file
+  module replacing `scrolled_navigation_bar.dart` and `navigation_destination.dart`,
+  both **deleted** rather than deprecated (keeping the old bar alive would have left
+  the only remaining reader of `ScrollNotifier` in the tree). Onyx `surfaceTabChrome`
+  chrome, 3px indigo cap over the active glyph, labels always visible.
+  **The scroll-hide behaviour was DROPPED by human decision.** The old bar collapsed
+  to zero height on scroll-down via the `getIt` `ScrollNotifier` singleton. That is a
+  deliberate, visible change to a shipped screen — do not "restore" it as a
+  regression. **`ScrollNotifier` is now fully orphaned but deliberately left in
+  place**: the singleton, its DI registration, three writer sites
+  (`home_screen.dart:61`, `browse_screen.dart:19`, `settings_screen.dart:26`) and
+  `settings_screen_test.dart:38`'s registration. Its own follow-up, not this run's.
+  **It also corrected a live bug nobody had noticed**: `CustomNavigationDestination`
+  painted the UNSELECTED destination indigo and the SELECTED one grey — inverted
+  against spec the whole time.
+  Two things about this run's test file are worth carrying forward. Four tests were
+  removed at the human's request (12 → 8), including the only automated cover for
+  keyboard activation and for the colour correction above — both are now the two
+  **highest-priority entries in `manual-check-backlog.md`**. And QA caught the tests
+  reaching into module internals (`find.byType(BottomTabBarCell)` ×10) against the
+  brief's own constraint; a post-QA commit reworked all 8 onto the public surface.
+  Worth watching for in the next module — it is an easy default.
+  **`elevation: 0` on `Material` was knowingly kept** despite being redundant, so the
+  analyzer baseline is **33 from here, not 32**. A decision, not drift; don't "fix"
+  it in a sweep without asking.
 
 **Two conventions worth knowing before the next Stage 2 item**, both learned the
 hard way this session:
@@ -312,9 +338,11 @@ uncovered.
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
 - **The whole on-device manual-check backlog now lives in
-  `.agents/manual-check-backlog.md`** — **59 checks** as of 2026-08-21 (item
-  10.1's four, week 2 Stage 1's twenty, 2.1's eight, 2.2's ten and 2.3's
-  fifteen), every one still unperformed. That file is the only copy: it was written when the run
+  `.agents/manual-check-backlog.md`** — **74 checks** as of 2026-08-22 (item
+  10.1's four, week 2 Stage 1's twenty, 2.1's eight, 2.2's ten, 2.3's fifteen and
+  2.4's fifteen), every one still unperformed. **Start with 2.4-MC-1 and 2.4-MC-2**
+  — keyboard activation and the tab bar's colour correction, the two with no
+  automated guard at all. That file is the only copy: it was written when the run
   folders were retired, precisely so the checks would outlive the `qa-report.md`
   files that had been holding them. Don't summarise it back into here — point at
   it. Note 2.2's ten need a scratch harness or its first real caller, since the
@@ -591,7 +619,7 @@ then `roadmap-deferred.md` (every decision consciously put aside, and the
 fastest way to understand why the plan looks the way it does).
 
 **Current phase: week 2, component library, Stage 1 done, Stage 2 in progress
-(3 of 8).** Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it
+(4 of 8).** Checklist is `.agents/week-2-task-briefs.md` (ephemeral — delete it
 when the whole week is done, same convention as week 1's). All 9 Stage 1
 primitives plus composites 2.1 and 2.2 are built and merged; 2.3 through 2.8
 remain. Target is a TestFlight-equivalent Android beta around week 4.
@@ -646,65 +674,90 @@ remain. Target is a TestFlight-equivalent Android beta around week 4.
 
 ```text
 Resume QuestLoggd. Checkout develop first. Read .agents/handover.md in full
-(it's long now, read it anyway).
+(it's long, read it anyway).
 
 Before anything else:
 - Check `git status` is clean. `.agents/`, `.claude/` and `.codex/` are tracked.
 - No Flutter in a fresh container. Install 3.41.4 to match `.fvmrc` (a
   /etc/profile.d/flutter.sh script works well so every login shell picks it up
   automatically, including subagents' Bash calls), then `flutter pub get` and
-  `dart run build_runner build --delete-conflicting-outputs` before trusting
-  any baseline. Expect 10 pre-existing test failures across three files
-  (gotcha #3) -- the suite is not green and never has been.
+  `dart run build_runner build --delete-conflicting-outputs` before trusting any
+  baseline.
+- Expect **33 analyzer issues (0 errors, 2 warnings, 31 info)** and **+312 -10**
+  on the test suite. Both numbers are correct and neither is drift. The 2 warnings
+  are the deliberate `_TaskReminder` pair; the 10 failures are pre-existing in
+  tracker_repository_test (4), game_detail_cubit_test (3), games_bloc_test (3).
+  The suite has never been green. Verify these yourself at Phase 0 rather than
+  inheriting them — item 2.4 found the baseline had moved twice.
 
-Current state: week 2 Stage 1 (9 primitives) is fully done, and Stage 2 is 2 of
-8 -- items 2.1 (Game card) and 2.2 (Completion ring) shipped 2026-08-21 and are
-merged to develop. Next is 2.3 (Countdown + Countdown tile). Work in order,
-since later composites build on earlier ones -- read
-.agents/week-2-task-briefs.md's own "How to use this" section first. Unlike 2.1,
-2.3 has a single known caller (featured's countdown section) and the checklist
-says to rewire it in the same run.
+Current state: week 2 Stage 1 (9 primitives) is done, and Stage 2 is 4 of 8 --
+items 2.1 (Game card), 2.2 (Completion ring), 2.3 (Countdown) and 2.4 (Tab bar)
+all shipped and merged to develop. **Next is item 2.5 -- Form fields.** Run it
+through /orchestrate as a normal PIPELINE item, on the harness-designated session
+branch (do not create a nested feature/ branch).
 
-Three things that repeated themselves across 2.1 and 2.2, so expect them again:
-- The checklist's caller lists are not reliable. 2.1's named tracker and
-  featured, and neither ever referenced GameItem. Grep before believing one --
-  2.5's is the next unverified claim.
+What 2.5 is: rework lib/widgets/default_border_text_field.dart, a stock
+TextFormField with a floating label and a hardcoded Colors.red for errors, into
+the token-driven treatment in system-foundation-specs.md §3.2 "Form fields" --
+label always above (no placeholder-as-label anywhere), helper text folded onto the
+label row rather than a third line, `#2f333c` fill at r16, 2px green focus ring at
+2px offset, and an error state that swaps the fill for an error tint plus a 1px
+hairline so error and focus never fight for the same edge. The tokens already
+exist in app_color_tokens.dart.
+
+**Verify the caller list before trusting it.** The checklist says 2.5 "has
+multiple existing callers" and leaves the rewire-now-or-later scope decision to
+the item's own BA/Tech Lead phase. That decision is real and should reach the
+human at a gate -- but the checklist has been WRONG about callers before: item
+2.1's bullet named tracker and featured, neither of which ever referenced the
+component. Grep for the real callers at Phase 0 and put the actual blast radius
+to the human, not the checklist's claim.
+
+Four things that recurred across 2.1-2.4 and will probably recur again:
 - BAs write criteria straight from system-foundation-specs.md §3 even where a
-  human decision has already overruled that text. It happened twice on the same
-  desaturation filter (items 1.3 and 2.1). §3.2 still describes it.
-- §3's type steps keep colliding with "dimensions are even numbers" (1.9 at 15px,
-  2.2 again at 15px). A 15px token still doesn't exist.
+  human decision already overruled that text. It happened twice on the same
+  desaturation filter. Check §3 claims against handover.md's records.
+- Screen docs outrank §3 where they disagree (the precedence rule is at
+  system-foundation-specs.md lines 6-8). Item 2.3 was settled that way twice.
+- §3's type steps keep colliding with "dimensions are even numbers" (1.9 and 2.2
+  both hit 15px). A 15px token still does not exist.
+- Removing a test often removes more than its name suggests. Item 2.2 lost three
+  criteria to one deleted test; item 2.4 lost keyboard-activation coverage and
+  the only proof of a colour fix. If asked to trim tests, say what each one is
+  actually carrying before deleting it.
 
-Conventions, stricter than what older code and older run artifacts show --
-re-read the skills, don't pattern-match off existing files:
-- Widgets carry NO comments at all (flutter-widgets, and execution.md's Code
-  quality section). Not "few" -- none.
-- Widget tests never assert dimensions, gaps, radii or positions, and colour
-  assertions must carry meaning and name a token. context_chip_test.dart and
-  stat_pill_test.dart are the reference files for shape and length; read one
-  before writing a new test file. The flutter-widget-test skill has been revised
-  four times -- always re-read it in full rather than trusting a prior compliance
-  pass. Keep test plans proportionate: 2.1's card was trimmed from 19 tests to 10
-  at the gate, and it is a far bigger component than most.
-- lib/widgets/ is no longer flat. 2.1 and 2.2 both ship module folders with an
-  enum/ subfolder, human-directed. The flutter-widgets skill still says the
-  opposite; that contradiction is a live follow-up.
+Conventions, stricter than older code and older run artifacts show -- re-read the
+skills, do not pattern-match off existing files:
+- Widgets carry NO comments at all. Not "few" -- none.
+- Widget tests never assert dimensions, gaps, radii or positions; colour
+  assertions must carry meaning and name a token; never a golden test.
+  context_chip_test.dart and stat_pill_test.dart are the reference files for shape
+  and length. The flutter-widget-test skill has been revised four times -- re-read
+  it in full rather than trusting a prior compliance pass.
+- Tests must import only a module's public entry point. QA caught item 2.4's tests
+  reaching into module internals; a post-QA commit fixed it. It is an easy default
+  to fall into.
+- lib/widgets/ is no longer flat: 2.1, 2.2, 2.3 and 2.4 all ship module folders
+  with an enum/ subfolder, human-directed each time. The flutter-widgets skill
+  still says "one file per widget family" -- that contradiction is a live
+  follow-up, not a rule to obey blindly.
 
 Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
-item 3's on-device cross-account RLS check (blocked on week 3's Library
-feature), item 10.1's dead-code cleanup, the on-device manual-check backlog in
-.agents/manual-check-backlog.md (59 checks, none performed yet -- that file is
-the only copy, the run folders it came from were retired), the flutter-widgets
-rule text contradicting two shipped modules, §3.2's stale desaturation text,
-§1.9 platform-mark conformance, primary_button.dart's unexplained third
-color.green, _SignOutButton as a third copy of the ActionRow anatomy, two
-comment-rule leftovers, a couple of human-authored-test coverage gaps, and a
-pre-existing dashed-border violation in library_stats.dart that is Stage 2 item
-2.8's to fix, not a stray bug to patch in passing.
+item 3's on-device cross-account RLS check (blocked on week 3's Library feature),
+item 10.1's dead-code cleanup, the manual-check backlog in
+.agents/manual-check-backlog.md (74 checks, none performed -- start with 2.4-MC-1
+and 2.4-MC-2, the two with no automated guard at all), the now fully-orphaned
+ScrollNotifier ecosystem left behind by 2.4, the flutter-widgets rule text
+contradicting four shipped modules, §3.2's stale desaturation text, §1.9
+platform-mark conformance, primary_button.dart's unexplained third color.green,
+ButtonPressScale registering no ActivateIntent (a real keyboard-accessibility bug
+in a shared widget), _SignOutButton as a third copy of the ActionRow anatomy, and
+a pre-existing dashed-border violation in library_stats.dart that is item 2.8's to
+fix, not a stray bug to patch in passing.
 
-Two environment things that will waste your time otherwise: remote branch
-deletion is blocked by the egress proxy (gotcha #11 -- the merged claude/*
-branches have to be deleted by hand in the GitHub UI, don't retry the 403),
-and the custom ba-agent/tech-lead-agent/dev-agent/qa-agent types may be
-missing at session start (gotcha #7 has the fallback).
+Two environment things that will waste your time otherwise: remote branch deletion
+is blocked by the egress proxy (gotcha #11 -- merged claude/* branches have to be
+deleted by hand in the GitHub UI, don't retry the 403), and the custom
+ba-agent/tech-lead-agent/dev-agent/qa-agent types may be missing at session start
+(gotcha #7 has the fallback).
 ```

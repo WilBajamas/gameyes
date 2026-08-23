@@ -198,13 +198,31 @@ duplicate.
       exclamation marks, `Colors.amber`/`Colors.green`, the gradient and `elevation: 3`,
       along with the file's `// TODO: Refactor this`.
 
-- [ ] **2.4 — Tab bar.** `system-foundation-specs.md` §3.2 "Tab bar" row.
+- [x] **2.4 — Tab bar.** `system-foundation-specs.md` §3.2 "Tab bar" row.
       Rework — `lib/features/home/presentation/screens/home_screen.dart` +
       `lib/widgets/scrolled_navigation_bar.dart` / `navigation_destination.dart`
       already have the right destination count (5) but use stock Material
       `NavigationBar` chrome, not the spec's onyx `#2e3236` background with a 3px
       cap above the active glyph. Single caller (home screen's shell) — rewire in
       the same item.
+      **Done 2026-08-22** (run `tab-bar-20260822`, Dev commit `31d3f55`). New
+      `lib/widgets/bottom_tab_bar/` module (6 files); both old widgets deleted
+      rather than deprecated, because keeping them would have left the only
+      remaining reader of `ScrollNotifier` alive. The single-caller claim was
+      accurate this time — verified at Phase 0.
+      **The bar's scroll-hide behaviour was DROPPED by human decision** — it used
+      to collapse to zero height on scroll-down via the `ScrollNotifier` singleton.
+      A deliberate, visible change to a shipped screen. `ScrollNotifier`, its DI
+      registration, three writer sites and a test registration are now dead but were
+      deliberately left in place as a follow-up rather than widening a chrome item
+      into four unrelated files.
+      Also corrected a live bug nobody had noticed: `CustomNavigationDestination`
+      painted the UNSELECTED destination indigo and the selected one grey — inverted.
+      Four widget tests were removed at the human's request (12 → 8), including the
+      only automated cover for keyboard activation and for that colour correction;
+      both are now the two highest-priority items in `manual-check-backlog.md`.
+      `elevation: 0` was knowingly kept despite being redundant, so **the analyzer
+      baseline is 33 from here, not 32** — that is a decision, not drift.
 
 - [ ] **2.5 — Form fields.** `system-foundation-specs.md` §3.2 "Form fields" row.
       Rework — `lib/widgets/default_border_text_field.dart` is a stock

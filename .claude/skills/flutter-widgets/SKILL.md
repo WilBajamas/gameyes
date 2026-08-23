@@ -156,8 +156,6 @@ actually match the requirement.
 | `HorizontalSeparator` | `horizontal_separator.dart` | Thin horizontal divider |
 | `MultiTypeValuesSelection` | `multi_type_values_selection.dart` | Multi-select chip group |
 | `TypeValuesSelection` | `type_values_selection.dart` | Single-select chip group |
-| `NavigationDestination` | `navigation_destination.dart` | Bottom nav destination item |
-| `ScrolledNavigationBar` | `scrolled_navigation_bar.dart` | Navigation bar that hides on scroll |
 | `AddContentDialog` | `add_content_dialog.dart` | Dialog for adding tracker content |
 | `ZoneLabel` | `zone_label.dart` | Caps section heading with optional trailing link; adds no spacing of its own |
 | `StatusChip` | `status_chip.dart` | Six-status pill: dot + label + optional count, list or on-media variant; adds no spacing of its own |
@@ -167,6 +165,7 @@ actually match the requirement.
 | `StatTile` / `StatPill` | `stat_pill.dart` | Stat pill in two forms sharing one figure-over-label pair: `StatTile` on 8% ink at r16 (laid out in threes by its caller), `StatPill` as a glass capsule of 2-3 pairs; adds no spacing of its own |
 | `ProgressDots` | `progress_dots.dart` | Step dots for a paged flow: caller supplies the dot count and which index is active; 22x5 ink pill for the active dot, 5x5 ink-12 for the rest, 6px apart, display-only and unanimated; hugs its content and adds no spacing of its own |
 | `ActionRow` | `action_row.dart` | Full-width 52px r-sm row on a caller-supplied flat fill: required 20px leading mark and label centred together as a pair, optional trailing 16px busy indicator, press-scale and focus ring, disabled without dimming; adds no spacing of its own |
+| `BottomTabBar` | `bottom_tab_bar/bottom_tab_bar.dart` | Static bottom tab chrome: onyx `surfaceTabChrome` fill, five fixed destinations at equal width, each an outline 20px glyph over an always-visible 10/500 label, plus an 18x3 fully-rounded cap above the glyph — indigo glyph, label and cap on the selected destination, ink-55 and a transparent cap on the other four. Reserves the live bottom safe-area inset with a 22 fallback and consumes it. Caller-driven: takes a selected index, reports the tapped index, holds no selection of its own and reads no scroll state. Multi-file module — `BottomTabBar` is the only public surface; the cell, focus ring, cap, content and the destination enum beside it are internal and are not imported from outside the folder. Adds no spacing of its own |
 | `CompletionRing` | `completion_ring/completion_ring.dart` | Circular completion ring at three fixed sizes (60 inline, 80 specimen, 88 detail): ink-12 track with a proportional arc over it and the truncated percentage centred inside, plus an optional caption at the two larger sizes. Indigo below 100, a closed magenta ring at exactly 100; value clamps to 0–100 and never throws. Display-only, unanimated, not a hit target; adds no spacing of its own |
 
 ## UI patterns every screen reuses
