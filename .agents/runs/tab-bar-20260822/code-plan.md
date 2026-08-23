@@ -295,3 +295,380 @@ appearance, which this project checks manually. C17's testable half (the label
 is not uppercased) is already covered by the first test's literal label finders,
 and C6 is covered by the constructor surface — see `task-brief.md ## Testing
 mode`.
+
+## Approved feedback delta
+
+Recorded 2026-08-23 after the Phase 3 human review. **Authoritative over
+everything above it wherever the two conflict.** No acceptance criterion changes —
+all twenty-two stand as written, and every decision not named here is unchanged.
+Because the delta moves and renames every created file, `tdd.md` and
+`task-brief.md` have also been corrected in place (file allowlist, implementation
+plan, and the paragraphs that named the old flat-file shape); the rest of both
+files stands.
+
+### 1. The destination cell is split into four classes
+
+`_TabDestinationCell` was doing six jobs in ~85 lines. It becomes four widgets,
+each with one nameable job:
+
+- `BottomTabBarCell` — one destination's interaction and accessibility shell.
+  Stateful, owns the press and focus flags; carries the semantics node, the
+  tooltip, the `InkWell`, the 44 minimum and the press scale.
+- `BottomTabBarFocusRing` — draws the green outline when focused, and reserves
+  its space when not.
+- `BottomTabBarCellContent` — the cap-glyph-label column, colour-animated by
+  selection.
+- `BottomTabBarCap` — the 18x3 indigo cap above the glyph.
+
+### 2. The component moves to a module folder
+
+`lib/widgets/bottom_tab_bar/`, with `BottomTabBar` at the module root, one file
+per split class, and the destination enum under `enum/` — the same shape as
+`game_card/`, `completion_ring/` and `countdown/`.
+
+This **reverses** the "Flat file, not a module folder" decision in
+`tdd.md ## Design decisions`. That reasoning rested on the module having a single
+public class plus little else; revision 1 undoes that premise, so the folder is
+now the right shape.
+
+**The enum is INTERNAL here, and that is deliberate.** In the other three modules
+the enum under `enum/` is public API — a caller must pass `GameCardSize`,
+`CompletionRingSize` or `CountdownForm`. Here the caller passes an `int` and gets
+an `int` back (C2, C3, C6), so `BottomTabBarDestination` is something no caller
+ever names, and `enum/` holds a type that is invisible outside the folder. The
+folder shape is kept anyway, as the human's explicit call for consistency across
+the four component modules. Recorded so a future reader does not mistake it for an
+accidental inconsistency and "fix" it.
+
+The four split classes are Dart-public for the same reason — they cross file
+boundaries inside the module — but they are **module-internal** and are not
+imported from outside the folder, exactly as `GameCardFooter` and
+`CountdownDigitRow` are.
+
+### 3. `Expanded` stays — settled, not an open question
+
+The human asked why not `MainAxisAlignment.spaceEvenly`. `Expanded` is kept, and
+`tdd.md ## Design decisions` now records why, so nobody "simplifies" it later:
+equal-width tap targets with no dead gaps between the cells, the 44 minimum
+without extra per-cell width constraints, stable layout in `zh` and under text
+scaling with the label ellipsizing in a fixed slot, even cap spacing across the
+five destinations, and it is what Material's own `NavigationBar` uses internally.
+
+### 4. `.claude/skills/flutter-widgets/SKILL.md` joins the allowlist — catalogue rows only
+
+This run deletes `scrolled_navigation_bar.dart` and `navigation_destination.dart`
+while the catalogue still lists both, which would leave it describing widgets that
+no longer exist. Items 2.1, 2.2 and 2.3 each updated that catalogue in-run, so
+this restores consistency rather than setting a precedent. This **reverses** the
+"not in Dev's allowlist" bullet in `tdd.md ## Out of scope`.
+
+**Catalogue table rows only. No rule text, no new prose section, nothing outside
+the table.** Delete these two rows:
+
+| `NavigationDestination` | `navigation_destination.dart` | Bottom nav destination item |
+| `ScrolledNavigationBar` | `scrolled_navigation_bar.dart` | Navigation bar that hides on scroll |
+
+and add, in their place:
+
+| `BottomTabBar` | `bottom_tab_bar/bottom_tab_bar.dart` | Static bottom tab chrome: onyx `surfaceTabChrome` fill, five fixed destinations at equal width, each an outline 20px glyph over an always-visible 10/500 label, plus an 18x3 fully-rounded cap above the glyph — indigo glyph, label and cap on the selected destination, ink-55 and a transparent cap on the other four. Reserves the live bottom safe-area inset with a 22 fallback and consumes it. Caller-driven: takes a selected index, reports the tapped index, holds no selection of its own and reads no scroll state. Multi-file module — `BottomTabBar` is the only public surface; the cell, focus ring, cap, content and the destination enum beside it are internal and are not imported from outside the folder. Adds no spacing of its own |
+
+### Revised skeleton — replaces `## CREATE NEW` above
+
+#### lib/widgets/bottom_tab_bar/enum/bottom_tab_bar_destination.dart
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
+
+enum BottomTabBarDestination {
+  featured(Icons.featured_play_list_outlined),
+  games(Icons.gamepad_outlined),
+  tracker(Icons.format_list_numbered_rtl),
+  browse(Icons.search_outlined),
+  settings(Icons.settings_outlined);
+
+  const BottomTabBarDestination(this.icon);
+
+  final IconData icon;
+
+  String get label => switch (this) {
+    BottomTabBarDestination.featured => S.current.featured,
+    BottomTabBarDestination.games => S.current.games,
+    BottomTabBarDestination.tracker => S.current.tracker,
+    BottomTabBarDestination.browse => S.current.browse,
+    BottomTabBarDestination.settings => S.current.settings,
+  };
+}
+```
+
+The `l10n` import becomes a package import rather than the relative
+`../generated/l10n.dart` the flat file used — the module now sits two levels down,
+and `completion_ring.dart` and `countdown_digit_row.dart` both take the package
+import.
+
+#### lib/widgets/bottom_tab_bar/bottom_tab_bar_cap.dart
+
+```dart
+class BottomTabBarCap extends StatelessWidget {
+  const BottomTabBarCap({super.key, required this.selected});
+
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+
+    return AnimatedContainer(
+      width: 18,
+      height: 3,
+      duration: tokens.motion.resolve(context, tokens.motion.stateChange),
+      curve: tokens.motion.standard,
+      decoration: BoxDecoration(
+        color: selected ? tokens.color.accentIndigo : Colors.transparent,
+        borderRadius: BorderRadius.circular(tokens.radius.full),
+      ),
+    );
+  }
+}
+```
+
+#### lib/widgets/bottom_tab_bar/bottom_tab_bar_focus_ring.dart
+
+```dart
+class BottomTabBarFocusRing extends StatelessWidget {
+  const BottomTabBarFocusRing({
+    super.key,
+    required this.focused,
+    required this.child,
+  });
+
+  final bool focused;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+
+    return Container(
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: focused ? tokens.color.green : Colors.transparent,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(tokens.radius.sm),
+      ),
+      child: child,
+    );
+  }
+}
+```
+
+The border and the 2px padding are present in both states, so taking focus never
+reflows the cell, and the ring is drawn inside the cell's own bounds so the bar's
+edge cannot clip it (C12).
+
+#### lib/widgets/bottom_tab_bar/bottom_tab_bar_cell_content.dart
+
+```dart
+class BottomTabBarCellContent extends StatelessWidget {
+  const BottomTabBarCellContent({
+    super.key,
+    required this.destination,
+    required this.selected,
+  });
+
+  final BottomTabBarDestination destination;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+    final tabLabel = tokens.typography.tabLabel;
+
+    return TweenAnimationBuilder<Color?>(
+      tween: ColorTween(
+        end: selected ? tokens.color.accentIndigo : tokens.color.ink55,
+      ),
+      duration: tokens.motion.resolve(context, tokens.motion.stateChange),
+      curve: tokens.motion.standard,
+      builder: (context, color, _) => Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 4,
+        children: [
+          BottomTabBarCap(selected: selected),
+          Icon(destination.icon, size: 20, color: color),
+          Text(
+            tabLabel.format(destination.label),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: tabLabel.style.copyWith(color: color),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+The `Icon` still takes no `semanticLabel` (C10). The cap is a child here rather
+than a branch, so the column's three slots are always occupied and a selection
+change cannot reflow the row (C16).
+
+#### lib/widgets/bottom_tab_bar/bottom_tab_bar_cell.dart
+
+```dart
+class BottomTabBarCell extends StatefulWidget {
+  const BottomTabBarCell({
+    super.key,
+    required this.destination,
+    required this.selected,
+    required this.onPressed,
+  });
+
+  final BottomTabBarDestination destination;
+  final bool selected;
+  final VoidCallback onPressed;
+
+  @override
+  State<BottomTabBarCell> createState() => _BottomTabBarCellState();
+}
+
+class _BottomTabBarCellState extends State<BottomTabBarCell> {
+  bool _pressed = false;
+  bool _focused = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+
+    return MergeSemantics(
+      child: Semantics(
+        selected: widget.selected,
+        label: MaterialLocalizations.of(context).tabLabel(
+          tabIndex: widget.destination.index + 1,
+          tabCount: BottomTabBarDestination.values.length,
+        ),
+        child: Tooltip(
+          message: widget.destination.label,
+          excludeFromSemantics: true,
+          child: InkWell(
+            onTap: widget.onPressed,
+            onHighlightChanged: (pressed) =>
+                setState(() => _pressed = pressed),
+            onFocusChange: (focused) => setState(() => _focused = focused),
+            splashFactory: NoSplash.splashFactory,
+            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 44),
+              child: AnimatedScale(
+                scale: _pressed ? 0.97 : 1,
+                duration: tokens.motion.resolve(
+                  context,
+                  tokens.motion.stateChange,
+                ),
+                curve: tokens.motion.standard,
+                child: BottomTabBarFocusRing(
+                  focused: _focused,
+                  child: BottomTabBarCellContent(
+                    destination: widget.destination,
+                    selected: widget.selected,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+Composition order is unchanged from the flat version — semantics outside the
+tooltip, outside the ink well, outside the 44 constraint, outside the press scale
+— so nothing about C2, C8, C9, C10, C11, C12, C13 or C20 moves. Only the class
+boundaries are new.
+
+#### lib/widgets/bottom_tab_bar/bottom_tab_bar.dart
+
+```dart
+class BottomTabBar extends StatelessWidget {
+  const BottomTabBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onDestinationSelected,
+  });
+
+  final int selectedIndex;
+  final ValueChanged<int> onDestinationSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.tokens;
+
+    return Material(
+      color: tokens.color.surfaceTabChrome,
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
+      child: SafeArea(
+        top: false,
+        left: false,
+        right: false,
+        minimum: const EdgeInsets.only(bottom: 22),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(6, 8, 6, 0),
+          child: Row(
+            children: [
+              for (final destination in BottomTabBarDestination.values)
+                Expanded(
+                  child: BottomTabBarCell(
+                    destination: destination,
+                    selected: destination.index == selectedIndex,
+                    onPressed: () => onDestinationSelected(destination.index),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+Public API is exactly what it was: `selectedIndex` in, index out. The five
+`Expanded` children stay — see delta item 3.
+
+Every file in the module carries **no comments at all**, imports its siblings by
+package path
+(`package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/...`), and
+reads its own tokens through `context.tokens`.
+
+### One-line change in `## MODIFY EXISTING`
+
+`home_screen.dart`'s import becomes
+`package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/bottom_tab_bar.dart`.
+Everything else in that section — the `BottomTabBar(...)` call, the retained
+`NotificationListener` and its `ScrollNotifier` write, the two deletions — is
+unchanged.
+
+### Test plan: unchanged
+
+Still **twelve tests in one file** at
+`test/widget/components/bottom_tab_bar_test.dart`, asserting exactly what is
+listed under `## TEST FILES` above. The split adds no tests: the four new classes
+are module-internal, not public contract, and every behaviour they own is already
+observable through `BottomTabBar`. No dimension, gap, radius, offset or position
+assertion; colour assertions name a token; never a golden test.
+
+### Explicitly unchanged by this delta
+
+The dropped scroll-hide decision and FOLLOW-UP-1's orphan list; the 3px cap
+exception; the label-paired glyph finding; both old files DELETED rather than
+`@Deprecated`; `SafeArea(minimum:)` giving `max(inset, 22)`; keeping
+`MaterialLocalizations.tabLabel`, `Semantics(selected:)`, `Tooltip` and the
+ink-suppressed `InkWell`; not reusing `ButtonPressScale`; C6 getting no dedicated
+widget test; and `tdd.md`'s note that C5's test loses its meaning once
+FOLLOW-UP-1 removes `ScrollNotifier`.

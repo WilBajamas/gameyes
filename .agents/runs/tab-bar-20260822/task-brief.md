@@ -1,6 +1,6 @@
 # Task Brief
 Source: `.agents/week-2-task-briefs.md` Stage 2 item 2.4 — Tab bar; `system-foundation-specs.md` §3.2 "Tab bar" row (with §1.7, §1.8, §1.9, §2, §5, §6); `home-screen-design-conventions.md` §6
-Date: 2026-08-22
+Date: 2026-08-22 (revised 2026-08-23 after the Phase 3 human review — see `code-plan.md ## Approved feedback delta`)
 
 ## Context
 
@@ -25,9 +25,13 @@ proportionate number of tests.
   contract (index in, index out) that can meaningfully regress.
 
 **Widgets deliberately not getting one:**
-- `_TabDestinationCell` and the destination enum — private, no public contract,
-  and every behaviour they own is observable through `BottomTabBar`. Testing them
-  separately would mean reaching for private types.
+- `BottomTabBarCell`, `BottomTabBarFocusRing`, `BottomTabBarCellContent`,
+  `BottomTabBarCap` and `BottomTabBarDestination` — module-internal. They are
+  Dart-public only because they cross file boundaries inside
+  `lib/widgets/bottom_tab_bar/`; nothing outside the folder imports them, so none
+  of them is a public contract, and every behaviour they own is already
+  observable through `BottomTabBar`. Splitting the old private cell into four
+  classes changes the file layout, not what is worth testing — it adds no tests.
 - `HomeScreen` — no dedicated test file, and none exists today. C6's contract is
   that the shell hands the bar only an index and a callback; after this change
   the bar's constructor exposes nothing else, so passing scroll state to it is
@@ -40,24 +44,59 @@ proportionate number of tests.
 ## File allowlist
 
 ### CREATE NEW
-`lib/widgets/bottom_tab_bar.dart` — the static bottom tab bar: five fixed
-destinations, token-driven chrome, cap, semantics, press/focus treatment, and
-safe-area handling. Contains the public `BottomTabBar`, the private destination
-cell and the private destination enum.
+
+The component is a module folder. `BottomTabBar` is the only public surface;
+everything else in the folder is module-internal and is never imported from
+outside it.
+
+`lib/widgets/bottom_tab_bar/enum/bottom_tab_bar_destination.dart` — the
+module-internal `BottomTabBarDestination` enum: five values in fixed order
+(featured, games, tracker, browse, settings), each with its outline `IconData`
+and an `S.current` label getter.
+
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_cap.dart` — `BottomTabBarCap`: the
+18x3 fully-rounded cap, `accentIndigo` when selected and transparent otherwise,
+animated at the state-change token.
+
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_focus_ring.dart` —
+`BottomTabBarFocusRing`: the solid 2px green outline when focused, transparent
+otherwise, with its border and 2px padding always present so focus never reflows
+the cell.
+
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_cell_content.dart` —
+`BottomTabBarCellContent`: the cap-glyph-label column with the selected/unselected
+colour tween over the glyph and label.
+
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_cell.dart` — `BottomTabBarCell`: one
+destination's interaction and accessibility shell. Stateful for the press and
+focus flags only; carries the semantics node, the tooltip, the ink-suppressed
+`InkWell`, the 44 minimum and the press scale.
+
+`lib/widgets/bottom_tab_bar/bottom_tab_bar.dart` — the public `BottomTabBar`:
+token-driven chrome, safe-area handling, and a `Row` of five `Expanded` cells.
 
 ### MODIFY EXISTING
+
 `lib/features/home/presentation/screens/home_screen.dart` — swap the
 `ScrolledNavigationBar` + `NavigationBar` + five `CustomNavigationDestination`
-construction for a single `BottomTabBar(selectedIndex:, onDestinationSelected:)`
+construction for a single `BottomTabBar(selectedIndex:, onDestinationSelected:)`,
+imported from
+`package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/bottom_tab_bar.dart`,
 and drop the imports that go with it. **Leave the
 `NotificationListener<UserScrollNotification>` body wrapper, its `ScrollNotifier`
 write and its `getIt`/`ScrollNotifier` imports exactly as they are.**
 
-`lib/widgets/scrolled_navigation_bar.dart` — **DELETE.** Replaced by
-`bottom_tab_bar.dart`; sole caller rewired above.
+`lib/widgets/scrolled_navigation_bar.dart` — **DELETE.** Replaced by the
+`bottom_tab_bar/` module; sole caller rewired above.
 
-`lib/widgets/navigation_destination.dart` — **DELETE.** Replaced by
-`bottom_tab_bar.dart`; sole caller rewired above.
+`lib/widgets/navigation_destination.dart` — **DELETE.** Replaced by the
+`bottom_tab_bar/` module; sole caller rewired above.
+
+`.claude/skills/flutter-widgets/SKILL.md` — **catalogue table rows only.** Delete
+the `NavigationDestination` and `ScrolledNavigationBar` rows, both of which name
+files this run deletes, and add the `BottomTabBar` row given verbatim in
+`code-plan.md ## Approved feedback delta` item 4. **Change no rule text, add no
+prose section, touch nothing outside that table.**
 
 ### TEST FILES
 `test/widget/components/bottom_tab_bar_test.dart` — the bar's behaviour:
@@ -73,26 +112,50 @@ Nothing else is in scope. In particular `scroll_notifier.dart`,
 
 ## Implementation plan
 
-Step 1: Create `lib/widgets/bottom_tab_bar.dart` — the private destination enum
-(five values in order, each with its outline `IconData` and its `S.current`
-label getter), the private stateful destination cell, and the public
-`BottomTabBar`. No comments anywhere in the file.
+Steps 1–6 build the module bottom-up, so every file compiles as it lands. No
+comments in any of them.
 
-Step 2: Rewire `lib/features/home/presentation/screens/home_screen.dart` to
+Step 1: Create
+`lib/widgets/bottom_tab_bar/enum/bottom_tab_bar_destination.dart` — the
+`BottomTabBarDestination` enum, five values in order, each with its outline
+`IconData` and its `S.current` label getter.
+
+Step 2: Create `lib/widgets/bottom_tab_bar/bottom_tab_bar_cap.dart` —
+`BottomTabBarCap`, taking `selected`.
+
+Step 3: Create `lib/widgets/bottom_tab_bar/bottom_tab_bar_focus_ring.dart` —
+`BottomTabBarFocusRing`, taking `focused` and a child.
+
+Step 4: Create `lib/widgets/bottom_tab_bar/bottom_tab_bar_cell_content.dart` —
+`BottomTabBarCellContent`, taking the destination and `selected`, composing the
+cap from step 2.
+
+Step 5: Create `lib/widgets/bottom_tab_bar/bottom_tab_bar_cell.dart` —
+`BottomTabBarCell`, the stateful interaction shell, composing steps 3 and 4.
+
+Step 6: Create `lib/widgets/bottom_tab_bar/bottom_tab_bar.dart` — the public
+`BottomTabBar`, composing five `Expanded` cells from step 5.
+
+Step 7: Rewire `lib/features/home/presentation/screens/home_screen.dart` to
 `BottomTabBar(selectedIndex: context.tabsRouter.activeIndex,
 onDestinationSelected: context.tabsRouter.setActiveIndex)`; remove the now-unused
 `navigation_destination.dart`, `scrolled_navigation_bar.dart` and
 `generated/l10n.dart` imports. Change nothing else in the file — the
 `NotificationListener` body wrapper and its `ScrollNotifier` write stay.
 
-Step 3: Delete `lib/widgets/scrolled_navigation_bar.dart`.
+Step 8: Delete `lib/widgets/scrolled_navigation_bar.dart`.
 
-Step 4: Delete `lib/widgets/navigation_destination.dart`.
+Step 9: Delete `lib/widgets/navigation_destination.dart`.
 
-Step 5: Create `test/widget/components/bottom_tab_bar_test.dart` with the tests
-named in `code-plan.md`, following the `flutter-widget-test` skill — no
+Step 10: Create `test/widget/components/bottom_tab_bar_test.dart` with the twelve
+tests named in `code-plan.md`, following the `flutter-widget-test` skill — no
 dimension, gap, radius, offset or position assertions, colour assertions only
 where they carry meaning and only via a named token, and never a golden test.
+
+Step 11: Update the catalogue table in `.claude/skills/flutter-widgets/SKILL.md`
+— drop the `NavigationDestination` and `ScrolledNavigationBar` rows, add the
+`BottomTabBar` row from `code-plan.md ## Approved feedback delta` item 4. Rows
+only; no rule text.
 
 No `dart run build_runner build` step is required: this item adds no annotated
 source, no `freezed`/`json_serializable` model, no injectable registration and no
@@ -119,9 +182,15 @@ IDs in scope: 2.4-C1 … 2.4-C22 (all twenty-two).
 
 - **Widgets carry no comments at all** — not a header, not a `///`, not a note
   above a `Stack` or a token lookup (`flutter-widgets`, and `execution.md`
-  §Code quality). This overrides anything the design docs explain in prose.
+  §Code quality). This overrides anything the design docs explain in prose, and
+  it applies to **every one of the six files** in `lib/widgets/bottom_tab_bar/`.
+- **Module-internal, not exported.** Only `bottom_tab_bar.dart` is imported from
+  outside the folder. The other five files are imported by their siblings, by
+  package path (`package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/...`),
+  never relatively — matching `game_card/` and `completion_ring/`. No barrel file.
 - **Never `Theme.of(context)` directly** — use `context.themeData` /
-  `context.tokens` from `ContextExtensions`.
+  `context.tokens` from `ContextExtensions`. Each class in the module reads its
+  own tokens; do not thread colours or durations down as parameters.
 - **Never a hardcoded user-facing string** — `S.current.[key]`.
 - **No literal hex, no literal duration, no literal radius.** Every colour,
   duration, curve and radius comes from `context.tokens`.
@@ -131,8 +200,10 @@ IDs in scope: 2.4-C1 … 2.4-C22 (all twenty-two).
   2 — is even.
 - **Outlines are always solid.** The focus ring is a continuous `Border`; no
   dashed or dotted stroke, no `CustomPainter` for an edge.
-- **Prefer `Expanded` over `Flexible`.** The five destination cells are
-  `Expanded` — that is what makes them equal fifths (C20).
+- **`Expanded`, not `MainAxisAlignment.spaceEvenly`.** The five destination cells
+  are `Expanded` — that is what makes them equal fifths and equal hit targets
+  with no dead gaps between them (C20). This was raised and settled at the Phase 3
+  gate; the reasoning is in `tdd.md ## Design decisions`. Do not "simplify" it.
 - **No spacing of its own** in the ordinary sense does not apply to the bar's
   own interior: the 8/6 padding and the safe-area inset are the chrome's own
   anatomy (C19), not spacing around a component. It still adds no margin outside
@@ -145,11 +216,14 @@ IDs in scope: 2.4-C1 … 2.4-C22 (all twenty-two).
 - **Icons carry no `semanticLabel`** (C10) and `Tooltip` is constructed with
   `excludeFromSemantics: true` — both are required for the destination name to be
   announced exactly once.
+- **The `SKILL.md` edit is catalogue table rows only.** Two rows out, one row in.
+  No rule text, no new section, nothing outside the table.
 - **Never a golden test**, and no test asserting a dimension, gap, radius, offset
   or painted position, whatever a criterion says about pixel appearance
   (`execution.md` §Scope, `testing-conventions.md`, `flutter-widget-test`).
 - Widget tests live at `test/widget/components/`, layer-based, never mirrored
-  from `lib/`.
+  from `lib/` — one file, `bottom_tab_bar_test.dart`, twelve tests. The module's
+  internal classes get no test file of their own.
 
 ## Self-correction budget
 

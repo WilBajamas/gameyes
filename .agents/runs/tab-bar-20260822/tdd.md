@@ -1,6 +1,6 @@
 # Technical Design Document
 Source: `.agents/week-2-task-briefs.md` Stage 2 item 2.4 — Tab bar; `system-foundation-specs.md` §3.2 "Tab bar" row (with §1.7, §1.8, §1.9, §2, §5, §6); `home-screen-design-conventions.md` §6
-Date: 2026-08-22
+Date: 2026-08-22 (revised 2026-08-23 after the Phase 3 human review — see `code-plan.md ## Approved feedback delta`)
 
 ## Feature summary
 
@@ -43,8 +43,13 @@ remains the holder of active-tab state, exactly as today.
 
 ### Widgets
 
-**`BottomTabBar`** (create) — `lib/widgets/bottom_tab_bar.dart` — stateless.
-Consumes `selectedIndex` (`int`) and `onDestinationSelected`
+The component ships as a module folder, `lib/widgets/bottom_tab_bar/`, with one
+file per class. `BottomTabBar` is the only public surface; the four classes
+beside it and the destination enum are module-internal and are never imported
+from outside the folder.
+
+**`BottomTabBar`** (create) — `lib/widgets/bottom_tab_bar/bottom_tab_bar.dart` —
+stateless. Consumes `selectedIndex` (`int`) and `onDestinationSelected`
 (`ValueChanged<int>`). Renders a `Material` filled with
 `tokens.color.surfaceTabChrome` at zero elevation with a transparent surface
 tint (C14 — flat fill, no border, no shadow, no elevation overlay), a bottom
@@ -53,11 +58,14 @@ tint (C14 — flat fill, no border, no shadow, no elevation overlay), a bottom
 Interactions: none of its own; each cell calls `onDestinationSelected` with its
 own index. It accepts no scroll, visibility, duration or collapse parameter and
 performs no service-locator lookup (C5).
+**One job: the bar's chrome and its five equal slots.**
 
-**`_TabDestinationCell`** (create, private, same file) — stateful only for
-ephemeral press and focus flags (C13, C12). Consumes its destination, its
-index, whether it is selected, and the selection callback. Composition, outside
-in:
+**`BottomTabBarCell`** (create) —
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_cell.dart` — stateful only for
+ephemeral press and focus flags (C13, C12). Consumes its destination, whether it
+is selected, and the press callback.
+**One job: one destination's interaction and accessibility shell.** Composition,
+outside in:
 
 - `MergeSemantics` → `Semantics(selected:, label: MaterialLocalizations.of(context).tabLabel(...))`
   — one accessibility node per destination carrying the selected state (C8) and
@@ -75,17 +83,33 @@ in:
   suppressed (C13). `onHighlightChanged` and `onFocusChange` feed the two flags.
 - `ConstrainedBox(minHeight: 44)` inside the ink well, so the hit target is the
   whole fifth including its padding, not the glyph and label bounds (C20, C2).
-- `AnimatedScale` at `0.97` while pressed (C13), and a `Container` whose solid
-  2px border is `tokens.color.green` when focused and transparent otherwise, with
-  a permanent 2px inner padding (C12 / §1.8's 2px green outline at 2px offset).
-  The border and padding are always present so focus does not reflow the cell,
-  and because the ring is drawn inside the cell's own bounds it cannot be clipped
-  by the bar's edges.
-- A `Column` of: the cap, then the glyph and label.
+- `AnimatedScale` at `0.97` while pressed (C13), wrapping the focus ring.
 
-**Destinations** (create, private enum, same file) — the five in fixed
-declaration order Featured · Games · Tracker · Browse · Settings, each carrying
-its outline `IconData` and a `label` getter returning the existing
+**`BottomTabBarFocusRing`** (create) —
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_focus_ring.dart` — stateless.
+Consumes `focused` and a child. A `Container` whose solid 2px border is
+`tokens.color.green` when focused and transparent otherwise, with a permanent 2px
+inner padding (C12 / §1.8's 2px green outline at 2px offset). The border and
+padding are always present so focus does not reflow the cell, and because the ring
+is drawn inside the cell's own bounds it cannot be clipped by the bar's edges.
+**One job: the green focus outline, with its space always reserved.**
+
+**`BottomTabBarCellContent`** (create) —
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_cell_content.dart` — stateless.
+Consumes its destination and whether it is selected. A `TweenAnimationBuilder`
+over the glyph/label colour (`accentIndigo` when selected, `ink55` otherwise —
+C15) around a `Column` of the cap, the glyph and the label.
+**One job: the cap-glyph-label column, colour-animated by selection.**
+
+**`BottomTabBarCap`** (create) —
+`lib/widgets/bottom_tab_bar/bottom_tab_bar_cap.dart` — stateless. Consumes
+whether it is selected. See "The cap" below.
+**One job: the indigo cap above the selected destination's glyph.**
+
+**`BottomTabBarDestination`** (create, module-internal enum) —
+`lib/widgets/bottom_tab_bar/enum/bottom_tab_bar_destination.dart` — the five in
+fixed declaration order Featured · Games · Tracker · Browse · Settings, each
+carrying its outline `IconData` and a `label` getter returning the existing
 `S.current.*` string (C1, ASSUMPTION-8). The enum's `index` is the zero-based
 index reported to the caller (C2) and its length is the tab count announced by
 `tabLabel` (C9). Glyphs are the outline twin of each current filled icon, same
@@ -112,9 +136,10 @@ wiring to the bar.
 
 ## Design decisions
 
-**Placement and name.** The component stays in `lib/widgets/` and lands as one
-flat file, `bottom_tab_bar.dart`, replacing `scrolled_navigation_bar.dart` and
-`navigation_destination.dart`.
+**Placement and name.** The component lands as a module folder,
+`lib/widgets/bottom_tab_bar/`, with `BottomTabBar` at its root, one file per
+internal class, and the destination enum under `enum/`. It replaces
+`scrolled_navigation_bar.dart` and `navigation_destination.dart`.
 
 - *`lib/widgets/` over a feature folder* — §3.2 lists "Tab bar" as a named
   component of the design system alongside Game card, Status chip, Completion
@@ -126,15 +151,33 @@ flat file, `bottom_tab_bar.dart`, replacing `scrolled_navigation_bar.dart` and
   every file that imports `material.dart`. Both design sources call it the tab
   bar and §6 opens with "fixed to the bottom of the frame", so `BottomTabBar`
   says what it is and where it sits without inventing a compound.
-- *Flat file, not a module folder with `enum/`* — 2.1, 2.2 and 2.3 each got a
-  folder because their enum is **public API**: a caller must pass
-  `GameCardSize`, `CompletionRingSize` or `CountdownForm`. Here the caller passes
-  an `int` and gets an `int` back (C2, C3, C6), so the destination enum is
-  internal, the cell widget is internal, and the module has exactly one public
-  class. `flutter-widgets` puts a helper only its parent uses in its parent's
-  file; splitting one public widget across three files would copy the folder
-  shape without the reason for it. If the human prefers the folder for
-  consistency, it is a one-line delta at the gate.
+- *Module folder, matching `game_card/`, `completion_ring/` and `countdown/`* —
+  the cell is split into four classes, so the module is no longer one public
+  class plus a private helper and the folder shape is what fits. **The enum here
+  is internal, unlike the other three modules where it is public API** (a caller
+  must pass `GameCardSize`, `CompletionRingSize` or `CountdownForm`); here the
+  caller passes an `int` and gets an `int` back (C2, C3, C6), so `enum/` holds a
+  type no caller ever names. That asymmetry is the human's explicit call for
+  folder consistency across the four component modules, recorded so it does not
+  read as an accident.
+
+**Five `Expanded` cells, not `MainAxisAlignment.spaceEvenly`.** Recorded because
+`spaceEvenly` looks like the simpler spelling and is not equivalent — swapping to
+it later would quietly reintroduce every problem below.
+
+- `Expanded` gives each destination an exact fifth of the width as its **hit
+  target**, with no dead gap between cells that swallows a tap (C20, C2).
+  `spaceEvenly` sizes each cell to its own content and distributes the leftover
+  as untappable whitespace, so a tap between two labels does nothing.
+- The 44 minimum then needs only the cell's own `minHeight`; under `spaceEvenly`
+  each cell would need its own width constraint to reach 44 in both dimensions.
+- Layout stays stable in `zh` and under text scaling: the label ellipsizes inside
+  a slot whose width does not depend on the label (C21). Under `spaceEvenly` one
+  long label widens its own cell and shifts its four neighbours.
+- Cap spacing across the five destinations stays even for the same reason — each
+  cap is centred in an identical slot.
+- Material's own `NavigationBar` uses `Expanded` internally for these exact
+  reasons, so this is the conventional spelling, not a local quirk.
 
 **How much Material is kept.** Rebuilt, because the spec's anatomy has no
 Material equivalent: the active-state visuals (cap, colours), the press
@@ -149,9 +192,9 @@ Material behaviour dropped outright is the ink ripple, and §1.8's press scale
 replaces it rather than leaving the control with no affordance (ASSUMPTION-6).
 
 **The cap.** A fixed `18 × 3` box with a fully-rounded radius
-(`tokens.radius.full`), drawn as the first child of the cell's `Column` — above
-the glyph, inside the cell, so it tracks the glyph rather than the bar. It is
-present on all five cells at all times and only its colour changes,
+(`tokens.radius.full`), drawn as the first child of `BottomTabBarCellContent`'s
+`Column` — above the glyph, inside the cell, so it tracks the glyph rather than
+the bar. It is present on all five cells at all times and only its colour changes,
 `accentIndigo` when selected and `Colors.transparent` otherwise, so nothing
 enters or leaves the layout and the row cannot jump on a tab change (C16). Its
 `AnimatedContainer` and the glyph/label colour tween both run at
@@ -245,10 +288,6 @@ leaving it as evidence it no longer supplies.
   builds a Material `NavigationBar`. It is a theme registration, harmless, no
   criterion touches it, and removing it would widen the item into the theme
   layer. Leave it.
-- **`.claude/skills/flutter-widgets/SKILL.md`'s widget catalogue** — its
-  `NavigationDestination` and `ScrolledNavigationBar` rows go stale with this
-  change. That file is pipeline configuration rather than project source, so it
-  is not in Dev's allowlist; flagged for the human at the gate.
 - Destination count, order, labels, glyph-to-route mapping, routing behaviour,
   tab state preservation and deep links — unchanged (ASSUMPTION-8).
 - Light theme (ASSUMPTION-7), the §6 mockup's different five destination names,
@@ -256,6 +295,12 @@ leaving it as evidence it no longer supplies.
 - Golden tests and any test asserting a pixel dimension, gap, radius, offset or
   painted position — those are the manual device checks named in C12, C13, C16,
   C17, C18, C20, C21 and C22, and go to `.agents/manual-check-backlog.md` at QA.
+
+**No longer out of scope:** `.claude/skills/flutter-widgets/SKILL.md`'s widget
+catalogue. Its `NavigationDestination` and `ScrolledNavigationBar` rows describe
+files this run deletes, so the file is now in Dev's allowlist for **catalogue
+table rows only** — two rows out, one `BottomTabBar` row in, no rule text. Items
+2.1, 2.2 and 2.3 each updated that catalogue in-run.
 
 ## Open questions
 
