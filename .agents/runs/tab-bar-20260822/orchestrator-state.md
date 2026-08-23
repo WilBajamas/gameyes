@@ -3,15 +3,15 @@ Feature: Week 2 Stage 2 item 2.4 — Tab bar
 Run ID: tab-bar-20260822
 Run folder: .agents/runs/tab-bar-20260822/
 Started: 2026-08-22
-Current phase: CODE_REVIEW
+Current phase: QA
 QA cycles used: 0
-Analyzer baseline: 0 errors, 2 warnings, 30 info (32 issues) — captured 2026-08-22
+Analyzer baseline: 0 errors, 2 warnings, 30 info (32 issues) — captured 2026-08-22. **Post-implementation it is 33**, by human decision: the explicit `elevation: 0` on `Material` in `bottom_tab_bar.dart:22` raises one `avoid_redundant_argument_values` info. Kept deliberately (it is redundant — `Material` defaults to 0, and `surfaceTintColor: Colors.transparent` is what suppresses the M3 tint). Later runs inherit 33 as the baseline; this is not drift.
 Test baseline: +304 -10 — captured 2026-08-22
 Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3)
 Branch: claude/questloggd-stage-2-game-card-nxg2vg
 Base branch: develop
 Base SHA: e881cb5
-Dev commit: 965b5ee
+Dev commit: eaae36e (test-trim revision of 965b5ee)
 Last updated: 2026-08-22
 
 Note: items 2.1, 2.2 and 2.3 are all merged to `develop` at `e881cb5`, and the
@@ -42,3 +42,5 @@ FLAGGED TO THE HUMAN before the removal, and accepted by them — two of the fou
 - The keyboard-traversal test was the ONLY automated coverage of keyboard activation, which is precisely the defect that shaped this design: `ButtonPressScale` was rejected for reuse because its `FocusableActionDetector` registers no `ActivateIntent`. After removal, the bug the design was built to avoid has no regression guard.
 - The colour test was the ONLY automated proof that the pre-existing colour INVERSION is fixed (`CustomNavigationDestination` shipped unselected in `colorScheme.primary` indigo and selected in `Colors.grey[100]`). This run corrects a live bug; after removal nothing automated proves the correction holds.
 Both are carried into the manual-check backlog instead.
+2026-08-22 eaae36e — Revision reviewed and approved by human at Phase 4B; released to QA. Orchestrator re-verified: 8 tests remain, `lib/` untouched, tests +312 -10, analyzer 33. Dev also cleaned up what the removals stranded (three imports and a `buildSubject` parameter).
+2026-08-22 `elevation: 0` KEPT by explicit human decision after the orchestrator recommended dropping it. It is a genuinely redundant argument and raises the analyzer baseline from 32 to 33 — accepted knowingly, not overlooked. Do not "fix" it in a later sweep without asking.
