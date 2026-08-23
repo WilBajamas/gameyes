@@ -3,7 +3,9 @@ Feature: Week 2 Stage 2 item 2.4 — Tab bar
 Run ID: tab-bar-20260822
 Run folder: .agents/runs/tab-bar-20260822/
 Started: 2026-08-22
-Current phase: QA
+Current phase: COMPLETE
+Result: PASS — pending manual checks
+Completed: 2026-08-22
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 30 info (32 issues) — captured 2026-08-22. **Post-implementation it is 33**, by human decision: the explicit `elevation: 0` on `Material` in `bottom_tab_bar.dart:22` raises one `avoid_redundant_argument_values` info. Kept deliberately (it is redundant — `Material` defaults to 0, and `surfaceTintColor: Colors.transparent` is what suppresses the M3 tint). Later runs inherit 33 as the baseline; this is not drift.
 Test baseline: +304 -10 — captured 2026-08-22
@@ -11,7 +13,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/questloggd-stage-2-game-card-nxg2vg
 Base branch: develop
 Base SHA: e881cb5
-Dev commit: eaae36e (test-trim revision of 965b5ee)
+Dev commit: 31d3f55 (post-QA test-decoupling revision of eaae36e, itself a revision of 965b5ee)
 Last updated: 2026-08-22
 
 Note: items 2.1, 2.2 and 2.3 are all merged to `develop` at `e881cb5`, and the
@@ -44,3 +46,21 @@ FLAGGED TO THE HUMAN before the removal, and accepted by them — two of the fou
 Both are carried into the manual-check backlog instead.
 2026-08-22 eaae36e — Revision reviewed and approved by human at Phase 4B; released to QA. Orchestrator re-verified: 8 tests remain, `lib/` untouched, tests +312 -10, analyzer 33. Dev also cleaned up what the removals stranded (three imports and a `buildSubject` parameter).
 2026-08-22 `elevation: 0` KEPT by explicit human decision after the orchestrator recommended dropping it. It is a genuinely redundant argument and raises the analyzer baseline from 32 to 33 — accepted knowingly, not overlooked. Do not "fix" it in a later sweep without asking.
+
+## Post-QA note
+`qa-report.md` was written against `eaae36e` and returned PASS — pending manual
+checks, with one WARNING: the test file imported two module-internal files and used
+`find.byType(BottomTabBarCell)` in 10 places, against `task-brief.md`'s own
+"only `bottom_tab_bar.dart` is imported from outside the folder" constraint. The
+human chose to fix it before sign-off rather than log it.
+
+Dev commit `31d3f55` reworked all 8 tests onto the public surface only. Verified by
+the orchestrator rather than by a second QA cycle, since the change is test-only and
+alters no assertion: one module import remains (`bottom_tab_bar.dart`), zero
+references to `BottomTabBarCell`/`BottomTabBarDestination`, test count still 8,
+`lib/` untouched, analyzer 33, tests +312 -10. QA cycles used stays 0 — this was a
+human-directed cleanup of a WARNING, not remediation of a FAIL.
+
+Dev solved the one case the orchestrator had pre-authorised an exception for: the
+whole-cell-tappable test now finds the ancestor `InkWell` (a public Flutter type)
+rather than naming the internal cell, so all 10 finders converted with no carve-out.

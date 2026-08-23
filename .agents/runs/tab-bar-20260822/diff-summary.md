@@ -8,7 +8,7 @@ Commit: 965b5ee1149abf36b8ef932666400847f02aed68
 Commit: eaae36e8636d92b7023f4191a59d029ecf33f095
 
 ## Post-QA revision (2026-08-23)
-Commit: PENDING
+Commit: 31d3f5522b78b0c4cc9ca2e0f902ab6e03d2b0e1
 
 QA passed `eaae36e` with one WARNING: `bottom_tab_bar_test.dart` imported
 `bottom_tab_bar_cell.dart` and `enum/bottom_tab_bar_destination.dart` and used
