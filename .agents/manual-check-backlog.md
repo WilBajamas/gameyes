@@ -18,6 +18,14 @@ leaving a failing check sitting here.
 None of these block anything. They are a debt to settle when a device is
 available, ideally in one sitting per screen rather than one item at a time.
 
+**Scheduled: after week 2 Stage 2 finishes.** Human decision, 2026-08-22 — the
+whole backlog waits until all eight Stage 2 items are shipped, then gets worked in
+one device sitting. Do not interrupt a pipeline run to perform these, and do not
+read the growing count as a problem. **Start with `2.4-MC-1` and `2.4-MC-2`** when
+the sitting happens: keyboard activation and the tab bar's colour correction are
+the only two entries here with no automated guard at all — everything else is
+either cosmetic or has a test standing behind it.
+
 ---
 
 ## Week 1 — item 10.1 (IGDB transport)

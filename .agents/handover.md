@@ -742,11 +742,17 @@ skills, do not pattern-match off existing files:
   still says "one file per widget family" -- that contradiction is a live
   follow-up, not a rule to obey blindly.
 
+**The manual-check backlog is deliberately NOT being worked during Stage 2.** All
+74 checks in .agents/manual-check-backlog.md wait until Stage 2's eight items are
+finished, then get performed in one device sitting. Human decision -- do not
+interrupt a pipeline run to perform them, and do not treat the growing count as
+something going wrong. When the sitting happens, start with 2.4-MC-1 and 2.4-MC-2:
+keyboard activation and the tab bar's colour correction are the only two with no
+automated guard at all.
+
 Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
 item 3's on-device cross-account RLS check (blocked on week 3's Library feature),
-item 10.1's dead-code cleanup, the manual-check backlog in
-.agents/manual-check-backlog.md (74 checks, none performed -- start with 2.4-MC-1
-and 2.4-MC-2, the two with no automated guard at all), the now fully-orphaned
+item 10.1's dead-code cleanup, the manual-check backlog above, the now fully-orphaned
 ScrollNotifier ecosystem left behind by 2.4, the flutter-widgets rule text
 contradicting four shipped modules, §3.2's stale desaturation text, §1.9
 platform-mark conformance, primary_button.dart's unexplained third color.green,
