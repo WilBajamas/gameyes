@@ -4,6 +4,35 @@ Date: 2026-08-23
 Branch: claude/questloggd-stage-2-game-card-nxg2vg
 Commit: 965b5ee1149abf36b8ef932666400847f02aed68
 
+## Phase 4B revision (2026-08-23)
+Commit: eaae36e8636d92b7023f4191a59d029ecf33f095
+
+Human review of `965b5ee` asked for one change: remove four widget tests from
+`test/widget/components/bottom_tab_bar_test.dart`, taking it from 12 tests to 8.
+Removed, by name, with no replacement and no redistribution of their
+assertions into the surviving tests:
+- `reports the destination reached by keyboard traversal when activated`
+- `fills the bar with the surfaceTabChrome token`
+- `tints the selected destination and cap indigo and the rest ink55`
+- `settles a selection change with no running animation under reduced motion`
+
+These four behaviours are now covered by manual device check only, per the
+human's explicit decision.
+
+Stranded code removed along with the tests: the `flutter/services.dart`
+import (`LogicalKeyboardKey`, keyboard-traversal test only), the
+`core/utils/extensions.dart` import (`tokens`, used only by the removed
+colour/chrome/reduced-motion tests), the `bottom_tab_bar_cap.dart` import
+(`BottomTabBarCap`, cap-colour test only), and the `disableAnimations`
+parameter on `buildSubject` (reduced-motion test only). No other file
+touched; `lib/` untouched, including `bottom_tab_bar.dart`'s `elevation: 0`.
+
+Verification: `flutter analyze` — 33 issues (0 errors, 2 pre-existing
+warnings, 31 info), unchanged from baseline. `flutter test` — +312 -10 vs.
+the prior +316 -10; the 8 surviving `bottom_tab_bar_test.dart` tests all
+pass; the 10 failures are the same pre-existing set (tracker repository 4,
+game_detail cubit 3, games bloc 3) — no new failure.
+
 ## Files created
 lib/widgets/bottom_tab_bar/enum/bottom_tab_bar_destination.dart — module-internal enum, five destinations in order with outline icon and `S.current` label
 lib/widgets/bottom_tab_bar/bottom_tab_bar_cap.dart — `BottomTabBarCap`, the 18x3 fully-rounded cap, indigo when selected
