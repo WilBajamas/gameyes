@@ -4,9 +4,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data_dark.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/bottom_tab_bar.dart';
-import 'package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/bottom_tab_bar_cell.dart';
-import 'package:gaming_library_assessment_flutter/widgets/bottom_tab_bar/enum/bottom_tab_bar_destination.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+List<String> _destinationLabels() => [
+  S.current.featured,
+  S.current.games,
+  S.current.tracker,
+  S.current.browse,
+  S.current.settings,
+];
+
+List<(String label, IconData icon)> _destinationLabelsAndIcons() => [
+  (S.current.featured, Icons.featured_play_list_outlined),
+  (S.current.games, Icons.gamepad_outlined),
+  (S.current.tracker, Icons.format_list_numbered_rtl),
+  (S.current.browse, Icons.search_outlined),
+  (S.current.settings, Icons.settings_outlined),
+];
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -57,18 +71,18 @@ void main() {
         buildSubject(selectedIndex: 0, onDestinationSelected: (_) {}),
       );
 
-      for (final destination in BottomTabBarDestination.values) {
-        expect(find.text(destination.label), findsOneWidget);
-        expect(find.byIcon(destination.icon), findsOneWidget);
+      for (final (label, icon) in _destinationLabelsAndIcons()) {
+        expect(find.text(label), findsOneWidget);
+        expect(find.byIcon(icon), findsOneWidget);
       }
 
       await tester.pumpWidget(
         buildSubject(selectedIndex: 4, onDestinationSelected: (_) {}),
       );
 
-      for (final destination in BottomTabBarDestination.values) {
-        expect(find.text(destination.label), findsOneWidget);
-        expect(find.byIcon(destination.icon), findsOneWidget);
+      for (final (label, icon) in _destinationLabelsAndIcons()) {
+        expect(find.text(label), findsOneWidget);
+        expect(find.byIcon(icon), findsOneWidget);
       }
     },
   );
@@ -82,9 +96,12 @@ void main() {
     );
 
     await tester.tap(find.text(S.current.games));
-    await tester.tap(find.byIcon(BottomTabBarDestination.games.icon));
+    await tester.tap(find.byIcon(Icons.gamepad_outlined));
 
-    final cell = find.byType(BottomTabBarCell).at(1);
+    final cell = find.ancestor(
+      of: find.text(S.current.games),
+      matching: find.byType(InkWell),
+    );
     await tester.tapAt(tester.getTopLeft(cell) + const Offset(2, 2));
 
     expect(reported, [1, 1, 1]);
@@ -100,11 +117,11 @@ void main() {
       );
 
       expect(
-        tester.getSemantics(find.byType(BottomTabBarCell).at(0)),
+        tester.getSemantics(find.text(S.current.featured)),
         isSemantics(isSelected: true),
       );
       expect(
-        tester.getSemantics(find.byType(BottomTabBarCell).at(1)),
+        tester.getSemantics(find.text(S.current.games)),
         isSemantics(isSelected: false),
       );
 
@@ -112,11 +129,11 @@ void main() {
       await tester.pump();
 
       expect(
-        tester.getSemantics(find.byType(BottomTabBarCell).at(0)),
+        tester.getSemantics(find.text(S.current.featured)),
         isSemantics(isSelected: true),
       );
       expect(
-        tester.getSemantics(find.byType(BottomTabBarCell).at(1)),
+        tester.getSemantics(find.text(S.current.games)),
         isSemantics(isSelected: false),
       );
 
@@ -125,11 +142,11 @@ void main() {
       );
 
       expect(
-        tester.getSemantics(find.byType(BottomTabBarCell).at(0)),
+        tester.getSemantics(find.text(S.current.featured)),
         isSemantics(isSelected: false),
       );
       expect(
-        tester.getSemantics(find.byType(BottomTabBarCell).at(1)),
+        tester.getSemantics(find.text(S.current.games)),
         isSemantics(isSelected: true),
       );
 
@@ -146,10 +163,8 @@ void main() {
         buildSubject(selectedIndex: 0, onDestinationSelected: (_) {}),
       );
 
-      final label = tester
-          .getSemantics(find.byType(BottomTabBarCell).at(2))
-          .label;
-      final context = tester.element(find.byType(BottomTabBarCell).at(2));
+      final label = tester.getSemantics(find.text(S.current.tracker)).label;
+      final context = tester.element(find.text(S.current.tracker));
       final position = MaterialLocalizations.of(
         context,
       ).tabLabel(tabIndex: 3, tabCount: 5);
@@ -201,8 +216,8 @@ void main() {
       await tester.drag(find.byType(ListView), const Offset(0, 400));
       await tester.pump();
 
-      for (final destination in BottomTabBarDestination.values) {
-        expect(find.text(destination.label), findsOneWidget);
+      for (final label in _destinationLabels()) {
+        expect(find.text(label), findsOneWidget);
       }
     },
   );
@@ -218,7 +233,7 @@ void main() {
       ),
     );
 
-    final descendant = tester.element(find.byType(BottomTabBarCell).first);
+    final descendant = tester.element(find.text(S.current.featured));
     expect(MediaQuery.of(descendant).padding.bottom, 0);
 
     await tester.pumpWidget(
@@ -244,8 +259,8 @@ void main() {
 
       expect(tester.takeException(), isNull);
 
-      for (final destination in BottomTabBarDestination.values) {
-        expect(find.text(destination.label), findsOneWidget);
+      for (final label in _destinationLabels()) {
+        expect(find.text(label), findsOneWidget);
       }
     },
   );

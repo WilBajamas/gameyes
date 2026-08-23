@@ -7,6 +7,46 @@ Commit: 965b5ee1149abf36b8ef932666400847f02aed68
 ## Phase 4B revision (2026-08-23)
 Commit: eaae36e8636d92b7023f4191a59d029ecf33f095
 
+## Post-QA revision (2026-08-23)
+Commit: PENDING
+
+QA passed `eaae36e` with one WARNING: `bottom_tab_bar_test.dart` imported
+`bottom_tab_bar_cell.dart` and `enum/bottom_tab_bar_destination.dart` and used
+`find.byType(BottomTabBarCell)` in 10 places, against the task brief's own
+"only `bottom_tab_bar.dart` is imported from outside the folder" constraint.
+The human asked for it fixed before sign-off.
+
+Reworked all 8 tests to go through the public surface only:
+- Both module-internal imports dropped. The file now imports
+  `bottom_tab_bar.dart` and nothing else from that folder.
+- Every `find.byType(BottomTabBarCell)` finder (10 places) replaced with
+  `tester.getSemantics(find.text(<label>))`/`tester.element(find.text(<label>))`
+  — QA had verified this returns the identical merged semantics node
+  (`MergeSemantics` collapses each cell to one node), so there is zero
+  coverage loss.
+- The two enum-iteration loops (`BottomTabBarDestination.values`) replaced
+  with local `_destinationLabels()` / `_destinationLabelsAndIcons()` helpers
+  built from `S.current.*` and the same `Icons.*` constants the enum uses —
+  no import of the internal enum.
+- Index-based reach (`.at(0)`, `.at(1)`, `.at(2)`) replaced with reach by
+  label (`S.current.featured`, `.games`, `.tracker`).
+- The one test that taps a cell at an offset from its top-left corner (to
+  prove the whole cell, not just the glyph, is tappable) now finds the
+  ancestor `InkWell` of the destination's label text instead of naming
+  `BottomTabBarCell` — `InkWell` is a public Flutter type, not a module
+  internal, and it is the same widget that owns the tap gesture and the
+  cell's full hit region, so the behaviour under test is unchanged.
+
+No source file touched — `lib/` is exactly as it was in `eaae36e`, including
+`bottom_tab_bar.dart`'s `elevation: 0`. Test count unchanged at 8; no
+assertion weakened, none added or removed.
+
+Verification: `flutter analyze` — 33 issues (0 errors, 2 pre-existing
+warnings, 31 info), unchanged. `flutter test` — +312 -10, unchanged; all 8
+`bottom_tab_bar_test.dart` tests pass; the 10 failures are the same
+pre-existing set (tracker repository 4, game_detail cubit 3, games bloc 3).
+No new failure.
+
 Human review of `965b5ee` asked for one change: remove four widget tests from
 `test/widget/components/bottom_tab_bar_test.dart`, taking it from 12 tests to 8.
 Removed, by name, with no replacement and no redistribution of their
