@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/theme/theme_data.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_filled_button_full_width.dart';
+import 'package:gaming_library_assessment_flutter/widgets/labeled_text_field.dart';
 
 import '../generated/l10n.dart';
 
@@ -73,30 +73,27 @@ class _AddContentDialogState extends State<AddContentDialog> {
                 const SizedBox(
                   height: 12,
                 ),
-                DefaultBorderTextField(
-                  textEditingController: _titleTextController,
-                  context: context,
-                  title: S.current.title,
-                  minLines: 1,
+                LabeledTextField(
+                  controller: _titleTextController,
+                  label: S.current.title,
                   isRequired: true,
-                  maxLengthEnforce: true,
+                  enforceMaxLength: true,
                   maxLength: 30,
-                  hint: S.current.keep_it_short,
+                  placeholder: S.current.keep_it_short,
                 ),
                 const SizedBox(
                   height: 8,
                 ),
-                DefaultBorderTextField(
-                  textEditingController: _descriptionTextController,
-                  context: context,
-                  title: S.current.description,
+                LabeledTextField(
+                  controller: _descriptionTextController,
+                  label: S.current.description,
                   inputType: TextInputType.multiline,
                   maxLines: null,
                   isRequired: true,
                   minLines: 5,
                   maxLength: 100,
-                  maxLengthEnforce: true,
-                  hint: S.current.a_brief_description,
+                  enforceMaxLength: true,
+                  placeholder: S.current.a_brief_description,
                 ),
                 const SizedBox(
                   height: 12,
