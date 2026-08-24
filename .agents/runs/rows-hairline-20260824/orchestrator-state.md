@@ -3,7 +3,9 @@ Feature: Week 2 Stage 2 item 2.6 — Rows & hairline groups (`system-foundation-
 Run ID: rows-hairline-20260824
 Run folder: .agents/runs/rows-hairline-20260824/
 Started: 2026-08-24
-Current phase: QA
+Current phase: COMPLETE
+Result: PASS — pending manual checks
+Completed: 2026-08-24
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
 Test baseline: +315 -10 — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
