@@ -23,6 +23,7 @@ class AppColorTokens {
     required this.surfaceIndigoPanel,
     required this.surfaceMagentaPanel,
     required this.surfaceTabChrome,
+    required this.surfaceToast,
     required this.accentIndigo,
     required this.accentMagenta,
     required this.accentLinkCyan,
@@ -59,6 +60,7 @@ class AppColorTokens {
   final Color surfaceIndigoPanel;
   final Color surfaceMagentaPanel;
   final Color surfaceTabChrome;
+  final Color surfaceToast;
 
   // ** Accents
   final Color accentIndigo;
@@ -107,6 +109,7 @@ class AppColorTokens {
     surfaceIndigoPanel: Color(0xFF2F3782),
     surfaceMagentaPanel: Color(0xFF8A2F86),
     surfaceTabChrome: Color(0xFF2E3236),
+    surfaceToast: Color(0xFF2E3236),
     accentIndigo: _accentIndigo,
     accentMagenta: _accentMagenta,
     accentLinkCyan: _accentLinkCyan,
@@ -174,6 +177,7 @@ class AppColorTokens {
     Color? surfaceIndigoPanel,
     Color? surfaceMagentaPanel,
     Color? surfaceTabChrome,
+    Color? surfaceToast,
     Color? accentIndigo,
     Color? accentMagenta,
     Color? accentLinkCyan,
@@ -209,6 +213,7 @@ class AppColorTokens {
       surfaceIndigoPanel: surfaceIndigoPanel ?? this.surfaceIndigoPanel,
       surfaceMagentaPanel: surfaceMagentaPanel ?? this.surfaceMagentaPanel,
       surfaceTabChrome: surfaceTabChrome ?? this.surfaceTabChrome,
+      surfaceToast: surfaceToast ?? this.surfaceToast,
       accentIndigo: accentIndigo ?? this.accentIndigo,
       accentMagenta: accentMagenta ?? this.accentMagenta,
       accentLinkCyan: accentLinkCyan ?? this.accentLinkCyan,
@@ -255,6 +260,7 @@ class AppColorTokens {
         t,
       )!,
       surfaceTabChrome: Color.lerp(a.surfaceTabChrome, b.surfaceTabChrome, t)!,
+      surfaceToast: Color.lerp(a.surfaceToast, b.surfaceToast, t)!,
       accentIndigo: Color.lerp(a.accentIndigo, b.accentIndigo, t)!,
       accentMagenta: Color.lerp(a.accentMagenta, b.accentMagenta, t)!,
       accentLinkCyan: Color.lerp(a.accentLinkCyan, b.accentLinkCyan, t)!,

@@ -49,6 +49,17 @@ void main() {
       expect(distinct.length, 3);
     });
 
+    test('should expose the toast surface when reading the dark set', () {
+      expect(colors.surfaceToast, const Color(0xFF2E3236));
+    });
+
+    test(
+      'should keep surfaceTabChrome unchanged when reading the dark set',
+      () {
+        expect(colors.surfaceTabChrome, const Color(0xFF2E3236));
+      },
+    );
+
     test('should not tokenise #1e2353 when scanning the whole colour set', () {
       const unusable = Color(0xFF1E2353);
 
@@ -486,6 +497,7 @@ List<Color> _allColors(AppColorTokens colors) {
     colors.surfaceIndigoPanel,
     colors.surfaceMagentaPanel,
     colors.surfaceTabChrome,
+    colors.surfaceToast,
     colors.accentIndigo,
     colors.accentMagenta,
     colors.accentLinkCyan,
