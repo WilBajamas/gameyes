@@ -79,6 +79,39 @@ settled would have meant a near-certain Tech Lead re-run.
   follow-up (after items 1.9 and 2.2), raised separately rather than absorbed into
   a component run.
 
+## Phase 3 gate outcome (human, 2026-08-23)
+
+**APPROVED**, with one adjustment routed back to the Tech Lead as a `code-plan.md`
+delta (Tech Lead-only: it changes call-site arguments, not a criterion, so no BA
+involvement per the process rules).
+
+- **maxLength enforcement — honour the flag, preserve shipped behaviour.** The Tech
+  Lead found that `maxLengthEnforce: false` passes `null`, which resolves to
+  *enforced* on Android — so the flag has been silently doing the opposite of what
+  it says. `LabeledTextField` now passes `MaxLengthEnforcement.none` explicitly so
+  the parameter means what it is named (`[2.5-AC15]` stands), **and**
+  `task_detail_screen.dart`'s two editors pass `enforceMaxLength: true` so their
+  live behaviour is unchanged. The "preserve what ships" precedent from item 1.9:
+  a rework moves code, it does not silently change a shipped screen's behaviour.
+  Worth carrying forward: `maxLengthEnforcement: null` does NOT mean "no
+  enforcement".
+- **`.claude/skills/flutter-widgets/SKILL.md` stays in the allowlist**, catalogue
+  row only. The "one file per widget family" rule sentence stays untouched — that
+  contradiction remains its own live follow-up.
+- Approved as written: the `FormField<String>` composition around a plain
+  `TextField` (so the focus ring encloses the box without also enclosing the error
+  message — `[2.5-AC7]` and `[2.5-AC9]` cannot both hold otherwise), deleting
+  `default_border_text_field.dart` rather than deprecating it, the single-file
+  shape, all 7 sites rewired, and the three smoke tests.
+
+Accepted and deliberate: three shipped surfaces change appearance on merge.
+
+**Latent bug found by the Tech Lead, deliberately NOT fixed** (out of this item's
+scope, recorded in `tdd.md` and belonging in the handover's follow-ups):
+`_AddContentDialogState.initState` calls `super.initState()` *inside* its
+`if (widget.titleDescription case final values?)` branch, so constructing the dialog
+with no initial values skips it and trips Flutter's debug assertion.
+
 ## Escalation history
 NONE
 
