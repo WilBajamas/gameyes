@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.7 — Error states (`system-foundation-specs.md` 
 Run ID: error-states-20260824
 Run folder: .agents/runs/error-states-20260824/
 Started: 2026-08-24
-Current phase: DEV (QA cycle 1 fix)
+Current phase: QA (cycle 2)
 QA cycles used: 1
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — re-verified on `develop` after the 2.6 merge
 Test baseline: +325 -10 — re-verified on `develop` after the 2.6 merge
@@ -11,7 +11,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/form-fields-token-treatment-imd2bg
 Base branch: develop
 Base SHA: e0b2111 (develop, immediately after item 2.6 merged and its run folder retired)
-Dev commit: 7d69ba485f1a7d1ee70179ee85853b00ab51c6aa
+Dev commit: 7d69ba485f1a7d1ee70179ee85853b00ab51c6aa (+ QA cycle 1 fix `9f7e6f8`)
 Last updated: 2026-08-24
 
 The pass count has moved twice recently — 312 → 315 (2.5's three tests) → 325
@@ -237,6 +237,24 @@ AppColorTokens.dark.surfaceToast` — still single-match, still token-named, no 
 and no key, so the intent survives.
 Worth carrying: "this widget type appears exactly once under that subtree" is an
 assumption to *verify by building the tree*, not to assert in a design doc.
+
+2026-08-24 `9f7e6f8a1cda4059b1fead9f5b2008f01103daaa` — QA cycle 1 fix. Reviewed and
+approved by human, sent to QA cycle 2. No source file touched; one test rewritten.
+
+**The fix was proved, not asserted.** The orchestrator injected the exact regression
+`[2.7-AC14]` exists to prevent — `ErrorNotice` converted to a `StatefulWidget` holding
+a `_dismissed` flag that suppresses the strip permanently — and ran both versions of
+the test against it:
+- **the original test passed 7/7** against that regression, confirming QA's finding
+  that the guard was hollow;
+- **the replacement failed** on exactly that case, confirming it is a real guard.
+Both files were then restored and the baseline re-verified (tree clean, analyzer 33,
+tests +343 -10, count unmoved so nothing was split or dropped to reach green).
+
+This mattered because the same round had just faulted `tdd.md` for asserting a
+tree-shape claim without building the tree. **A claim that a test would catch a
+regression is checkable in about two minutes by injecting the regression** — worth
+doing whenever a test's whole value is its falsifiability.
 
 ### Unreported change, surfaced by the orchestrator at the gate and accepted
 
