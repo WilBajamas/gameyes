@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.5 — Form fields (`system-foundation-specs.md` �
 Run ID: form-fields-20260823
 Run folder: .agents/runs/form-fields-20260823/
 Started: 2026-08-23
-Current phase: BA
+Current phase: TECH_LEAD
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info — captured 2026-08-23T19:05:00Z
 Test baseline: +312 -10 — captured 2026-08-23T19:10:00Z
@@ -57,6 +57,27 @@ Notable properties of the current API that the rework has to reckon with:
 levels)** explicitly owns "field-level tinted fill + red hairline" — the same
 treatment 2.5's error state describes. 2.5 and 2.7 overlap here and the boundary
 should be settled deliberately rather than by whichever item runs first.
+
+## Gate decisions (human, 2026-08-23, pre-Tech-Lead)
+
+The BA routed three decisions to a gate rather than halting. All three were put to
+the human before Phase 2, because GATE-1 and GATE-2 between them determine the task
+brief's file allowlist and whether four criteria stand — designing before they were
+settled would have meant a near-certain Tech Lead re-run.
+
+- **GATE-1 — rewiring scope: option A.** Rework in place and revisit all 7 call
+  sites across the 3 caller files. Three shipped surfaces change appearance on
+  merge, which is accepted and deliberate. Matches how item 2.1 settled the
+  identical fork. Renaming the widget off its `Default` prefix is in scope, since
+  every caller is being edited anyway.
+- **GATE-2 — field-level error treatment: option A.** Item 2.5 builds it now.
+  `[2.5-AC8]`–`[2.5-AC11]` stand as written. Item **2.7 therefore covers only the
+  Action, Screen and Item levels** and inherits the field level unchanged — record
+  this against 2.7 when it runs.
+- **GATE-3 — type steps: option A.** Use the existing 14/500 and 16/400 tokens;
+  mint nothing. `[2.5-AC18]` stands. The 15px token is now a **third**-occurrence
+  follow-up (after items 1.9 and 2.2), raised separately rather than absorbed into
+  a component run.
 
 ## Escalation history
 NONE
