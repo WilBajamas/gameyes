@@ -2,7 +2,7 @@
 Source: `tech-ac.md` (week 2 Stage 2 item 2.7 — Error states)
 Date: 2026-08-24
 Branch: claude/form-fields-token-treatment-imd2bg
-Commit: 7d69ba485f1a7d1ee70179ee85853b00ab51c6aa
+Commit: 9f7e6f8a1cda4059b1fead9f5b2008f01103daaa (QA cycle 1 fix, on top of 7d69ba485f1a7d1ee70179ee85853b00ab51c6aa)
 
 ## QA cycle 1 fix (this commit)
 Defect (qa-report.md / escalation.md): `test/widget/components/error_notice_test.dart:120–129`,
