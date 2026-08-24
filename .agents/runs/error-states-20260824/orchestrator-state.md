@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.7 — Error states (`system-foundation-specs.md` 
 Run ID: error-states-20260824
 Run folder: .agents/runs/error-states-20260824/
 Started: 2026-08-24
-Current phase: DEV
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — re-verified on `develop` after the 2.6 merge
 Test baseline: +325 -10 — re-verified on `develop` after the 2.6 merge
@@ -11,7 +11,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/form-fields-token-treatment-imd2bg
 Base branch: develop
 Base SHA: e0b2111 (develop, immediately after item 2.6 merged and its run folder retired)
-Dev commit: NONE
+Dev commit: 7d69ba485f1a7d1ee70179ee85853b00ab51c6aa
 Last updated: 2026-08-24
 
 The pass count has moved twice recently — 312 → 315 (2.5's three tests) → 325
@@ -211,4 +211,42 @@ manual-only.
 NONE
 
 ## Code review outcomes
-NONE
+
+2026-08-24 `7d69ba485f1a7d1ee70179ee85853b00ab51c6aa` — Reviewed and approved by human,
+sent to QA.
+
+Verified against the commit rather than `diff-summary.md`'s account of itself:
+analyzer 33 (0/2/31); tests +343 -10 with the 10 failures unchanged in identity;
+zero comments across all five module files; no golden test; **none of the ten
+inspection-only criteria received a test**; and `ErrorNotice`'s `variant` is
+`required` and non-nullable with no `child`/`content`/`visible` parameter, so
+`[2.7-AC11]`'s shape holds.
+
+**The dead-code fence held.** `git show --name-only` confirms `game_screenshot.dart`,
+`GameScreenshotCubit`, the screenshot models/entity and `auto_route_config.dart` are
+all untouched. `detail_screenshot_section.dart` is deleted in full, not stubbed.
+
+### Reported deviation — a real hole in the Tech Lead's design
+
+`tdd.md` prescribed `find.byType(ColoredBox)` scoped to `ErrorNotice` as a
+single-match finder for the toast surface. **It isn't single-match**: the toast's own
+`ErrorDot` also renders a `ColoredBox`. The "structural finder discipline" the design
+was proud of had a gap at precisely the surface it was meant to protect. Dev resolved
+it with `find.byWidgetPredicate` matching `ColoredBox.color ==
+AppColorTokens.dark.surfaceToast` — still single-match, still token-named, no `.first`
+and no key, so the intent survives.
+Worth carrying: "this widget type appears exactly once under that subtree" is an
+assumption to *verify by building the tree*, not to assert in a design doc.
+
+### Unreported change, surfaced by the orchestrator at the gate and accepted
+
+`game_detail_screen.dart` carries a second hunk beyond the authorised lines 71–73: an
+`Icon` constructor reflowed from four lines to one (lines 38–44). Confirmed to be
+`dart format` output — the file was **not** canonically formatted before this commit
+and is after, verified by running the formatter against both revisions. Semantically
+identical and normal practice after editing a file, but outside the brief's stated
+"lines 71–73 only" scope and **absent from `diff-summary.md`'s deviations section**.
+Accepted by the human at the gate.
+Worth carrying: a Dev Agent running `dart format` on an allowlisted file can reflow
+pre-existing code elsewhere in it. That is benign but should be *reported*, and it
+means the repo has other unformatted files that a future formatter run will churn.
