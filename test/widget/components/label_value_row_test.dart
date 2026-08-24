@@ -35,9 +35,7 @@ void main() {
     );
   }
 
-  testWidgets('shows the label in ink and the value in ink70', (
-    tester,
-  ) async {
+  testWidgets('shows the label in ink and the value in ink70', (tester) async {
     await tester.pumpWidget(buildSubject(label: 'Label', value: 'Value'));
 
     final labelWidget = tester.widget<Text>(find.text('Label'));
@@ -47,9 +45,7 @@ void main() {
     expect(valueWidget.style!.color, AppColorTokens.dark.ink70);
   });
 
-  testWidgets('shows one chevron when a chevron is requested', (
-    tester,
-  ) async {
+  testWidgets('shows one chevron when a chevron is requested', (tester) async {
     await tester.pumpWidget(
       buildSubject(label: 'Label', value: 'Value', showChevron: true),
     );

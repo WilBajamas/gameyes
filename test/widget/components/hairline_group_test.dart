@@ -25,9 +25,7 @@ void main() {
     );
   }
 
-  testWidgets('shows no separator when given a single child', (
-    tester,
-  ) async {
+  testWidgets('shows no separator when given a single child', (tester) async {
     await tester.pumpWidget(buildSubject(children: [const Text('One')]));
 
     expect(find.byType(Divider), findsNothing);
@@ -44,11 +42,7 @@ void main() {
   testWidgets('shows two separators between three children', (tester) async {
     await tester.pumpWidget(
       buildSubject(
-        children: [
-          const Text('One'),
-          const Text('Two'),
-          const Text('Three'),
-        ],
+        children: [const Text('One'), const Text('Two'), const Text('Three')],
       ),
     );
 
@@ -58,13 +52,24 @@ void main() {
   testWidgets('shows no card fill when given no children', (tester) async {
     await tester.pumpWidget(buildSubject(children: const []));
 
-    expect(find.byType(ColoredBox), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byType(HairlineGroup),
+        matching: find.byType(ColoredBox),
+      ),
+      findsNothing,
+    );
   });
 
   testWidgets('fills the card with the surfaceRaised token', (tester) async {
     await tester.pumpWidget(buildSubject(children: [const Text('One')]));
 
-    final coloredBox = tester.widget<ColoredBox>(find.byType(ColoredBox));
+    final coloredBox = tester.widget<ColoredBox>(
+      find.descendant(
+        of: find.byType(HairlineGroup),
+        matching: find.byType(ColoredBox),
+      ),
+    );
 
     expect(coloredBox.color, AppColorTokens.dark.surfaceRaised);
   });
