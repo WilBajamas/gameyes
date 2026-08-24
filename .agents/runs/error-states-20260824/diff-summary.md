@@ -4,6 +4,30 @@ Date: 2026-08-24
 Branch: claude/form-fields-token-treatment-imd2bg
 Commit: 7d69ba485f1a7d1ee70179ee85853b00ab51c6aa
 
+## QA cycle 1 fix (this commit)
+Defect (qa-report.md / escalation.md): `test/widget/components/error_notice_test.dart:120–129`,
+`'shows the strip again when rebuilt with the same inputs after a dismissal'`, asserted
+`find.byType(ErrorNotice), findsOneWidget)` — true by construction, since `buildSubject` places
+an `ErrorNotice` unconditionally, and the dismiss callback used was the default no-op, so no
+dismissal was actually exercised. A `_dismissed` flag that permanently suppressed the strip
+would still leave this test passing.
+
+Fix: rewrote the same test (renamed `'shows the strip content again when rebuilt with the same
+inputs after a dismissal'`) to pass a real `onDismiss` (increments a counter, asserted `== 1`),
+tap the close control, then rebuild with the identical inputs and assert
+`find.descendant(of: find.byType(ErrorNotice), matching: find.text('Something failed'))` —
+the strip's own message content, not the presence of `ErrorNotice` itself. Chose the "tap then
+assert own content still renders" shape (first of the two offered) over a stateful
+show/hide harness, since `error_notice.dart:6` is already `StatelessWidget` and the point is to
+prove the *absence* of held dismissal state, which a content-level finder does directly. No
+source file touched — `escalation.md` and QA both confirmed the implementation is correct.
+
+Verified: `flutter test test/widget/components/error_notice_test.dart` — 7/7 pass (test count
+unchanged, one test renamed/rewritten in place, none split or merged). Full suite `flutter
+test` — 343 total, 333 passing, 10 failing, same pre-existing failure set as before
+(`tracker_repository_test` 4, `game_detail_cubit_test` 3, `games_bloc_test` 3). `flutter
+analyze` — 33 issues (0 errors, 2 warnings, 31 info), unchanged from baseline.
+
 ## Files created
 lib/widgets/error_states/error_dot.dart — shared circular fill primitive (`error` token), optional centred glyph
 lib/widgets/error_states/enum/error_notice_variant.dart — two-value enum, `strip` and `toast`

@@ -117,16 +117,39 @@ void main() {
     },
   );
 
-  testWidgets('shows the strip again when rebuilt with the same inputs after a '
-      'dismissal', (tester) async {
-    await tester.pumpWidget(buildSubject(variant: ErrorNoticeVariant.strip));
-    await tester.tap(find.byIcon(Icons.close));
-    await tester.pump();
+  testWidgets(
+    'shows the strip content again when rebuilt with the same inputs after '
+    'a dismissal',
+    (tester) async {
+      var dismissCount = 0;
 
-    await tester.pumpWidget(buildSubject(variant: ErrorNoticeVariant.strip));
+      await tester.pumpWidget(
+        buildSubject(
+          variant: ErrorNoticeVariant.strip,
+          onDismiss: () => dismissCount++,
+        ),
+      );
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pump();
 
-    expect(find.byType(ErrorNotice), findsOneWidget);
-  });
+      expect(dismissCount, 1);
+
+      await tester.pumpWidget(
+        buildSubject(
+          variant: ErrorNoticeVariant.strip,
+          onDismiss: () => dismissCount++,
+        ),
+      );
+
+      expect(
+        find.descendant(
+          of: find.byType(ErrorNotice),
+          matching: find.text('Something failed'),
+        ),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('shows a dot filled with the error token in the toast', (
     tester,
