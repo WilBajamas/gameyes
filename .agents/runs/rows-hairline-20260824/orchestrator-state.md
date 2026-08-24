@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.6 — Rows & hairline groups (`system-foundation-
 Run ID: rows-hairline-20260824
 Run folder: .agents/runs/rows-hairline-20260824/
 Started: 2026-08-24
-Current phase: DEV
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
 Test baseline: +315 -10 — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
@@ -11,7 +11,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/form-fields-token-treatment-imd2bg
 Base branch: develop
 Base SHA: cd08b35 (develop, immediately after item 2.5 merged and its run folder retired)
-Dev commit: NONE
+Dev commit: 409fe04 (with part of the implementation in 6689860 — see the note below)
 Last updated: 2026-08-24
 
 Note the pass count moved 312 → 315 when item 2.5 added three tests. Both baselines
@@ -151,4 +151,41 @@ the settled scope; `escalation.md` deleted.
 NONE
 
 ## Code review outcomes
-NONE
+
+2026-08-24 `409fe04` (+ `6689860`) — Reviewed and approved by human, sent to QA.
+Deviations: NONE.
+
+### Two process incidents on this Dev phase — both worth avoiding next time
+
+1. **The orchestrator's `git add -A` swept up the Dev Agent's in-progress files.**
+   The "Phase 3 approved" docs commit `6689860` therefore carries both that docs
+   change *and* the first pass of `label_value_row.dart`, `hairline_group.dart` and
+   both test files, under a message describing only the docs. Harmless to the code,
+   misleading in history. **Rule for next time: never `git add -A` while a subagent
+   is live in the same tree** — stage explicit paths, or wait for the agent to
+   return. This is the orchestrator's error, not the Dev Agent's.
+2. **The Dev Agent hit an account-wide session limit at its commit step** and
+   terminated with its work finished but uncommitted (`diff-summary.md` written,
+   all three required sections present). The orchestrator committed that work
+   unchanged as `409fe04`, after independently verifying the baseline rather than
+   trusting `diff-summary.md`. Recorded as a deliberate, one-off departure from
+   "only the Dev Agent commits" — the alternative was losing finished work to an
+   ephemeral container. The commit message states the authorship.
+
+Verified independently before the gate: analyzer 33 (0/2/31); tests +325 -10
+(baseline +315 plus this run's 10, the 10 failures unchanged in identity); zero
+comments in both widget files; no golden test; tests import only the two public
+widget files plus the permitted harness; and `HairlineGroup`'s constructor is
+exactly `{super.key, required this.children}`, so no divider flag crept in during
+implementation and `[2.6-AC9]` holds as designed.
+
+**Dev's one self-correction found a broken test, not a broken widget**, which is
+worth remembering: `find.byType(ColoredBox)` was matching an unrelated `ColoredBox`
+elsewhere in the pumped tree, so the "no card fill when empty" assertion was not
+testing what it claimed. Both finders are now scoped to the group's subtree with
+`find.descendant`. An unscoped `byType` finder in a `MaterialApp` harness can pass
+forever while asserting nothing.
+
+Also worth carrying: the N−1 separator tests use plain `Text` children rather than
+`LabelValueRow`, which *demonstrates* that arity alone drives hairline placement
+(`[2.6-AC12]`) rather than merely asserting it.
