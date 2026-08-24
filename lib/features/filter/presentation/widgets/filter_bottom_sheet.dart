@@ -6,7 +6,7 @@ import 'package:gaming_library_assessment_flutter/features/filter/data/models/ga
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/cubits/filter_state.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
+import 'package:gaming_library_assessment_flutter/widgets/labeled_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/multi_type_values_selection.dart';
 import 'package:gaming_library_assessment_flutter/widgets/type_values_selection.dart';
 
@@ -77,10 +77,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   const SizedBox(height: 20),
 
                   //** Search */
-                  DefaultBorderTextField(
-                    context: filterContext,
-                    title: S.current.search_games,
-                    textEditingController: _searchTextController,
+                  LabeledTextField(
+                    label: S.current.search_games,
+                    controller: _searchTextController,
                     prefixIcon: const Icon(Icons.search),
                   ),
                   const SizedBox(height: 12),
@@ -212,11 +211,9 @@ class _DateSelectionState extends State<DateSelection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: DefaultBorderTextField(
-                context: context,
-                textEditingController: _dateFromController,
-                inputType: TextInputType.number,
-                title: S.current.from,
+              child: LabeledTextField(
+                controller: _dateFromController,
+                label: S.current.from,
                 readOnly: true,
                 onClicked: () => changeStartDate(
                   context,
@@ -227,11 +224,9 @@ class _DateSelectionState extends State<DateSelection> {
             ),
             const SizedBox(width: 20),
             Expanded(
-              child: DefaultBorderTextField(
-                context: context,
-                textEditingController: _dateToController,
-                inputType: TextInputType.number,
-                title: S.current.to,
+              child: LabeledTextField(
+                controller: _dateToController,
+                label: S.current.to,
                 readOnly: true,
                 onClicked: () => changeEndDate(
                   context,

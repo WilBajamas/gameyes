@@ -8,10 +8,10 @@ import 'package:gaming_library_assessment_flutter/features/tracker/presentation/
 import 'package:gaming_library_assessment_flutter/features/tracker/presentation/cubits/task_state.dart';
 import 'package:gaming_library_assessment_flutter/widgets/add_content_dialog.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_alert_dialog.dart';
-import 'package:gaming_library_assessment_flutter/widgets/default_border_text_field.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_outlined_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_pop_up_button.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_snackbar.dart';
+import 'package:gaming_library_assessment_flutter/widgets/labeled_text_field.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../generated/l10n.dart';
@@ -132,10 +132,10 @@ class _TaskTitleState extends State<_TaskTitle> {
                   widget.task?.title ?? '(${S.current.set_title_here})',
                   style: context.themeData.textTheme.displayLarge,
                 )
-              : DefaultBorderTextField(
-                  context: context,
-                  title: S.current.title,
+              : LabeledTextField(
+                  label: S.current.title,
                   maxLength: 30,
+                  enforceMaxLength: true,
                 ),
         ),
         const SizedBox(
@@ -177,11 +177,11 @@ class _TaskDescriptionState extends State<_TaskDescription> {
                   widget.task?.description ?? '-',
                   style: context.themeData.textTheme.bodySmall,
                 )
-              : DefaultBorderTextField(
-                  context: context,
-                  title: S.current.description,
+              : LabeledTextField(
+                  label: S.current.description,
                   maxLength: 100,
                   maxLines: 5,
+                  enforceMaxLength: true,
                 ),
         ),
         IconButton(

@@ -132,7 +132,7 @@ actually match the requirement.
 | `DefaultSliverAppBar` | `default_sliver_app_bar.dart` | Standard sliver app bar with title, subtitle, action buttons |
 | `DefaultFilterListAppBar` | `default_filter_list_app_bar.dart` | Generic sliver filter chip list (typed) |
 | `FilterListAppBar` | `filter_list_app_bar.dart` | Alternative filter list app bar |
-| `DefaultBorderTextField` | `default_border_text_field.dart` | Outlined text input field |
+| `LabeledTextField` | `labeled_text_field.dart` | Text input with the label always above the box and the helper or character counter on that same label row: raised fill at r16 with no stroke at rest, 2px green focus ring drawn outside the box, error tint plus a 1px error hairline when invalid and the message below in error ink. Optional placeholder, prefix icon, multi-line and required validation; `readOnly` + `onClicked` makes it a tap target. Adds no spacing of its own |
 | `DefaultFilledButtonFullWidth` | `default_filled_button_full_width.dart` | Full-width filled button |
 | `DefaultOutlinedButton` | `default_outlined_button.dart` | Outlined button |
 | `DefaultPopUpButton` | `default_pop_up_button.dart` | Pop-up menu button |
