@@ -1,0 +1,1 @@
+enum ErrorNoticeVariant { strip, toast }

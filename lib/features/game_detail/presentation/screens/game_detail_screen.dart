@@ -38,10 +38,7 @@ class GameDetailScreen extends StatelessWidget {
                             context.read<GameDetailCubit>().saveButtonClicked(),
                         icon: state == null
                             ? const Icon(Icons.star_border)
-                            : const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
+                            : const Icon(Icons.star, color: Colors.amber),
                       );
                     },
                   ),
@@ -68,9 +65,6 @@ class GameDetailScreen extends StatelessWidget {
                     style: context.themeData.textTheme.displayLarge,
                   ),
                 ),
-
-                /// TODO: fetch screenshots - from game detail
-                // DetailScreenshotsSection(id: gameExtra!.$1),
               ],
             ),
           ),
