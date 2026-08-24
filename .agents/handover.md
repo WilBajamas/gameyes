@@ -1,9 +1,10 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-21: **week 2 Stage 2 is under way — 4
+Written 2026-07-29. Last updated 2026-08-24: **week 2 Stage 2 is under way — 5
 of 8 composites done.** Items 2.1 (Game card), 2.2 (Completion ring), 2.3
-(Countdown) and 2.4 (Tab bar) all shipped this session and are merged to `develop`. Stage 1's 9
-primitives were already complete. Full detail below.
+(Countdown) and 2.4 (Tab bar) shipped 2026-08-21; **2.5 (Form fields) shipped
+2026-08-24**. All merged to `develop`. Stage 1's 9 primitives were already
+complete. Full detail below.
 
 ---
 
@@ -128,8 +129,8 @@ is what's left, plus `.agents/manual-check-backlog.md`):
   - **`Flexible` over `Expanded`** around the row's label, under the
     hug-content exception, approved at Phase 3.
 
-**Week 2 Stage 2 (composites) — 4 of 8 done.** All shipped 2026-08-21, run
-folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
+**Week 2 Stage 2 (composites) — 5 of 8 done.** 2.1–2.4 shipped 2026-08-21, 2.5 on
+2026-08-24; run folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
 section before the next one — it points at the visual spec
 (`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
 skills. Explicitly out of scope there: `system-foundation-specs.md` §3.1 (an
@@ -218,15 +219,58 @@ target), and the Add-to-library sheet (needs week 3's Library feature first).
   analyzer baseline is **33 from here, not 32**. A decision, not drift; don't "fix"
   it in a sweep without asking.
 
+- **2.5 Form fields** (`lib/widgets/labeled_text_field.dart`, Dev commit `79255bd`) —
+  `DefaultBorderTextField` **deleted**, not deprecated, and replaced by
+  `LabeledTextField`: label always above, helper and character counter folded onto
+  that label row, `surfaceRaised` fill at r16, 2px green focus ring at 2px offset,
+  and an error state that swaps the fill for `errorTint` plus a 1px `errorLine`
+  hairline. All 7 call sites rewired across 3 files. QA PASS, 0 cycles.
+  **A single file, not a module folder** — the first Stage 2 item where the folder
+  wasn't earned (no variant enum, no painter, two parent-only helpers). A folder
+  would only have imported 2.4's public-surface trap for no gain.
+  **"Ship unwired" was a false choice, and this generalises.** The checklist offered
+  rework-vs-unwired as if both were available; an in-place rework *cannot* ship
+  unwired, because the same class in the same file changes every caller the moment
+  it merges. "Unwired" only exists by building a second component beside the old
+  one. Worth remembering the next time a checklist bullet offers that fork — 2.6
+  and 2.7 both rework existing code.
+  **The caller list was right this time**, unlike 2.1's — but it was still grepped
+  before being trusted, which is what made the "false choice" finding possible.
+  **It composes its own `FormField<String>` around a plain `TextField`** instead of
+  using `TextFormField`, because `TextFormField` renders its error message inside
+  the same decorator as the box: a focus ring around that decorator would enclose
+  box *and* message, so `[2.5-AC7]` and `[2.5-AC9]` could not both hold. Documented
+  boundary: the form value tracks the controller at first build then via
+  `onChanged`, so external mutation of a validated controller wouldn't propagate.
+  No call site does that today.
+  **A silent pre-existing bug was found and fixed.** `maxLengthEnforce: false`
+  passed `null`, and **`maxLengthEnforcement: null` does NOT mean "no enforcement"**
+  — it resolves per-platform and *enforces* on Android. So the flag had been doing
+  the opposite of its name. The widget now passes `MaxLengthEnforcement.none`
+  explicitly, and `task_detail_screen.dart`'s two editors pass
+  `enforceMaxLength: true` so their shipped behaviour is unchanged — "preserve what
+  ships", the 1.9 precedent.
+  Three shipped surfaces change appearance on merge, accepted at the gate. Renames
+  beyond the class: `maxLengthEnforce` → `enforceMaxLength`, `hint` → `placeholder`,
+  `suffixIcon` dropped (zero callers).
+  **Two gate outcomes that bind other items:** 2.7 now covers only the Action,
+  Screen and Item error levels — the field level was built here and 2.7 inherits it
+  unchanged; and the 15px type collision hit a **third** time, shipped at 14 again.
+
 **Two conventions worth knowing before the next Stage 2 item**, both learned the
 hard way this session:
 - **§3's type steps keep colliding with "dimensions are even numbers."** Item 1.9
   hit it at 15px and left the gap open for want of a token; 2.2 hit it again and
-  shipped 14. A 15px type token still doesn't exist. Expect a third collision.
-- **A "one file per widget family" flat `lib/widgets/` is no longer true.** The
-  human directed module folders for both 2.1 and 2.2 (`game_card/`,
-  `completion_ring/`, each with an `enum/` subfolder). The `flutter-widgets` skill
-  still says the opposite — see the follow-ups.
+  shipped 14; **2.5 hit it a third time and shipped 14 again**. A 15px type token
+  still doesn't exist, and three runs have now worked around its absence. Minting
+  one is a foundations change — deliberately kept out of every component run so
+  far, but it is now the most-repeated open gap in this file.
+- **A "one file per widget family" flat `lib/widgets/` is no longer true** — but
+  neither is "always a module folder". 2.1, 2.2, 2.3 and 2.4 all ship module
+  folders with an `enum/` subfolder, human-directed each time; **2.5 deliberately
+  ships a single file**, because it has no variant enum, no painter and only two
+  parent-only helpers. Decide on the merits per item. The `flutter-widgets` skill
+  still states the flat rule as absolute — see the follow-ups.
 
 ---
 
@@ -338,9 +382,9 @@ uncovered.
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
 - **The whole on-device manual-check backlog now lives in
-  `.agents/manual-check-backlog.md`** — **74 checks** as of 2026-08-22 (item
-  10.1's four, week 2 Stage 1's twenty, 2.1's eight, 2.2's ten, 2.3's fifteen and
-  2.4's fifteen), every one still unperformed. **Start with 2.4-MC-1 and 2.4-MC-2**
+  `.agents/manual-check-backlog.md`** — **82 checks** as of 2026-08-24 (item
+  10.1's four, week 2 Stage 1's twenty, 2.1's eight, 2.2's ten, 2.3's fifteen,
+  2.4's fifteen and 2.5's eight), every one still unperformed. **Start with 2.4-MC-1 and 2.4-MC-2**
   — keyboard activation and the tab bar's colour correction, the two with no
   automated guard at all. That file is the only copy: it was written when the run
   folders were retired, precisely so the checks would outlive the `qa-report.md`
@@ -354,10 +398,14 @@ uncovered.
   despite `tech-ac.md` naming it explicitly; two color assertions there
   hardcode literal hex instead of referencing the design token.
 - **`.claude/skills/flutter-widgets/SKILL.md`'s "one file per widget family" rule
-  text contradicts two shipped modules** (`game_card/`, `completion_ring/`). Both
-  folders were human-directed; the rule sentence was deliberately not updated in
-  either run. Flagged by QA in both. Whoever next edits that skill should settle
-  the wording rather than leave a rule the codebase openly breaks.
+  text contradicts four shipped modules** (`game_card/`, `completion_ring/`,
+  `countdown/`, `bottom_tab_bar/`). Every folder was human-directed; the rule
+  sentence was deliberately not updated in any run. Flagged by QA repeatedly.
+  Item 2.5 edited that file's **catalogue row** (a gate decision) while still
+  leaving the rule sentence alone, so the contradiction has now survived a run
+  that had the file open. Note 2.5 also shipped a deliberate *single* file, so the
+  right wording is "decide per item", not a simple inversion. Whoever next edits
+  that skill should settle it.
 - **`system-foundation-specs.md` §3.2 still describes the cover-art desaturation
   filter** that was rejected at item 1.3 and rejected again at 2.1. Two runs have
   now had a BA write a criterion straight from that stale text. Correcting the
@@ -396,6 +444,18 @@ uncovered.
   covers (out of the 1.8/1.9 run's allowlist, so it couldn't touch them), and
   `action_row_test.dart` duplicates its `Text` constructor args around lines
   64–65. Neither is urgent; sweep them when something else edits those files.
+- **`_AddContentDialogState.initState` calls `super.initState()` inside a
+  pattern-match branch** (`lib/widgets/add_content_dialog.dart`) — its
+  `if (widget.titleDescription case final values?)` guard wraps the `super` call, so
+  constructing that dialog with no initial values skips it and trips Flutter's
+  debug assertion. A real latent bug, found by item 2.5's Tech Lead while rewiring
+  that file and deliberately left unfixed as out of scope. Small and self-contained;
+  worth folding into whatever next touches the dialog.
+- **`LabeledTextField.onChanged` has zero call sites** — flagged by 2.5's QA.
+  `tdd.md` invoked the "no parameter nothing calls" rule to drop `suffixIcon` in the
+  same run, so the rule was applied unevenly; `onChanged` was an approved carry-over
+  from the old API. (`helper` is also uncalled but is criterion-driven by
+  `[2.5-AC3]`, so it stands.) Worth a trim, not urgent.
 - **Two more off-spec filter chips** exist beyond what item 1.5 named:
   `_SelectionChip` in both `default_filter_list_app_bar.dart` and
   `filter_list_app_bar.dart`. Not migrated to `FilterCountChip`, flagged as a
@@ -683,83 +743,103 @@ Before anything else:
   automatically, including subagents' Bash calls), then `flutter pub get` and
   `dart run build_runner build --delete-conflicting-outputs` before trusting any
   baseline.
-- Expect **33 analyzer issues (0 errors, 2 warnings, 31 info)** and **+312 -10**
-  on the test suite. Both numbers are correct and neither is drift. The 2 warnings
-  are the deliberate `_TaskReminder` pair; the 10 failures are pre-existing in
+- Expect **33 analyzer issues (0 errors, 2 warnings, 31 info)** and **+315 -10**
+  on the test suite. Both are correct and neither is drift. The 2 warnings are the
+  deliberate `_TaskReminder` pair; the 10 failures are pre-existing in
   tracker_repository_test (4), game_detail_cubit_test (3), games_bloc_test (3).
-  The suite has never been green. Verify these yourself at Phase 0 rather than
-  inheriting them — item 2.4 found the baseline had moved twice.
+  The suite has never been green. Note the pass count moved 312 → 315 when item
+  2.5 added three tests. Verify all of it yourself at Phase 0 rather than
+  inheriting it -- item 2.4 found the baseline had moved twice.
 
-Current state: week 2 Stage 1 (9 primitives) is done, and Stage 2 is 4 of 8 --
-items 2.1 (Game card), 2.2 (Completion ring), 2.3 (Countdown) and 2.4 (Tab bar)
-all shipped and merged to develop. **Next is item 2.5 -- Form fields.** Run it
-through /orchestrate as a normal PIPELINE item, on the harness-designated session
-branch (do not create a nested feature/ branch).
+Current state: week 2 Stage 1 (9 primitives) is done, and Stage 2 is 5 of 8 --
+items 2.1 (Game card), 2.2 (Completion ring), 2.3 (Countdown), 2.4 (Tab bar) and
+2.5 (Form fields) are all shipped and merged to develop. **Next is item 2.6 --
+Rows & hairline groups.** Run it through /orchestrate as a normal PIPELINE item,
+on the harness-designated session branch (do not create a nested feature/ branch).
 
-What 2.5 is: rework lib/widgets/default_border_text_field.dart, a stock
-TextFormField with a floating label and a hardcoded Colors.red for errors, into
-the token-driven treatment in system-foundation-specs.md §3.2 "Form fields" --
-label always above (no placeholder-as-label anywhere), helper text folded onto the
-label row rather than a third line, `#2f333c` fill at r16, 2px green focus ring at
-2px offset, and an error state that swaps the fill for an error tint plus a 1px
-hairline so error and focus never fight for the same edge. The tokens already
-exist in app_color_tokens.dart.
+What 2.6 is: extract a generic reusable row primitive matching
+system-foundation-specs.md §3.2's "Rows & hairline groups" row -- raised card at
+r16, hairline between rows only, with the spec's label-left / value-right /
+optional-chevron shape. The visual pattern already exists in group_task_item.dart,
+task_item.dart and horizontal_separator.dart, but all three are tracker/task-
+specific rather than generic. The checklist is explicit that tracker's own rows
+stay as later, OPTIONAL adopters -- do not force a rewrite of them into this item.
 
-**Verify the caller list before trusting it.** The checklist says 2.5 "has
-multiple existing callers" and leaves the rewire-now-or-later scope decision to
-the item's own BA/Tech Lead phase. That decision is real and should reach the
-human at a gate -- but the checklist has been WRONG about callers before: item
-2.1's bullet named tracker and featured, neither of which ever referenced the
-component. Grep for the real callers at Phase 0 and put the actual blast radius
-to the human, not the checklist's claim.
+**That "leave the callers alone" instruction deserves the same scrutiny 2.5 gave
+its own.** Item 2.5 found that an in-place rework CANNOT ship unwired -- same class,
+same file means every caller changes on merge, and "unwired" is only available by
+building a second component. 2.6 is framed as an *extraction* rather than a rework,
+which is the one shape where shipping unwired genuinely is available. Confirm at
+Phase 0 which it actually is: if the plan ends up modifying the three existing files
+rather than adding a new one beside them, the unwired option is gone and the human
+needs to know that at a gate. Grep the real callers of all three files before
+trusting any claim about blast radius -- 2.1's checklist bullet named two files that
+never referenced the component.
 
-Four things that recurred across 2.1-2.4 and will probably recur again:
-- BAs write criteria straight from system-foundation-specs.md §3 even where a
-  human decision already overruled that text. It happened twice on the same
-  desaturation filter. Check §3 claims against handover.md's records.
-- Screen docs outrank §3 where they disagree (the precedence rule is at
+**Two live follow-ups sit inside 2.6's likely blast radius**, so decide them
+deliberately rather than tripping over them:
+- `_SignOutButton` (settings/sign_out_section.dart) is a third hand-rolled copy of
+  the ActionRow anatomy and is described in the follow-ups as "the natural second
+  caller". Whether it adopts 2.6's new row is a real scope question for the gate.
+- `horizontal_separator.dart` is named in 2.6's own bullet. Check what else uses it
+  before absorbing or replacing it.
+
+Five things that recurred across 2.1-2.5 and will probably recur again:
+- BAs write criteria straight from system-foundation-specs.md §3 even where a human
+  decision already overruled that text. It happened twice on the same desaturation
+  filter. Check §3 claims against handover.md's records.
+- Screen docs outrank §3 where they disagree (precedence rule at
   system-foundation-specs.md lines 6-8). Item 2.3 was settled that way twice.
-- §3's type steps keep colliding with "dimensions are even numbers" (1.9 and 2.2
-  both hit 15px). A 15px token still does not exist.
+- §3's type steps keep colliding with "dimensions are even numbers" -- 1.9, 2.2 and
+  2.5 have all now hit 15px, and all three worked around it. A 15px token still
+  does not exist; minting one is a foundations change, not a component-run task.
 - Removing a test often removes more than its name suggests. Item 2.2 lost three
-  criteria to one deleted test; item 2.4 lost keyboard-activation coverage and
-  the only proof of a colour fix. If asked to trim tests, say what each one is
-  actually carrying before deleting it.
+  criteria to one deleted test; item 2.4 lost keyboard-activation coverage and the
+  only proof of a colour fix. If asked to trim tests, say what each one is actually
+  carrying before deleting it.
+- A pre-existing bug hiding behind a misleading API is worth a look while rewiring:
+  2.5 found `maxLengthEnforcement: null` silently ENFORCES on Android, so a
+  `maxLengthEnforce: false` flag had been doing the opposite of its name for as long
+  as it existed.
 
 Conventions, stricter than older code and older run artifacts show -- re-read the
 skills, do not pattern-match off existing files:
 - Widgets carry NO comments at all. Not "few" -- none.
-- Widget tests never assert dimensions, gaps, radii or positions; colour
-  assertions must carry meaning and name a token; never a golden test.
-  context_chip_test.dart and stat_pill_test.dart are the reference files for shape
-  and length. The flutter-widget-test skill has been revised four times -- re-read
-  it in full rather than trusting a prior compliance pass.
+- Widget tests never assert dimensions, gaps, radii or positions; colour assertions
+  must carry meaning and name a token; never a golden test. context_chip_test.dart
+  and stat_pill_test.dart are the reference files for shape and length. The
+  flutter-widget-test skill has been revised four times -- re-read it in full rather
+  than trusting a prior compliance pass.
 - Tests must import only a module's public entry point. QA caught item 2.4's tests
-  reaching into module internals; a post-QA commit fixed it. It is an easy default
-  to fall into.
-- lib/widgets/ is no longer flat: 2.1, 2.2, 2.3 and 2.4 all ship module folders
-  with an enum/ subfolder, human-directed each time. The flutter-widgets skill
-  still says "one file per widget family" -- that contradiction is a live
-  follow-up, not a rule to obey blindly.
+  reaching into module internals; it is an easy default to fall into.
+- **Module folder vs single file is a per-item judgement now, not a rule either
+  way.** 2.1-2.4 each ship a module folder with an enum/ subfolder; 2.5 deliberately
+  ships a single file (no variant enum, no painter, two parent-only helpers). The
+  flutter-widgets skill still states the flat "one file per widget family" rule as
+  absolute, which matches neither -- that contradiction is a live follow-up, not a
+  rule to obey blindly.
 
 **The manual-check backlog is deliberately NOT being worked during Stage 2.** All
-74 checks in .agents/manual-check-backlog.md wait until Stage 2's eight items are
-finished, then get performed in one device sitting. Human decision -- do not
+**82** checks in .agents/manual-check-backlog.md wait until Stage 2's eight items
+are finished, then get performed in one device sitting. Human decision -- do not
 interrupt a pipeline run to perform them, and do not treat the growing count as
 something going wrong. When the sitting happens, start with 2.4-MC-1 and 2.4-MC-2:
 keyboard activation and the tab bar's colour correction are the only two with no
 automated guard at all.
 
-Known follow-ups, none blocking, all itemised in "Known non-blocking gaps":
-item 3's on-device cross-account RLS check (blocked on week 3's Library feature),
-item 10.1's dead-code cleanup, the manual-check backlog above, the now fully-orphaned
+Known follow-ups, none blocking, all itemised in "Known non-blocking gaps": item 3's
+on-device cross-account RLS check (blocked on week 3's Library feature), item 10.1's
+dead-code cleanup, the manual-check backlog above, the now fully-orphaned
 ScrollNotifier ecosystem left behind by 2.4, the flutter-widgets rule text
-contradicting four shipped modules, §3.2's stale desaturation text, §1.9
-platform-mark conformance, primary_button.dart's unexplained third color.green,
-ButtonPressScale registering no ActivateIntent (a real keyboard-accessibility bug
-in a shared widget), _SignOutButton as a third copy of the ActionRow anatomy, and
-a pre-existing dashed-border violation in library_stats.dart that is item 2.8's to
-fix, not a stray bug to patch in passing.
+contradicting five shipped items in two different directions, §3.2's stale
+desaturation text, §1.9 platform-mark conformance, primary_button.dart's unexplained
+third color.green, ButtonPressScale registering no ActivateIntent (a real
+keyboard-accessibility bug in a shared widget), _SignOutButton as a third copy of the
+ActionRow anatomy, add_content_dialog.dart's super.initState() called inside a
+pattern-match branch (a real latent assertion failure, found by 2.5 and left as out
+of scope), LabeledTextField.onChanged having zero call sites, the 15px token, and a
+pre-existing dashed-border violation in library_stats.dart that is item 2.8's to fix,
+not a stray bug to patch in passing.
 
 Two environment things that will waste your time otherwise: remote branch deletion
 is blocked by the egress proxy (gotcha #11 -- merged claude/* branches have to be

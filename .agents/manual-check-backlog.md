@@ -20,7 +20,7 @@ available, ideally in one sitting per screen rather than one item at a time.
 
 **Scheduled: after week 2 Stage 2 finishes.** Human decision, 2026-08-22 — the
 whole backlog waits until all eight Stage 2 items are shipped, then gets worked in
-one device sitting. Do not interrupt a pipeline run to perform these, and do not
+one device sitting. **82 checks** as of 2026-08-24 (item 2.5 added eight). Do not interrupt a pipeline run to perform these, and do not
 read the growing count as a problem. **Start with `2.4-MC-1` and `2.4-MC-2`** when
 the sitting happens: keyboard activation and the tab bar's colour correction are
 the only two entries here with no automated guard at all — everything else is
@@ -376,6 +376,50 @@ only remaining check on something this run either fixed or could silently break.
 - **2.4-MC-15** — Open each of the five tabs — same five routes, same content,
   each still scrolling as before, and the selected destination tracks the active
   tab in both directions (tap the bar, and change tab via any other route change).
+
+---
+
+## Week 2 Stage 2 — item 2.5 (Form fields)
+
+From the `form-fields-20260823` run, QA `PASS — pending manual checks`. Ten
+criteria passed automatically, these eight are pixel-appearance only. Every text
+input in the app now renders through `LabeledTextField`, so a single wrong token
+shows up on **three shipped surfaces at once** — the Add-content dialog, the
+filter sheet, and the tracker's task detail editors.
+
+**Three of those surfaces change appearance on merge, deliberately** (GATE-1,
+option A). Seeing that once is worth as much as any single check below: the
+change is expected, and the point is to confirm it looks right rather than to
+confirm nothing moved.
+
+- **2.5-MC-1** `[2.5-AC5]` — Open the filter sheet, Search field untouched — a
+  solid `surfaceRaised` (#2f333c) fill at radius 16 and **no stroke on any edge**,
+  including the two read-only date fields.
+- **2.5-MC-2** `[2.5-AC7]` — Add-content dialog, tap into Title — a 2px green ring
+  drawn **outside** the box at a 2px gap, fill unchanged, ring gone on blur. Green
+  appears nowhere else in the field.
+- **2.5-MC-3** `[2.5-AC8]` — Add-content dialog, submit with Title empty — the fill
+  swaps to the error tint (the raised fill must not show through) plus a 1px
+  error-line hairline on the box edge; both clear once a valid value is entered and
+  validation re-runs.
+- **2.5-MC-4** `[2.5-AC10]` — **The point of the whole error design.** Same dialog,
+  submit empty then tap back into Title — the green ring and the error hairline are
+  visible **at the same time**, neither suppressing the other. This is what "error
+  and focus never fight for the same edge" means, and it is the reason the widget
+  composes its own `FormField` instead of using `TextFormField`.
+- **2.5-MC-5** `[2.5-AC11]` — Same state, re-run validation on unchanged content —
+  no glow, no shake, no icon inside the box, and the typed text unchanged.
+- **2.5-MC-6** `[2.5-AC13]` — Add-content dialog, Description (minLines 5, maxLines
+  null) — label above the box, fill wrapping the whole grown box, focus and error
+  treatment identical to the single-line Title.
+- **2.5-MC-7** `[2.5-AC17]` — Every configuration, especially the filter sheet's
+  read-only date fields and a single-line field with no placeholder — the tappable
+  box measures at least 44px tall.
+- **2.5-MC-8** `[2.5-AC18]` — Any of the three surfaces — label and validation
+  message at 14/500, input and placeholder at 16/400, counter at 13/400. Token
+  values were verified in source; only the rendered result is manual. Note this is
+  the **third** run to hit the 15px collision (after 1.9 and 2.2) — it ships at 14
+  by human decision, so a label looking a touch small is expected, not a defect.
 
 ---
 

@@ -224,14 +224,36 @@ duplicate.
       `elevation: 0` was knowingly kept despite being redundant, so **the analyzer
       baseline is 33 from here, not 32** — that is a decision, not drift.
 
-- [ ] **2.5 — Form fields.** `system-foundation-specs.md` §3.2 "Form fields" row.
-      Rework — `lib/widgets/default_border_text_field.dart` is a stock
-      `TextFormField` with a floating label and hardcoded `Colors.red` for errors,
-      not the token-driven fill/focus/error treatment (label always above, no
-      placeholder-as-label, `#2f333c` fill at r16, 2px green focus at 2px offset,
-      error swaps fill for error tint + hairline). Tokens for this already exist
-      in `app_color_tokens.dart`. Check current callers before deciding whether to
-      rewire in this item or ship unwired — same call as 2.1.
+- [x] **2.5 — Form fields.** DONE 2026-08-24, merged to `develop`. Run
+      `form-fields-20260823`, Dev commit `79255bd`, QA PASS with 0 cycles used.
+      `default_border_text_field.dart` **deleted** (not deprecated) and replaced by
+      `lib/widgets/labeled_text_field.dart` — a single file, not a module folder:
+      no variant enum, no painter, two parent-only helpers, so a folder would only
+      have imported 2.4's public-surface trap for no gain. First Stage 2 item where
+      the folder wasn't earned.
+      **The checklist's caller claim was RIGHT this time** — unlike 2.1's. Three
+      files, seven sites, all rewired: `add_content_dialog.dart` (2),
+      `filter_bottom_sheet.dart` (3), `task_detail_screen.dart` (2). Nothing else
+      in the app builds a raw text input.
+      **The "ship unwired" option above was a false choice**, and that is the most
+      reusable thing this run found: an in-place rework *cannot* ship unwired, since
+      the same class in the same file changes all its callers on merge. "Unwired" is
+      only ever available by building a second component. Three shipped surfaces
+      change appearance, accepted at the gate.
+      **It composes its own `FormField<String>` around a plain `TextField`** rather
+      than using `TextFormField`, because `TextFormField` renders its error message
+      inside the same decorator as the box — so a focus ring around it would enclose
+      box *and* message, and `[2.5-AC7]` and `[2.5-AC9]` could not both hold.
+      **A silent pre-existing bug was found and fixed:** `maxLengthEnforce: false`
+      passed `null`, and `maxLengthEnforcement: null` resolves to *enforced* on
+      Android — so "not enforced" had been enforcing all along. The flag now means
+      what it says, and `task_detail_screen.dart`'s two editors pass
+      `enforceMaxLength: true` so their shipped behaviour is unchanged ("preserve
+      what ships", per 1.9).
+      Two gate outcomes that bind other items: **2.7 now covers only the Action,
+      Screen and Item error levels** — the field level was built here and 2.7
+      inherits it unchanged; and the **15px type collision hit a third time** (after
+      1.9 and 2.2), shipped at 14 again, still no token.
 
 - [ ] **2.6 — Rows & hairline groups.** `system-foundation-specs.md` §3.2
       "Rows & hairline groups" row. Rework — `group_task_item.dart`,
