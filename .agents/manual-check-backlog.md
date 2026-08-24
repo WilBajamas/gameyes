@@ -20,7 +20,7 @@ available, ideally in one sitting per screen rather than one item at a time.
 
 **Scheduled: after week 2 Stage 2 finishes.** Human decision, 2026-08-22 — the
 whole backlog waits until all eight Stage 2 items are shipped, then gets worked in
-one device sitting. **82 checks** as of 2026-08-24 (item 2.5 added eight). Do not interrupt a pipeline run to perform these, and do not
+one device sitting. **85 checks** as of 2026-08-24 (2.5 added eight, 2.6 three). Do not interrupt a pipeline run to perform these, and do not
 read the growing count as a problem. **Start with `2.4-MC-1` and `2.4-MC-2`** when
 the sitting happens: keyboard activation and the tab bar's colour correction are
 the only two entries here with no automated guard at all — everything else is
@@ -420,6 +420,30 @@ confirm nothing moved.
   values were verified in source; only the rendered result is manual. Note this is
   the **third** run to hit the 15px collision (after 1.9 and 2.2) — it ships at 14
   by human decision, so a label looking a touch small is expected, not a defect.
+
+---
+
+## Week 2 Stage 2 — item 2.6 (Rows & hairline groups)
+
+From the `rows-hairline-20260824` run, QA `PASS — pending manual checks`. Ten of
+thirteen criteria passed automatically; these three are the ones the project's own
+rules forbid testing (dimensions, radii and stroke widths are never asserted in a
+widget test).
+
+**All three need a scratch harness** — `LabelValueRow` and `HairlineGroup` ship
+**unwired**, with no caller anywhere in the app. Same position 2.2's completion ring
+is still in. Cheapest route is to check these the first time a real screen adopts
+the components rather than building a harness twice.
+
+- **2.6-MC-1** `[2.6-AC6]` — Host a `LabelValueRow` — expect 16 horizontal / 14
+  vertical interior padding, and confirm the row's height clears a 44px touch
+  target once it sits in a group.
+- **2.6-MC-2** `[2.6-AC7]` — Host a `HairlineGroup` of three rows — expect the card
+  corners clipped at r16 with the `surfaceRaised` fill reaching the rounded edge,
+  and no child painting outside the clip.
+- **2.6-MC-3** `[2.6-AC10]` — Same group — expect each separator to read as a 1px
+  hairline at the `hairline` token, and confirm by eye what the tests already prove
+  by count: a separator between rows only, never above the first or below the last.
 
 ---
 

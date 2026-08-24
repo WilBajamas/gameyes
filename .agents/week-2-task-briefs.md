@@ -255,14 +255,32 @@ duplicate.
       inherits it unchanged; and the **15px type collision hit a third time** (after
       1.9 and 2.2), shipped at 14 again, still no token.
 
-- [ ] **2.6 — Rows & hairline groups.** `system-foundation-specs.md` §3.2
-      "Rows & hairline groups" row. Rework — `group_task_item.dart`,
-      `task_item.dart`, and `horizontal_separator.dart` cover the visual pattern
-      (raised card at r16, hairline between rows only) but are tracker/task-
-      specific, not a generic reusable row primitive with the spec's label-left/
-      value-right/optional-chevron shape. Extract the generic pattern; leave
-      tracker's own rows as later, optional adopters rather than forcing a rewrite
-      here.
+- [x] **2.6 — Rows & hairline groups.** DONE 2026-08-24, merged to `develop`. Run
+      `rows-hairline-20260824`, QA PASS with 0 cycles. Two new widgets, both in
+      `lib/widgets/`: `LabelValueRow` (`label`, `value`, `showChevron`) and
+      `HairlineGroup` (`children` only). Ships **unwired** — `group_task_item.dart`,
+      `task_item.dart` and `horizontal_separator.dart` are all untouched, exactly as
+      this bullet asked, and tracker's rows stay optional adopters.
+      **This bullet was wrong that all three files are tracker-specific.**
+      `horizontal_separator.dart`'s main caller is `detail_mid_section.dart`, a
+      **game_detail** screen; `group_task_item.dart` uses it internally. It was
+      already a shared cross-feature primitive, which is why touching it would have
+      changed a shipped surface and killed the unwired option. Second checklist
+      caller-list error in Stage 2, after 2.1's.
+      **"Ship unwired" was genuinely available here, unlike 2.5** — because this is
+      an *extraction* (new files) rather than an in-place rework. 2.5 established
+      that a rework can never ship unwired. That distinction is the reusable one.
+      **The hairline guarantee is a construction, not a rule.** Placement is
+      `if (index > 0)` inside the child loop and `children` is the only constructor
+      parameter, so a leading or trailing hairline is a case the code cannot express
+      — `[2.6-AC9]` is satisfied by the *absence* of a divider flag, verified at the
+      API surface rather than by a behaviour test. A `Column` was chosen over
+      `ListView.separated` deliberately; the reasoning is in the handover.
+      **Two follow-ups left open on purpose:** `horizontal_separator.dart` still has
+      a hardcoded `Colors.grey` and `width: context.screenWidth` (out of scope by
+      the gate decision, now in the handover's follow-ups), and §4.4's green
+      "Day one" price needs a per-row value colour the minimal API omits — flagged
+      for whoever builds Where to play.
 
 - [ ] **2.7 — Error states (4 levels).** `system-foundation-specs.md` §3.2
       "Error states" row + §3.4 (full detail: Field / Action / Screen / Item).

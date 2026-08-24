@@ -1,10 +1,10 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-24: **week 2 Stage 2 is under way — 5
+Written 2026-07-29. Last updated 2026-08-24: **week 2 Stage 2 is under way — 6
 of 8 composites done.** Items 2.1 (Game card), 2.2 (Completion ring), 2.3
-(Countdown) and 2.4 (Tab bar) shipped 2026-08-21; **2.5 (Form fields) shipped
-2026-08-24**. All merged to `develop`. Stage 1's 9 primitives were already
-complete. Full detail below.
+(Countdown) and 2.4 (Tab bar) shipped 2026-08-21; **2.5 (Form fields) and 2.6
+(Rows & hairline groups) shipped 2026-08-24**. All merged to `develop`. Stage 1's
+9 primitives were already complete. Full detail below.
 
 ---
 
@@ -129,8 +129,8 @@ is what's left, plus `.agents/manual-check-backlog.md`):
   - **`Flexible` over `Expanded`** around the row's label, under the
     hug-content exception, approved at Phase 3.
 
-**Week 2 Stage 2 (composites) — 5 of 8 done.** 2.1–2.4 shipped 2026-08-21, 2.5 on
-2026-08-24; run folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
+**Week 2 Stage 2 (composites) — 6 of 8 done.** 2.1–2.4 shipped 2026-08-21, 2.5 and
+2.6 on 2026-08-24; run folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
 section before the next one — it points at the visual spec
 (`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
 skills. Explicitly out of scope there: `system-foundation-specs.md` §3.1 (an
@@ -256,6 +256,42 @@ target), and the Add-to-library sheet (needs week 3's Library feature first).
   **Two gate outcomes that bind other items:** 2.7 now covers only the Action,
   Screen and Item error levels — the field level was built here and 2.7 inherits it
   unchanged; and the 15px type collision hit a **third** time, shipped at 14 again.
+
+- **2.6 Rows & hairline groups** (`lib/widgets/label_value_row.dart` +
+  `hairline_group.dart`) — `LabelValueRow` (`label`, `value`, `showChevron`) and
+  `HairlineGroup` (`children` only). Two flat files, no module folder. QA PASS,
+  0 cycles. **Ships unwired**: `group_task_item.dart`, `task_item.dart` and
+  `horizontal_separator.dart` are all untouched, and no existing file references
+  either widget.
+  **"Ship unwired" was genuinely available here, and 2.5 explains why it wasn't
+  there.** 2.6 is an *extraction* (new files beside the old), where nothing changes
+  on merge; 2.5 was an in-place *rework*, where the same class in the same file
+  changes every caller the moment it lands. Ask which shape an item is before
+  believing a checklist bullet that offers the fork — 2.7 and 2.8 both rework
+  existing code.
+  **The checklist's caller claim was wrong again**, the second time in Stage 2 after
+  2.1's. The bullet called all three files "tracker/task-specific";
+  `horizontal_separator.dart`'s main caller is `detail_mid_section.dart`, a
+  **game_detail** screen. Grepping first is what made the unwired option visible as
+  a real choice rather than an assumption.
+  **The hairline guarantee is a construction, not a rule.** Placement is
+  `if (index > 0)` inside the child loop, and `children` is the only constructor
+  parameter, so a leading or trailing hairline is a case the code cannot express.
+  `[2.6-AC9]` is therefore satisfied by the **absence** of a divider flag and was
+  verified at the API surface, not by a behaviour test. The N−1 count tests use
+  plain `Text` children rather than `LabelValueRow`, which *demonstrates* that arity
+  alone drives placement.
+  **`Column` was chosen over `ListView.separated` deliberately.** The strongest form
+  of the objection is that `separatorBuilder` fires exactly `itemCount − 1` times —
+  the same contract, guaranteed by the framework. It loses because these groups sit
+  inside already-scrolling screens, so a nested `ListView` needs
+  `shrinkWrap: true` + `NeverScrollableScrollPhysics`; `shrinkWrap` builds every
+  child anyway, so laziness is lost while a viewport, hit-test layer and semantics
+  node are added. `.builder` is worse still: the API takes an already-built
+  `List<Widget>`, so there is nothing to build lazily — real laziness would need
+  `itemBuilder` + `itemCount`, which is the rejected option C. If a group ever needs
+  to be *long*, add a `HairlineGroup.builder` then.
+  Two follow-ups left open on purpose — see "Known non-blocking gaps".
 
 **Two conventions worth knowing before the next Stage 2 item**, both learned the
 hard way this session:
@@ -384,7 +420,7 @@ uncovered.
 - **The whole on-device manual-check backlog now lives in
   `.agents/manual-check-backlog.md`** — **82 checks** as of 2026-08-24 (item
   10.1's four, week 2 Stage 1's twenty, 2.1's eight, 2.2's ten, 2.3's fifteen,
-  2.4's fifteen and 2.5's eight), every one still unperformed. **Start with 2.4-MC-1 and 2.4-MC-2**
+  2.4's fifteen, 2.5's eight and 2.6's three), every one still unperformed. **Start with 2.4-MC-1 and 2.4-MC-2**
   — keyboard activation and the tab bar's colour correction, the two with no
   automated guard at all. That file is the only copy: it was written when the run
   folders were retired, precisely so the checks would outlive the `qa-report.md`
@@ -451,6 +487,20 @@ uncovered.
   debug assertion. A real latent bug, found by item 2.5's Tech Lead while rewiring
   that file and deliberately left unfixed as out of scope. Small and self-contained;
   worth folding into whatever next touches the dialog.
+- **`horizontal_separator.dart` still hardcodes `Colors.grey` and forces
+  `width: context.screenWidth`** — a §2 colour-law violation of the same shape as
+  the `Colors.red` item 2.5 removed, with the `hairline` token already available,
+  plus a separator sizing itself to the screen rather than its parent (fragile in
+  any padded or constrained container). Deliberately left alone by item 2.6's gate
+  decision: fixing it would have changed `detail_mid_section.dart`, a shipped
+  **game_detail** screen, and killed that item's unwired option. It is 15 lines and
+  has exactly two callers (`detail_mid_section.dart` and `group_task_item.dart`) —
+  a small, self-contained follow-up, and the natural moment is whenever a screen
+  first adopts `HairlineGroup`, since that is what supersedes it.
+- **§4.4's green "Day one" price has no home yet.** `LabelValueRow`'s minimal API
+  deliberately omits a per-row value colour, so the Where-to-play row's green price
+  cannot be expressed. Flagged during item 2.6 rather than shipped speculatively;
+  whoever builds that screen needs to add the capability or argue it away.
 - **`LabeledTextField.onChanged` has zero call sites** — flagged by 2.5's QA.
   `tdd.md` invoked the "no parameter nothing calls" rule to drop `suffixIcon` in the
   same run, so the rule was applied unevenly; `onChanged` was an approved carry-over
@@ -507,6 +557,20 @@ uncovered.
   on GitHub before approving at a gate — a deliberate, requested deviation
   from "only the Dev Agent commits," not a standing practice to repeat
   unprompted.
+- **Never `git add -A` while a subagent is live in the same tree.** The
+  orchestrator did this during item 2.6's Dev phase and swept the Dev Agent's
+  in-progress widget and test files into a docs commit, so that item's
+  implementation is split across two commits (`6689860` and `409fe04`) under a
+  message describing only documentation. Harmless to the code, misleading in
+  history, and it forced QA to be told to diff a range rather than read a commit.
+  Stage explicit paths, or wait for the agent to return.
+- **If a subagent dies with finished-but-uncommitted work, the orchestrator may
+  commit it** — established during item 2.6, when the Dev Agent hit an
+  account-wide session limit at its commit step with `diff-summary.md` already
+  written. Verify the baseline independently first, commit the work *unchanged*,
+  and state the authorship in the commit message. A deliberate one-off departure
+  from "only the Dev Agent commits"; the alternative is losing finished work to an
+  ephemeral container. Do not use it as licence to finish an agent's work.
 - **A Phase 3 revision that changes implementation style but no acceptance
   criterion** (e.g. "remove this comment," "use `Expanded` not `Flexible`")
   is Tech Lead-only — append to `code-plan.md`'s delta, no BA involvement.
@@ -743,64 +807,75 @@ Before anything else:
   automatically, including subagents' Bash calls), then `flutter pub get` and
   `dart run build_runner build --delete-conflicting-outputs` before trusting any
   baseline.
-- Expect **33 analyzer issues (0 errors, 2 warnings, 31 info)** and **+315 -10**
+- Expect **33 analyzer issues (0 errors, 2 warnings, 31 info)** and **+325 -10**
   on the test suite. Both are correct and neither is drift. The 2 warnings are the
   deliberate `_TaskReminder` pair; the 10 failures are pre-existing in
   tracker_repository_test (4), game_detail_cubit_test (3), games_bloc_test (3).
-  The suite has never been green. Note the pass count moved 312 → 315 when item
-  2.5 added three tests. Verify all of it yourself at Phase 0 rather than
-  inheriting it -- item 2.4 found the baseline had moved twice.
+  The suite has never been green. The pass count has moved twice recently -- 312 →
+  315 (item 2.5's three tests) → 325 (item 2.6's ten). Verify all of it yourself at
+  Phase 0 rather than inheriting it; item 2.4 found the baseline had moved twice.
 
-Current state: week 2 Stage 1 (9 primitives) is done, and Stage 2 is 5 of 8 --
-items 2.1 (Game card), 2.2 (Completion ring), 2.3 (Countdown), 2.4 (Tab bar) and
-2.5 (Form fields) are all shipped and merged to develop. **Next is item 2.6 --
-Rows & hairline groups.** Run it through /orchestrate as a normal PIPELINE item,
+Current state: week 2 Stage 1 (9 primitives) is done, and Stage 2 is 6 of 8 --
+items 2.1 through 2.6 are all shipped and merged to develop. **Next is item 2.7 --
+Error states (4 levels).** Run it through /orchestrate as a normal PIPELINE item,
 on the harness-designated session branch (do not create a nested feature/ branch).
 
-What 2.6 is: extract a generic reusable row primitive matching
-system-foundation-specs.md §3.2's "Rows & hairline groups" row -- raised card at
-r16, hairline between rows only, with the spec's label-left / value-right /
-optional-chevron shape. The visual pattern already exists in group_task_item.dart,
-task_item.dart and horizontal_separator.dart, but all three are tracker/task-
-specific rather than generic. The checklist is explicit that tracker's own rows
-stay as later, OPTIONAL adopters -- do not force a rewrite of them into this item.
+What 2.7 is: system-foundation-specs.md §3.2's "Error states" row plus §3.4 (full
+detail). Missing entirely today -- only the generic error_retry_widget.dart and
+default_snackbar.dart exist.
 
-**That "leave the callers alone" instruction deserves the same scrutiny 2.5 gave
-its own.** Item 2.5 found that an in-place rework CANNOT ship unwired -- same class,
-same file means every caller changes on merge, and "unwired" is only available by
-building a second component. 2.6 is framed as an *extraction* rather than a rework,
-which is the one shape where shipping unwired genuinely is available. Confirm at
-Phase 0 which it actually is: if the plan ends up modifying the three existing files
-rather than adding a new one beside them, the unwired option is gone and the human
-needs to know that at a gate. Grep the real callers of all three files before
-trusting any claim about blast radius -- 2.1's checklist bullet named two files that
-never referenced the component.
+**2.7's scope is REDUCED from what the checklist bullet says, by a human gate
+decision during item 2.5.** The bullet lists four levels: Field, Action, Screen and
+Item. **The Field level is already built** -- item 2.5's LabeledTextField ships the
+tinted fill plus error hairline, and 2.7 inherits it unchanged. So 2.7 covers only
+**Action, Screen and Item**: action-level destructive-fill confirmation,
+screen-level dismissable strip or single-line toast, and item-level dimmed card
+with a wordless corner badge. Do not rebuild the field level, and do not let a BA
+write criteria for it off §3.4's text.
 
-**Two live follow-ups sit inside 2.6's likely blast radius**, so decide them
-deliberately rather than tripping over them:
-- `_SignOutButton` (settings/sign_out_section.dart) is a third hand-rolled copy of
-  the ActionRow anatomy and is described in the follow-ups as "the natural second
-  caller". Whether it adopts 2.6's new row is a real scope question for the gate.
-- `horizontal_separator.dart` is named in 2.6's own bullet. Check what else uses it
-  before absorbing or replacing it.
+The bullet also asks Tech Lead to confirm whether three sub-components in one item
+is the right grain rather than three separate runs. That question is still live and
+should reach the human at a gate.
 
-Five things that recurred across 2.1-2.5 and will probably recur again:
+**Verify the caller/blast-radius claims before trusting them -- the checklist has
+now been wrong TWICE in Stage 2.** Item 2.1's bullet named two files that never
+referenced the component; item 2.6's called horizontal_separator.dart
+"tracker/task-specific" when its main caller is a game_detail screen. Grep at
+Phase 0. In particular, find every existing error-ish surface (error_retry_widget,
+default_snackbar, and any hand-rolled inline error) before deciding what 2.7
+replaces versus what it adds beside.
+
+**Ask early whether 2.7 is a rework or an extraction -- it decides whether "ship
+unwired" is even available.** This is the single most reusable thing the last two
+items taught:
+- Item 2.5 (rework, in place): an in-place rework CANNOT ship unwired. Same class,
+  same file means every caller changes the moment it merges. "Unwired" only exists
+  by building a second component.
+- Item 2.6 (extraction, new files): shipping unwired was genuinely available,
+  because nothing existing was touched.
+2.7 looks like a mix -- new components, but error_retry_widget.dart and
+default_snackbar.dart already occupy some of that ground. Put the actual shape to
+the human at a gate rather than assuming.
+
+Five things that recurred across 2.1-2.6 and will probably recur again:
 - BAs write criteria straight from system-foundation-specs.md §3 even where a human
   decision already overruled that text. It happened twice on the same desaturation
-  filter. Check §3 claims against handover.md's records.
+  filter, and §3.4's field level is now a third instance waiting to happen.
 - Screen docs outrank §3 where they disagree (precedence rule at
   system-foundation-specs.md lines 6-8). Item 2.3 was settled that way twice.
 - §3's type steps keep colliding with "dimensions are even numbers" -- 1.9, 2.2 and
-  2.5 have all now hit 15px, and all three worked around it. A 15px token still
-  does not exist; minting one is a foundations change, not a component-run task.
+  2.5 have all hit 15px and all three worked around it. No 15px token exists;
+  minting one is a foundations change, not a component-run task. (2.6 did NOT hit
+  it -- check before assuming.)
 - Removing a test often removes more than its name suggests. Item 2.2 lost three
-  criteria to one deleted test; item 2.4 lost keyboard-activation coverage and the
-  only proof of a colour fix. If asked to trim tests, say what each one is actually
-  carrying before deleting it.
-- A pre-existing bug hiding behind a misleading API is worth a look while rewiring:
-  2.5 found `maxLengthEnforcement: null` silently ENFORCES on Android, so a
-  `maxLengthEnforce: false` flag had been doing the opposite of its name for as long
-  as it existed.
+  criteria to one deleted test; 2.4 lost keyboard-activation coverage and the only
+  proof of a colour fix. If asked to trim tests, say what each one carries first.
+- A criterion phrased about position or pixels usually has a checkable form. Item
+  2.6 could not test "hairline between rows only" (positions are never asserted), so
+  it pinned the same guarantee three other ways: a COUNT (N children → N-1
+  separators at N=1,2,3), the ABSENCE of any parameter that could move a separator,
+  and a sibling criterion that the row draws no edge of its own. Reach for that
+  before marking something manual-only.
 
 Conventions, stricter than older code and older run artifacts show -- re-read the
 skills, do not pattern-match off existing files:
@@ -808,36 +883,51 @@ skills, do not pattern-match off existing files:
 - Widget tests never assert dimensions, gaps, radii or positions; colour assertions
   must carry meaning and name a token; never a golden test. context_chip_test.dart
   and stat_pill_test.dart are the reference files for shape and length. The
-  flutter-widget-test skill has been revised four times -- re-read it in full rather
-  than trusting a prior compliance pass.
+  flutter-widget-test skill has been revised four times -- re-read it in full.
 - Tests must import only a module's public entry point. QA caught item 2.4's tests
-  reaching into module internals; it is an easy default to fall into.
-- **Module folder vs single file is a per-item judgement now, not a rule either
-  way.** 2.1-2.4 each ship a module folder with an enum/ subfolder; 2.5 deliberately
-  ships a single file (no variant enum, no painter, two parent-only helpers). The
-  flutter-widgets skill still states the flat "one file per widget family" rule as
-  absolute, which matches neither -- that contradiction is a live follow-up, not a
-  rule to obey blindly.
+  reaching into module internals.
+- **Beware an unscoped `find.byType` in a MaterialApp harness.** Item 2.6's Dev
+  caught `find.byType(ColoredBox)` matching an unrelated widget elsewhere in the
+  pumped tree, leaving an "empty state draws no fill" test asserting nothing. Scope
+  finders with `find.descendant(of: find.byType(TheWidget), ...)`. 2.7 builds four
+  error surfaces that will all want container/colour finders -- this will come up.
+- **Module folder vs single file is a per-item judgement, not a rule either way.**
+  2.1-2.4 ship module folders with an enum/ subfolder; 2.5 and 2.6 deliberately ship
+  flat files. The flutter-widgets skill still states the flat "one file per widget
+  family" rule as absolute, which matches neither -- a live follow-up, not a rule to
+  obey blindly. With three sub-components, 2.7 is a real candidate for a folder.
+
+**Two process rules learned the hard way during 2.6, both now in "Process rules
+currently in force":**
+- **Never `git add -A` while a subagent is live in the same tree.** The orchestrator
+  did, and swept the Dev Agent's in-progress files into a docs commit, splitting
+  that item's implementation across two commits under a misleading message. Stage
+  explicit paths.
+- **If a subagent dies with finished-but-uncommitted work** (2.6's Dev Agent hit an
+  account-wide session limit at its commit step), the orchestrator may commit it --
+  verify the baseline independently first, commit unchanged, state the authorship.
 
 **The manual-check backlog is deliberately NOT being worked during Stage 2.** All
-**82** checks in .agents/manual-check-backlog.md wait until Stage 2's eight items
+**85** checks in .agents/manual-check-backlog.md wait until Stage 2's eight items
 are finished, then get performed in one device sitting. Human decision -- do not
 interrupt a pipeline run to perform them, and do not treat the growing count as
 something going wrong. When the sitting happens, start with 2.4-MC-1 and 2.4-MC-2:
 keyboard activation and the tab bar's colour correction are the only two with no
-automated guard at all.
+automated guard at all. Note 2.2's ten and 2.6's three need a scratch harness or a
+first real caller, since those components ship unwired.
 
 Known follow-ups, none blocking, all itemised in "Known non-blocking gaps": item 3's
 on-device cross-account RLS check (blocked on week 3's Library feature), item 10.1's
 dead-code cleanup, the manual-check backlog above, the now fully-orphaned
 ScrollNotifier ecosystem left behind by 2.4, the flutter-widgets rule text
-contradicting five shipped items in two different directions, §3.2's stale
-desaturation text, §1.9 platform-mark conformance, primary_button.dart's unexplained
-third color.green, ButtonPressScale registering no ActivateIntent (a real
-keyboard-accessibility bug in a shared widget), _SignOutButton as a third copy of the
-ActionRow anatomy, add_content_dialog.dart's super.initState() called inside a
-pattern-match branch (a real latent assertion failure, found by 2.5 and left as out
-of scope), LabeledTextField.onChanged having zero call sites, the 15px token, and a
+contradicting six shipped items in two directions, §3.2's stale desaturation text,
+§1.9 platform-mark conformance, primary_button.dart's unexplained third color.green,
+ButtonPressScale registering no ActivateIntent (a real keyboard-accessibility bug in
+a shared widget), _SignOutButton as a third copy of the ActionRow anatomy,
+add_content_dialog.dart's super.initState() called inside a pattern-match branch (a
+real latent assertion failure), LabeledTextField.onChanged having zero call sites,
+horizontal_separator.dart's hardcoded Colors.grey and screen-width sizing, §4.4's
+green "Day one" price having no home in LabelValueRow's API, the 15px token, and a
 pre-existing dashed-border violation in library_stats.dart that is item 2.8's to fix,
 not a stray bug to patch in passing.
 
@@ -845,5 +935,8 @@ Two environment things that will waste your time otherwise: remote branch deleti
 is blocked by the egress proxy (gotcha #11 -- merged claude/* branches have to be
 deleted by hand in the GitHub UI, don't retry the 403), and the custom
 ba-agent/tech-lead-agent/dev-agent/qa-agent types may be missing at session start
-(gotcha #7 has the fallback).
+(gotcha #7 has the fallback). Note also that the Skill tool was disabled for
+subagents throughout the 2.6 session -- every phase worked around it by reading
+.claude/skills/<name>/SKILL.md directly from disk. Tell them to do that if it
+recurs.
 ```
