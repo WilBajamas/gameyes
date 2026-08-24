@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.6 — Rows & hairline groups (`system-foundation-
 Run ID: rows-hairline-20260824
 Run folder: .agents/runs/rows-hairline-20260824/
 Started: 2026-08-24
-Current phase: TECH_LEAD
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
 Test baseline: +315 -10 — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
@@ -72,6 +72,46 @@ in `handover.md`:
   caller". Whether it adopts 2.6's row is a genuine scope question.
 - `library_stats.dart`'s `_DashedBorderPainter` violates "outlines are always
   solid" but **belongs to item 2.8**, explicitly not to be fixed in passing.
+
+## Phase 3 gate outcome (human, 2026-08-24)
+
+**APPROVED as written**, no delta. `LabelValueRow` + `HairlineGroup` as two flat
+files, ships unwired, 10 tests across 2 files, `flutter-widgets` catalogue rows
+updated.
+
+Two sub-questions were put alongside the gate and resolved by approving the design
+as designed: the **ten tests stay** (AC8's guarantee is a three-case contract and
+four more are named by `tech-ac.md`'s own "Verified by" lines — items 2.2 and 2.4
+each lost criteria to trimmed tests), and the **`flutter-widgets` "one file per
+widget family" rule sentence stays unedited**, remaining a follow-up rather than
+being settled inside a component run.
+
+### `Column` vs `ListView` — asked at the gate, settled, recorded so 2.7 doesn't re-litigate it
+
+The human asked whether `HairlineGroup` would be better built on a `ListView`
+builder. Answer: no, and the reasoning is worth keeping.
+
+- **`ListView.builder` buys nothing here.** The API takes `List<Widget> children` —
+  widgets the caller has *already constructed*. Laziness requires building items on
+  demand from a data source; handed a prebuilt list, a builder builds nothing
+  lazily. Getting real laziness would mean `itemBuilder` + `itemCount` in the public
+  API, which is the data-driven shape of **option C** — already rejected at
+  CRITICAL-2 precisely so callers can pass a bespoke child.
+- **It is a card, not a list.** These groups sit inside already-scrolling screens, so
+  a nested `ListView` needs `shrinkWrap: true` + `NeverScrollableScrollPhysics` —
+  and `shrinkWrap` builds every child anyway to measure, losing laziness a second
+  time while adding a viewport, hit-test layer and semantics node. `Column(mainAxisSize:
+  .min)` also sizes to content, which a card needs; an unbounded `ListView` inside a
+  `Column` throws unless shrink-wrapped.
+- **The strongest form of the question was `ListView.separated`**, whose
+  `separatorBuilder` fires exactly `itemCount − 1` times — AC8's contract guaranteed
+  by the framework rather than by a hand-rolled loop. Rejected anyway: it pays the
+  nested-viewport cost to buy a guarantee that `if (index > 0)` already provides in
+  three tokens, fully visible in review and pinned by tests at N = 1, 2, 3.
+- **Where it would genuinely win:** if a group could ever be *long*. Nothing in §3.2
+  suggests that (price, session and settings rows are handfuls), and a
+  `HairlineGroup.builder` named constructor could be added later without disturbing
+  this API.
 
 ## Escalation history
 2026-08-24 Phase 1 — BA Agent — Two CRITICAL scope ambiguities: which files 2.6 may
