@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.7 — Error states (`system-foundation-specs.md` 
 Run ID: error-states-20260824
 Run folder: .agents/runs/error-states-20260824/
 Started: 2026-08-24
-Current phase: BA (re-run against settled scope)
+Current phase: TECH_LEAD
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — re-verified on `develop` after the 2.6 merge
 Test baseline: +325 -10 — re-verified on `develop` after the 2.6 merge

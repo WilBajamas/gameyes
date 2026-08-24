@@ -1,7 +1,7 @@
 # Ambiguities Report
 Source: `system-foundation-specs.md` §3.2 "Error states" row (line 247) + §3.4 (lines 266–279);
 `week-2-task-briefs.md` item 2.7
-Date: 2026-08-24
+Date: 2026-08-24 (BA re-run, after the human gate answered all open criticals)
 
 ## Settled before this run (recorded, not re-derived)
 
@@ -14,112 +14,72 @@ Date: 2026-08-24
   rule does not fire for this item; §3.4 is uncontested for the two features that host the
   existing error surfaces.
 
-`tech-ac.md` is NOT written this run — three CRITICAL items are open. See `escalation.md`.
+`tech-ac.md` **is** written this run. No CRITICAL item remains open.
 
 ## CRITICAL (pipeline blocked — requires human decision before proceeding)
 
-CRITICAL-1: item 2.7 — **Grain: one item covering three error levels, or separate runs?**
-  The checklist bullet raises this itself and defers it ("Tech Lead should confirm that's the
-  right grain rather than four separate runs"), and it is also listed under the checklist's
-  own "Open decisions that could block". It is unresolved and it changes which criteria belong
-  in this run at all, so it cannot be answered inside `tech-ac.md`.
-  Options:
-    A — One run, all three levels (Action + Screen + Item). One design gate, one QA cycle,
-        one allowlist. Cost: a Phase 3 reversal on any one level re-opens the whole run; the
-        blast-radius answer from CRITICAL-2 has to be the same for all three levels, because
-        a run either ships unwired or it does not. This is also the strongest module-folder
-        candidate so far (three sibling components), though 2.5 and 2.6 both deliberately
-        shipped flat files, so the folder is a judgement, not a consequence.
-    B — Three runs, one level each. Each level's shipped-surface question is decided on its
-        own evidence; smallest blast radius per gate. Cost: three BA/Tech-Lead/Dev/QA cycles
-        and three human gates for roughly one item's worth of code, and the three levels
-        share tokens and probably a red-dot/badge primitive, which would then be built in run
-        one and imported by runs two and three (or duplicated).
-    C — Two runs, split on blast radius rather than on level count: the levels that touch no
-        shipped surface in one run, the level(s) that do in another. Cost: one extra gate;
-        benefit: "unwired" becomes a property of a whole run rather than a per-criterion
-        argument, which is exactly the distinction 2.5 and 2.6 established.
-  Note the dependency: **A is only coherent if CRITICAL-2 resolves the same way for all three
-  levels.** On today's evidence it does not — the Item and Action levels have no incumbent at
-  all, the Screen level has two.
-  Recommended: NONE — this is delivery cadence versus blast radius, a human call.
-  Decision needed from: Product Owner (with Tech Lead input)
+NONE — all three criticals raised on 2026-08-24 were answered by the human at a gate, plus a
+fourth question on dead-code scope. `escalation.md` is deleted. The answers are reproduced below
+so this file reads correctly on its own; the full reasoning lives in `orchestrator-state.md`'s
+"Gate decisions" section.
 
-CRITICAL-2: item 2.7 — **Extraction, rewire, or in-place rework — does 2.7 own the existing
-error surfaces?** This decides whether the item can ship unwired at all.
-  Facts, grepped this run rather than inherited:
-    - `ErrorRetryWidget` (37 lines) has **5 live callers**: `detail_top_header.dart:34`,
-      `detail_mid_section.dart:29`, `games_screen.dart:68`, `:78`, `:88`. Two features
-      (game_detail, games). Plus two **commented-out** blocks in
-      `detail_screenshot_section.dart:22` and `:52` — dead code, not callers.
-    - **One of those five is not an error state.** `games_screen.dart:88` renders
-      `ErrorRetryWidget` for `GamesStatus.empty` with `S.current.no_results_found`. That is
-      an **empty** state, which belongs to item 2.8, not 2.7. Absorbing `ErrorRetryWidget`
-      into 2.7 therefore reaches into 2.8's scope, or leaves a component with one caller
-      still using it as an empty state.
-    - **§3.4 does not spec a per-section retry block.** `ErrorRetryWidget` is a centred
-      message plus a retry button rendered inside a failed section. §3.4's four levels are
-      field, action, screen and item; the "error per section, never full page" line lives in
-      §3.2's **Async states** row, not the Error states row. Replacing `ErrorRetryWidget`
-      means designing a surface no current doc describes, or re-reading one of §3.4's levels
-      as covering it. Neither is a BA call.
-    - `DefaultSnackbar` (21 lines) has **1 caller**, `task_detail_screen.dart:70` — and that
-      call site shows **both** outcomes through it: `RemoveStepSuccess` → "removed step",
-      `RemoveStepFailed` → "remove step failed". So it is a general-purpose snackbar, not an
-      error surface. §3.4's toast is error-only by construction (it carries a red dot), and
-      §0.3/§2.1 ration red hard. A straight swap would put a red dot on a success message.
-      Replacing it needs either the call site split into two surfaces, or a non-error toast
-      variant that §3.4 does not describe.
-    - `DefaultSnackbar` is also currently off-spec regardless: it fills with
-      `kColorScheme.primary` (indigo), where §3.4's toast is `#2e3236`.
-  Options:
-    A — **Pure extraction.** New Action/Screen/Item components beside the existing ones;
-        `ErrorRetryWidget` and `DefaultSnackbar` untouched. Ships genuinely unwired (2.6's
-        shape): zero shipped-surface change, no manual-check burden on live screens.
-        Cost: two error vocabularies coexist; 4 error call sites stay off-spec indefinitely;
-        the follow-up debt list grows (it already carries `horizontal_separator.dart` of
-        exactly this shape). And nothing exercises the new components — 2.2's unwired ring
-        left 10 manual checks that still cannot be performed for want of a caller.
-    B — **Extraction plus rewire in the same run.** Build beside, then move call sites over
-        and deprecate or delete the old widgets. Cost: unwired is not available; game_detail
-        and games both change appearance on merge; largest manual-check surface. Precedent
-        exists (2.1 rewired in-run; 2.5 accepted three changed surfaces at the gate). Needs
-        CRITICAL-2's `games_screen.dart:88` and `task_detail_screen.dart:70` questions
-        answered first, since neither call site is a plain error.
-    C — **In-place rework** of `ErrorRetryWidget` / `DefaultSnackbar` (same class, same file).
-        2.5 established that this cannot ship unwired under any circumstances — the same
-        class in the same file changes every caller the moment it merges, touched or not.
-        Highest blast radius, least reversible, and it inherits both mismatches above.
-    D — **Mixed by level.** Item and Action levels are pure extraction (nothing in the app
-        renders a failed card or a destructive confirmation today, so there is no incumbent);
-        Screen level is the only one with incumbents. Cost: the run is then partly unwired
-        and partly not, which is precisely the fork CRITICAL-1's Option A cannot express.
-  Also decide, in the same breath: the two commented-out `ErrorRetryWidget` blocks in
-  `detail_screenshot_section.dart` — delete as part of this run, or leave for a sweep.
-  Recommended: NONE.
-  Decision needed from: Product Owner (with Tech Lead input)
+### RESOLVED CRITICAL-1 — grain: one run, all three levels
 
-CRITICAL-3: §3.4 Screen level — **which token carries the toast fill `#2e3236`?**
-  A token with exactly that value already exists: `surfaceTabChrome` (`0xFF2E3236`), minted
-  for item 2.4's tab bar chrome. The value is right; the name describes a different surface.
-  Options:
-    A — Reuse `surfaceTabChrome`. No foundations change, no new token, stays inside a
-        component run's normal allowlist. Cost: a toast component reads a tab-bar-named token,
-        which reads as a mistake to the next person and invites a "fix" that breaks the tab bar.
-    B — Mint a semantic alias (a second name for the same value, e.g. a toast/overlay surface
-        token). Reads correctly at both call sites. Cost: this edits
-        `lib/config/theme/tokens/app_color_tokens.dart` — a **foundations change**, which
-        every component run so far has deliberately stayed out of (see the standing 15px type
-        token gap, now open across 1.9, 2.2 and 2.5). It also needs the token allowlisted and
-        the two-name-one-value duplication accepted.
-    C — Rename `surfaceTabChrome` to a neutral surface name and update 2.4's module. Cost:
-        touches a shipped component for a naming reason only.
-  A criterion can be written against the value either way, so this is not blocking on
-  correctness — it is blocking on "don't silently pick", which is what has gone wrong before.
-  Since the pipeline is already stopped by CRITICAL-1 and 2, answering it in the same
-  round-trip is free.
-  Recommended: NONE.
-  Decision needed from: Product Owner
+Answered: **one run covering Action + Screen + Item, one `tech-ac.md`.** This is coherent
+precisely *because* CRITICAL-2 resolved uniformly across the three levels — pure extraction
+applies to every level, so the run ships unwired as a whole rather than partly. The three levels
+also share tokens and probably a badge/dot primitive, which one run builds once.
+Consequence for this document: every criterion for all three levels lives in one `tech-ac.md`.
+
+### RESOLVED CRITICAL-2 — blast radius: pure extraction
+
+Answered: **option A, pure extraction.** New Action / Screen / Item components are built beside
+the incumbents. `ErrorRetryWidget` and `DefaultSnackbar` are **not** reworked, replaced or
+rewired, and neither file is touched. The item ships genuinely **unwired**.
+
+The decisive argument was this BA's own finding: **§3.4 does not spec a per-section retry block
+at all** — `ErrorRetryWidget`'s anatomy comes from §3.2's *Async states* row — so replacing it
+would mean designing a surface no document describes, which is not a BA call.
+
+Accepted cost, recorded honestly by the human: two error vocabularies coexist, four error call
+sites stay off-spec, and nothing exercises the new components (item 2.2's unwired completion ring
+left 10 manual checks still unperformable for want of a caller).
+
+Consequence for this document: `tech-ac.md` carries **no criteria** about `ErrorRetryWidget`,
+`DefaultSnackbar`, `games_screen.dart:88`'s empty state, or `task_detail_screen.dart:70`'s
+success/failure snackbar. All four are listed under `## Out of scope` instead. The three findings
+that drove the decision — the empty-state caller, the both-outcomes snackbar, and the missing
+per-section-retry spec — are preserved in `orchestrator-state.md` and are not re-litigated here.
+
+### RESOLVED CRITICAL-3 — toast token: mint a semantic alias
+
+Answered: **option B, mint a semantic alias.** `#2e3236` already exists as `surfaceTabChrome`
+(minted for item 2.4's tab bar). A toast reading `surfaceTabChrome` would read as a bug later, so
+a second, semantically named token carries the same value.
+
+This makes `lib/config/theme/tokens/app_color_tokens.dart` an allowlisted file — the **first
+foundations edit a component run has been permitted**. The human scoped it to adding the alias:
+`surfaceTabChrome` is not renamed or removed, because the shipped tab bar depends on it.
+
+Consequence for this document: `[2.7-AC1]`–`[2.7-AC4]` cover the alias and nothing else, with
+`[2.7-AC4]` explicitly fencing off every other foundations file.
+
+### RESOLVED (fourth question) — dead-code removal: one file, narrowly
+
+Answered: **delete `lib/features/game_detail/presentation/screens/detail_screenshot_section.dart`
+entirely** and remove the commented reference at `game_detail_screen.dart:73`. Traced, not
+assumed: the file is 66 lines of which 54 are commented out, its live body is
+`return SizedBox.shrink()` so it renders nothing, and its only reference anywhere is itself
+commented out. Deleting it also removes the two phantom `ErrorRetryWidget` "callers" at `:22` and
+`:52` that this item's recon tripped over.
+
+**Explicitly NOT in scope**, by human decision: `GameScreenshotCubit`, `game_screenshot_entity.dart`,
+`screenshot.dart`, `screenshot_response_model.dart`, and `ImageRouteView`'s route registration.
+And **`lib/widgets/game_screenshot.dart` is LIVE** (`image_page_view.dart:32` uses it) — it must
+not be touched, despite looking dead from inside the deleted file's commented block.
+
+Consequence for this document: `[2.7-AC30]` states that boundary as an explicit do-not-touch
+list, because a Dev Agent following the dead-code trail could easily over-delete.
 
 ## ASSUMPTIONS (minor — pipeline may proceed)
 
@@ -129,13 +89,14 @@ would be no caller. Assuming the run builds only the solid destructive-fill vari
 "no parameter nothing calls" rule that dropped `suffixIcon` in 2.5. Cheap to overrule at the
 gate if the human wants the variant built ahead of the flow.
 
-ASSUMPTION: no copy is specified for any of the three levels, and §4 forbids a corporate
-register but gives no strings. Assuming every user-visible string is caller-supplied and no
-component hardcodes English; anything a component owns internally goes through the existing
-localisation path.
+ASSUMPTION: no copy is specified for any of the three levels, and §4 forbids a corporate register
+but gives no strings. Assuming every user-visible string is caller-supplied and no component
+hardcodes English; anything a component owns internally goes through the existing localisation
+path.
 
 ASSUMPTION: §3.4's toast has no stated duration. Assuming the app's existing snackbar display
-duration rather than introducing a new number.
+behaviour — which sets no explicit duration and inherits the framework default — rather than
+introducing a new number.
 
 ASSUMPTION: §3.4 calls the Screen-level strip "dismissable" without saying what dismissal
 means. Assuming dismissal removes the strip for that failure only, with no persistence and no
@@ -158,3 +119,23 @@ positional reference. Assuming the badge carries no text in any form, and that i
 accessibility affordance is a semantics label rather than visible copy (§5 exempts only the
 tab bar and circular icon buttons from label pairing, so a semantics label is required, not
 optional).
+
+ASSUMPTION (new this run): §3.4 does not state the toast's text colour. The red dot carries the
+signal and §2.1 rations red harder than green, so assuming the toast message renders in the `ink`
+token on the `#2e3236` surface. The strip, which carries no dot, keeps `errorInk` per §3.3's
+"signal hairline + `#ff8f88` message". Overrule at the design gate if the toast should carry
+error ink instead.
+
+ASSUMPTION (new this run): a `/// TODO: fetch screenshots - from game detail` comment sits
+immediately above `game_detail_screen.dart:73` and annotates only the commented reference being
+removed. Assuming it goes with it rather than dangling above nothing. The live "Screenshots"
+heading above both stays — removing that would be a shipped-surface change this run is not
+permitted to make.
+
+## Note on §3.4's "never both a strip and a toast"
+
+Not an ambiguity — recording it because the earlier pass established it and `tech-ac.md` depends
+on it. The rule **has a checkable form** in the shape item 2.6 used for its hairline guarantee: a
+single required variant selector with no default makes "both" unrepresentable, and the absence of
+any parameter that could render the second surface is verified at the API surface. It does not
+need to be a manual-only check. See `[2.7-AC11]` and `[2.7-AC12]`.
