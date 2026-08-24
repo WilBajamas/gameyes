@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.7 — Error states (`system-foundation-specs.md` 
 Run ID: error-states-20260824
 Run folder: .agents/runs/error-states-20260824/
 Started: 2026-08-24
-Current phase: BA
+Current phase: BA (re-run against settled scope)
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — re-verified on `develop` after the 2.6 merge
 Test baseline: +325 -10 — re-verified on `develop` after the 2.6 merge
@@ -89,7 +89,83 @@ strongest candidate yet for a module folder — though note 2.5 and 2.6 both
 deliberately shipped flat files, so it is a judgement, not a default.
 
 ## Escalation history
-NONE
+2026-08-24 Phase 1 — BA Agent — Three CRITICALs: grain (one run or several), whether 2.7 owns
+the existing error surfaces (which decides if it can ship unwired at all), and which token
+carries the toast fill. `tech-ac.md` deliberately not written. — Resolved 2026-08-24: human
+answered all three at a gate, plus a fourth on dead-code scope. BA re-spawned;
+`escalation.md` deleted.
+
+## Gate decisions (human, 2026-08-24, resolving the BA escalation)
+
+- **CRITICAL-2 — blast radius: option A, pure extraction.** New Action / Screen / Item
+  components built beside the incumbents. `ErrorRetryWidget` and `DefaultSnackbar` are
+  **not** reworked, replaced or rewired. The item ships genuinely **unwired**. The
+  decisive argument is the BA's own: **§3.4 does not spec a per-section retry block at
+  all** — `ErrorRetryWidget`'s anatomy comes from §3.2's *Async states* row — so
+  replacing it would mean designing a surface no document describes.
+  Accepted cost, recorded honestly: two error vocabularies coexist, four error call
+  sites stay off-spec, and nothing exercises the new components (2.2's unwired ring
+  left 10 manual checks still unperformable for want of a caller).
+- **CRITICAL-1 — grain: option A, one run covering all three levels.** Coherent
+  precisely *because* the blast-radius answer is uniform: pure extraction applies to
+  every level, so the run ships unwired as a whole. The three levels also share tokens
+  and probably a red-dot/badge primitive, which one run builds once.
+- **CRITICAL-3 — toast token: mint a semantic alias.** `#2e3236` already exists as
+  `surfaceTabChrome` (minted for 2.4's tab bar). A toast reading `surfaceTabChrome`
+  would read as a bug later, so a second, semantically-named token carries the same
+  value. **This is a foundations-file edit** — the first a component run has been
+  allowed; every prior run stayed out (cf. the standing 15px gap). Scope it to adding
+  the alias; do not rename or remove `surfaceTabChrome`, which the shipped tab bar
+  depends on.
+- **Dead code: remove the dead `ErrorRetryWidget` usage only.** In scope:
+  **delete `lib/features/game_detail/presentation/screens/detail_screenshot_section.dart`
+  entirely**, and the commented reference at `game_detail_screen.dart:73`.
+
+### Why that file is genuinely dead — traced, not assumed
+
+`detail_screenshot_section.dart` is 66 lines of which **54 are commented out**; the live
+widget body is `return SizedBox.shrink()`, so it renders nothing. Its **only** reference
+anywhere is itself commented out (`game_detail_screen.dart:73`). It is unreachable code
+wrapping a widget that draws nothing. Deleting it also removes both phantom
+`ErrorRetryWidget` "callers" (`:22` and `:52`) that this item's recon tripped over — so
+the next caller-grep sees 5 real call sites, not 7.
+
+**Explicitly NOT in scope** (human decision — deliberately left, not missed):
+`GameScreenshotCubit` is orphaned once that file goes (its only references are inside the
+commented block), and `game_screenshot_entity.dart`, `screenshot.dart` and
+`screenshot_response_model.dart` form a dormant chain behind it. `ImageRouteView` stays
+registered in `auto_route_config.dart:39` with nothing pushing to it. **`GameScreenshot`
+(`lib/widgets/game_screenshot.dart`) is LIVE** — `image_page_view.dart:32` uses it — so
+it must not be touched. Deleting the rest would turn a component item into a feature
+removal, and may delete work intended for restoration. Record as a follow-up.
+
+### Three BA findings that reshape the item — worth keeping even if the run is re-scoped
+
+1. **One of `ErrorRetryWidget`'s five callers is not an error.**
+   `games_screen.dart:88` renders it for `GamesStatus.empty` with `no_results_found` — an
+   **empty** state, which is item **2.8**'s scope. So absorbing `ErrorRetryWidget` into 2.7
+   either reaches into 2.8 or leaves the widget alive for one empty-state caller. 4 of 5
+   callers are genuine errors.
+2. **`DefaultSnackbar`'s single caller shows both outcomes through it** —
+   `task_detail_screen.dart:70`: `RemoveStepSuccess` → "removed step", `RemoveStepFailed` →
+   "remove step failed". §3.4's toast is error-only by construction (it carries a red dot) and
+   §0.3/§2.1 ration red hard, so a straight swap would put a red dot on a success message.
+   Replacing it needs the call site split, or a non-error toast variant no doc describes.
+   (`DefaultSnackbar` is off-spec regardless: it fills `kColorScheme.primary` indigo, not
+   `#2e3236`.)
+3. **§3.4 does not spec a per-section retry block at all.** `ErrorRetryWidget`'s anatomy — a
+   centred message plus retry inside a failed section — comes from §3.2's **Async states**
+   row, not the Error states row. Replacing it means designing a surface no current doc
+   describes. That is not a BA call, and it is a strong argument for leaving it alone in 2.7.
+
+Two useful negatives, both grepped: **neither screen doc mentions errors**, so §3 is
+uncontested for this item (no precedence conflict to resolve); and 14/500 sits inside §1.2's
+"14–15" range, so **2.7 does NOT re-open the 15px collision** that 1.9, 2.2 and 2.5 each hit.
+
+Also confirmed: §3.4's "never both a strip and a toast for the same failure" **has a checkable
+form** in the 2.6 shape — a single required variant selector making "both" unrepresentable,
+plus the absence of any parameter that could render the second surface. It need not be
+manual-only.
 
 ## Deviation approvals
 NONE
