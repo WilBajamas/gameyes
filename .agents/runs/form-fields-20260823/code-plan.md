@@ -331,3 +331,81 @@ and 44px floor are manual checks. Harness matches `context_chip_test.dart` /
 `stat_pill_test.dart` — real `buildDarkTheme()`, `S.delegate`,
 `GoogleFonts.config.allowRuntimeFetching = false`, no `setUpAll` token
 resolution.
+
+## Approved feedback delta
+
+Phase 3 gate, 2026-08-24. Authoritative over anything above and over `tdd.md` /
+`task-brief.md` where they conflict. One change, the rest confirmations.
+
+### Change — `task_detail_screen.dart`'s two editors pass `enforceMaxLength: true`
+
+- The widget is unchanged from the plan above: `enforceMaxLength: false` still
+  emits `MaxLengthEnforcement.none`, so the parameter means what its name says.
+  **`[2.5-AC15]` stands unchanged.**
+- The **two** `task_detail_screen.dart` sites — the 30-char title editor and the
+  100-char description editor — each gain **`enforceMaxLength: true`**. They
+  enforce today and they keep enforcing; the run ships no behaviour change on
+  that screen. This supersedes the two `task_detail_screen.dart` snippets under
+  `## MODIFY EXISTING` above, which show no `enforceMaxLength`.
+- Rationale — the **"preserve what ships" precedent from item 1.9**: a promotion
+  or rework moves code, it does not silently change a live screen's behaviour.
+  The widget-level bug is fixed at the widget; no shipped surface changes
+  behaviour as a result.
+
+### The trap this closes, recorded so it survives the run
+
+**`maxLengthEnforcement: null` does NOT mean "no enforcement."** It resolves
+per-platform through `LengthLimitingTextInputFormatter.getDefaultMaxLengthEnforcement`
+(SDK `services/text_formatter.dart:517`): Android and Windows → `enforced`;
+iOS, macOS, Linux, Fuchsia and web → `truncateAfterCompositionEnds`. **Both of
+those enforce the limit** — the user cannot end up over it either way. So
+`DefaultBorderTextField`'s `maxLengthEnforce: false` has always been *enforcing*,
+and a future reader of the old code would get this backwards. `MaxLengthEnforcement.none`
+is the only value that actually lets text past the limit, and after this run it
+is the only way to ask for that.
+
+*Residual difference, and it is the whole of it:* on Android, today's `null` and
+the new `enforced` are identical. On the `truncateAfterCompositionEnds` platforms
+the new `enforced` differs in one narrow case — an in-progress IME composition
+(CJK, accent entry) that would cross the limit gets truncated mid-composition
+rather than when the composition ends. Accepted: preserving that exactly would
+mean re-admitting a tri-state or a `null` passthrough, which is the bug itself.
+
+### Confirmations — the other five call sites, checked against the files
+
+Read from the source files for this delta, not carried over from the earlier review:
+
+| File | Sites | Today | After |
+|---|---|---|---|
+| `add_content_dialog.dart` | title (`maxLength: 30`), description (`maxLength: 100`) | both already pass `maxLengthEnforce: true` → `MaxLengthEnforcement.enforced` | carry over as `enforceMaxLength: true`. **No behaviour change on any platform** |
+| `filter_bottom_sheet.dart` | search, date-from, date-to | **no `maxLength` at all** on any of the three | enforcement is moot — no `maxLength`, no `enforceMaxLength`. Nothing to preserve |
+| `task_detail_screen.dart` | title, description | pass no `maxLengthEnforce` → defaults to `false` → `null` → enforced per platform | `enforceMaxLength: true` (the change above) |
+
+The gate's reading of all three files was correct as stated; nothing to correct.
+
+### Confirmations — no change
+
+- **`.claude/skills/flutter-widgets/SKILL.md` stays in the allowlist**, catalogue
+  row only. The "one file per widget family" rule sentence stays untouched.
+- **Everything else in this plan is approved as written**: the `FormField<String>`
+  composition, deleting `default_border_text_field.dart` rather than deprecating
+  it, the single-file shape, all 7 sites rewired, the three tests.
+- The **file allowlist is unchanged** — same 7 files, same one test file. This is
+  a call-site argument change, not an acceptance-criterion change, so `tdd.md`
+  and `task-brief.md` are not rewritten.
+
+### Stale text this delta overrides
+
+Read these with the delta, not instead of it:
+
+- `tdd.md` decision **4**, final paragraph ("The two `task_detail_screen.dart`
+  editors (30 and 100) are the affected sites: typing past the limit becomes
+  possible there and the counter reads over its maximum") — **no longer true**.
+  Decision 4's first half, that the widget passes `MaxLengthEnforcement.none`
+  explicitly when the flag is false, still holds.
+- `tdd.md` `## Call-site review`, both `task_detail_screen.dart` rows —
+  "`maxLength: 30`/`100` now un-enforced per decision 4" — **no longer true**;
+  both stay enforced.
+- `task-brief.md` Step 4 ("both editors with the same renames") — the renames
+  still apply, and each editor additionally gains `enforceMaxLength: true`, which
+  has no counterpart at those sites to rename.
