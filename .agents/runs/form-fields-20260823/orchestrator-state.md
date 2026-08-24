@@ -3,7 +3,9 @@ Feature: Week 2 Stage 2 item 2.5 — Form fields (`system-foundation-specs.md` �
 Run ID: form-fields-20260823
 Run folder: .agents/runs/form-fields-20260823/
 Started: 2026-08-23
-Current phase: QA
+Current phase: COMPLETE
+Result: PASS — pending manual checks
+Completed: 2026-08-24
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info — captured 2026-08-23T19:05:00Z
 Test baseline: +312 -10 — captured 2026-08-23T19:10:00Z
@@ -116,7 +118,22 @@ with no initial values skips it and trips Flutter's debug assertion.
 NONE
 
 ## Deviation approvals
-NONE
+2026-08-23 **`lib/widgets/default_border_text_field.dart` is DELETED, not `@Deprecated`** —
+approved by the human at GATE-1 by name. `flutter-widgets` would otherwise favour
+deprecating a widget with live callers. The deletion is deliberate: leaving the old
+file alive would keep both the hardcoded `Colors.red` and the caller-passed
+`BuildContext` in the tree, which is exactly what GATE-1 chose option A to remove.
+Recorded here because QA correctly noted the approval existed only in the gate
+narrative, not where a future reader would look.
+
+2026-08-23 **`.claude/skills/flutter-widgets/SKILL.md` edited from a component run** —
+catalogue row only, approved at the Phase 3 gate. The "one file per widget family"
+rule sentence stays untouched; that contradiction remains its own live follow-up.
+
+2026-08-24 **`maxLength` enforcement split** — widget honours the flag
+(`MaxLengthEnforcement.none`, never `null`), while `task_detail_screen.dart`'s two
+editors pass `enforceMaxLength: true` to preserve shipped behaviour. Approved as a
+Phase 3 delta.
 
 ## Code review outcomes
 2026-08-24 `79255bdc99f4a64ad3b5c103643a6c0a0bbc818e` — Reviewed and approved by human, sent to QA.
