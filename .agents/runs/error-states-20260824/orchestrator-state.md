@@ -3,8 +3,8 @@ Feature: Week 2 Stage 2 item 2.7 — Error states (`system-foundation-specs.md` 
 Run ID: error-states-20260824
 Run folder: .agents/runs/error-states-20260824/
 Started: 2026-08-24
-Current phase: QA
-QA cycles used: 0
+Current phase: DEV (QA cycle 1 fix)
+QA cycles used: 1
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — re-verified on `develop` after the 2.6 merge
 Test baseline: +325 -10 — re-verified on `develop` after the 2.6 merge
 Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3)
