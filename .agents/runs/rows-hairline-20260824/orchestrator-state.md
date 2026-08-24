@@ -3,7 +3,7 @@ Feature: Week 2 Stage 2 item 2.6 — Rows & hairline groups (`system-foundation-
 Run ID: rows-hairline-20260824
 Run folder: .agents/runs/rows-hairline-20260824/
 Started: 2026-08-24
-Current phase: BA
+Current phase: ESCALATED
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 31 info (33 total) — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
 Test baseline: +315 -10 — captured 2026-08-24, re-verified on `develop` after the 2.5 merge
@@ -74,7 +74,38 @@ in `handover.md`:
   solid" but **belongs to item 2.8**, explicitly not to be fixed in passing.
 
 ## Escalation history
-NONE
+2026-08-24 Phase 1 — BA Agent — Two CRITICAL scope ambiguities: which files 2.6 may
+touch (and therefore whether it can ship unwired at all), and whether §3.2's
+"hairline between rows only" ships as one component or two. `tech-ac.md`
+deliberately not written; every hairline/fill/radius/clipping criterion changes
+shape depending on the second answer, and whether `HorizontalSeparator`'s two
+defects are criteria at all depends on the first. — Resolved 2026-08-24: human
+answered both at a gate (CRITICAL-1 → A, CRITICAL-2 → B). BA re-spawned against
+the settled scope; `escalation.md` deleted.
+
+## Gate decisions (human, 2026-08-24, resolving the BA escalation)
+
+- **CRITICAL-1 — scope: option A.** New file(s) only; `group_task_item.dart`,
+  `task_item.dart` and `horizontal_separator.dart` are all left **untouched**. The
+  item ships genuinely **unwired** — no shipped surface changes appearance on merge,
+  and tracker's rows stay optional adopters exactly as the checklist intends. This
+  is available only because 2.6 is an *extraction*; item 2.5 established that an
+  in-place rework can never ship unwired.
+  **Consequence to carry:** `HorizontalSeparator`'s two defects stay open as a
+  follow-up — a hardcoded `Colors.grey` (a §2 colour-law violation of the same
+  shape as the `Colors.red` 2.5 removed, with the `hairline` token already
+  available) and `width: context.screenWidth`. Add to the handover follow-ups when
+  this run completes.
+  **Known tension, accepted:** with no caller anywhere, the new API has to be
+  derived from the design docs rather than a live call site, which sits awkwardly
+  against the "no parameter nothing calls" rule that trimmed `suffixIcon` in 2.5.
+  Keep the API minimal for that reason.
+- **CRITICAL-2 — grain: option B.** Two public components — a row, plus a group
+  container that owns the card fill, r16, clipping, and inserts the hairlines
+  *between* its children. This makes §3.2's load-bearing "hairline between rows
+  only, never a border on both edges" rule **unbreakable by construction** rather
+  than a rule each caller must remember. Accepted cost: a second public class, and
+  the row is usable standalone in a way the spec doesn't sanction.
 
 ## Deviation approvals
 NONE
