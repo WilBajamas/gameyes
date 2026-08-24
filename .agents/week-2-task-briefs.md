@@ -282,14 +282,37 @@ duplicate.
       "Day one" price needs a per-row value colour the minimal API omits — flagged
       for whoever builds Where to play.
 
-- [ ] **2.7 — Error states (4 levels).** `system-foundation-specs.md` §3.2
-      "Error states" row + §3.4 (full detail: Field / Action / Screen / Item).
-      Missing entirely — only the generic `error_retry_widget.dart` and
-      `default_snackbar.dart` exist; none of the four spec'd levels (field-level
-      tinted fill + red hairline; action-level destructive-fill confirmation;
-      screen-level dismissable strip or single-line toast; item-level dimmed card
-      + wordless corner badge) are built. Four sub-components, one item — Tech
-      Lead should confirm that's the right grain rather than four separate runs.
+- [x] **2.7 — Error states.** DONE 2026-08-24, merged to `develop`. Run
+      `error-states-20260824`, commits `7d69ba4` + `9f7e6f8`, QA PASS after 2 cycles.
+      Shipped as `lib/widgets/error_states/` — 5 files: `ErrorDot`,
+      `ErrorNoticeVariant`, `ErrorNotice`, `DestructiveActionPair`, `FailedItem`.
+      Ships **unwired**; `error_retry_widget.dart` and `default_snackbar.dart` are
+      untouched.
+      **THREE levels, not this bullet's four** — the Field level was already shipped
+      by item 2.5's `LabeledTextField`, settled at a gate. 2.7 built Action, Screen
+      and Item only.
+      **The decisive scope finding: §3.4 specs no per-section retry block at all.**
+      `ErrorRetryWidget`'s anatomy comes from §3.2's *Async states* row, not the
+      Error states row — so replacing it would have meant designing a surface no
+      document describes. That is why the item ships unwired rather than rewiring.
+      Two further caller findings: `games_screen.dart:88` renders `ErrorRetryWidget`
+      for an **empty** state (2.8's scope, not 2.7's), and `DefaultSnackbar`'s single
+      caller pushes both success *and* failure through it, so §3.4's error-only toast
+      cannot replace it as-is.
+      Also **the first foundations edit a component run has been permitted**: a
+      `surfaceToast` alias for `#2e3236`, because the existing token with that value
+      is named `surfaceTabChrome` (minted for 2.4's tab bar) and a toast reading that
+      name would look like a bug. `surfaceTabChrome` itself was left alone.
+      **Dead code removed**, narrowly and by explicit decision:
+      `detail_screenshot_section.dart` deleted in full — 66 lines of which 54 were
+      commented out, a live body of `SizedBox.shrink()`, and its only reference also
+      commented out. The dormant `GameScreenshotCubit` / entity / model chain behind
+      it was deliberately **left**, as was `ImageRouteView`'s registration; see the
+      handover follow-up.
+      **One §3.4 spec gap surfaced, needing a design answer rather than a code fix:**
+      `FailedItem`'s badge and the library tick occupy a character-identical
+      `Positioned(top: 8, right: 8)`, so an item that is both in-library and failed
+      stacks them.
 
 - [ ] **2.8 — Async states: shared empty state.**
       `system-foundation-specs.md` §3.2 "Async states" row (empty-state half only

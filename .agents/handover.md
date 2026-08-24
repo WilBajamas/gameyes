@@ -1,10 +1,11 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-24: **week 2 Stage 2 is under way — 6
-of 8 composites done.** Items 2.1 (Game card), 2.2 (Completion ring), 2.3
-(Countdown) and 2.4 (Tab bar) shipped 2026-08-21; **2.5 (Form fields) and 2.6
-(Rows & hairline groups) shipped 2026-08-24**. All merged to `develop`. Stage 1's
-9 primitives were already complete. Full detail below.
+Written 2026-07-29. Last updated 2026-08-24: **week 2 Stage 2 is nearly done — 7
+of 8 composites complete, only 2.8 remains.** Items 2.1 (Game card), 2.2
+(Completion ring), 2.3 (Countdown) and 2.4 (Tab bar) shipped 2026-08-21; **2.5
+(Form fields), 2.6 (Rows & hairline groups) and 2.7 (Error states) shipped
+2026-08-24**. All merged to `develop`. Stage 1's 9 primitives were already
+complete. Full detail below.
 
 ---
 
@@ -129,8 +130,8 @@ is what's left, plus `.agents/manual-check-backlog.md`):
   - **`Flexible` over `Expanded`** around the row's label, under the
     hug-content exception, approved at Phase 3.
 
-**Week 2 Stage 2 (composites) — 6 of 8 done.** 2.1–2.4 shipped 2026-08-21, 2.5 and
-2.6 on 2026-08-24; run folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
+**Week 2 Stage 2 (composites) — 7 of 8 done, only 2.8 left.** 2.1–2.4 shipped
+2026-08-21, 2.5–2.7 on 2026-08-24; run folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
 section before the next one — it points at the visual spec
 (`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
 skills. Explicitly out of scope there: `system-foundation-specs.md` §3.1 (an
@@ -293,6 +294,44 @@ target), and the Add-to-library sheet (needs week 3's Library feature first).
   to be *long*, add a `HairlineGroup.builder` then.
   Two follow-ups left open on purpose — see "Known non-blocking gaps".
 
+- **2.7 Error states** (`lib/widgets/error_states/`, commits `7d69ba4` + `9f7e6f8`) —
+  five files: `ErrorDot`, `ErrorNoticeVariant`, `ErrorNotice`,
+  `DestructiveActionPair`, `FailedItem`. First module folder since 2.4. QA PASS after
+  **2 cycles**. **Ships unwired**; `error_retry_widget.dart` and
+  `default_snackbar.dart` untouched.
+  **Three levels, not §3.4's four** — the Field level was already shipped by 2.5's
+  `LabeledTextField` and 2.7 inherits it. A BA reading §3.4 straight would rebuild it;
+  that was headed off at a gate.
+  **The scope finding that decided the run: §3.4 specs no per-section retry block.**
+  `ErrorRetryWidget`'s anatomy comes from §3.2's *Async states* row, not Error states
+  — so replacing it would have meant designing a surface no doc describes. Two more
+  caller findings worth keeping: `games_screen.dart:88` renders `ErrorRetryWidget` for
+  an **empty** state (2.8's scope), and `DefaultSnackbar`'s one caller pushes success
+  *and* failure through it, so §3.4's error-only toast (red dot) cannot replace it.
+  **The first foundations edit a component run has been permitted** — a `surfaceToast`
+  alias for `#2e3236`, because the existing token holding that value is named
+  `surfaceTabChrome` (from 2.4's tab bar). `surfaceTabChrome` was left alone. Note the
+  trap this created: `app_tokens_test.dart:38-50` asserts three *distinct* raised
+  surfaces via a `Set`, so `surfaceToast` had to stay out of it and go only into
+  `_allColors`.
+  **Two test lessons, both worth more than the component:**
+  - **QA cycle 1 caught a guard that passed by construction.** The AC14 test asserted
+    `find.byType(ErrorNotice)` after a "dismissal", but the harness placed that widget
+    unconditionally and `onDismiss` was the default no-op — a self-suppressing
+    `ErrorNotice` would still have passed. **This was proved rather than argued**: the
+    regression was injected (stateful `_dismissed` flag), the old test passed 7/7
+    against it, the replacement failed. Injecting the regression takes about two
+    minutes and is worth doing whenever a test's whole value is its falsifiability.
+  - **`tdd.md` asserted a tree-shape claim that was false.** It prescribed
+    `find.byType(ColoredBox)` scoped to `ErrorNotice` as "single-match"; the toast's
+    own `ErrorDot` also renders a `ColoredBox`. The design's proudest feature —
+    structural finder discipline — had a hole at exactly the surface it protected. A
+    tree-shape claim is verified by building the tree, not asserted in a doc.
+  **A `dart format` hunk landed unreported.** Dev formatted an allowlisted file and
+  reflowed a pre-existing `Icon` outside the authorised line range. Benign and
+  accepted, but it means **other files in the repo are unformatted** and will churn
+  whenever a formatter next touches them.
+
 **Two conventions worth knowing before the next Stage 2 item**, both learned the
 hard way this session:
 - **§3's type steps keep colliding with "dimensions are even numbers."** Item 1.9
@@ -420,7 +459,9 @@ uncovered.
 - **The whole on-device manual-check backlog now lives in
   `.agents/manual-check-backlog.md`** — **82 checks** as of 2026-08-24 (item
   10.1's four, week 2 Stage 1's twenty, 2.1's eight, 2.2's ten, 2.3's fifteen,
-  2.4's fifteen, 2.5's eight and 2.6's three), every one still unperformed. **Start with 2.4-MC-1 and 2.4-MC-2**
+  2.4's fifteen, 2.5's eight, 2.6's three and 2.7's five), every one still
+  unperformed. **2.2's ten, 2.6's three and 2.7's five all need one scratch harness**
+  — those three modules ship unwired — so a single harness clears eighteen at once. **Start with 2.4-MC-1 and 2.4-MC-2**
   — keyboard activation and the tab bar's colour correction, the two with no
   automated guard at all. That file is the only copy: it was written when the run
   folders were retired, precisely so the checks would outlive the `qa-report.md`
@@ -487,6 +528,28 @@ uncovered.
   debug assertion. A real latent bug, found by item 2.5's Tech Lead while rewiring
   that file and deliberately left unfixed as out of scope. Small and self-contained;
   worth folding into whatever next touches the dialog.
+- **§3.4 has a spec gap: the failed-item badge and the library tick share one slot.**
+  `failed_item.dart:29-31` and `game_card.dart:97` are **character-identical**
+  `Positioned(top: 8, right: 8)`. §3.4 asks the badge to sit "in the same slot as the
+  indigo library tick" and never says what happens when both marks apply — so a game
+  that is in the library *and* failed stacks a red badge on the indigo tick. The
+  implementation followed the spec exactly; **the spec has the hole**, so this needs a
+  design answer, not a code fix. Found by 2.7's QA. `2.7-MC-2` in the backlog says to
+  look at it on device before deciding.
+- **A dormant screenshots feature sits behind the file item 2.7 deleted.** Removing
+  `detail_screenshot_section.dart` orphaned `GameScreenshotCubit` (its only references
+  were inside that file's commented-out block). Also unreferenced behind it:
+  `game_screenshot_entity.dart`, `screenshot.dart`, `screenshot_response_model.dart`.
+  `ImageRouteView` is still registered in `auto_route_config.dart:39` with nothing
+  pushing to it. **`lib/widgets/game_screenshot.dart` is LIVE** — `image_page_view.dart:32`
+  uses it — so it must not be swept up. Deliberately left by human decision at 2.7's
+  gate: deleting it is a feature removal, not a cleanup, and may discard work intended
+  for restoration. Decide it deliberately rather than in passing.
+- **Some files in the repo are not `dart format` clean.** Item 2.7's Dev formatted one
+  allowlisted file and reflowed a pre-existing block inside it. Harmless, but it means
+  any future formatter run produces churn unrelated to the change that triggered it.
+  Worth one deliberate repo-wide `dart format` in a cleanup item rather than letting
+  each run carry a few stray hunks.
 - **`horizontal_separator.dart` still hardcodes `Colors.grey` and forces
   `width: context.screenWidth`** — a §2 colour-law violation of the same shape as
   the `Colors.red` item 2.5 removed, with the `hairline` token already available,
@@ -807,136 +870,158 @@ Before anything else:
   automatically, including subagents' Bash calls), then `flutter pub get` and
   `dart run build_runner build --delete-conflicting-outputs` before trusting any
   baseline.
-- Expect **33 analyzer issues (0 errors, 2 warnings, 31 info)** and **+325 -10**
+- Expect **33 analyzer issues (0 errors, 2 warnings, 31 info)** and **+343 -10**
   on the test suite. Both are correct and neither is drift. The 2 warnings are the
   deliberate `_TaskReminder` pair; the 10 failures are pre-existing in
   tracker_repository_test (4), game_detail_cubit_test (3), games_bloc_test (3).
-  The suite has never been green. The pass count has moved twice recently -- 312 →
-  315 (item 2.5's three tests) → 325 (item 2.6's ten). Verify all of it yourself at
-  Phase 0 rather than inheriting it; item 2.4 found the baseline had moved twice.
+  The suite has never been green. The pass count has moved three times recently:
+  312 → 315 (2.5) → 325 (2.6) → 343 (2.7). Verify it yourself at Phase 0 rather
+  than inheriting it -- item 2.4 found the baseline had moved twice.
 
-Current state: week 2 Stage 1 (9 primitives) is done, and Stage 2 is 6 of 8 --
-items 2.1 through 2.6 are all shipped and merged to develop. **Next is item 2.7 --
-Error states (4 levels).** Run it through /orchestrate as a normal PIPELINE item,
-on the harness-designated session branch (do not create a nested feature/ branch).
+Current state: Stage 1 (9 primitives) is done, and **Stage 2 is 7 of 8 -- only
+item 2.8 remains.** Items 2.1 through 2.7 are all shipped and merged to develop.
+**Next is item 2.8 -- Async states: shared empty state.** Run it through
+/orchestrate as a normal PIPELINE item, on the harness-designated session branch
+(do not create a nested feature/ branch).
 
-What 2.7 is: system-foundation-specs.md §3.2's "Error states" row plus §3.4 (full
-detail). Missing entirely today -- only the generic error_retry_widget.dart and
-default_snackbar.dart exist.
+What 2.8 is: system-foundation-specs.md §3.2's "Async states" row, **empty-state
+half only**. The loading/shimmer half is explicitly OUT of scope and already
+correct -- see project-conventions.md's shimmer catalogue, nothing to change
+there. There is no shared empty-state component today; project-conventions.md
+itself documents the workaround ("use ErrorRetryWidget with custom text... or a
+plain centred Text"), and features like featured improvise their own inline. The
+spec wants: art-deep card, glyph, caps display headline, one line, one action --
+"empty states recruit, they never apologise."
 
-**2.7's scope is REDUCED from what the checklist bullet says, by a human gate
-decision during item 2.5.** The bullet lists four levels: Field, Action, Screen and
-Item. **The Field level is already built** -- item 2.5's LabeledTextField ships the
-tinted fill plus error hairline, and 2.7 inherits it unchanged. So 2.7 covers only
-**Action, Screen and Item**: action-level destructive-fill confirmation,
-screen-level dismissable strip or single-line toast, and item-level dimmed card
-with a wordless corner badge. Do not rebuild the field level, and do not let a BA
-write criteria for it off §3.4's text.
+**Three things are already known about 2.8's territory. Verify them, but start
+from them rather than from scratch:**
 
-The bullet also asks Tech Lead to confirm whether three sub-components in one item
-is the right grain rather than three separate runs. That question is still live and
-should reach the human at a gate.
+1. **`games_screen.dart:88` renders `ErrorRetryWidget` for `GamesStatus.empty`
+   with `S.current.no_results_found`.** Item 2.7 found this and deliberately left
+   it -- it is an EMPTY state wearing an error component, and it is 2.8's to fix.
+   That is a real caller, already identified.
+2. **`library_stats.dart` has a `_DashedBorderPainter`** (`BorderStyle.none, // We
+   want dashed border`) around the empty now-playing card. This violates the
+   standing "outlines are always solid" convention (established at item 1.4) and
+   **the handover has said for several runs that it is 2.8's to fix, not a stray
+   bug to patch in passing.** It is now in scope. Expect the empty now-playing
+   card to be a caller.
+3. **Once 2.8 ships, it supersedes `project-conventions.md`'s empty-state note.**
+   That doc needs updating as part of this item -- the checklist flags it.
 
-**Verify the caller/blast-radius claims before trusting them -- the checklist has
-now been wrong TWICE in Stage 2.** Item 2.1's bullet named two files that never
-referenced the component; item 2.6's called horizontal_separator.dart
-"tracker/task-specific" when its main caller is a game_detail screen. Grep at
-Phase 0. In particular, find every existing error-ish surface (error_retry_widget,
-default_snackbar, and any hand-rolled inline error) before deciding what 2.7
-replaces versus what it adds beside.
+**Ask the rework-vs-extraction question at Phase 0; it decides whether "ship
+unwired" is even available.** The last three items settled this rule:
+- 2.5 (in-place rework): CANNOT ship unwired. Same class, same file changes every
+  caller on merge.
+- 2.6 (extraction, new files): unwired genuinely available.
+- 2.7 (extraction beside incumbents): unwired available, chosen because §3.4
+  specced no replacement for the incumbent.
+2.8 looks different from all three: it has **identified callers that are
+currently wrong** (the two above), so shipping unwired would knowingly leave two
+known-bad surfaces. Put that to the human at a gate rather than assuming either
+way.
 
-**Ask early whether 2.7 is a rework or an extraction -- it decides whether "ship
-unwired" is even available.** This is the single most reusable thing the last two
-items taught:
-- Item 2.5 (rework, in place): an in-place rework CANNOT ship unwired. Same class,
-  same file means every caller changes the moment it merges. "Unwired" only exists
-  by building a second component.
-- Item 2.6 (extraction, new files): shipping unwired was genuinely available,
-  because nothing existing was touched.
-2.7 looks like a mix -- new components, but error_retry_widget.dart and
-default_snackbar.dart already occupy some of that ground. Put the actual shape to
-the human at a gate rather than assuming.
+**Verify the caller list. The checklist has been WRONG about callers three
+times** -- 2.1's named two files that never referenced the component, 2.6's called
+horizontal_separator.dart "tracker-specific" when its main caller is a
+game_detail screen, and 2.7's bullet claimed four levels when one was already
+built. Grep for every improvised empty state at Phase 0 (`featured` is named in
+the bullet; there are likely others) and put the real blast radius to the human.
 
-Five things that recurred across 2.1-2.6 and will probably recur again:
-- BAs write criteria straight from system-foundation-specs.md §3 even where a human
-  decision already overruled that text. It happened twice on the same desaturation
-  filter, and §3.4's field level is now a third instance waiting to happen.
+Five things that recurred across 2.1-2.7 and will probably recur again:
+- BAs write criteria straight from §3 even where a human decision already
+  overruled that text (twice on the desaturation filter, once nearly on §3.4's
+  field level). Check §3 claims against this file's records first.
 - Screen docs outrank §3 where they disagree (precedence rule at
   system-foundation-specs.md lines 6-8). Item 2.3 was settled that way twice.
-- §3's type steps keep colliding with "dimensions are even numbers" -- 1.9, 2.2 and
-  2.5 have all hit 15px and all three worked around it. No 15px token exists;
-  minting one is a foundations change, not a component-run task. (2.6 did NOT hit
-  it -- check before assuming.)
-- Removing a test often removes more than its name suggests. Item 2.2 lost three
-  criteria to one deleted test; 2.4 lost keyboard-activation coverage and the only
-  proof of a colour fix. If asked to trim tests, say what each one carries first.
-- A criterion phrased about position or pixels usually has a checkable form. Item
-  2.6 could not test "hairline between rows only" (positions are never asserted), so
-  it pinned the same guarantee three other ways: a COUNT (N children → N-1
-  separators at N=1,2,3), the ABSENCE of any parameter that could move a separator,
-  and a sibling criterion that the row draws no edge of its own. Reach for that
+- §3's type steps keep colliding with "dimensions are even numbers" -- 1.9, 2.2
+  and 2.5 all hit 15px. No 15px token exists; minting one is a foundations
+  change. (2.6 and 2.7 did NOT hit it -- check, don't assume.)
+- Removing a test often removes more than its name suggests. 2.2 lost three
+  criteria to one deletion; 2.4 lost keyboard-activation coverage. If asked to
+  trim tests, say what each one carries first.
+- **A criterion phrased about position or pixels usually has a checkable form.**
+  2.6 could not test "hairline between rows only", so it pinned a COUNT (N
+  children → N-1 separators) plus the ABSENCE of any parameter that could move
+  one. 2.7 pinned "never both a strip and a toast" the same way. Reach for that
   before marking something manual-only.
+
+**Two test traps, both found the hard way and both likely to recur:**
+- **A test can pass by construction.** QA failed 2.7 cycle 1 for asserting
+  `find.byType(TheWidget)` after an interaction -- but the harness placed that
+  widget unconditionally, so a self-suppressing widget would still have passed.
+  Assert on something the component actually DRAWS, never on the presence of the
+  widget your harness placed. **And prove it: inject the regression the test is
+  meant to catch and confirm the test fails.** It takes about two minutes.
+- **An unscoped `find.byType` in a MaterialApp harness can match something else
+  entirely.** 2.6 found `find.byType(ColoredBox)` matching an unrelated widget,
+  leaving a test asserting nothing. 2.7's design then asserted a
+  "single-match" finder that wasn't -- the toast's own ErrorDot also rendered a
+  ColoredBox. A tree-shape claim is verified by BUILDING the tree, not asserted
+  in a design doc.
 
 Conventions, stricter than older code and older run artifacts show -- re-read the
 skills, do not pattern-match off existing files:
 - Widgets carry NO comments at all. Not "few" -- none.
-- Widget tests never assert dimensions, gaps, radii or positions; colour assertions
-  must carry meaning and name a token; never a golden test. context_chip_test.dart
-  and stat_pill_test.dart are the reference files for shape and length. The
-  flutter-widget-test skill has been revised four times -- re-read it in full.
-- Tests must import only a module's public entry point. QA caught item 2.4's tests
-  reaching into module internals.
-- **Beware an unscoped `find.byType` in a MaterialApp harness.** Item 2.6's Dev
-  caught `find.byType(ColoredBox)` matching an unrelated widget elsewhere in the
-  pumped tree, leaving an "empty state draws no fill" test asserting nothing. Scope
-  finders with `find.descendant(of: find.byType(TheWidget), ...)`. 2.7 builds four
-  error surfaces that will all want container/colour finders -- this will come up.
+- Widget tests never assert dimensions, gaps, radii or positions; colour
+  assertions must carry meaning and name a token; never a golden test.
+  context_chip_test.dart and stat_pill_test.dart are the reference files for shape
+  and length. The flutter-widget-test skill has been revised four times.
+- Tests must import only a module's public entry point.
 - **Module folder vs single file is a per-item judgement, not a rule either way.**
-  2.1-2.4 ship module folders with an enum/ subfolder; 2.5 and 2.6 deliberately ship
-  flat files. The flutter-widgets skill still states the flat "one file per widget
-  family" rule as absolute, which matches neither -- a live follow-up, not a rule to
-  obey blindly. With three sub-components, 2.7 is a real candidate for a folder.
+  2.1-2.4 and 2.7 ship module folders; 2.5 and 2.6 deliberately ship flat files.
+  The flutter-widgets skill still states the flat "one file per widget family"
+  rule as absolute, matching neither -- a live follow-up, not a rule to obey
+  blindly. That contradiction has now been flagged by QA five times.
 
-**Two process rules learned the hard way during 2.6, both now in "Process rules
-currently in force":**
-- **Never `git add -A` while a subagent is live in the same tree.** The orchestrator
-  did, and swept the Dev Agent's in-progress files into a docs commit, splitting
-  that item's implementation across two commits under a misleading message. Stage
-  explicit paths.
-- **If a subagent dies with finished-but-uncommitted work** (2.6's Dev Agent hit an
-  account-wide session limit at its commit step), the orchestrator may commit it --
+**Process rules learned during 2.6/2.7, both in "Process rules currently in
+force":**
+- **Never `git add -A` while a subagent is live in the same tree.** The
+  orchestrator did during 2.6 and swept a Dev Agent's in-progress files into a
+  docs commit, splitting that item's implementation across two commits under a
+  misleading message. Stage explicit paths.
+- **If a subagent dies with finished-but-uncommitted work** (2.6's Dev hit an
+  account session limit at its commit step), the orchestrator may commit it --
   verify the baseline independently first, commit unchanged, state the authorship.
 
 **The manual-check backlog is deliberately NOT being worked during Stage 2.** All
-**85** checks in .agents/manual-check-backlog.md wait until Stage 2's eight items
-are finished, then get performed in one device sitting. Human decision -- do not
-interrupt a pipeline run to perform them, and do not treat the growing count as
-something going wrong. When the sitting happens, start with 2.4-MC-1 and 2.4-MC-2:
-keyboard activation and the tab bar's colour correction are the only two with no
-automated guard at all. Note 2.2's ten and 2.6's three need a scratch harness or a
-first real caller, since those components ship unwired.
+**90** checks in .agents/manual-check-backlog.md wait until Stage 2's eight items
+are shipped, then get performed in one device sitting. **2.8 is the last item, so
+that sitting is next.** Start with 2.4-MC-1 and 2.4-MC-2 (keyboard activation and
+the tab bar's colour correction -- the only two with no automated guard at all).
+Note **2.2's ten, 2.6's three and 2.7's five all need one scratch harness**, since
+those modules ship unwired -- build one harness and clear eighteen at once.
 
-Known follow-ups, none blocking, all itemised in "Known non-blocking gaps": item 3's
-on-device cross-account RLS check (blocked on week 3's Library feature), item 10.1's
-dead-code cleanup, the manual-check backlog above, the now fully-orphaned
-ScrollNotifier ecosystem left behind by 2.4, the flutter-widgets rule text
-contradicting six shipped items in two directions, §3.2's stale desaturation text,
-§1.9 platform-mark conformance, primary_button.dart's unexplained third color.green,
-ButtonPressScale registering no ActivateIntent (a real keyboard-accessibility bug in
-a shared widget), _SignOutButton as a third copy of the ActionRow anatomy,
-add_content_dialog.dart's super.initState() called inside a pattern-match branch (a
-real latent assertion failure), LabeledTextField.onChanged having zero call sites,
+Known follow-ups, none blocking, all itemised in "Known non-blocking gaps": item
+3's on-device cross-account RLS check (blocked on week 3's Library feature), item
+10.1's dead-code cleanup, the manual-check backlog above, the orphaned
+ScrollNotifier ecosystem from 2.4, the flutter-widgets rule text contradicting
+seven shipped items in two directions, §3.2's stale desaturation text, §1.9
+platform-mark conformance, primary_button.dart's unexplained third color.green,
+ButtonPressScale registering no ActivateIntent, _SignOutButton as a third copy of
+the ActionRow anatomy, add_content_dialog.dart's super.initState() inside a
+pattern-match branch, LabeledTextField.onChanged having zero call sites,
 horizontal_separator.dart's hardcoded Colors.grey and screen-width sizing, §4.4's
-green "Day one" price having no home in LabelValueRow's API, the 15px token, and a
-pre-existing dashed-border violation in library_stats.dart that is item 2.8's to fix,
-not a stray bug to patch in passing.
+green "Day one" price having no home in LabelValueRow's API, the 15px token,
+**§3.4's badge/library-tick slot collision** (a spec gap needing a design answer,
+found by 2.7), **the dormant screenshots chain left behind when 2.7 deleted
+detail_screenshot_section.dart** (GameScreenshotCubit, the entity and two models,
+plus ImageRouteView's registration -- note game_screenshot.dart is LIVE and must
+not be swept up), and **some files not being `dart format` clean**, which makes
+any future formatter run produce unrelated churn.
 
 Two environment things that will waste your time otherwise: remote branch deletion
 is blocked by the egress proxy (gotcha #11 -- merged claude/* branches have to be
 deleted by hand in the GitHub UI, don't retry the 403), and the custom
 ba-agent/tech-lead-agent/dev-agent/qa-agent types may be missing at session start
-(gotcha #7 has the fallback). Note also that the Skill tool was disabled for
-subagents throughout the 2.6 session -- every phase worked around it by reading
-.claude/skills/<name>/SKILL.md directly from disk. Tell them to do that if it
-recurs.
+(gotcha #7 has the fallback). Note also that **the Skill tool was disabled for
+subagents throughout the 2.6 and 2.7 sessions** -- every phase worked around it by
+reading .claude/skills/<name>/SKILL.md directly from disk. Tell them to do that if
+it recurs.
+
+**When 2.8 ships, week 2 is complete.** `.agents/week-2-task-briefs.md`'s own top
+note says to delete it once the whole week ships -- but see gotcha #9 first:
+actually grep the destination to confirm anything worth keeping has been promoted
+into this file or `.agents/references/`, rather than trusting that an earlier step
+handled it. That mistake has already happened once with week 1's checklist.
 ```

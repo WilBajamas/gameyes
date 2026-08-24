@@ -20,7 +20,9 @@ available, ideally in one sitting per screen rather than one item at a time.
 
 **Scheduled: after week 2 Stage 2 finishes.** Human decision, 2026-08-22 — the
 whole backlog waits until all eight Stage 2 items are shipped, then gets worked in
-one device sitting. **85 checks** as of 2026-08-24 (2.5 added eight, 2.6 three). Do not interrupt a pipeline run to perform these, and do not
+one device sitting. **90 checks** as of 2026-08-24 (2.5 added eight, 2.6 three, 2.7
+five). Note 2.2's ten, 2.6's three and 2.7's five all need a scratch harness — those
+three modules ship unwired — so build one harness and clear eighteen at once. Do not interrupt a pipeline run to perform these, and do not
 read the growing count as a problem. **Start with `2.4-MC-1` and `2.4-MC-2`** when
 the sitting happens: keyboard activation and the tab bar's colour correction are
 the only two entries here with no automated guard at all — everything else is
@@ -444,6 +446,39 @@ the components rather than building a harness twice.
 - **2.6-MC-3** `[2.6-AC10]` — Same group — expect each separator to read as a 1px
   hairline at the `hairline` token, and confirm by eye what the tests already prove
   by count: a separator between rows only, never above the first or below the last.
+
+---
+
+## Week 2 Stage 2 — item 2.7 (Error states)
+
+From the `error-states-20260824` run, QA `PASS — pending manual checks` after 2
+cycles. Thirty of thirty-five criteria passed automatically; these five are visual.
+
+**All five need a scratch harness** — the `error_states/` module ships **unwired**,
+with no caller anywhere. Same position as 2.2's ring and 2.6's rows. One harness
+hosting all three levels would clear these in a single sitting.
+
+- **2.7-MC-1** `[2.7-AC10]` — Host an `ErrorNotice` in each variant — the **strip**
+  reads as an error-tinted panel with a 1px `errorLine` edge and its message in
+  `errorInk`; the **toast** reads as a single line on `surfaceToast` (`#2e3236`)
+  carrying a red dot rather than an icon, with its message in `ink`. Confirm the
+  toast holds one line at 390px width.
+- **2.7-MC-2** `[2.7-AC26]` — **Known spec gap, check what it actually looks like.**
+  Host a `FailedItem` wrapping a `GameCard` that is *also* in the library.
+  `failed_item.dart:29-31` and `game_card.dart:97` are character-identical
+  `Positioned(top: 8, right: 8)`, so the red badge lands directly on the indigo
+  library tick. §3.4 asks for the same slot and never says what happens when both
+  marks apply. **This needs a design answer, not a code fix** — see the handover
+  follow-up. Look at it before deciding.
+- **2.7-MC-3** `[2.7-AC29]` — Open Game Detail and confirm the screenshots deletion
+  changed nothing visible: the "Screenshots" heading still renders and no gap or
+  stray spacing appeared where the commented-out section used to sit.
+- **2.7-MC-4** `[2.7-AC13/15/17]` — `ErrorNotice` strip: the dismiss control reads as
+  tappable at a 44px target, and dismissing then re-showing the strip looks
+  identical the second time.
+- **2.7-MC-5** `[2.7-AC21]` — `FailedItem`: the child dims to 55% *including cover
+  artwork* (an opacity, not a text recolour), the error hairline is visible against
+  the dimmed content, and the corner badge carries no text at any size.
 
 ---
 
