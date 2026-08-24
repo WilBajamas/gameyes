@@ -36,8 +36,8 @@ action is **required**, not optional.
 | 5 `featured_screen` countdown section | goes to Browse |
 
 **Sites 4 and 5 are a tab switch, not a push.** Browse is a tab inside the home
-tabs router (`auto_route_config.dart:28`, index 3 of featured/games/tracker/
-browse/settings), so `context.router.push(BrowseRoute())` would stack a Browse
+tabs router (`lib/config/route/auto_route_config.dart:28` — note `route/`, singular, not
+`router/`; index 3 of featured/games/tracker/browse/settings), so `context.router.push(BrowseRoute())` would stack a Browse
 screen *over* the Featured tab and leave the tab bar's active cap on Featured.
 The shipped pattern in this exact file is
 `AutoTabsRouter.of(context).setActiveIndex(n)` — `featured_screen.dart:143-146`
