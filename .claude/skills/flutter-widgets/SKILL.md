@@ -169,6 +169,7 @@ actually match the requirement.
 | `CompletionRing` | `completion_ring/completion_ring.dart` | Circular completion ring at three fixed sizes (60 inline, 80 specimen, 88 detail): ink-12 track with a proportional arc over it and the truncated percentage centred inside, plus an optional caption at the two larger sizes. Indigo below 100, a closed magenta ring at exactly 100; value clamps to 0–100 and never throws. Display-only, unanimated, not a hit target; adds no spacing of its own |
 | `LabelValueRow` | `label_value_row.dart` | Dense-list row: required label at full ink taking the leftover width, required value at ink-70 beside it, optional trailing chevron. Draws no fill, radius or edge of its own — surface and hairlines belong to `HairlineGroup`. Display-only, not a tap target; adds no spacing of its own |
 | `HairlineGroup` | `hairline_group.dart` | Raised card wrapping any list of children: `surfaceRaised` fill at r16, clipped, with a 1px hairline between each adjacent pair — exactly N−1 for N children, never on an outer edge. `children` is the only parameter, so hairline placement cannot be added, removed or moved by a caller. Renders nothing when given no children; adds no spacing of its own |
+| `EmptyStateCard` | `empty_state_card.dart` | Empty-state card on `surfaceRaised` at r16: optional 44px glyph, a caps headline rendered from a normal-case string, one supporting line at `ink70` that wraps rather than truncating, and one required action built from `PrimaryButton`. No border, no fixed height, no actionless variant; adds no spacing of its own |
 
 ## UI patterns every screen reuses
 
@@ -182,7 +183,6 @@ for any error state that supports retry:
 ```dart
 ErrorRetryWidget(
   onRetryClicked: () => context.read<GamesBloc>().add(const GamesFetched()),
-  text: S.current.no_results_found, // optional — omit for generic error text
   padding: const EdgeInsets.all(16), // optional
 )
 ```
@@ -215,9 +215,12 @@ ScaffoldMessenger.of(context).showSnackBar(
 );
 ```
 
-**Empty state** — no dedicated `EmptyStateWidget` today. Use
-`ErrorRetryWidget` with custom `text` when retry is meaningful; otherwise a
-plain centred `Text`, localised, `textAlign: TextAlign.center`.
+**Empty state** — use `EmptyStateCard` (`lib/widgets/empty_state_card.dart`) for
+every empty branch. Its anatomy is fixed: a raised-surface card at r-lg carrying
+an optional glyph, a headline the component renders in caps from a normal-case
+`.arb` value, exactly one supporting line, and exactly one action. All four text
+and callback slots are required — there is no actionless variant, and the card
+adds no spacing of its own, so the caller owns the surrounding layout.
 
 ## System bars and SafeArea
 

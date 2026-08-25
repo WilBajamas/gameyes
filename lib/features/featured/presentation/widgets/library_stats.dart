@@ -7,6 +7,7 @@ import 'package:gaming_library_assessment_flutter/features/featured/domain/repos
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
+import 'package:gaming_library_assessment_flutter/widgets/empty_state_card.dart';
 import 'package:gaming_library_assessment_flutter/widgets/stat_pill.dart';
 
 /// TODO: Refactor this widget - too long and many redundant things
@@ -268,73 +269,12 @@ class LibraryStatsWidget extends StatelessWidget {
     List<SavedGame> playingGames,
   ) {
     if (playingGames.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: context.themeData.colorScheme.outline.withValues(alpha: 0.3),
-            style: BorderStyle.none, // We want dashed border
-          ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: CustomPaint(
-            painter: _DashedBorderPainter(
-              color: context.themeData.colorScheme.outline.withValues(
-                alpha: 0.5,
-              ),
-              strokeWidth: 1.5,
-              dashWidth: 6.0,
-              dashSpace: 4.0,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.play_circle_outline_rounded,
-                    size: 44,
-                    color: context.themeData.colorScheme.onSurfaceVariant
-                        .withValues(alpha: 0.5),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    S.current.no_game_in_progress,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: context.themeData.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: onMarkNowPlaying,
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 8,
-                      ),
-                      backgroundColor: context.themeData.colorScheme.primary
-                          .withValues(alpha: 0.1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: Text(
-                      S.current.mark_something_playing,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: context.themeData.colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      return EmptyStateCard(
+        glyph: Icons.play_circle_outline_rounded,
+        headline: S.current.no_game_in_progress,
+        supportingLine: S.current.pick_a_game_to_start_logging,
+        actionLabel: S.current.mark_something_playing,
+        onActionPressed: onMarkNowPlaying,
       );
     }
 
@@ -489,52 +429,4 @@ class LibraryStatsWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-class _DashedBorderPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double dashWidth;
-  final double dashSpace;
-
-  _DashedBorderPainter({
-    required this.color,
-    this.strokeWidth = 1.5,
-    this.dashWidth = 6.0,
-    this.dashSpace = 4.0,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-
-    final path = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-          const Radius.circular(16),
-        ),
-      );
-
-    final dashPath = Path();
-    for (final pathMetric in path.computeMetrics()) {
-      var distance = 0.0;
-      while (distance < pathMetric.length) {
-        final len = dashWidth;
-        dashPath.addPath(
-          pathMetric.extractPath(distance, distance + len),
-          Offset.zero,
-        );
-        distance += len + dashSpace;
-      }
-    }
-
-    canvas.drawPath(dashPath, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

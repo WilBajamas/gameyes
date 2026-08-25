@@ -154,7 +154,7 @@
   "this_week": "This Week",
   "now_playing": "Now Playing",
   "no_game_in_progress": "No game in progress",
-  "mark_something_playing": "Mark something as playing →",
+  "mark_something_playing": "Mark something as playing",
   "active": "Active",
   "completed_percentage": "{percentage}% completed",
   "@completed_percentage": {
@@ -215,5 +215,16 @@
   },
   "on_your_wishlist": "On your wishlist",
   "most_anticipated": "Most anticipated",
-  "remind": "Remind"
+  "remind": "Remind",
+  "try_widening_your_filters": "Widen your filters and more of the catalogue comes into view.",
+  "search_again": "Search again",
+  "pick_a_game_to_start_logging": "Pick a game from your library and start logging hours.",
+  "open_up_your_genres": "Open up your genres",
+  "every_pick_without_a_genre_filter": "Clear the genre filter to see every pick critics made this week.",
+  "show_every_pick": "Show every pick",
+  "look_further_ahead": "Look further ahead",
+  "browse_for_your_next_game": "Browse the catalogue and line up what you play next.",
+  "browse_games": "Browse games",
+  "start_a_countdown": "Start a countdown",
+  "wishlist_a_game_to_track_release": "Wishlist an upcoming game and its release lands here."
 }
