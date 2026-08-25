@@ -21,8 +21,15 @@ available, ideally in one sitting per screen rather than one item at a time.
 **Scheduled: after week 2 Stage 2 finishes — which it now has.** Human decision,
 2026-08-22 — the whole backlog waits until all eight Stage 2 items are shipped, then
 gets worked in one device sitting. **Item 2.8 shipped 2026-08-25 and was the last
-one, so that sitting is now the next task.** **95 checks** as of 2026-08-25 (2.5
-added eight, 2.6 three, 2.7 five, 2.8 five). Note 2.2's ten, 2.6's three and 2.7's
+one, so that sitting is now the next task.**
+
+**92 checks** as of 2026-08-25, **counted from this file rather than carried
+forward**. Every previously quoted total was wrong: this file said 90 and
+`handover.md` said 82, while the itemised list in `handover.md` summed to 88. The
+real breakdown is item 10.1's **4**, week 2 Stage 1's **19** (not twenty — 1.1×1,
+1.2×2, 1.3×7, 1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **69**
+(2.1×8, 2.2×10, 2.3×15, 2.4×15, 2.5×8, 2.6×3, 2.7×5, 2.8×5). Recount here rather
+than trusting a quoted total — three of them had drifted. Note 2.2's ten, 2.6's three and 2.7's
 five all need a scratch harness — those three modules ship unwired — so build one
 harness and clear eighteen at once; 2.8's five need no harness, and four of them sit
 on Featured in one sitting. Do not interrupt a pipeline run to perform these, and do not

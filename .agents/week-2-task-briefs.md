@@ -314,17 +314,29 @@ duplicate.
       `Positioned(top: 8, right: 8)`, so an item that is both in-library and failed
       stacks them.
 
-- [ ] **2.8 — Async states: shared empty state.**
-      `system-foundation-specs.md` §3.2 "Async states" row (empty-state half only
-      — the loading/shimmer half is already correct and out of scope here: see
-      `project-conventions.md`'s shimmer catalogue, nothing to change). Missing —
-      there's no shared empty-state component; `project-conventions.md` itself
-      documents the current workaround ("use `ErrorRetryWidget` with custom
-      text... or a plain centred `Text`"), and features like `featured` improvise
-      their own inline. Spec wants: art-deep card, glyph, caps display headline,
-      one line, one action — "empty states recruit, they never apologise." Once
-      built, this supersedes the `project-conventions.md` empty-state note — flag
-      that doc for an update when this ships.
+- [x] **2.8 — Async states: shared empty state.** DONE 2026-08-25, merged to
+      `develop` at `41829d0`. Run `async-empty-state-20260824`, QA PASS, 0 cycles.
+      `lib/widgets/empty_state_card.dart` (a flat file, not a module folder) plus
+      `EmptyStateCard` wired at **five** call sites. Dev commit `6199114`.
+      **The caller count in this bullet was wrong, the fourth Stage 2 bullet to be
+      so.** Phase 0's grep found **seven** improvised empty states, not the two the
+      handover carried. Five were fixed: `games_screen.dart` (an `ErrorRetryWidget`
+      rendering an *empty* state), `library_stats.dart`'s dashed now-playing card,
+      and `critics_grid.dart` / `countdown_releases.dart`, both of which held
+      **hardcoded, untranslated English** in improvised 160/170px containers. The
+      human also ruled `featured_screen.dart`'s `SizedBox.shrink()` in scope, so a
+      section that vanished silently now recruits. The two tracker plain-text sites
+      were ruled out of scope and are still open — see `handover.md`.
+      **This bullet also named the wrong doc.** The empty-state note it says to
+      supersede is not in `project-conventions.md`; it moved into
+      `.claude/skills/flutter-widgets/SKILL.md` in the 2026-08-07 restructuring.
+      The skill was updated instead.
+      **Two spec gaps recorded rather than invented around.** §3.2's "art-deep card"
+      fill has no value anywhere in the project and no art surface exists, so the
+      card ships on `surfaceRaised` by human decision — §2.2's "art-deep is the
+      empty-state card fill" is unimplemented app-side. And §3.2's mandatory "one
+      action" had no target at three of the five sites; destinations were named at
+      the gate rather than assumed.
 
 ---
 
@@ -345,9 +357,18 @@ duplicate.
 - [x] **Rewiring scope for 2.1 (Game card)** — settled 2026-08-21: rewired in the
       same run (Option B). Note the checklist's own caller list for 2.1 was wrong;
       verify 2.5's before trusting it too.
-- [ ] **Rewiring scope for 2.5 (Form fields)** — has multiple existing callers.
-      That item's own BA/Tech Lead phase should size the blast radius and decide
-      whether rewiring belongs in the same run or ships as a follow-up, rather
-      than this checklist guessing.
-- [ ] **2.7's grain** — four error-state levels in one task-brief vs. four. Tech
-      Lead's call when that item runs.
+- [x] **Rewiring scope for 2.5 (Form fields)** — settled inside the 2.5 run,
+      2026-08-24: all 7 call sites across 3 files rewired in the same run, because
+      an in-place rework has no other option. `DefaultBorderTextField` was deleted,
+      not deprecated. The run also established that **"ship unwired" was a false
+      choice here** — the same class in the same file changes every caller the
+      moment it merges; unwired only exists by building a second component beside
+      the old one.
+- [x] **2.7's grain** — settled inside the 2.7 run, 2026-08-24: **three** levels in
+      one task brief, not four. The Field level had already shipped as 2.5's
+      `LabeledTextField`, so 2.7 inherited it rather than rebuilding it — caught at
+      a gate, since a BA reading §3.4 straight would have rebuilt it.
+- [x] **Rewiring scope for 2.8 (Async states)** — settled at that run's Phase 0
+      gate, 2026-08-25: wired in the same run at five of the seven sites Phase 0
+      found. Shipping unwired was mechanically available (2.8 is an extraction) but
+      was rejected because two of the callers were already known-bad.
