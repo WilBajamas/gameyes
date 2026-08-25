@@ -18,11 +18,14 @@ leaving a failing check sitting here.
 None of these block anything. They are a debt to settle when a device is
 available, ideally in one sitting per screen rather than one item at a time.
 
-**Scheduled: after week 2 Stage 2 finishes.** Human decision, 2026-08-22 — the
-whole backlog waits until all eight Stage 2 items are shipped, then gets worked in
-one device sitting. **90 checks** as of 2026-08-24 (2.5 added eight, 2.6 three, 2.7
-five). Note 2.2's ten, 2.6's three and 2.7's five all need a scratch harness — those
-three modules ship unwired — so build one harness and clear eighteen at once. Do not interrupt a pipeline run to perform these, and do not
+**Scheduled: after week 2 Stage 2 finishes — which it now has.** Human decision,
+2026-08-22 — the whole backlog waits until all eight Stage 2 items are shipped, then
+gets worked in one device sitting. **Item 2.8 shipped 2026-08-25 and was the last
+one, so that sitting is now the next task.** **95 checks** as of 2026-08-25 (2.5
+added eight, 2.6 three, 2.7 five, 2.8 five). Note 2.2's ten, 2.6's three and 2.7's
+five all need a scratch harness — those three modules ship unwired — so build one
+harness and clear eighteen at once; 2.8's five need no harness, and four of them sit
+on Featured in one sitting. Do not interrupt a pipeline run to perform these, and do not
 read the growing count as a problem. **Start with `2.4-MC-1` and `2.4-MC-2`** when
 the sitting happens: keyboard activation and the tab bar's colour correction are
 the only two entries here with no automated guard at all — everything else is
@@ -479,6 +482,55 @@ hosting all three levels would clear these in a single sitting.
 - **2.7-MC-5** `[2.7-AC21]` — `FailedItem`: the child dims to 55% *including cover
   artwork* (an opacity, not a text recolour), the error hairline is visible against
   the dimmed content, and the corner badge carries no text at any size.
+
+---
+
+## Week 2 Stage 2 — item 2.8 (Async states: shared empty state)
+
+From the `async-empty-state-20260824` run, QA `PASS — pending manual checks`, 0
+cycles. Twenty-six of twenty-eight criteria passed automatically; AC-15 and AC-16
+are worded observationally and cannot be asserted, and the rest are visual.
+
+**None of these need a scratch harness** — unlike 2.2, 2.6 and 2.7, this module
+ships **wired** at five live sites, so every check is reachable by driving the real
+app. Sites 3, 4 and 5 all live on **Featured**, so one Featured sitting covers
+2.8-MC-1 through 2.8-MC-4.
+
+- **2.8-MC-1** `[2.8-AC15]` — Featured, with a countdown game present but the weekly
+  releases list empty (site 4, the card headed "LOOK FURTHER AHEAD" below the
+  countdown card) — tap **Browse games**. Expect the home tab bar to move its active
+  cap to Browse and Browse's own content to appear, with the back gesture returning
+  to the previous tab — *not* to Featured underneath a pushed page. This is the
+  check that the tab-switch design (`setActiveIndex`, not `router.push`) actually
+  behaves as intended.
+- **2.8-MC-2** `[2.8-AC16]` — Featured with no countdown game and no weekly releases
+  (site 5, the card headed "START A COUNTDOWN") — expect the Right Now section to
+  render the card in the slot that previously rendered nothing, with no section
+  heading above it, and the sections below pushed down but not visually broken. Tap
+  **Browse games** and expect the same tab switch as 2.8-MC-1. **This section had
+  zero height before this item**, so it is the most likely place for a layout
+  surprise.
+- **2.8-MC-3** `[2.8-AC14]` — **Human-approved side effect, confirm it looks right.**
+  Featured with genre preferences selected and the critics grid empty (site 3, "OPEN
+  UP YOUR GENRES") — tap **Show every pick**. Expect exactly one reload, and expect
+  the genre-picker row above the grid to disappear, because `skipGenrePreferences()`
+  also sets `isSkipped: true`. Approved at this run's Phase 3 gate; the check is
+  whether the section looks coherent with the picker gone, not whether it happens.
+- **2.8-MC-4** — `EmptyStateCard`'s appearance at all five sites: one raised-surface
+  card (`#2F333C`) at r16 holding, top to bottom, an optional 44px glyph at ink55, a
+  capitalised headline at 22/700 in full ink, one wrapping supporting line at
+  16/1.45/400 in ink70, and one full-width green primary button. **Sites 3 and 4 lost
+  fixed heights of 160 and 170**, and sites 3–5 lost their old surface, so check none
+  overflows or collapses. Site 2's card must read as solid-edged and undashed — that
+  card is the "outlines are always solid" violation this item was reserved to fix.
+  Note the card declares no width of its own; it fills its parent only because
+  `PrimaryButton` sets `width: double.infinity`.
+- **2.8-MC-5** — **A judgement call, not a pass/fail.** Games grid, filtered to
+  return nothing (site 1) — the headline renders "NO RESULTS FOUND". That is the
+  reused `no_results_found` key AC-24 mandates, so it is correct as shipped, but it
+  is the one empty state in the set that still reads as an apology rather than an
+  invitation, against §3.2's "empty states recruit, they never apologise." Decide on
+  device whether to raise a follow-up to reword that key.
 
 ---
 
