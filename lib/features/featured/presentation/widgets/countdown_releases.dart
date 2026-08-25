@@ -1,9 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/widgets/countdown/countdown_card.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
+import 'package:gaming_library_assessment_flutter/widgets/empty_state_card.dart';
 import 'package:gaming_library_assessment_flutter/widgets/library_tick.dart';
+
+import '../../../../generated/l10n.dart';
 
 class CountdownReleasesWidget extends StatelessWidget {
   final GameEntity? countdownGame;
@@ -81,23 +85,12 @@ class CountdownReleasesWidget extends StatelessWidget {
 
   Widget _buildReleasesList(BuildContext context) {
     if (outThisWeekGames.isEmpty) {
-      return Container(
-        height: 170,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: context.themeData.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Center(
-          child: Text(
-            'No releases in this period',
-            style: TextStyle(
-              color: context.themeData.colorScheme.onSurfaceVariant.withValues(
-                alpha: .6,
-              ),
-            ),
-          ),
-        ),
+      return EmptyStateCard(
+        glyph: Icons.calendar_month_outlined,
+        headline: S.current.look_further_ahead,
+        supportingLine: S.current.browse_for_your_next_game,
+        actionLabel: S.current.browse_games,
+        onActionPressed: () => AutoTabsRouter.of(context).setActiveIndex(3),
       );
     }
 

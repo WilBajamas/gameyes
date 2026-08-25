@@ -154,7 +154,7 @@
   "this_week": "本周",
   "now_playing": "正在玩",
   "no_game_in_progress": "目前没有正在进行的游戏",
-  "mark_something_playing": "标记一些游戏为正在玩 →",
+  "mark_something_playing": "标记一些游戏为正在玩",
   "active": "活跃",
   "completed_percentage": "已完成 {percentage}%",
   "@completed_percentage": {
@@ -215,5 +215,16 @@
   },
   "on_your_wishlist": "在你的愿望单中",
   "most_anticipated": "最受期待",
-  "remind": "提醒"
+  "remind": "提醒",
+  "try_widening_your_filters": "放宽筛选条件，就能看到更多游戏。",
+  "search_again": "重新搜索",
+  "pick_a_game_to_start_logging": "从你的游戏库中选一款，开始记录时长。",
+  "open_up_your_genres": "放开你的类型偏好",
+  "every_pick_without_a_genre_filter": "清除类型筛选，就能看到本周媒体的全部推荐。",
+  "show_every_pick": "显示全部推荐",
+  "look_further_ahead": "看看更远的未来",
+  "browse_for_your_next_game": "浏览游戏库，安排你接下来要玩的游戏。",
+  "browse_games": "浏览游戏",
+  "start_a_countdown": "开启一个倒计时",
+  "wishlist_a_game_to_track_release": "将即将推出的游戏加入心愿单，它的发售就会出现在这里。"
 }

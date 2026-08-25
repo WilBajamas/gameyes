@@ -15,6 +15,7 @@ import 'package:gaming_library_assessment_flutter/features/featured/presentation
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/widgets/critics_grid.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/widgets/library_stats.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
+import 'package:gaming_library_assessment_flutter/widgets/empty_state_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 @RoutePage()
@@ -197,7 +198,14 @@ class _RightNowSection extends StatelessWidget {
             }
 
             if (state.countdownGame == null && state.outThisWeekGames.isEmpty) {
-              return const SizedBox.shrink();
+              return EmptyStateCard(
+                glyph: Icons.timer_outlined,
+                headline: S.current.start_a_countdown,
+                supportingLine: S.current.wishlist_a_game_to_track_release,
+                actionLabel: S.current.browse_games,
+                onActionPressed: () =>
+                    AutoTabsRouter.of(context).setActiveIndex(3),
+              );
             }
 
             return CountdownReleasesWidget(

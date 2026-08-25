@@ -76,6 +76,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Best of the year",
     ),
     "browse": MessageLookupByLibrary.simpleMessage("Browse"),
+    "browse_for_your_next_game": MessageLookupByLibrary.simpleMessage(
+      "浏览游戏库，安排你接下来要玩的游戏。",
+    ),
+    "browse_games": MessageLookupByLibrary.simpleMessage("浏览游戏"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "coming_soon": MessageLookupByLibrary.simpleMessage("即将推出"),
     "complete_onboarding_steps": MessageLookupByLibrary.simpleMessage(
@@ -115,6 +119,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dropped": MessageLookupByLibrary.simpleMessage("弃坑"),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "error_results": MessageLookupByLibrary.simpleMessage("获取结果失败"),
+    "every_pick_without_a_genre_filter": MessageLookupByLibrary.simpleMessage(
+      "清除类型筛选，就能看到本周媒体的全部推荐。",
+    ),
     "failed_to_load_countdown_game": MessageLookupByLibrary.simpleMessage(
       "加载倒计时游戏失败",
     ),
@@ -163,10 +170,11 @@ class MessageLookup extends MessageLookupByLibrary {
       "加载游戏标题",
     ),
     "logged_hours_of": m4,
+    "look_further_ahead": MessageLookupByLibrary.simpleMessage("看看更远的未来"),
     "mark_button": MessageLookupByLibrary.simpleMessage("+ 标记"),
     "mark_playing_now": MessageLookupByLibrary.simpleMessage("标记你现在正在玩的游戏"),
     "mark_something_playing": MessageLookupByLibrary.simpleMessage(
-      "标记一些游戏为正在玩 →",
+      "标记一些游戏为正在玩",
     ),
     "metacritic_score": MessageLookupByLibrary.simpleMessage("综合评分"),
     "missed": MessageLookupByLibrary.simpleMessage("Missed"),
@@ -199,7 +207,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "only_10_group_tasks_allowed": MessageLookupByLibrary.simpleMessage(
       "Only a maximum of 10 group tasks are allowed.",
     ),
+    "open_up_your_genres": MessageLookupByLibrary.simpleMessage("放开你的类型偏好"),
     "ordering": MessageLookupByLibrary.simpleMessage("排序"),
+    "pick_a_game_to_start_logging": MessageLookupByLibrary.simpleMessage(
+      "从你的游戏库中选一款，开始记录时长。",
+    ),
     "platforms": MessageLookupByLibrary.simpleMessage("主机选择"),
     "played_hours": m6,
     "playing": MessageLookupByLibrary.simpleMessage("在玩"),
@@ -231,6 +243,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "retry": MessageLookupByLibrary.simpleMessage("重试"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "screenshots": MessageLookupByLibrary.simpleMessage("截图"),
+    "search_again": MessageLookupByLibrary.simpleMessage("重新搜索"),
     "search_games": MessageLookupByLibrary.simpleMessage("搜索游戏"),
     "search_saved_games": MessageLookupByLibrary.simpleMessage(
       "Search saved games",
@@ -240,7 +253,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "set_title_here": MessageLookupByLibrary.simpleMessage("Set title here"),
     "settings": MessageLookupByLibrary.simpleMessage("设置"),
+    "show_every_pick": MessageLookupByLibrary.simpleMessage("显示全部推荐"),
     "skip": MessageLookupByLibrary.simpleMessage("跳过"),
+    "start_a_countdown": MessageLookupByLibrary.simpleMessage("开启一个倒计时"),
     "step_added": MessageLookupByLibrary.simpleMessage("Step has been added"),
     "task_screenshots": MessageLookupByLibrary.simpleMessage(
       "Task screenshots",
@@ -259,6 +274,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
     "total_games": MessageLookupByLibrary.simpleMessage("总游戏数"),
     "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),
+    "try_widening_your_filters": MessageLookupByLibrary.simpleMessage(
+      "放宽筛选条件，就能看到更多游戏。",
+    ),
     "welcome_body_one": MessageLookupByLibrary.simpleMessage(
       "你打通的、弃坑的、积灰的游戏，全都在一处 —— 312 款还是 3 款都一样。",
     ),
@@ -271,6 +289,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "欢迎来到 GameYes 🎮",
     ),
     "wishlist": MessageLookupByLibrary.simpleMessage("心愿单"),
+    "wishlist_a_game_to_track_release": MessageLookupByLibrary.simpleMessage(
+      "将即将推出的游戏加入心愿单，它的发售就会出现在这里。",
+    ),
     "wishlist_button": MessageLookupByLibrary.simpleMessage("+ 心愿单"),
     "wishlist_upcoming_game": MessageLookupByLibrary.simpleMessage(
       "将即将推出的游戏加入心愿单",

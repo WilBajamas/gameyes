@@ -88,6 +88,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Best of the year",
     ),
     "browse": MessageLookupByLibrary.simpleMessage("Browse"),
+    "browse_for_your_next_game": MessageLookupByLibrary.simpleMessage(
+      "Browse the catalogue and line up what you play next.",
+    ),
+    "browse_games": MessageLookupByLibrary.simpleMessage("Browse games"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "coming_soon": MessageLookupByLibrary.simpleMessage("Coming Soon"),
     "complete_onboarding_steps": MessageLookupByLibrary.simpleMessage(
@@ -130,6 +134,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "error_results": MessageLookupByLibrary.simpleMessage(
       "Error retrieving results",
+    ),
+    "every_pick_without_a_genre_filter": MessageLookupByLibrary.simpleMessage(
+      "Clear the genre filter to see every pick critics made this week.",
     ),
     "failed_to_load_countdown_game": MessageLookupByLibrary.simpleMessage(
       "Failed to load countdown game",
@@ -183,12 +190,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "Loading Game Title",
     ),
     "logged_hours_of": m4,
+    "look_further_ahead": MessageLookupByLibrary.simpleMessage(
+      "Look further ahead",
+    ),
     "mark_button": MessageLookupByLibrary.simpleMessage("+ Mark"),
     "mark_playing_now": MessageLookupByLibrary.simpleMessage(
       "Mark what you\'re playing now",
     ),
     "mark_something_playing": MessageLookupByLibrary.simpleMessage(
-      "Mark something as playing →",
+      "Mark something as playing",
     ),
     "metacritic_score": MessageLookupByLibrary.simpleMessage(
       "Metacritic score",
@@ -231,7 +241,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "only_10_group_tasks_allowed": MessageLookupByLibrary.simpleMessage(
       "Only a maximum of 10 group tasks are allowed.",
     ),
+    "open_up_your_genres": MessageLookupByLibrary.simpleMessage(
+      "Open up your genres",
+    ),
     "ordering": MessageLookupByLibrary.simpleMessage("Ordering"),
+    "pick_a_game_to_start_logging": MessageLookupByLibrary.simpleMessage(
+      "Pick a game from your library and start logging hours.",
+    ),
     "platforms": MessageLookupByLibrary.simpleMessage("Platforms"),
     "played_hours": m6,
     "playing": MessageLookupByLibrary.simpleMessage("Playing"),
@@ -265,6 +281,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "screenshots": MessageLookupByLibrary.simpleMessage("Screenshots"),
+    "search_again": MessageLookupByLibrary.simpleMessage("Search again"),
     "search_games": MessageLookupByLibrary.simpleMessage("Search games"),
     "search_saved_games": MessageLookupByLibrary.simpleMessage(
       "Search saved games",
@@ -274,7 +291,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "set_title_here": MessageLookupByLibrary.simpleMessage("Set title here"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "show_every_pick": MessageLookupByLibrary.simpleMessage("Show every pick"),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+    "start_a_countdown": MessageLookupByLibrary.simpleMessage(
+      "Start a countdown",
+    ),
     "step_added": MessageLookupByLibrary.simpleMessage("Step has been added"),
     "task_screenshots": MessageLookupByLibrary.simpleMessage(
       "Task screenshots",
@@ -293,6 +314,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
     "total_games": MessageLookupByLibrary.simpleMessage("Total Games"),
     "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),
+    "try_widening_your_filters": MessageLookupByLibrary.simpleMessage(
+      "Widen your filters and more of the catalogue comes into view.",
+    ),
     "welcome_body_one": MessageLookupByLibrary.simpleMessage(
       "Every game you have played, beaten, dropped or shelved, in one place — 312 or 3.",
     ),
@@ -309,6 +333,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome to GameYes 🎮",
     ),
     "wishlist": MessageLookupByLibrary.simpleMessage("Wishlist"),
+    "wishlist_a_game_to_track_release": MessageLookupByLibrary.simpleMessage(
+      "Wishlist an upcoming game and its release lands here.",
+    ),
     "wishlist_button": MessageLookupByLibrary.simpleMessage("+ Wishlist"),
     "wishlist_upcoming_game": MessageLookupByLibrary.simpleMessage(
       "Wishlist an upcoming game",

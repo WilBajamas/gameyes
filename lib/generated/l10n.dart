@@ -1130,10 +1130,10 @@ class S {
     );
   }
 
-  /// `Mark something as playing →`
+  /// `Mark something as playing`
   String get mark_something_playing {
     return Intl.message(
-      'Mark something as playing →',
+      'Mark something as playing',
       name: 'mark_something_playing',
       desc: '',
       args: [],
@@ -1263,6 +1263,116 @@ class S {
   /// `Remind`
   String get remind {
     return Intl.message('Remind', name: 'remind', desc: '', args: []);
+  }
+
+  /// `Widen your filters and more of the catalogue comes into view.`
+  String get try_widening_your_filters {
+    return Intl.message(
+      'Widen your filters and more of the catalogue comes into view.',
+      name: 'try_widening_your_filters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search again`
+  String get search_again {
+    return Intl.message(
+      'Search again',
+      name: 'search_again',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a game from your library and start logging hours.`
+  String get pick_a_game_to_start_logging {
+    return Intl.message(
+      'Pick a game from your library and start logging hours.',
+      name: 'pick_a_game_to_start_logging',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open up your genres`
+  String get open_up_your_genres {
+    return Intl.message(
+      'Open up your genres',
+      name: 'open_up_your_genres',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear the genre filter to see every pick critics made this week.`
+  String get every_pick_without_a_genre_filter {
+    return Intl.message(
+      'Clear the genre filter to see every pick critics made this week.',
+      name: 'every_pick_without_a_genre_filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show every pick`
+  String get show_every_pick {
+    return Intl.message(
+      'Show every pick',
+      name: 'show_every_pick',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Look further ahead`
+  String get look_further_ahead {
+    return Intl.message(
+      'Look further ahead',
+      name: 'look_further_ahead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Browse the catalogue and line up what you play next.`
+  String get browse_for_your_next_game {
+    return Intl.message(
+      'Browse the catalogue and line up what you play next.',
+      name: 'browse_for_your_next_game',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Browse games`
+  String get browse_games {
+    return Intl.message(
+      'Browse games',
+      name: 'browse_games',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start a countdown`
+  String get start_a_countdown {
+    return Intl.message(
+      'Start a countdown',
+      name: 'start_a_countdown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wishlist an upcoming game and its release lands here.`
+  String get wishlist_a_game_to_track_release {
+    return Intl.message(
+      'Wishlist an upcoming game and its release lands here.',
+      name: 'wishlist_a_game_to_track_release',
+      desc: '',
+      args: [],
+    );
   }
 }
 

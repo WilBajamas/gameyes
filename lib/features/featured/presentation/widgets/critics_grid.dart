@@ -5,6 +5,9 @@ import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
+import 'package:gaming_library_assessment_flutter/widgets/empty_state_card.dart';
+
+import '../../../../generated/l10n.dart';
 
 // TODO: Refactor this
 class CriticsGridWidget extends StatelessWidget {
@@ -81,10 +84,7 @@ class CriticsGridWidget extends StatelessWidget {
             children: [
               const Text(
                 'Personalize Your Discover Feed',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
               GestureDetector(
                 onTap: onSkipPressed,
@@ -110,8 +110,10 @@ class CriticsGridWidget extends StatelessWidget {
               return GestureDetector(
                 onTap: () => onGenreToggled(genre.id),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? context.themeData.colorScheme.primary
@@ -120,8 +122,9 @@ class CriticsGridWidget extends StatelessWidget {
                     border: Border.all(
                       color: isSelected
                           ? context.themeData.colorScheme.primary
-                          : context.themeData.colorScheme.outline
-                              .withValues(alpha: .12),
+                          : context.themeData.colorScheme.outline.withValues(
+                              alpha: .12,
+                            ),
                     ),
                   ),
                   child: Text(
@@ -145,22 +148,12 @@ class CriticsGridWidget extends StatelessWidget {
 
   Widget _buildGrid(BuildContext context) {
     if (criticsGames.isEmpty) {
-      return Container(
-        height: 160,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: context.themeData.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Center(
-          child: Text(
-            'No critic reviews found',
-            style: TextStyle(
-              color: context.themeData.colorScheme.onSurfaceVariant
-                  .withValues(alpha: .6),
-            ),
-          ),
-        ),
+      return EmptyStateCard(
+        glyph: Icons.tune_outlined,
+        headline: S.current.open_up_your_genres,
+        supportingLine: S.current.every_pick_without_a_genre_filter,
+        actionLabel: S.current.show_every_pick,
+        onActionPressed: onSkipPressed,
       );
     }
 
@@ -182,8 +175,9 @@ class CriticsGridWidget extends StatelessWidget {
 
         return Card(
           elevation: 1.5,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: InkWell(
             onTap: () => onGameClick(game.id, game.name, game.cover.url),
             borderRadius: BorderRadius.circular(16),
@@ -207,7 +201,9 @@ class CriticsGridWidget extends StatelessWidget {
                                 )
                               : Container(
                                   color: context
-                                      .themeData.colorScheme.surfaceContainer,
+                                      .themeData
+                                      .colorScheme
+                                      .surfaceContainer,
                                   child: const Icon(
                                     Icons.videogame_asset,
                                     size: 36,

@@ -9,6 +9,7 @@ import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/filter/presentation/widgets/filter_bottom_sheet.dart';
 import 'package:gaming_library_assessment_flutter/features/games/presentation/blocs/games_bloc.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
+import 'package:gaming_library_assessment_flutter/widgets/empty_state_card.dart';
 import 'package:gaming_library_assessment_flutter/widgets/error_retry_widget.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_card/game_card.dart';
 import 'package:gaming_library_assessment_flutter/widgets/game_card/enum/game_card_size.dart';
@@ -85,10 +86,17 @@ class GamesScreen extends StatelessWidget {
                     if (state.status == GamesStatus.empty)
                       SliverFillRemaining(
                         child: Center(
-                          child: ErrorRetryWidget(
-                            text: S.current.no_results_found,
-                            onRetryClicked: () => context.read<GamesBloc>().add(
-                              const GamesFetched(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: EmptyStateCard(
+                              glyph: Icons.search_outlined,
+                              headline: S.current.no_results_found,
+                              supportingLine:
+                                  S.current.try_widening_your_filters,
+                              actionLabel: S.current.search_again,
+                              onActionPressed: () => context
+                                  .read<GamesBloc>()
+                                  .add(const GamesFetched()),
                             ),
                           ),
                         ),
