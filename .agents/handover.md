@@ -855,9 +855,27 @@ The two blockers below ("no Library design spec", "navigation still open") are
 questions. `.agents/references/library-design-conventions.md` landed on `develop`
 at `15f068f` and answers all four of the brief's open design questions.
 
-1. **Tab structure: `Featured · Library · Games · Browse · Settings`.** Library
-   replaces Tracker *and* moves to slot 2 (index 1); Games shifts 1 → 2. Browse
-   stays at 3 and Settings at 4.
+1. **Tab structure: `Featured · Library · Games · Settings` — FOUR tabs.** Library
+   replaces Tracker *and* moves to slot 2 (index 1); Games shifts 1 → 2; **the
+   Browse tab is deleted** and Settings shifts 4 → 3. (Superseded a five-tab
+   version of this ruling made earlier the same day — the five-tab shape is gone,
+   do not restore it.)
+   **Deleting Browse is free**: `browse_screen.dart` is the entire feature — one
+   file, `Center(child: Text('Browse'))`, no bloc, no datasource, no folder beyond
+   `presentation/screens/`. Delete the file, the `AutoRoute` at
+   `auto_route_config.dart:28`, the `BrowseRoute()` at `home_screen.dart:20`, and
+   the enum value, then regenerate.
+   **The human's stated intent is that the Games screen is eventually renamed
+   Browse** under new conventions and designs. That is a later week's work — for
+   now Games keeps its name and `Icons.gamepad_outlined`. Do not pre-emptively
+   rename it or hand it `Icons.search_outlined`.
+   Two things not to sweep while deleting Browse: the l10n keys `browse_games` and
+   `browse_for_your_next_game` are **still live** on Featured's empty states — only
+   the bare `browse` key becomes unreferenced (gotcha #1: intl_utils will drop its
+   getter, which is correct here, but check the other two survive). And
+   `browse_screen.dart` is one of `ScrollNotifier`'s three writer sites; deleting it
+   leaves **two** (settings_screen, home_screen). The notifier stays orphaned-but-
+   deliberate exactly as 2.4 left it — this does not reopen that follow-up.
 2. **The desaturation filter stays absent.** §5 of the new Library spec re-introduced
    `saturate(.5) contrast(1.05)`; rejected for the **third** time. `1.3-AC7` remains a
    live check that it stays absent. Both the Library spec §5 **and**
@@ -878,15 +896,24 @@ at `15f068f` and answers all four of the brief's open design questions.
    says indigo is the active chip and tab "and nothing else".
 6. **Featured's 3-step checklist points at Games (index 2).** All three of
    `featured_screen.dart:144,145,147` go `setActiveIndex(1)` → `(2)`. The literal
-   changes; the destination screen does not. Note the human's stated intent is that
-   the *Games* screen is eventually renamed Browse — which will collide with the
-   existing Browse tab at index 3 (`featured_screen.dart:207`,
-   `countdown_releases.dart:93` both point there). Not week 3's problem, but do not
-   "helpfully" merge the two.
+   changes; the destination screen does not.
 
-**The one index that changes meaning silently:** `library_stats.dart:315` is
-`setActiveIndex(2)` and today means Tracker. It must become **1** (Library).
-No compiler catches this — it is the exact trap the navigation blocker warned about.
+**All six `setActiveIndex` literals change, and none keeps its old value** — which
+is what makes this safe, since a stale literal cannot survive by looking correct:
+
+| Site | Now | Becomes | Destination |
+|---|---|---|---|
+| `featured_screen.dart:144` | 1 | **2** | Games |
+| `featured_screen.dart:145` | 1 | **2** | Games |
+| `featured_screen.dart:147` | 1 | **2** | Games |
+| `featured_screen.dart:207` | 3 | **2** | Games (was Browse) |
+| `countdown_releases.dart:93` | 3 | **2** | Games (was Browse) |
+| `library_stats.dart:315` | 2 | **1** | Library (was Tracker) |
+
+The last row is the one with no compiler help and the one the navigation blocker
+warned about: it currently means Tracker, and Tracker is gone. Grep for
+`setActiveIndex` at Phase 0 and check the count is six — do not work from this
+table alone.
 
 **Verified at Phase 0 on 2026-08-26** (fresh container, Flutter 3.41.4): analyzer
 **30 issues / 0 errors / 2 warnings / 28 info**, suite **+361 -10**, the 10 failures
