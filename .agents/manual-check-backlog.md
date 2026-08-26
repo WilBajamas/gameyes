@@ -52,27 +52,36 @@ Current breakdown: item 10.1's **4**, week 2 Stage 1's **19** (1.1×1, 1.2×2, 1
 1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **57** (2.1×8, 2.2×10,
 2.3×15, 2.4×**3**, 2.5×8, 2.6×3, 2.7×5, 2.8×5).
 
-**The scratch harness now exists: `lib/main_harness.dart`.** Run it with
+**DECIDED 2026-08-25: no scratch harness. These wait for their real callers.**
+A harness was built and then **deleted the same day** at the human's decision. The
+reasoning is worth keeping, because this file spent weeks recommending the harness:
 
-```
-flutter run --flavor dev -t lib/main_harness.dart
-```
+- The sixteen harness-able checks belong to components with **zero callers anywhere
+  in the app** — `CompletionRing`, `LabelValueRow`, `HairlineGroup`, `ErrorNotice`,
+  `FailedItem`, `DestructiveActionPair`. Verified by grep, not assumed. There is no
+  screen to open, which is the only reason a harness was ever proposed.
+- But a harness checks a component **in isolation, not in the layout it will ship
+  in**, and several of these checks are only meaningful in a real screen — whether a
+  row's padding clears a 44px touch target inside a group, whether a card's corners
+  clip against a real background. 2.6's own entry already said as much: *"cheapest
+  route is to check these the first time a real screen adopts the components rather
+  than building a harness twice."*
+- So they are **deferred to week 3/4**, when Game Detail and Library adopt them.
+  Check each one on the screen that adopts it. The accepted risk is finding a
+  component wrong after a screen is built on it.
 
-It is a **separate entrypoint** — it registers no route, nothing in `lib/` imports
-it, and it needs neither DI nor `bootstrap()`, so it adds nothing to the shipped
-app and cannot leak into a release build. It hosts every unwired component in one
-scrolling screen, each section captioned with the check IDs it serves. **Delete the
-file** once these checks are cleared and the components have real callers.
+**Do not rebuild the harness** without raising it first — it has been built and
+discarded once. If a future session wants it back, `git show faa108b` has the whole
+file.
 
-**It clears seventeen, not the eighteen this file used to claim.** `2.7-MC-3` is a
-**real-app** check ("open Game Detail and confirm the screenshots deletion changed
-nothing visible") and cannot be done in a harness — it was miscounted with the other
-four. Sixteen of the seventeen (2.2's ten, 2.6's three, 2.7's `MC-1`, `MC-2`, `MC-4`,
-`MC-5`) are harness checks; `2.7-MC-3` needs the app.
+**`2.7-MC-3` was never a harness check anyway** — "open Game Detail and confirm the
+screenshots deletion changed nothing visible" is a real-app check, and had been
+miscounted with the other four for weeks. It is doable today, on the current build,
+with no new screen needed.
 
-**2.8's five need no harness** (it ships wired) and four of them sit on Featured, so
-they go in one Featured sitting. Do not interrupt a pipeline run to perform these,
-and do not read the count as a problem.
+**2.8's five are also doable today** (it ships wired), and four of them sit on
+Featured, so they go in one Featured sitting. Along with `2.7-MC-3`, those six are
+the only checks here reachable in the app as it stands right now.
 
 ---
 
