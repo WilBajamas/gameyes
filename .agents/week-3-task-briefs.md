@@ -149,10 +149,23 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         on arrival. Deliberately throwaway, ~30 lines, and worth it — it buys final
         indices before anything sits on them.
       - **Retires here, in the run that replaces them:** `tracker_screen.dart`,
-        `saved_game_item.dart`, `saved_game_status_tag.dart` (and its `Status` enum),
-        and the whole of `lib/features/browse/`. All lose their only reachable caller
-        the moment the tabs change. Browse is a stub —
-        `Center(child: Text('Browse'))`, no bloc, no datasource.
+        `saved_game_item.dart`, and the whole of `lib/features/browse/`. These lose
+        their only reachable caller the moment the tabs change. Browse is one file
+        with no bloc and no datasource — a 59-line `StatefulWidget` whose body is
+        `Center(child: Text('Browse'))`.
+      - **`saved_game_status_tag.dart` is NOT retired here.** Corrected 2026-08-26,
+        mid-run: this list was written before the human's decision to keep the task
+        tree, and never re-checked against it. Its only caller is
+        `tracker_game_detail_screen.dart:131-133`, which that decision protects — so
+        the "loses its only reachable caller" rationale is true for the other two and
+        **false for this one**. Retiring it means editing a protected screen. Deferred
+        to whichever item adopts the task-tree design convention, alongside its
+        `Status` enum. Do not reinstate it here.
+      - Deleting `tracker_screen.dart` also orphans `TrackerCubit` and
+        `default_filter_list_app_bar.dart` (each has no other caller but its own
+        test). Neither is an analyzer issue and neither is on the retirement list —
+        flagged, not swept. `default_alert_dialog.dart` is **not** orphaned:
+        `task_detail_screen.dart` still uses it, and that file survives.
       - **Do not over-delete l10n.** `browse_games` and `browse_for_your_next_game`
         are still live on Featured's empty states; only the bare `browse` key becomes
         unreferenced. Gotcha #1: `intl_utils` regenerates strictly from the `.arb`
