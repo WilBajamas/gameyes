@@ -344,62 +344,35 @@ unwired).
 
 ---
 
-## Week 2 Stage 2 — item 2.4 (Tab bar)
+## Week 2 Stage 2 — item 2.4 (Tab bar) — CLEARED 2026-08-25
 
-From the `tab-bar-20260822` run, QA `PASS — pending manual checks`. This item
-reworked the **home shell's tab bar**, which every screen sits under, and it
-carries more manual weight than any item so far for two reasons: four widget
-tests were removed at Phase 4B by human decision, and the bar deliberately lost
-a shipped behaviour.
+**All fifteen are done. Nothing remains here.** Kept as a record rather than
+deleted, because this item carried more manual weight than any other — four widget
+tests were removed at Phase 4B by human decision, and the bar deliberately lost a
+shipped behaviour.
 
-**Twelve of the fifteen were performed and passed on 2026-08-25**, including both
-entries that carried no automated guard: `MC-1` (keyboard Enter/Space activation,
-the `ButtonPressScale`/`ActivateIntent` defect) and `MC-2` (the selected/unselected
+Twelve were performed and passed, including both entries that had no automated
+guard at all: `MC-1` (keyboard Enter/Space activation — the
+`ButtonPressScale`/`ActivateIntent` defect) and `MC-2` (the selected/unselected
 colour correction, which the old `CustomNavigationDestination` had shipped
-inverted). Also cleared: `MC-3, 5, 6, 7, 8, 9, 11, 12, 14, 15`. **The bar's colour
-correction and its keyboard activation are now confirmed on device, not merely
-inferred.**
+**inverted** the whole time). **Both are now confirmed on device rather than
+inferred.** `MC-10` was verified afterwards by switching navigation modes on the
+one emulator rather than sourcing a second device.
 
-Two notes on what that pass does and does not cover. `MC-9` passed — the Tracker
-glyph reads as an outline despite being declared `Icons.format_list_numbered_rtl`
-with no `_outlined` suffix, unlike the other four; the inconsistency is real in the
-source but invisible in the render, so it is a code tidiness point, not a bug.
-And `MC-12` was **under-exercised**: it asks over-long Chinese labels to stay on one
-line, but `tracker` and `browse` render as English even under `zh` (see the
-translation bug in `handover.md`), so only three of the five labels actually tested
-the case. The layout held on those three. Worth one more look after the strings are
-translated.
+`MC-4` and `MC-13`'s duration halves were **closed by human decision without being
+observed** — 0ms versus 140ms on a colour crossfade is at or below naked-eye
+perception, and the human judged the distinction not worth a frame-accurate
+recording. `MC-13`'s negative half (nothing slides horizontally, the bar never
+animates its own height, position or background) did pass by eye.
 
-The three below each failed to settle for a different reason — read the note on
-each before retrying.
+Two notes that outlive the checks. `MC-9` passed, but the Tracker glyph is declared
+`Icons.format_list_numbered_rtl` with **no `_outlined` suffix**, unlike the other
+four — invisible in the render, real in the source, so it is a tidiness point
+rather than a bug. And `MC-12` was **under-exercised**: it wants over-long *Chinese*
+labels to ellipsise, but `tracker` and `browse` rendered as English at the time.
+Both strings were translated on 2026-08-25, so that case is now genuinely
+reachable and is worth one more look next time a device is out.
 
-- **2.4-MC-4** — With OS reduce-motion ON, tap between tabs — colour and cap snap
-  instantly, no fade. Turn it off and repeat — a short 140ms ease.
-  **ATTEMPTED 2026-08-25, NOT SETTLED — don't retry it the same way.** The observer
-  could not tell the two states apart by eye, which is expected rather than a
-  defect: the difference is 0ms versus 140ms on a colour crossfade, at or below the
-  threshold of naked-eye perception. **Settle it with a frame-accurate record, not
-  by looking**: screen-record the tab change at 60fps and scrub frame by frame —
-  reduce-motion ON should show the new colour on the very next frame, OFF should
-  show roughly 8 intermediate frames. `flutter run` + `timeDilation = 10` in a
-  scratch build is the other option.
-- **2.4-MC-10** — A device with a home indicator or gesture bar — labels clear the
-  indicator, no overlap and no dead band beneath. Then one reporting a zero bottom
-  inset — the bar must not sit flush to the screen edge (22 fallback).
-  **BLOCKED 2026-08-25 — only one emulator available**, and this check needs two
-  different bottom-inset conditions. **No second physical device is needed**: create
-  a second AVD, or on the existing one switch Settings → System → Gestures between
-  three-button navigation (non-zero inset) and gesture navigation, then compare. An
-  AVD with no navigation bar at all gives the zero-inset case that exercises the 22
-  fallback.
-- **2.4-MC-13** — Tap between tabs at normal motion — only colours and the cap
-  animate, ~140ms standard ease. No indicator sliding horizontally, no animation
-  of the bar's height, position or background.
-  **PARTIALLY SETTLED 2026-08-25.** The *negative* half passed by eye and is done:
-  nothing slides horizontally, and the bar's height, position and background never
-  animate. The remaining half is the ~140ms duration itself, which has the same
-  naked-eye problem as `MC-4` above — settle both together with one frame-accurate
-  recording rather than two sittings.
 ---
 
 ## Week 2 Stage 2 — item 2.5 (Form fields)

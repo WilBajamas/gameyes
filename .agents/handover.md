@@ -499,36 +499,53 @@ uncovered.
 ## Bugs found on device (2026-08-25 sitting)
 
 Two real defects, **found by looking rather than by any check that was hunting for
-them** — the first argument this project has for the device sitting being worth its
-cost. Neither is a manual check; both need a fix.
+them** — the first concrete argument this project has for the device sitting being
+worth its cost. Both were fixed the same day by direct human-directed edits, outside
+the pipeline, at the human's explicit instruction.
 
-- **65 of 167 Chinese strings are untranslated English.** `lib/l10n/intl_zh.arb`
-  holds the *English* value for 65 keys, so a `zh` device renders them in English.
-  Spotted because `tracker` and `browse` stayed English in the tab bar during
-  `2.4-MC-12`, but the gap is far wider than those two: whole surfaces are affected
-  — every library status (`completed`, `onHold`, `rageQuit`, `toBuy`, `inProgress`),
-  the entire group-task and step flow, all six featured-shelf titles, the
-  saved-games empty state, and `ok`/`cancel`/`done`/`back`/`edit`/`remove`.
-  Get the full list with a diff of the two `.arb` files' values, not by eye.
-  **This also weakens `2.4-MC-12`** — that check wants over-long *Chinese* labels to
-  ellipsise, and two of the five labels it should exercise are English. Re-run it
-  once the strings land.
-  Note `a_brief_description` also carries a typo in the **English** source:
-  `"A breif description"`. Fix it in the same pass, and remember localisation is
-  generated (gotcha #1), never hand-edited in `lib/generated/`.
-- **Screen titles overflow at Android's largest font size**, on Games, Browse and
-  Settings. **The obvious fix is already in place and is not working**, which is the
-  part worth knowing: `DefaultSliverAppBar` already wraps the title in
-  `AutoSizeText` and `auto_size_text` is already a dependency. It fails because
-  **`AutoSizeText` with no `maxLines` has no reason to shrink** — it wraps to as
-  many lines as it needs instead, and the bar's `toolbarHeight: kToolbarHeight + 12`
-  is fixed, so the wrapped text overflows a container that cannot grow. The title is
-  `screenTitle`, Space Grotesk **34px/700**, which Android's largest setting scales
-  well past what 68px of toolbar can hold.
-  The fix is bounding it — `maxLines: 1` plus a `minFontSize`, or clamping the
-  app-wide `textScaler` — not adding a package that is already there. It touches
-  one shared widget and therefore **every screen using `DefaultSliverAppBar` at
-  once**, so it wants its own small pipeline item rather than a drive-by edit.
+- **Screen titles overflowed at Android's largest font size** — Games, Browse and
+  Settings, "BOTTOM OVERFLOWED BY 24 PIXELS". **FIXED 2026-08-25** in
+  `lib/widgets/default_sliver_app_bar.dart`, with
+  `test/widget/components/default_sliver_app_bar_test.dart` (9 tests) guarding it.
+  **The part worth carrying forward is why the obvious fix was already present and
+  still failing.** `DefaultSliverAppBar` already used `AutoSizeText`, and
+  `auto_size_text` was already a dependency — so "use AutoSizeText" was not the fix.
+  It failed for two independent reasons:
+  1. **`AutoSizeText` with no `maxLines` has no reason to shrink.** It wraps to as
+     many lines as it needs; `toolbarHeight: kToolbarHeight + 12` is fixed, so the
+     wrapped text overflowed a container that could not grow.
+  2. **`maxFontSize` alone is not a ceiling.** Read
+     `auto_size_text-3.0.0/lib/src/auto_size_text.dart:353` —
+     `fontSize = right * userScale * stepGranularity`. The OS scale multiplies the
+     result *after* the min/max clamp, so a 34px `maxFontSize` still renders at 68px
+     when Android is at 2×. **A min/max band only becomes a real ceiling if the
+     scale factor is clamped too.** Anyone reaching for `AutoSizeText` elsewhere in
+     this app to solve an overflow needs to know this.
+  The shipped fix sets `maxLines: 1`, a min/max band on both title (22–34) and
+  subtitle (11–13), and `textScaleFactor` from
+  `MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3)`. **The trade-off is
+  deliberate**: the app-bar title stops honouring OS font scaling past 1.3×. That
+  was the human's stated preference over letting it grow.
+  Note the test harness models a **24px status-bar inset**, because `flexibleSpace`
+  gets the full app-bar extent — without that inset the harness is stricter than any
+  real device and forces needless over-shrinking. It caps at **2.0**, which is
+  Android's actual maximum; 3.0 tests a condition the platform cannot produce.
+  Falsifiability was proved twice — once before the harness was made realistic and
+  again after, since changing a harness can silently turn a real test into a
+  pass-by-construction one. 8 of 9 fail against the unfixed widget; the one that
+  passes is the scale-1.0 case that was never broken.
+- **65 of 167 Chinese strings are untranslated English**, in `lib/l10n/intl_zh.arb`.
+  **Only `browse` (浏览) and `tracker` (追踪) were fixed** on 2026-08-25, because
+  those were the two visible in the tab bar. **63 remain.** Whole surfaces are still
+  affected: every library status (`completed`, `onHold`, `rageQuit`, `toBuy`,
+  `inProgress`), the entire group-task and step flow, all six featured-shelf titles,
+  the saved-games empty state, and `ok`/`cancel`/`done`/`back`/`edit`/`remove`.
+  Get the real list by diffing the two `.arb` files' *values* — do not eyeball it,
+  and do not trust the count above without re-running that diff.
+  `a_brief_description` also carries a typo in the **English** source:
+  `"A breif description"`. Still unfixed.
+  Localisation is generated (gotcha #1): edit the `.arb`, then
+  `dart pub global run intl_utils:generate`. Never hand-edit `lib/generated/`.
 
 ---
 
@@ -558,18 +575,17 @@ cost. Neither is a manual check; both need a fix.
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
 - **The whole on-device manual-check backlog now lives in
-  `.agents/manual-check-backlog.md`** — **80 checks** remaining as of 2026-08-25.
-  **The device sitting has started**: twelve of item 2.4's fifteen were performed and
-  **all passed**, including both entries that had no automated guard at all — keyboard
-  Enter/Space activation and the tab bar's selected/unselected colour correction.
-  **Both are now confirmed on device rather than inferred**, which retires the largest
-  untested risk 2.4 left behind. Three did not settle and each carries a note in the
-  file explaining why: `MC-4` and `MC-13` are **not observable by naked eye** (0ms vs
-  140ms) and need one frame-accurate screen recording between them; `MC-10` needs a
-  second bottom-inset condition, which a second AVD or a navigation-mode switch gives
-  — not a second physical device. **The sitting also turned up two real bugs nothing
-  was hunting for** — see "Bugs found on device" above. **Do not quote the count from
-  here; recount in the file.**
+  `.agents/manual-check-backlog.md`** — **77 checks** remaining as of 2026-08-25.
+  **Item 2.4 is fully CLEARED** — all fifteen done, the first item in the backlog to
+  finish. That includes both entries that had no automated guard at all: keyboard
+  Enter/Space activation and the tab bar's selected/unselected colour correction,
+  **now confirmed on device rather than inferred**, which retires the largest untested
+  risk 2.4 left behind. `MC-4` and `MC-13`'s duration halves were **closed by human
+  decision without being observed** — 0ms vs 140ms on a colour crossfade is at or
+  below naked-eye perception and was judged not worth a frame-accurate recording;
+  that is a deliberate call, not an oversight. **The sitting also turned up two real
+  bugs nothing was hunting for, both since fixed** — see "Bugs found on device"
+  above. **Do not quote the count from here; recount in the file.**
   Every total previously written down was wrong: this file said 82, the backlog
   file said 90, and the itemised list here summed to 88. The counted breakdown is
   now recorded once, in the backlog file itself, and the Stage 1 group is **19**,

@@ -17,8 +17,18 @@ class DefaultSliverAppBar extends StatelessWidget {
     this.actionTwo,
   });
 
+  static const double _titleMaxFontSize = 34;
+  static const double _titleMinFontSize = 22;
+  static const double _subtitleMaxFontSize = 13;
+  static const double _subtitleMinFontSize = 11;
+  static const double _maxTextScale = 1.3;
+
   @override
   Widget build(BuildContext context) {
+    final textScale = MediaQuery.textScalerOf(
+      context,
+    ).clamp(maxScaleFactor: _maxTextScale).scale(1);
+
     return SliverAppBar(
       toolbarHeight: kToolbarHeight + 12,
       backgroundColor: context.themeData.scaffoldBackgroundColor,
@@ -35,6 +45,11 @@ class DefaultSliverAppBar extends StatelessWidget {
           children: [
             AutoSizeText(
               title,
+              maxLines: 1,
+              minFontSize: _titleMinFontSize,
+              maxFontSize: _titleMaxFontSize,
+              textScaleFactor: textScale,
+              overflow: TextOverflow.ellipsis,
               style: context.themeData.textTheme.displayLarge!
                   .copyWith(fontWeight: FontWeight.w900),
             ),
@@ -44,6 +59,11 @@ class DefaultSliverAppBar extends StatelessWidget {
             if (subtitle case final subtitle?)
               AutoSizeText(
                 subtitle,
+                maxLines: 1,
+                minFontSize: _subtitleMinFontSize,
+                maxFontSize: _subtitleMaxFontSize,
+                textScaleFactor: textScale,
+                overflow: TextOverflow.ellipsis,
                 style: context.themeData.textTheme.bodySmall!
                     .copyWith(color: ColorPalette.textGrey),
               ),

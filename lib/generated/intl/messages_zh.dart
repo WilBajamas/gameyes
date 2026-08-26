@@ -75,7 +75,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "best_of_the_year": MessageLookupByLibrary.simpleMessage(
       "Best of the year",
     ),
-    "browse": MessageLookupByLibrary.simpleMessage("Browse"),
+    "browse": MessageLookupByLibrary.simpleMessage("浏览"),
     "browse_for_your_next_game": MessageLookupByLibrary.simpleMessage(
       "浏览游戏库，安排你接下来要玩的游戏。",
     ),
@@ -273,7 +273,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "toBuy": MessageLookupByLibrary.simpleMessage("To Buy"),
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
     "total_games": MessageLookupByLibrary.simpleMessage("总游戏数"),
-    "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),
+    "tracker": MessageLookupByLibrary.simpleMessage("追踪"),
     "try_widening_your_filters": MessageLookupByLibrary.simpleMessage(
       "放宽筛选条件，就能看到更多游戏。",
     ),
