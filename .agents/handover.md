@@ -824,6 +824,67 @@ is a TestFlight-equivalent Android beta around week 4.
 
 ---
 
+## Stage 3 brief — read before writing the kickoff prompt
+
+Written 2026-08-25, when week 2 closed. **Nothing here has been implemented.**
+
+**Stage 3 is the Library feature**, and it is the biggest thing this project has
+attempted: the brief calls Library "the most important screen we haven't designed"
+and "where the primary user lives".
+
+**Two blockers are human deliverables, not engineering work. Both must be settled
+before a pipeline run can start.**
+
+1. **There is no Library design spec.** The product brief lists the requirements
+   (status filtering across six states, grid/list toggle, five sort orders, four
+   filter axes, custom lists, bulk edit, search-within-library, per-tab empty states)
+   and then lists the *unanswered* design questions: how six status categories are
+   navigated, whether cover grids or lists win, how bulk edit stays discoverable
+   without cluttering, and how one screen serves a user with 3 games and a user with
+   300. **A BA cannot translate requirements into criteria while those are open** —
+   that is the "unstated threshold / unspecified edge case" shape that item 2.8's BA
+   correctly halted on twice.
+2. **The navigation decision is still open, and it invalidates part of what week 2
+   just built.** The brief proposes **Home · Library · Search · Stats · Profile**
+   against today's shipped **Featured · Games · Tracker · Browse · Settings**. That is
+   not a rename — it is a different information architecture. `BottomTabBar` ships
+   five *fixed* destinations in an enum, and `AutoTabsRouter` index positions are
+   hardcoded at call sites (item 2.8 wired two actions to `setActiveIndex(3)` for
+   Browse). Settle the tab structure **before** anything is built on top of it, or
+   those indices silently point at the wrong screens.
+
+**What stage 3 inherits, ready to use.** Week 2's component library is built and
+merged, but **11 of 17 components have never rendered anywhere** — see "The component
+library" above. Stage 3 is where they get proven. Three things fold into the build
+rather than being separate tasks:
+- **Perform each component's manual checks on the screen that adopts it**
+  (`.agents/manual-check-backlog.md`, 74 entries, most gated on exactly these screens).
+- **Retire each legacy widget in the run that replaces it** — `horizontal_separator.dart`
+  when Game Detail adopts `HairlineGroup`, `saved_game_item.dart` when Library replaces
+  it. Never as a standalone sweep.
+- **Translate the strings you touch.** 63 Chinese keys still hold English values;
+  human decision is to fix them per-screen as building proceeds.
+
+**Known scope that is already decided:**
+- **The Add-to-library sheet is stage 3's**, deferred from week 2 because it binds to a
+  Library entity/status model that does not exist yet. `add_content_dialog.dart` is
+  **not** it under an old name. The brief calls the add-to-library action "the single
+  most important interaction in the app".
+- **Game Detail is a rebuild**, and its hero ramp hue is still an open design question.
+  Users arrive in two states (game in library or not) and the brief says these are
+  "functionally different screens — design both".
+- **Featured is on an old design** and is due to be rebuilt against
+  `home-screen-design-conventions.md`. Do not invest in its current layout.
+- **The tracker → library migration** is what unblocks item 3's on-device
+  cross-account RLS check — nothing writes to `library_entries` until it lands.
+
+**Two foundations gaps will be hit again.** No 15px type token (three items worked
+around it) and no art-deep surface (§2.2 names it as the empty-state fill and it has
+no value anywhere). Both are foundations changes, deliberately kept out of component
+runs — decide whether stage 3 mints them rather than working around them a fourth time.
+
+---
+
 ## Next-session prompt
 
 ```text
