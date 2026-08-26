@@ -387,6 +387,26 @@ it has no value anywhere). Both are recorded below.
 
 ## Known non-blocking gaps (carried forward)
 
+- **REMINDER — the tracker task tree goes dormant at stage 3.2, and is owed a
+  design convention before anyone touches it.** Human decision 2026-08-26: leave
+  the task tree alone through week 3, and leave the Isar `SavedGame` store alive
+  alongside `library_entries`. What that means concretely: item 3.2 deletes
+  `tracker_screen.dart` (the tab's list), which is the **only real entry point**
+  to `TrackerGameDetailRoute` and `TaskDetailRoute`. After it merges,
+  `tracker_game_detail_screen.dart`, `task_detail_screen.dart`, `TaskCubit`,
+  `GroupTask`, `SavedGameTask` and `TaskStep` still compile and still pass their
+  tests, but are reachable only from `library_stats.dart:319`. That is deliberate,
+  not an oversight — **do not "clean up" the orphan, and do not delete the Isar
+  store to tidy the two-store situation.** The two stores hold different data and
+  never need syncing while this holds.
+  The human will supply a new design convention covering task detail, groups and
+  group items. **Pick this up when that lands, not before.** The likely shape is
+  re-keying tasks onto `library_entries.igdb_id` so the Isar store can retire in
+  one move — but that is a guess, not a decision, and the convention outranks it.
+  Two consequences worth knowing while it's dormant: the **analyzer baseline stays
+  30 issues / 2 warnings** all week, because `_TaskReminder` lives in
+  `task_detail_screen.dart` and that file survives; and `2015` lines of
+  `lib/features/tracker/` stay in the tree, roughly 1,240 of them the task half.
 - Item 8's AC12 test duplicates AC10 and never simulates the onboarding hop
   — test-quality gap, not a behaviour gap.
 - No loading state while OAuth sign-in is in flight — `sign_in_cubit.dart`
@@ -827,6 +847,96 @@ is a TestFlight-equivalent Android beta around week 4.
 ## Stage 3 brief — read before writing the kickoff prompt
 
 Written 2026-08-25, when week 2 closed. **Nothing here has been implemented.**
+
+### Both blockers are CLEARED as of 2026-08-26. Six rulings, all human decisions.
+
+The two blockers below ("no Library design spec", "navigation still open") are
+**both settled** — the text under them is kept for the reasoning, not as open
+questions. `.agents/references/library-design-conventions.md` landed on `develop`
+at `15f068f` and answers all four of the brief's open design questions.
+
+1. **Tab structure: `Featured · Library · Games · Browse · Settings`.** Library
+   replaces Tracker *and* moves to slot 2 (index 1); Games shifts 1 → 2. Browse
+   stays at 3 and Settings at 4.
+2. **The desaturation filter stays absent.** §5 of the new Library spec re-introduced
+   `saturate(.5) contrast(1.05)`; rejected for the **third** time. `1.3-AC7` remains a
+   live check that it stays absent. Both the Library spec §5 **and**
+   `system-foundation-specs.md` §3.2 are to be corrected so a fourth BA cannot
+   inherit it — item 1.4 set that precedent.
+3. **Mint `surfaceArt` and `surfaceArtDeep`.** The second standing foundations gap is
+   closed by decision. Trap for whoever does it: `app_tokens_test.dart:97-110`
+   asserts violet stays out of the surface and accent tokens, and §2.2 describes
+   art-deep as violet — decide deliberately whether the new surface joins that list
+   or gets a documented carve-out, the same shape as 2.7's `surfaceToast` alias
+   having to stay outside the distinctness `Set`.
+4. **The 15px type token is NOT minted — keep shipping 14.** Four items have now
+   done this (1.9, 2.2, 2.5, and all of week 3). It is a settled convention, not a
+   recurring workaround. **Stop raising it.**
+5. **Playing's status dot is `accentIndigo`, and the spec is wrong, not the token.**
+   `AppStatusTokens.playing` stands. Amend `library-design-conventions.md` §3
+   ("Playing white") — and §12 in the same edit, since its colour ration currently
+   says indigo is the active chip and tab "and nothing else".
+6. **Featured's 3-step checklist points at Games (index 2).** All three of
+   `featured_screen.dart:144,145,147` go `setActiveIndex(1)` → `(2)`. The literal
+   changes; the destination screen does not. Note the human's stated intent is that
+   the *Games* screen is eventually renamed Browse — which will collide with the
+   existing Browse tab at index 3 (`featured_screen.dart:207`,
+   `countdown_releases.dart:93` both point there). Not week 3's problem, but do not
+   "helpfully" merge the two.
+
+**The one index that changes meaning silently:** `library_stats.dart:315` is
+`setActiveIndex(2)` and today means Tracker. It must become **1** (Library).
+No compiler catches this — it is the exact trap the navigation blocker warned about.
+
+**Verified at Phase 0 on 2026-08-26** (fresh container, Flutter 3.41.4): analyzer
+**30 issues / 0 errors / 2 warnings / 28 info**, suite **+361 -10**, the 10 failures
+being tracker_repository (4), game_detail_cubit (3), games_bloc (3). The
+games_bloc root cause was re-confirmed in source, not inherited: `games_bloc.dart`
+registers all three handlers `droppable()` at `:25-27` and calls
+`add(const GamesFetched())` in the constructor at `:29`.
+
+### What that Phase 0 found that no checklist had
+
+- **`SavedGame.status` is dead code.** Constructor parameter only — zero writers,
+  zero readers, anywhere. Same for `isWishlisted`, `dateModified` and the whole
+  `PlaySessionLog` collection. `SavedGameStatusTag` has exactly one caller,
+  `tracker_game_detail_screen.dart:131`, hardcoded to `Status.notStarted`.
+- **Two more never-fired branches, the same shape as `GamesStatus.empty`.**
+  `featured_local_datasource.dart:46` filters `statusEqualTo('Playing')` and
+  `getWishlistedGames()` filters `isWishlistedEqualTo(true)` — both against fields
+  nothing writes, so **Featured's now-playing shelf and wishlist stat have never
+  once rendered with data**, and `library_stats.dart:287-305`'s progress branch is
+  unreachable for the same reason. `'Playing'` also matches neither the enum nor
+  the SQL vocabulary. Fixing this is folded into the run that builds the data layer.
+- **The migration is mostly free, because the dead fields are the ones we need.**
+  `hoursLogged`, `manualProgressPercentage`, `platforms` and `genres` already exist
+  on the Isar model with no writers — they become live Supabase columns.
+- **`library_entries` cannot serve the spec as it stands.** It needs `platform`,
+  `rating`, `playtime_hours`, `progress_percent`, `genre` and `updated_at` before
+  sort-by-rating/playtime, the four filter axes, the grid's `PS5 · 24h · Ch. 9`
+  meta or the list's right-hand figure can exist.
+- **Three status vocabularies, one genuinely ambiguous mapping.** Legacy `toBuy`
+  collides with `wishlist`, which the legacy model carries as a *separate boolean*.
+  Five of six map cleanly; that one needs a call when the migration is written.
+- **`LibrarySnapshotEntity` holds `List<SavedGame>` directly** — an Isar model inside
+  a domain entity. The migration has to break that seam whatever else it does.
+- **The reactive shape changes.** Tracker drives `StreamBuilder` off Isar `.watch()`;
+  Supabase has no drop-in equivalent, so Library is `Result<T>` + BLoC with explicit
+  refetch and real pagination. That is a shape change, not a port.
+- **A third improvised empty state exists** beyond the two recorded below:
+  `tracker_screen.dart:179-202`, bare `Text`, no card, no glyph. (Moot once 3.2
+  deletes that file.)
+- **All 11 never-rendered components were read against their manual-check entries
+  and are sound** — every recorded trade-off still holds, including the
+  `FailedItem`/`GameCard` slot collision being character-identical. One new find:
+  `zone_label.dart` carries 4 comment lines, violating "widgets carry no comments
+  at all". Every other one of the 11 is comment-free.
+- **Violet and cyan already exist** as `_statusViolet #7D4EE0` and
+  `_accentLinkCyan #00B0F4` (`app_color_tokens.dart:11,15`), wired through
+  `AppStatusTokens` for all six statuses. The Library spec's §13.5 worry that they
+  are "still flagged" is stale.
+- **`horizontal_separator.dart` has exactly the 2 callers on record**, and the
+  63-untranslated-key count is correct — both re-derived rather than quoted.
 
 **Stage 3 is the Library feature**, and it is the biggest thing this project has
 attempted: the brief calls Library "the most important screen we haven't designed"
