@@ -35,7 +35,7 @@ skill instead — that's a separate concern from the widget itself.
 ## File and class naming
 
 - Global widget file: `[descriptor]_widget.dart` or plain `[descriptor].dart`
-  (e.g. `game_item.dart`, `default_snackbar.dart`).
+  (e.g. `status_chip.dart`, `default_snackbar.dart`).
 - Screen file: `[feature]_screen.dart`, class `[Feature]Screen`, annotated
   `@RoutePage()`. Extend `StatelessWidget` by default — `StatefulWidget` only
   for local ephemeral state that genuinely can't live in a Cubit/BLoC.
@@ -115,12 +115,54 @@ Written for the component-library push, permanent, not tied to any one week.
   old widget `@Deprecated` with one line saying what replaced it, rather
   than deleting it outright (same pattern used for `NetworkModule` and
   `TwitchAuthInterceptor` elsewhere in this project).
+  **Deprecation is a staging post, not a permanent state.** Once a
+  `@Deprecated` widget has no callers left, delete it — keeping a dead
+  implementation beside its replacement is the thing that makes this folder
+  hard to read. `game_item.dart` was deprecated at item 2.1 and deleted on
+  2026-08-25 once `GameCard` had taken all of its callers. Retire a *live*
+  legacy widget in the run that adopts its replacement, so the screen is
+  touched once — never as a standalone cleanup sweep.
 
 ## Existing reusable widgets catalogue
 
 All global widgets live in `lib/widgets/`. Check this list before creating a
 new one — it's not a target, reuse an entry only when its existing semantics
 actually match the requirement.
+
+### Three tiers live in this one folder — know which you are touching
+
+The table below mixes them, and the filename alone will not tell you apart. As of
+2026-08-25:
+
+**1. Design-system components** (week 2, built against `system-foundation-specs.md`
+§3). Prefer these. `ZoneLabel`, `StatusChip`, `CoverTile`, `PlaceholderSlot`,
+`FilterCountChip`, `ContextChip`, `StatTile`/`StatPill`, `ProgressDots`,
+`ActionRow`, `GameCard`, `CompletionRing`, `CountdownCard`/`CountdownTile`,
+`BottomTabBar`, `LabeledTextField`, `LabelValueRow`, `HairlineGroup`,
+the `error_states/` module, `EmptyStateCard`, plus `LibraryTick` and `CriticBadge`.
+
+**2. Legacy, still load-bearing.** Predate the design system and have live callers,
+so they are not deletable without changing a shipped screen: `ErrorRetryWidget`
+(3 callers, all genuine error states), `DefaultSnackbar` (pushes success *and*
+failure, so §3.4's error-only toast cannot replace it), `HorizontalSeparator`
+(hardcoded `Colors.grey`, sizes to screen width — superseded by `HairlineGroup`
+but its main caller is a Game Detail screen), `SavedGameItem`, `TaskItem`,
+`GroupTaskItem`, `AddContentDialog`, `MetacriticIndicator`, `LegendIndicator`,
+`MultiTypeValuesSelection`, `TypeValuesSelection`, the `Default*` buttons and
+filter app bars, and the shimmers. **Retire each one in the run that adopts its
+replacement**, not in a sweep — that way the screen is touched once and the new
+component's manual checks get done on a real layout.
+
+**3. Not yet proven anywhere.** Built and merged, but with **no caller outside
+`lib/widgets/`**, so they have never rendered in the app: `CompletionRing`,
+`LabelValueRow`, `HairlineGroup`, `ErrorNotice`, `FailedItem`,
+`DestructiveActionPair`, `ContextChip`, `StatPill`, `CountdownTile`, `ZoneLabel`,
+`CoverTile`. `StatusChip` and `FilterCountChip` are composed by other widgets but
+never placed by a feature. **Treat the first use of any of these as first use** —
+expect to find something, and perform that component's entries in
+`.agents/manual-check-backlog.md` on the screen that adopts it. Precedent: item
+2.8's `EmptyStateCard` shipped wired to five call sites, and one of them turned out
+never to have been reachable in the app's history.
 
 | Widget | File | Purpose |
 |---|---|---|
@@ -139,7 +181,6 @@ actually match the requirement.
 | `GameCard` | `game_card/game_card.dart` | Game card in three sizes (`xs` 64 no footer, `sm` 132, `md` fills its parent): 3:4 cover at r16 with an indigo wash and an onyx missing-art fallback, optional library tick / status chip / critic badge overlays, optional shared-element hero, constructible with no data for shimmers. Multi-file module — only `GameCard` and `GameCardSize` are public surface; the footer classes beside them are internal and are not imported from outside the folder. Adds no spacing of its own |
 | `LibraryTick` | `library_tick.dart` | 20px indigo circle with a check, marking a cover as already in the library; no parameters, display-only; adds no spacing of its own |
 | `CriticBadge` | `critic_badge.dart` | Green pill showing a critic score rounded to a whole number. `score` is the only parameter — no colour, threshold, variant or score ramp. Its green is one of §2 rule 1's two sanctioned exceptions (with the focus ring) because it is data, not an affordance: do not copy the green out of this widget and do not reuse it for a badge that is not a critic score |
-| `GameItem` | `game_item.dart` | **Deprecated** — replaced by `GameCard`. Kept as reference only, no callers |
 | `GameItemLoadingShimmer` | `game_item_loading_shimmer.dart` | Horizontal shimmer of dataless `GameCard`s at `sm` |
 | `GameItemGridLoadingShimmer` | `game_item_grid_loading_shimmer.dart` | Grid shimmer of dataless `GameCard`s at `md`, matching the games grid's cell geometry |
 | `GameDetailTopContentShimmer` | `game_detail_top_content_shimmer.dart` | Shimmer for game detail top section |

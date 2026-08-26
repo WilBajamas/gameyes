@@ -597,6 +597,47 @@ the pipeline, at the human's explicit instruction.
 
 ---
 
+## The component library: built, but only half of it has ever rendered
+
+Established 2026-08-25 by grepping callers, not by reading the checklist's ticks.
+All 17 week-2 items exist and are merged, but **"done" and "reusable everywhere" are
+different claims** and only the first is true.
+
+**8 of 17 have a caller outside `lib/widgets/`** — `EmptyStateCard` (5 sites),
+`LabeledTextField` (2), `GameCard`, `BottomTabBar`, `CountdownCard`, `ActionRow`,
+`ProgressDots`, `PlaceholderSlot`. **11 have never rendered anywhere**:
+`CompletionRing`, `LabelValueRow`, `HairlineGroup`, `ErrorNotice`, `FailedItem`,
+`DestructiveActionPair`, `ContextChip`, `StatPill`, `CountdownTile`, `ZoneLabel`,
+`CoverTile`. `StatusChip` and `FilterCountChip` sit between the two — composed by
+other widgets, never placed by a feature.
+
+**Treat the first use of any unproven component as first use.** Things go wrong at
+the seam between a component and a real screen, and 11 of these have never had that
+seam. The evidence is item 2.8: it shipped wired to five sites, and one of them
+turned out never to have been reachable in the app's history.
+
+**`lib/widgets/` holds three tiers and the filename does not tell them apart** —
+design-system components, legacy that is still load-bearing, and unproven new
+components. The split is now written out in `.claude/skills/flutter-widgets/SKILL.md`
+above its catalogue table; keep it current rather than re-deriving it.
+
+**Do not sweep the legacy out before stage 3.** Human decision, 2026-08-25, after
+weighing it: only `game_item.dart` was genuinely dead (deprecated, zero callers) and
+it was deleted. Everything else either has live callers — so removing it *is* a
+screen rewrite wearing a cleanup costume — or is superseded by a component that has
+never rendered, which would leave neither implementation proven.
+`horizontal_separator.dart` is the trap that looks safest: 15 lines, hardcoded
+`Colors.grey`, superseded by `HairlineGroup` — but its main caller is a **Game
+Detail** screen that stage 3 is about to rebuild, so deleting it now means touching
+that screen twice. **Retire each legacy widget in the run that adopts its
+replacement.**
+
+**Two foundations gaps still block spec-exact work**: no 15px type token (three items
+worked around it) and no art-deep surface (§2.2 names it as the empty-state fill and
+it has no value anywhere). Both are recorded below.
+
+---
+
 ## Known non-blocking gaps (carried forward)
 
 - Item 8's AC12 test duplicates AC10 and never simulates the onboarding hop

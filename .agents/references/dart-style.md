@@ -45,7 +45,7 @@ All files: `snake_case.dart`
 | BLoC/Cubit state | `[feature]_state.dart` | `games_state.dart` |
 | Cubit | `[feature]_cubit.dart` | `tracker_cubit.dart` |
 | Screen | `[feature]_screen.dart` | `tracker_screen.dart` |
-| Widget (global) | `[descriptor]_widget.dart` or plain `[descriptor].dart` | `game_item.dart`, `default_snackbar.dart` |
+| Widget (global) | `[descriptor]_widget.dart` or plain `[descriptor].dart` | `status_chip.dart`, `default_snackbar.dart` |
 | Repository interface | `[feature]_repository.dart` | `games_repository.dart` |
 | Repository impl | `[feature]_repository_impl.dart` | `games_repository_impl.dart` |
 | DataSource | `[feature]_datasource.dart` | `games_datasource.dart` |
