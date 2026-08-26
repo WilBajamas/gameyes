@@ -285,11 +285,11 @@ class S {
     );
   }
 
-  /// `No results found`
-  String get no_results_found {
+  /// `Nothing matches yet`
+  String get nothing_matches_yet {
     return Intl.message(
-      'No results found',
-      name: 'no_results_found',
+      'Nothing matches yet',
+      name: 'nothing_matches_yet',
       desc: '',
       args: [],
     );
@@ -1275,11 +1275,11 @@ class S {
     );
   }
 
-  /// `Search again`
-  String get search_again {
+  /// `Clear filters`
+  String get clear_filters {
     return Intl.message(
-      'Search again',
-      name: 'search_again',
+      'Clear filters',
+      name: 'clear_filters',
       desc: '',
       args: [],
     );

@@ -22,6 +22,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
 
   GamesBloc(this._fetchGamesUseCase) : super(const GamesState()) {
     on<GamesFetched>(_onFetchGames, transformer: droppable());
+    on<GamesFiltersCleared>(_onClearFilters, transformer: droppable());
     on<GamesNextPage>(_onFetchNextPage, transformer: droppable());
 
     add(const GamesFetched());
@@ -57,6 +58,40 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       1,
       filter,
     );
+
+    final newState = switch (result) {
+      Success(value: final response) => state.copyWith(
+          status: response.items.isEmpty
+              ? GamesStatus.empty
+              : GamesStatus.success,
+          response: response,
+          games: response.items,
+          currentPage: 1,
+          filterState: filter,
+        ),
+      Failure(error: final error) => state.copyWith(
+          status: GamesStatus.failed,
+          error: error,
+        ),
+    };
+
+    emit(newState);
+  }
+
+  Future<void> _onClearFilters(
+    GamesFiltersCleared event,
+    Emitter<GamesState> emit,
+  ) async {
+    const filter = FilterState();
+
+    emit(
+      state.copyWith(
+        status: GamesStatus.loading,
+        filterState: filter,
+      ),
+    );
+
+    final result = await _fetchGames(1, filter);
 
     final newState = switch (result) {
       Success(value: final response) => state.copyWith(

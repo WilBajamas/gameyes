@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "browse_games": MessageLookupByLibrary.simpleMessage("Browse games"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "clear_filters": MessageLookupByLibrary.simpleMessage("Clear filters"),
     "coming_soon": MessageLookupByLibrary.simpleMessage("Coming Soon"),
     "complete_onboarding_steps": MessageLookupByLibrary.simpleMessage(
       "Let\'s complete your quick onboarding steps.",
@@ -228,10 +229,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_pinned_tasks_desc": MessageLookupByLibrary.simpleMessage(
       "There are no pinned tasks",
     ),
-    "no_results_found": MessageLookupByLibrary.simpleMessage(
-      "No results found",
-    ),
     "not_started": MessageLookupByLibrary.simpleMessage("Not started"),
+    "nothing_matches_yet": MessageLookupByLibrary.simpleMessage(
+      "Nothing matches yet",
+    ),
     "now_playing": MessageLookupByLibrary.simpleMessage("Now Playing"),
     "ok": MessageLookupByLibrary.simpleMessage("Ok"),
     "onHold": MessageLookupByLibrary.simpleMessage("On Hold"),
@@ -281,7 +282,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "screenshots": MessageLookupByLibrary.simpleMessage("Screenshots"),
-    "search_again": MessageLookupByLibrary.simpleMessage("Search again"),
     "search_games": MessageLookupByLibrary.simpleMessage("Search games"),
     "search_saved_games": MessageLookupByLibrary.simpleMessage(
       "Search saved games",

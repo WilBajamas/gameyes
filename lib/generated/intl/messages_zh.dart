@@ -81,6 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "browse_games": MessageLookupByLibrary.simpleMessage("浏览游戏"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "clear_filters": MessageLookupByLibrary.simpleMessage("清除筛选"),
     "coming_soon": MessageLookupByLibrary.simpleMessage("即将推出"),
     "complete_onboarding_steps": MessageLookupByLibrary.simpleMessage(
       "让我们完成快速入门步骤。",
@@ -198,8 +199,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_pinned_tasks_desc": MessageLookupByLibrary.simpleMessage(
       "There are no pinned tasks",
     ),
-    "no_results_found": MessageLookupByLibrary.simpleMessage("找不到物品"),
     "not_started": MessageLookupByLibrary.simpleMessage("Not started"),
+    "nothing_matches_yet": MessageLookupByLibrary.simpleMessage("还没有匹配的结果"),
     "now_playing": MessageLookupByLibrary.simpleMessage("正在玩"),
     "ok": MessageLookupByLibrary.simpleMessage("Ok"),
     "onHold": MessageLookupByLibrary.simpleMessage("On Hold"),
@@ -243,7 +244,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "retry": MessageLookupByLibrary.simpleMessage("重试"),
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "screenshots": MessageLookupByLibrary.simpleMessage("截图"),
-    "search_again": MessageLookupByLibrary.simpleMessage("重新搜索"),
     "search_games": MessageLookupByLibrary.simpleMessage("搜索游戏"),
     "search_saved_games": MessageLookupByLibrary.simpleMessage(
       "Search saved games",

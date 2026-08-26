@@ -90,13 +90,13 @@ class GamesScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: EmptyStateCard(
                               glyph: Icons.search_outlined,
-                              headline: S.current.no_results_found,
+                              headline: S.current.nothing_matches_yet,
                               supportingLine:
                                   S.current.try_widening_your_filters,
-                              actionLabel: S.current.search_again,
+                              actionLabel: S.current.clear_filters,
                               onActionPressed: () => context
                                   .read<GamesBloc>()
-                                  .add(const GamesFetched()),
+                                  .add(const GamesFiltersCleared()),
                             ),
                           ),
                         ),

@@ -28,6 +28,13 @@ final class GamesFetched extends GamesEvent {
       [searchTerm, dateFrom, dateTo, platforms, ordering, genres, ascending];
 }
 
+final class GamesFiltersCleared extends GamesEvent {
+  const GamesFiltersCleared();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class GamesNextPage extends GamesEvent {
   final String? searchTerm;
   final DateTime? dateFrom;
