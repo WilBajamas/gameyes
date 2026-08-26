@@ -23,14 +23,14 @@ available, ideally in one sitting per screen rather than one item at a time.
 gets worked in one device sitting. **Item 2.8 shipped 2026-08-25 and was the last
 one, so that sitting is now the next task.**
 
-**75 checks** remaining as of 2026-08-25, **counted from this file rather than
+**74 checks** remaining as of 2026-08-25, **counted from this file rather than
 carried forward**. Recount here rather than trusting a quoted total — every number
 previously written down had drifted (this file said 90, `handover.md` said 82, and
 `handover.md`'s own itemised list summed to 88, against a true 92 before the sitting
 started).
 
-**The device sitting began 2026-08-25. Seventeen checks are done.** All fifteen of
-item 2.4 (see that section) plus `2.8-MC-1` and `2.8-MC-2`. Among them were the two
+**The device sitting began 2026-08-25. Eighteen checks are done.** All fifteen of
+item 2.4 (see that section) plus `2.8-MC-1`, `2.8-MC-2` and `2.8-MC-5`. Among them were the two
 entries that had no automated guard at all — keyboard Enter/Space activation (the
 `ButtonPressScale`/`ActivateIntent` defect) and the selected/unselected colour
 correction, which the old bar had shipped **inverted**.
@@ -45,7 +45,7 @@ exact branch. Do not add those back here as checks; they are bugs, two fixed and
 
 Current breakdown: item 10.1's **4**, week 2 Stage 1's **19** (1.1×1, 1.2×2, 1.3×7,
 1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **52** (2.1×8, 2.2×10,
-2.3×15, 2.4×**0**, 2.5×8, 2.6×3, 2.7×5, 2.8×**3**).
+2.3×15, 2.4×**0**, 2.5×8, 2.6×3, 2.7×5, 2.8×**2**).
 
 **Weigh Featured's checks against a rebuild before spending time on them.** Human
 note, 2026-08-25: **the Featured screen is on an old design and is due to be rebuilt**
@@ -83,7 +83,7 @@ screenshots deletion changed nothing visible" is a real-app check, and had been
 miscounted with the other four for weeks. It is doable today, on the current build,
 with no new screen needed.
 
-**2.8's remaining three are doable today** (it ships wired). Along with `2.7-MC-3`,
+**2.8's remaining two are doable today** (it ships wired). Along with `2.7-MC-3`,
 those four are the only checks here reachable in the app as it stands right now —
 everything else waits on a screen that does not exist yet.
 
@@ -514,8 +514,14 @@ are worded observationally and cannot be asserted, and the rest are visual.
 ships **wired** at five live sites, so every check is reachable by driving the real
 app.
 
-**`MC-1` and `MC-2` passed 2026-08-25** — both Browse tab-switch actions work, and
-site 5's card now renders where the section used to vanish silently.
+**`MC-1`, `MC-2` and `MC-5` are cleared as of 2026-08-25.** Both Browse tab-switch
+actions work, and site 5's card now renders where the section used to vanish
+silently. `MC-5` was a wording judgement and the judgement was made: the headline
+became **"Nothing matches yet"** and the action became **"Clear filters"**, which now
+resets `FilterState` through a new `GamesFiltersCleared` event rather than re-running
+the same failing filters. **This overrides `2.8-AC-24`**, which had mandated reusing
+the `no_results_found` key — a human decision, not drift. Both keys were renamed
+(`nothing_matches_yet`, `clear_filters`) since each had exactly one call site.
 
 **Three sites cannot be reached without forcing them**, because they only appear
 when the app genuinely has no data. Flip the guard, hot-restart, look, then revert
@@ -546,13 +552,6 @@ real filter that returns nothing now shows it.
   card is the "outlines are always solid" violation this item was reserved to fix.
   Note the card declares no width of its own; it fills its parent only because
   `PrimaryButton` sets `width: double.infinity`.
-- **2.8-MC-5** — **A judgement call, not a pass/fail.** Games grid, filtered to
-  return nothing (site 1) — the headline renders "NO RESULTS FOUND". That is the
-  reused `no_results_found` key AC-24 mandates, so it is correct as shipped, but it
-  is the one empty state in the set that still reads as an apology rather than an
-  invitation, against §3.2's "empty states recruit, they never apologise." Decide on
-  device whether to raise a follow-up to reword that key.
-
 ---
 
 ## Also deferred, for a different reason
