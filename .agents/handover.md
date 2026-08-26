@@ -496,6 +496,42 @@ uncovered.
 
 ---
 
+## Bugs found on device (2026-08-25 sitting)
+
+Two real defects, **found by looking rather than by any check that was hunting for
+them** — the first argument this project has for the device sitting being worth its
+cost. Neither is a manual check; both need a fix.
+
+- **65 of 167 Chinese strings are untranslated English.** `lib/l10n/intl_zh.arb`
+  holds the *English* value for 65 keys, so a `zh` device renders them in English.
+  Spotted because `tracker` and `browse` stayed English in the tab bar during
+  `2.4-MC-12`, but the gap is far wider than those two: whole surfaces are affected
+  — every library status (`completed`, `onHold`, `rageQuit`, `toBuy`, `inProgress`),
+  the entire group-task and step flow, all six featured-shelf titles, the
+  saved-games empty state, and `ok`/`cancel`/`done`/`back`/`edit`/`remove`.
+  Get the full list with a diff of the two `.arb` files' values, not by eye.
+  **This also weakens `2.4-MC-12`** — that check wants over-long *Chinese* labels to
+  ellipsise, and two of the five labels it should exercise are English. Re-run it
+  once the strings land.
+  Note `a_brief_description` also carries a typo in the **English** source:
+  `"A breif description"`. Fix it in the same pass, and remember localisation is
+  generated (gotcha #1), never hand-edited in `lib/generated/`.
+- **Screen titles overflow at Android's largest font size**, on Games, Browse and
+  Settings. **The obvious fix is already in place and is not working**, which is the
+  part worth knowing: `DefaultSliverAppBar` already wraps the title in
+  `AutoSizeText` and `auto_size_text` is already a dependency. It fails because
+  **`AutoSizeText` with no `maxLines` has no reason to shrink** — it wraps to as
+  many lines as it needs instead, and the bar's `toolbarHeight: kToolbarHeight + 12`
+  is fixed, so the wrapped text overflows a container that cannot grow. The title is
+  `screenTitle`, Space Grotesk **34px/700**, which Android's largest setting scales
+  well past what 68px of toolbar can hold.
+  The fix is bounding it — `maxLines: 1` plus a `minFontSize`, or clamping the
+  app-wide `textScaler` — not adding a package that is already there. It touches
+  one shared widget and therefore **every screen using `DefaultSliverAppBar` at
+  once**, so it wants its own small pipeline item rather than a drive-by edit.
+
+---
+
 ## Known non-blocking gaps (carried forward)
 
 - Item 8's AC12 test duplicates AC10 and never simulates the onboarding hop
@@ -522,12 +558,17 @@ uncovered.
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
 - **The whole on-device manual-check backlog now lives in
-  `.agents/manual-check-backlog.md`** — **82 checks** remaining as of 2026-08-25.
-  **The device sitting has started**: item 2.4's `MC-1, 2, 3, 5, 6, 7, 8, 9, 11, 14`
-  were performed and **all passed**, including both entries that had no automated
-  guard at all — keyboard Enter/Space activation and the tab bar's selected/unselected
-  colour correction. **Both are now confirmed on device rather than inferred**, which
-  retires the largest untested risk 2.4 left behind. **Do not quote the count from
+  `.agents/manual-check-backlog.md`** — **80 checks** remaining as of 2026-08-25.
+  **The device sitting has started**: twelve of item 2.4's fifteen were performed and
+  **all passed**, including both entries that had no automated guard at all — keyboard
+  Enter/Space activation and the tab bar's selected/unselected colour correction.
+  **Both are now confirmed on device rather than inferred**, which retires the largest
+  untested risk 2.4 left behind. Three did not settle and each carries a note in the
+  file explaining why: `MC-4` and `MC-13` are **not observable by naked eye** (0ms vs
+  140ms) and need one frame-accurate screen recording between them; `MC-10` needs a
+  second bottom-inset condition, which a second AVD or a navigation-mode switch gives
+  — not a second physical device. **The sitting also turned up two real bugs nothing
+  was hunting for** — see "Bugs found on device" above. **Do not quote the count from
   here; recount in the file.**
   Every total previously written down was wrong: this file said 82, the backlog
   file said 90, and the itemised list here summed to 88. The counted breakdown is

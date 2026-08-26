@@ -23,23 +23,34 @@ available, ideally in one sitting per screen rather than one item at a time.
 gets worked in one device sitting. **Item 2.8 shipped 2026-08-25 and was the last
 one, so that sitting is now the next task.**
 
-**82 checks** remaining as of 2026-08-25, **counted from this file rather than
+**80 checks** remaining as of 2026-08-25, **counted from this file rather than
 carried forward**. Recount here rather than trusting a quoted total — every number
 previously written down had drifted (this file said 90, `handover.md` said 82, and
 `handover.md`'s own itemised list summed to 88, against a true 92 before the sitting
 started).
 
-**The device sitting began 2026-08-25 and ten checks are already done.** Item 2.4's
-`MC-1, 2, 3, 5, 6, 7, 8, 9, 11, 14` were performed and **all passed**, including
-both of the two that had no automated guard at all — keyboard Enter/Space activation
-(the `ButtonPressScale`/`ActivateIntent` defect) and the selected/unselected colour
-correction. They have been deleted from item 2.4's section below, per this file's own
-tick-off rule. **Five 2.4 checks remain**, each needing a settings or hardware change
-rather than just the app.
+**The device sitting began 2026-08-25. Twelve checks are done, three are not.**
+Item 2.4's `MC-1, 2, 3, 5, 6, 7, 8, 9, 11, 14, 12, 15` were performed and **all
+passed**, including both entries that had no automated guard at all — keyboard
+Enter/Space activation (the `ButtonPressScale`/`ActivateIntent` defect) and the
+selected/unselected colour correction. They are deleted below, per this file's
+tick-off rule.
+
+**Three 2.4 checks remain and each is annotated with why it did not settle** —
+read those notes before retrying, they will save you the sitting: `MC-4` and
+`MC-13` are **not observable by naked eye** (0ms vs 140ms) and need one
+frame-accurate recording between them; `MC-10` is blocked on a second bottom-inset
+condition, which a second AVD or a navigation-mode switch provides — no second
+physical device required.
+
+**The sitting also found two real bugs, neither of which any check was looking
+for.** Both are filed in `handover.md`'s "Known non-blocking gaps": 65 of 167
+Chinese strings are untranslated English, and the screen titles overflow at
+Android's largest font size. Neither is a manual check — do not add them back here.
 
 Current breakdown: item 10.1's **4**, week 2 Stage 1's **19** (1.1×1, 1.2×2, 1.3×7,
-1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **59** (2.1×8, 2.2×10,
-2.3×15, 2.4×**5**, 2.5×8, 2.6×3, 2.7×5, 2.8×5).
+1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **57** (2.1×8, 2.2×10,
+2.3×15, 2.4×**3**, 2.5×8, 2.6×3, 2.7×5, 2.8×5).
 
 **Where to go next**, now that 2.4's highest-priority pair is cleared: **2.2's ten,
 2.6's three and 2.7's five need one scratch harness between them** — those three
@@ -341,30 +352,54 @@ carries more manual weight than any item so far for two reasons: four widget
 tests were removed at Phase 4B by human decision, and the bar deliberately lost
 a shipped behaviour.
 
-**Ten of the fifteen were performed and passed on 2026-08-25**, including both of
-the two that carried no automated guard: `MC-1` (keyboard Enter/Space activation,
+**Twelve of the fifteen were performed and passed on 2026-08-25**, including both
+entries that carried no automated guard: `MC-1` (keyboard Enter/Space activation,
 the `ButtonPressScale`/`ActivateIntent` defect) and `MC-2` (the selected/unselected
 colour correction, which the old `CustomNavigationDestination` had shipped
-inverted). Also cleared: `MC-3, 5, 6, 7, 8, 9, 11, 14`. **The bar's colour
+inverted). Also cleared: `MC-3, 5, 6, 7, 8, 9, 11, 12, 14, 15`. **The bar's colour
 correction and its keyboard activation are now confirmed on device, not merely
-inferred.** The five below all need a settings or hardware change rather than just
-the running app, which is why they were held back.
+inferred.**
+
+Two notes on what that pass does and does not cover. `MC-9` passed — the Tracker
+glyph reads as an outline despite being declared `Icons.format_list_numbered_rtl`
+with no `_outlined` suffix, unlike the other four; the inconsistency is real in the
+source but invisible in the render, so it is a code tidiness point, not a bug.
+And `MC-12` was **under-exercised**: it asks over-long Chinese labels to stay on one
+line, but `tracker` and `browse` render as English even under `zh` (see the
+translation bug in `handover.md`), so only three of the five labels actually tested
+the case. The layout held on those three. Worth one more look after the strings are
+translated.
+
+The three below each failed to settle for a different reason — read the note on
+each before retrying.
 
 - **2.4-MC-4** — With OS reduce-motion ON, tap between tabs — colour and cap snap
   instantly, no fade. Turn it off and repeat — a short 140ms ease.
+  **ATTEMPTED 2026-08-25, NOT SETTLED — don't retry it the same way.** The observer
+  could not tell the two states apart by eye, which is expected rather than a
+  defect: the difference is 0ms versus 140ms on a colour crossfade, at or below the
+  threshold of naked-eye perception. **Settle it with a frame-accurate record, not
+  by looking**: screen-record the tab change at 60fps and scrub frame by frame —
+  reduce-motion ON should show the new colour on the very next frame, OFF should
+  show roughly 8 intermediate frames. `flutter run` + `timeDilation = 10` in a
+  scratch build is the other option.
 - **2.4-MC-10** — A device with a home indicator or gesture bar — labels clear the
   indicator, no overlap and no dead band beneath. Then one reporting a zero bottom
   inset — the bar must not sit flush to the screen edge (22 fallback).
-- **2.4-MC-12** — `zh` at maximum OS text size — each over-long label stays on ONE
-  line and ellipsizes, glyphs stay put, bar height does not grow, no destination
-  squeezes its neighbours.
+  **BLOCKED 2026-08-25 — only one emulator available**, and this check needs two
+  different bottom-inset conditions. **No second physical device is needed**: create
+  a second AVD, or on the existing one switch Settings → System → Gestures between
+  three-button navigation (non-zero inset) and gesture navigation, then compare. An
+  AVD with no navigation bar at all gives the zero-inset case that exercises the 22
+  fallback.
 - **2.4-MC-13** — Tap between tabs at normal motion — only colours and the cap
   animate, ~140ms standard ease. No indicator sliding horizontally, no animation
   of the bar's height, position or background.
-- **2.4-MC-15** — Open each of the five tabs — same five routes, same content,
-  each still scrolling as before, and the selected destination tracks the active
-  tab in both directions (tap the bar, and change tab via any other route change).
-
+  **PARTIALLY SETTLED 2026-08-25.** The *negative* half passed by eye and is done:
+  nothing slides horizontally, and the bar's height, position and background never
+  animate. The remaining half is the ~140ms duration itself, which has the same
+  naked-eye problem as `MC-4` above — settle both together with one frame-accurate
+  recording rather than two sittings.
 ---
 
 ## Week 2 Stage 2 — item 2.5 (Form fields)
