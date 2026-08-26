@@ -586,6 +586,13 @@ the pipeline, at the human's explicit instruction.
   that is a deliberate call, not an oversight. **The sitting also turned up two real
   bugs nothing was hunting for, both since fixed** — see "Bugs found on device"
   above. **Do not quote the count from here; recount in the file.**
+  **The scratch harness now exists**: `lib/main_harness.dart`, run with
+  `flutter run --flavor dev -t lib/main_harness.dart`. It is a separate entrypoint
+  needing neither DI nor `bootstrap()`, registers no route, and nothing in `lib/`
+  imports it — so it adds nothing to the shipped app. It clears **seventeen** checks,
+  not the eighteen this file claimed for weeks: `2.7-MC-3` is a real-app check ("open
+  Game Detail") and was miscounted with the other four. **Delete the file** once the
+  checks are cleared and the three modules have real callers.
   Every total previously written down was wrong: this file said 82, the backlog
   file said 90, and the itemised list here summed to 88. The counted breakdown is
   now recorded once, in the backlog file itself, and the Stage 1 group is **19**,

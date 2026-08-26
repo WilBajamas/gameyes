@@ -52,12 +52,27 @@ Current breakdown: item 10.1's **4**, week 2 Stage 1's **19** (1.1×1, 1.2×2, 1
 1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **57** (2.1×8, 2.2×10,
 2.3×15, 2.4×**3**, 2.5×8, 2.6×3, 2.7×5, 2.8×5).
 
-**Where to go next**, now that 2.4's highest-priority pair is cleared: **2.2's ten,
-2.6's three and 2.7's five need one scratch harness between them** — those three
-modules ship unwired — so building a single harness clears eighteen at once, and is
-the largest remaining win in this file. **2.8's five need no harness** (it ships
-wired) and four of them sit on Featured, so they go in one Featured sitting. Do not
-interrupt a pipeline run to perform these, and do not read the count as a problem.
+**The scratch harness now exists: `lib/main_harness.dart`.** Run it with
+
+```
+flutter run --flavor dev -t lib/main_harness.dart
+```
+
+It is a **separate entrypoint** — it registers no route, nothing in `lib/` imports
+it, and it needs neither DI nor `bootstrap()`, so it adds nothing to the shipped
+app and cannot leak into a release build. It hosts every unwired component in one
+scrolling screen, each section captioned with the check IDs it serves. **Delete the
+file** once these checks are cleared and the components have real callers.
+
+**It clears seventeen, not the eighteen this file used to claim.** `2.7-MC-3` is a
+**real-app** check ("open Game Detail and confirm the screenshots deletion changed
+nothing visible") and cannot be done in a harness — it was miscounted with the other
+four. Sixteen of the seventeen (2.2's ten, 2.6's three, 2.7's `MC-1`, `MC-2`, `MC-4`,
+`MC-5`) are harness checks; `2.7-MC-3` needs the app.
+
+**2.8's five need no harness** (it ships wired) and four of them sit on Featured, so
+they go in one Featured sitting. Do not interrupt a pipeline run to perform these,
+and do not read the count as a problem.
 
 ---
 
