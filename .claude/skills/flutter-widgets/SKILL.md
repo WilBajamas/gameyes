@@ -48,9 +48,20 @@ skill instead — that's a separate concern from the widget itself.
 
 Written for the component-library push, permanent, not tied to any one week.
 
-- **One file per widget family.** A small helper widget only its parent uses
-  lives as a private class in the same file. It only gets its own file once
-  something else also needs it.
+- **One file, or a module folder — decide per component, and say why.** A small
+  helper widget only its parent uses lives as a private class in the same file,
+  and most components are a single flat file. A **module folder** earns its place
+  when the component has a variant enum, a `CustomPainter`, or several sub-widgets
+  that are more than parent-only helpers. Shipped both ways deliberately: folders
+  for `game_card/`, `completion_ring/`, `countdown/`, `bottom_tab_bar/`,
+  `error_states/`; flat files for `labeled_text_field.dart`, `label_value_row.dart`,
+  `hairline_group.dart`, `empty_state_card.dart`. **A module folder has exactly one
+  public surface** — the component and its enum. Everything beside them is internal
+  and is never imported from outside the folder, tests included (item 2.4 shipped ten
+  violations of this and QA caught them late).
+  *This rule replaced an absolute "one file per widget family" on 2026-08-25. That
+  wording matched neither the five module folders nor the four deliberate flat files,
+  and QA flagged the contradiction six times across runs before it was settled.*
 - **Match the hand-written `default_*` widgets' style.** Plain, common
   Flutter widgets (`Container`, `Row`, `Column`, `Text`, `InkWell`, and the
   like), no cleverness, easy to read top to bottom. Match that style — not

@@ -6,10 +6,20 @@ Phase 4B review.
 - A run starts only from a clean tree (`git status --short` empty). Never stash,
   discard, or commit anything the human left uncommitted — just stop.
 - One `feature/<slug>` branch per run, created at Phase 0. Record branch and base SHA.
+  **Exception, and it is the common case now:** a *resume* session runs the pipeline
+  directly on the harness-designated session branch (`claude/...`) and creates no
+  nested branch. Several runs' artifacts may coexist on it; only one run's Dev/QA
+  phases are ever active at once. That branch merges into `develop` directly, not via
+  a PR, once the human says so.
 - Never merge, rebase, cherry-pick, reset, amend, force-update, open a PR, or
   trigger CI. Not once, not with any flag.
 - The Dev Agent commits its own work at the end of its pass, before any human
-  review. Only the Dev Agent commits; only the orchestrator pushes.
+  review. Only the Dev Agent commits; only the orchestrator pushes. **Two established
+  exceptions, both requiring a stated reason in the commit message:** the orchestrator
+  may commit run-folder planning docs ahead of Dev when the human asks to review
+  `code-plan.md` on GitHub before a gate, and may commit a dead subagent's
+  finished-but-uncommitted work (verify the baseline independently first, commit it
+  unchanged, state the authorship). Neither is licence to finish an agent's work.
 - The orchestrator pushes the branch after each Dev commit, so the human reviews
   a pushed commit at Phase 4B rather than a working tree.
 - A Phase 4B revision is a **new** commit from a fresh Dev round — history is
@@ -21,7 +31,8 @@ Phase 4B review.
    `task-brief.md ## File allowlist`. Anything extra that isn't a generated output
    (`*.freezed.dart`, `*.g.dart`, `*.gr.dart`, `*.config.dart`, `*.mocks.dart`) means
    stop and escalate — do not commit it, do not revert it either.
-2. Confirm the branch is `feature/<slug>`, not `main`. On `main`, stop and escalate.
+2. Confirm the branch is the run's branch — `feature/<slug>`, or the harness session
+   branch on a resume run — and **not** `main` or `develop`. On either, stop and escalate.
 3. Stage only allowlisted files plus their generated outputs.
 4. One commit for the whole task brief — not one per step, not one per file.
 5. Short conventional-commit message (`feat:`, `fix:`, `chore:`, `refactor:`,

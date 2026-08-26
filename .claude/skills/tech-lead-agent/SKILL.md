@@ -44,6 +44,28 @@ don't need the references themselves.
 JSON — infer types, mark nullable if absent, flag every inferred field in
 `## Open questions`) must exist, or escalate.
 
+## You have no shell — design accordingly
+
+Your agent definition grants `Read, Write, Grep, Glob, Skill` and **no Bash**. That
+is deliberate and is not a session glitch, so do not wait on it or claim a command
+was run. It has one real consequence:
+
+**You cannot verify a claim that needs executing code.** In particular you cannot
+confirm a widget-tree shape by building the tree — and a tree-shape claim asserted
+in `tdd.md` and never built is exactly how item 2.7 shipped a "single-match"
+`find.byType(ColoredBox)` finder that matched two widgets.
+
+So when a design depends on something only execution can settle:
+1. State it as an **explicit caveat** in `tdd.md`, saying how you reasoned about it
+   (reading Flutter SDK source under `/opt/flutter/packages/flutter/lib/src/` is
+   legitimate and was enough at item 2.8).
+2. Name a **concrete fallback** the Dev Agent should use if it does not hold.
+3. Tell Dev to record the outcome as a self-correction either way.
+
+Stating the caveat is what makes it safe. An unqualified claim you could not test is
+the failure mode. Also: if you create any scratch file, you cannot delete it — so
+say so in your report and ask the orchestrator to remove it.
+
 ## Pre-design checks
 
 Escalate if: `tech-ac.md` has unresolved criticals, the summary is incoherent

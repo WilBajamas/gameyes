@@ -37,42 +37,21 @@ pipeline work.** `week-1-task-briefs.md` is deleted per its own top note
 in git history past commit `167a026` and in the condensed record just below —
 see the gotcha at the bottom about why that almost got lost.
 
-**Condensed record of items 9, 10, 10.1** (their run folders are retired,
-this is what's left):
-- **Item 9** (`igdb-client-repoint`) — IGDB calls moved server-side behind a
-  `igdb-proxy` Edge Function. `NetworkModule`/`TwitchAuthInterceptor` kept as
-  `@Deprecated` reference code by human request rather than deleted. Two
-  human-approved rounds: the deprecation carve-out, and later
-  `IgdbProxyConstants` → `SupabaseIgdbProxyConstants` /
-  `ErrorType.functionError` → `ErrorType.supabaseIgdbError` renamed by direct
-  human commits (`8f9f9bf`, `5cd8a4f`).
-- **Item 10** (`sentry`) — Sentry crash reporting, single project/DSN,
-  `environment` set from flavour. Scope grew mid-run to add `talker`
-  request/response/error logging around the IGDB client and remove the
-  deprecated `PrettyDioLogger`. Dev commit `7adeb25`. `TestCrash` and its
-  three `SentryConstants.testCrash*` constants were removed afterward once
-  both manual checks passed. See gotcha #8 for the `--flavor dev` requirement
-  that manual check needed.
-- **Item 10.1** (`igdb-transport`) — swapped the IGDB client from
-  `functions.invoke` to Dio + Retrofit. Dev commit `5385338`. Four approved
-  deviations: `talker_dio_logger` adopted, `IgdbCallLog` deleted;
-  `SupabaseIgdbClient` collapsed entirely (its three callers now depend on
-  `SupabaseIgdbProxyService` directly); the Retrofit interface renamed
-  `SupabaseIgdbProxyService`; error-propagation tests swapped from
-  `FunctionException` to a `DioException` fixture. Left two things open — see
-  "Known non-blocking gaps" below.
-- **Item 11** (`cleanup`) — `.gitattributes` fix for generated-file line-ending
-  churn, `coverage/` untracked, a wrong `envied` TODO removed, 14 zero-reference
-  `static const` members deleted from `const.dart`, and the three run folders
-  above retired (their record migrated here and into what was
-  `week-1-task-briefs.md` first). Dev commit `37f82ee`, QA cycle 1 fix
-  `12d08d9` (the dangling-sentence fragment above). One resolved escalation:
-  `task_detail_screen.dart`'s unused `_TaskReminder` class is the entire
-  2-warning analyzer baseline — human chose to leave it alone rather than have
-  the unused-code scan delete it, so it's still there, on purpose, not missed
-  by a future sweep. Two deviations approved beyond REQ-11.1–11.6 itself: this
-  file's "Where things stand" and "Next-session prompt" sections were edited
-  directly, both normally out of this item's stated scope.
+**Condensed record of week 1's items 9, 10, 10.1 and 11.** Their run folders are
+retired and `week-1-task-briefs.md` is deleted; full text is in git history past
+`167a026`. What shipped: IGDB calls moved server-side behind an `igdb-proxy` Edge
+Function (item 9, with `NetworkModule`/`TwitchAuthInterceptor` kept `@Deprecated` by
+human request); Sentry crash reporting with `environment` from flavour, plus `talker`
+logging around the IGDB client (item 10, `7adeb25`); the IGDB client swapped from
+`functions.invoke` to Dio + Retrofit, collapsing `SupabaseIgdbClient` into
+`SupabaseIgdbProxyService` (item 10.1, `5385338`); and a cleanup pass — `.gitattributes`
+line-ending fix, `coverage/` untracked, 14 dead `const.dart` members removed (item 11,
+`37f82ee`).
+
+**The one thing from those runs that still binds:** `task_detail_screen.dart`'s unused
+`_TaskReminder` class **is** the entire 2-warning analyzer baseline. The human chose to
+leave it rather than let an unused-code scan delete it — it is deliberate, not missed,
+so do not "fix" it and do not read the 2 warnings as drift.
 
 **One open item, carried from item 3:** the on-device cross-account RLS
 check. Schema, RLS policies and the account-picker sign-in fix are all done
@@ -100,54 +79,36 @@ both the same day. Same shape as gotcha #9. The 2.1 run then found the checklist
 misnaming `GameItem`'s callers — so this applies to any inherited claim about
 what exists, not just stage status.
 
-**Condensed record of items 1.1–1.9** (run folders retired 2026-08-20 — this
-is what's left, plus `.agents/manual-check-backlog.md`):
-- **1.1 Zone label** (`lib/widgets/zone_label.dart`) — one Phase 3 reversal:
-  human rejected the widget owning its own vertical spacing; established the
-  **"No spacing of its own"** standing convention now in `flutter-widgets`
-  skill. Dev commit `2a220f6`.
-- **1.2 Status chip** (`status_chip.dart`) — six status pills, glass on-media
-  variant. No revisions. Dev commit `dd940a5`.
-- **1.3 Cover tile** (`cover_tile.dart`) — one Phase 3 reversal: human
-  rejected the spec's `saturate(.5) contrast(1.05)` artwork filter, artwork
-  keeps original colours (only the indigo wash overlay remains). Dev commit
-  `c2ab32f`.
-- **1.4 Placeholder slot** (`placeholder_slot.dart`, renamed from
-  `logo_placeholder.dart`) — one Phase 3 reversal: human rejected the spec's
-  dashed border, solid outline instead; established **"Outlines are always
-  solid"** as a standing convention (`system-foundation-specs.md` §0 item 6
-  plus a `flutter-widgets` bullet). Corrected two design docs that had
-  described the old dashed treatment as if it were still current. Dev commit
-  `482a319`.
-- **1.5/1.6/1.7 combined** (`filter_count_chip.dart`, `context_chip.dart`,
-  `stat_pill.dart`) — one BA/Tech-Lead/Dev/QA run covering all three, human
-  request (none of the three depend on each other). Notable: human wrote the
-  three widget test files personally rather than Dev — established via a
-  Phase 3 revision reversing `tech-ac.md`'s test-authorship criterion, not a
-  standing rule for future items unless asked again. Also established
-  **"Dimensions are even numbers"** and **"Prefer Expanded over Flexible,
-  unless the widget hugs its content"** as standing conventions. Dev commit
-  `bb9b6e5`. `ContextChip` and `StatPill` (the glass form) ship unwired — no
-  caller since the welcome heroes went to flat PNG art before Stage 1 started.
-- **1.8/1.9 combined** (`progress_dots.dart`, `action_row.dart`) — one run for
-  both promotions, human request. Three Dev commits: `cf6d4d8` built it,
-  `29a516d` applied a Phase 4B revision, `495a27f` fixed QA cycle 1's single
-  defect. `provider_action_button.dart` was deleted (git records it as renamed
-  into `action_row.dart`); both screens rewired in-run with no visual change.
-  Three things settled here that outlive the run:
-  - **The checklist was wrong that the provider row matched spec.** Its label
-    renders Inter 16/400, not §3.3's 15px/500. Resolved as *preserve what
-    ships* — a promotion moves code, it doesn't restyle a live screen — so
-    the gap is still open, and correcting it needs a new 15px type token
-    (none exists). `[1.9-AC5]`'s "full ink" was also wrong: `body` carries no
-    colour and inherits `ink70` via `bodyMedium`→`meta`, so the code pins
-    `ink70` deliberately. Don't "fix" either to match the spec text without
-    asking.
-  - **The dots' 5px dimensions are a recorded exception** to "dimensions are
-    even numbers" — that convention postdates the dots, and the promotion
-    preserved them on purpose.
-  - **`Flexible` over `Expanded`** around the row's label, under the
-    hug-content exception, approved at Phase 3.
+**Condensed record of Stage 1's primitives 1.1–1.9.** Run folders retired 2026-08-20;
+what each widget *is* now lives in `.claude/skills/flutter-widgets/SKILL.md`'s
+catalogue, which is the place to look. Files: `zone_label.dart`, `status_chip.dart`,
+`cover_tile.dart`, `placeholder_slot.dart`, `filter_count_chip.dart`,
+`context_chip.dart`, `stat_pill.dart`, `progress_dots.dart`, `action_row.dart`.
+`provider_action_button.dart` was deleted into `action_row.dart`.
+
+**Four standing conventions were established by those runs and still bind every
+widget** — all four are now written into the `flutter-widgets` skill, which is the
+enforcing copy; they are listed here only so their origin is not lost:
+- **"No spacing of its own"** (1.1) — a reusable widget never carries outer padding or
+  a spacing parameter. Human reversal at a Phase 3 gate.
+- **"Outlines are always solid"** (1.4) — the spec's dashed border was rejected;
+  `system-foundation-specs.md` §0 item 6 records it. Item 2.8 finally removed the last
+  live violation.
+- **"Dimensions are even numbers"** (1.5/1.6/1.7). `progress_dots.dart`'s 5px values
+  are a **recorded exception** — the convention postdates them and the promotion
+  preserved them deliberately.
+- **"Prefer `Expanded` over `Flexible`, unless the widget hugs its content"**
+  (1.5/1.6/1.7), with `StatusChip` as the live hug-content example.
+
+**Two traps from those runs that a future session can still fall into:**
+- **The provider row's label renders Inter 16/400, not §3.3's 15px/500** — a promotion
+  moves code, it does not restyle a live screen, so the gap is open on purpose and
+  needs the missing 15px token. `[1.9-AC5]`'s "full ink" was also wrong: `body` carries
+  no colour and inherits `ink70`, so the code pins `ink70` deliberately. **Do not
+  "fix" either to match the spec text without asking.**
+- **The human wrote three widget test files personally** (1.5/1.6/1.7), via a Phase 3
+  revision reversing the BA's test-authorship criterion. That was a one-off by request,
+  **not** a standing default — ask again rather than assuming it repeats.
 
 **Week 2 Stage 2 (composites) — 7 of 8 done, only 2.8 left.** 2.1–2.4 shipped
 2026-08-21, 2.5–2.7 on 2026-08-24, 2.8 on 2026-08-25; run folders retired. The
@@ -176,346 +137,134 @@ on 2026-08-25** — this is now their only home:
   CTA, and a `Dialog` rather than a bottom sheet. Building the real sheet before
   week 3's Library entity/status model exists means building it twice.
 
-**Condensed record of items 2.1 and 2.2:**
-- **2.1 Game card** (`lib/widgets/game_card/`, Dev commit `26b5951`) — three
-  sizes, 3:4 cover at r16, three overlays, onyx missing-art fallback. Rewired
-  `games_screen` and both shimmers; `GameItem` is `@Deprecated`, not deleted.
-  **The checklist's caller list for this item was wrong** — it named tracker and
-  featured, neither of which ever referenced `GameItem`; the real ones were
-  `games_screen` and the two shimmers. That bullet is now corrected in place, and
-  it is worth verifying 2.5's caller list before trusting it. `LibraryTick` and
-  `CriticBadge` were promoted to app-wide primitives at the human's request.
-  Three things ship knowingly off-spec, all deliberate: §3.2's desaturation filter
-  (see below), platform marks staying as `PlatformRowList` logo images rather than
-  §1.9 abbreviations, and `md`'s 220px being a design reference rather than an
-  enforced minimum (two columns on a 360dp phone give ~168 each — C1 and R2 cannot
-  both hold literally).
-  **The desaturation reversal repeated item 1.3's.** BA wrote a criterion straight
-  from §3.2 demanding the 50% desaturation; the human had already rejected exactly
-  that filter at 1.3, and `1.3-AC7` stands as a live check that it be *visibly
-  absent*. Tech Lead caught it. §3.2 still describes the filter and was NOT
-  corrected — see the follow-ups below.
-- **2.2 Completion ring** (`lib/widgets/completion_ring/`, Dev commit `a3a918a`) —
-  three fixed sizes (60/80/88), `ink12` track, indigo arc, closed magenta ring at
-  exactly 100. Ships **unwired** by design; groundwork for Game Detail in week
-  3/4. The project's first real `CustomPainter`. Two approved deviations: the
-  semantics label reuses the existing `completed_percentage` key so it announces
-  "37% completed", and the 60px centre type is 14 rather than §3.2's 15.
-  **The `linear_progress_bar` package was evaluated at the human's request and
-  rejected**, as was Material's `CircularProgressIndicator` — don't re-open
-  without new information; the reasoning is in the checklist bullet.
-  The single indigo→magenta test was removed at Phase 4B by human decision; it
-  turned out to be carrying C8, C9's colour and C10's colour as well, so all three
-  are manual-only now. `CompletionRingPainter` is still public, which was
-  justified *only* by that test — worth revisiting.
+**Condensed record of Stage 2's composites 2.1–2.8.** Run folders retired; what each
+component *is* lives in the `flutter-widgets` catalogue. Files and Dev commits:
+`game_card/` `26b5951` · `completion_ring/` `a3a918a` · `countdown/` `5c2266b` ·
+`bottom_tab_bar/` `31d3f55` · `labeled_text_field.dart` `79255bd` ·
+`label_value_row.dart` + `hairline_group.dart` · `error_states/` `7d69ba4` ·
+`empty_state_card.dart` `6199114`. Deleted along the way:
+`scrolled_navigation_bar.dart`, `navigation_destination.dart`,
+`default_border_text_field.dart`, `detail_screenshot_section.dart`, `game_item.dart`.
 
-- **2.3 Countdown + Countdown tile** (`lib/widgets/countdown/`, Dev commit
-  `5c2266b`) — two public widgets, `CountdownCard` and `CountdownTile`, over a
-  shared `CountdownDigitRow`. Featured's countdown section rewired; the tile ships
-  unwired (the welcome hero that would have hosted it went to flat PNG art in item
-  6.1). **Provably timer-free**: every class in the module is a `StatelessWidget`,
-  so there is no lifecycle hook in which to start a timer and the cubit stays the
-  only clock — QA verified no `Timer`/`Ticker`/`AnimationController` anywhere in the
-  folder. `ButtonPressScale` is deliberately not reused for the same reason.
-  **Scope was deliberately widened past the component**, by human decision: the
-  "Wishlisted" badge fired on whole-library membership (`isFallback =
-  !localLibraryGameIds.contains(...)`), so it asserted something false about the
-  user's own library. A real wishlist boolean now travels repo → use case → state
-  via a new `CountdownGameEntity` with both fields `required`, and both repository
-  branches resolve it through one helper — the stale-flag bug is *unrepresentable*,
-  not merely avoided. The card takes no library-membership input at all; the rail
-  keeps `localLibraryGameIds` for its owned marker.
-  Three further human calls: the 80×110 cover thumbnail dropped (the screen doc
-  lists none and outranks §3.2), `isReleaseDay` left the widget API (the component
-  derives it from the duration), and the rail's hand-rolled green owned-marker
-  replaced with 2.1's `LibraryTick`. All §4/§1.9 violations are gone — emoji,
-  exclamation marks, `Colors.amber`/`Colors.green`, the gradient, `elevation: 3`
-  and the file's `// TODO: Refactor this`.
+**What still binds, per item:**
+- **2.1 Game card** — three things ship knowingly off-spec, all deliberate: §3.2's
+  desaturation filter is **absent** (rejected at 1.3, rejected again here — `1.3-AC7`
+  is a live check that it stays absent), platform marks stay as `PlatformRowList` logo
+  images rather than §1.9 abbreviations, and `md`'s 220px is a design reference, not an
+  enforced minimum. `LibraryTick` and `CriticBadge` were promoted to app-wide primitives.
+- **2.2 Completion ring** — the `linear_progress_bar` package and Material's
+  `CircularProgressIndicator` were both **evaluated and rejected**; do not re-open
+  without new information. `CompletionRingPainter` is still public, justified only by a
+  test that was later deleted — worth revisiting.
+- **2.3 Countdown** — **provably timer-free**: every class is a `StatelessWidget`, so
+  there is no lifecycle hook to start a timer in and the cubit stays the only clock.
+  `ButtonPressScale` is deliberately not reused for that reason. Scope was widened by
+  human decision to fix a real bug: the "Wishlisted" badge fired on whole-library
+  membership, so a `CountdownGameEntity` now carries a real wishlist boolean and the
+  stale-flag bug is *unrepresentable*, not merely avoided.
+- **2.4 Tab bar** — **the scroll-hide behaviour was DROPPED by human decision**; the
+  bar staying visible is correct, not a regression. `ScrollNotifier` is now fully
+  orphaned but deliberately left in place (singleton, DI registration, three writer
+  sites, one test registration) — its own follow-up. `elevation: 0` was knowingly kept
+  though redundant. The run also corrected a live bug: the old destination painted
+  **unselected** indigo and **selected** grey, inverted the entire time it shipped.
+- **2.5 Form fields** — composes its own `FormField<String>` around a plain `TextField`
+  because `TextFormField` renders its error inside the same decorator as the box, so a
+  focus ring would enclose both. **A silent pre-existing bug was fixed here**:
+  `maxLengthEnforcement: null` does **not** mean "no enforcement" — it resolves
+  per-platform and enforces on Android, so the old flag did the opposite of its name.
+- **2.6 Rows & hairline groups** — the hairline guarantee is **a construction, not a
+  rule**: placement is `if (index > 0)` and `children` is the only parameter, so a
+  leading or trailing hairline is a case the code cannot express. `Column` was chosen
+  over `ListView.separated` deliberately (these sit inside already-scrolling screens;
+  `shrinkWrap` builds every child anyway, losing the laziness that would justify it).
+- **2.7 Error states** — three levels, not §3.4's four: the Field level was already
+  shipped by 2.5 and is inherited. §3.4 specs **no per-section retry block**, so
+  `ErrorRetryWidget` has no replacement by design. The first foundations edit ever
+  permitted in a component run happened here (`surfaceToast` alias) — note
+  `app_tokens_test.dart` asserts three *distinct* raised surfaces via a `Set`, so the
+  alias had to stay out of it.
+- **2.8 Empty state** — see "Bugs found on device" and the §3.2/§2.2 gaps below.
 
-- **2.4 Tab bar** (`lib/widgets/bottom_tab_bar/`, Dev commit `31d3f55`) — six-file
-  module replacing `scrolled_navigation_bar.dart` and `navigation_destination.dart`,
-  both **deleted** rather than deprecated (keeping the old bar alive would have left
-  the only remaining reader of `ScrollNotifier` in the tree). Onyx `surfaceTabChrome`
-  chrome, 3px indigo cap over the active glyph, labels always visible.
-  **The scroll-hide behaviour was DROPPED by human decision.** The old bar collapsed
-  to zero height on scroll-down via the `getIt` `ScrollNotifier` singleton. That is a
-  deliberate, visible change to a shipped screen — do not "restore" it as a
-  regression. **`ScrollNotifier` is now fully orphaned but deliberately left in
-  place**: the singleton, its DI registration, three writer sites
-  (`home_screen.dart:61`, `browse_screen.dart:19`, `settings_screen.dart:26`) and
-  `settings_screen_test.dart:38`'s registration. Its own follow-up, not this run's.
-  **It also corrected a live bug nobody had noticed**: `CustomNavigationDestination`
-  painted the UNSELECTED destination indigo and the SELECTED one grey — inverted
-  against spec the whole time.
-  Two things about this run's test file are worth carrying forward. Four tests were
-  removed at the human's request (12 → 8), including the only automated cover for
-  keyboard activation and for the colour correction above — both are now the two
-  **highest-priority entries in `manual-check-backlog.md`**. And QA caught the tests
-  reaching into module internals (`find.byType(BottomTabBarCell)` ×10) against the
-  brief's own constraint; a post-QA commit reworked all 8 onto the public surface.
-  Worth watching for in the next module — it is an easy default.
-  **`elevation: 0` on `Material` was knowingly kept** despite being redundant, so the
-  analyzer baseline is **33 from here, not 32**. A decision, not drift; don't "fix"
-  it in a sweep without asking.
+## Lessons that outlive the runs that produced them
 
-- **2.5 Form fields** (`lib/widgets/labeled_text_field.dart`, Dev commit `79255bd`) —
-  `DefaultBorderTextField` **deleted**, not deprecated, and replaced by
-  `LabeledTextField`: label always above, helper and character counter folded onto
-  that label row, `surfaceRaised` fill at r16, 2px green focus ring at 2px offset,
-  and an error state that swaps the fill for `errorTint` plus a 1px `errorLine`
-  hairline. All 7 call sites rewired across 3 files. QA PASS, 0 cycles.
-  **A single file, not a module folder** — the first Stage 2 item where the folder
-  wasn't earned (no variant enum, no painter, two parent-only helpers). A folder
-  would only have imported 2.4's public-surface trap for no gain.
-  **"Ship unwired" was a false choice, and this generalises.** The checklist offered
-  rework-vs-unwired as if both were available; an in-place rework *cannot* ship
-  unwired, because the same class in the same file changes every caller the moment
-  it merges. "Unwired" only exists by building a second component beside the old
-  one. Worth remembering the next time a checklist bullet offers that fork — 2.6
-  and 2.7 both rework existing code.
-  **The caller list was right this time**, unlike 2.1's — but it was still grepped
-  before being trusted, which is what made the "false choice" finding possible.
-  **It composes its own `FormField<String>` around a plain `TextField`** instead of
-  using `TextFormField`, because `TextFormField` renders its error message inside
-  the same decorator as the box: a focus ring around that decorator would enclose
-  box *and* message, so `[2.5-AC7]` and `[2.5-AC9]` could not both hold. Documented
-  boundary: the form value tracks the controller at first build then via
-  `onChanged`, so external mutation of a validated controller wouldn't propagate.
-  No call site does that today.
-  **A silent pre-existing bug was found and fixed.** `maxLengthEnforce: false`
-  passed `null`, and **`maxLengthEnforcement: null` does NOT mean "no enforcement"**
-  — it resolves per-platform and *enforces* on Android. So the flag had been doing
-  the opposite of its name. The widget now passes `MaxLengthEnforcement.none`
-  explicitly, and `task_detail_screen.dart`'s two editors pass
-  `enforceMaxLength: true` so their shipped behaviour is unchanged — "preserve what
-  ships", the 1.9 precedent.
-  Three shipped surfaces change appearance on merge, accepted at the gate. Renames
-  beyond the class: `maxLengthEnforce` → `enforceMaxLength`, `hint` → `placeholder`,
-  `suffixIcon` dropped (zero callers).
-  **Two gate outcomes that bind other items:** 2.7 now covers only the Action,
-  Screen and Item error levels — the field level was built here and 2.7 inherits it
-  unchanged; and the 15px type collision hit a **third** time, shipped at 14 again.
+Extracted from the per-item records above so they survive the next compression.
+Each cost a real cycle to learn.
 
-- **2.6 Rows & hairline groups** (`lib/widgets/label_value_row.dart` +
-  `hairline_group.dart`) — `LabelValueRow` (`label`, `value`, `showChevron`) and
-  `HairlineGroup` (`children` only). Two flat files, no module folder. QA PASS,
-  0 cycles. **Ships unwired**: `group_task_item.dart`, `task_item.dart` and
-  `horizontal_separator.dart` are all untouched, and no existing file references
-  either widget.
-  **"Ship unwired" was genuinely available here, and 2.5 explains why it wasn't
-  there.** 2.6 is an *extraction* (new files beside the old), where nothing changes
-  on merge; 2.5 was an in-place *rework*, where the same class in the same file
-  changes every caller the moment it lands. Ask which shape an item is before
-  believing a checklist bullet that offers the fork — 2.7 and 2.8 both rework
-  existing code.
-  **The checklist's caller claim was wrong again**, the second time in Stage 2 after
-  2.1's. The bullet called all three files "tracker/task-specific";
-  `horizontal_separator.dart`'s main caller is `detail_mid_section.dart`, a
-  **game_detail** screen. Grepping first is what made the unwired option visible as
-  a real choice rather than an assumption.
-  **The hairline guarantee is a construction, not a rule.** Placement is
-  `if (index > 0)` inside the child loop, and `children` is the only constructor
-  parameter, so a leading or trailing hairline is a case the code cannot express.
-  `[2.6-AC9]` is therefore satisfied by the **absence** of a divider flag and was
-  verified at the API surface, not by a behaviour test. The N−1 count tests use
-  plain `Text` children rather than `LabelValueRow`, which *demonstrates* that arity
-  alone drives placement.
-  **`Column` was chosen over `ListView.separated` deliberately.** The strongest form
-  of the objection is that `separatorBuilder` fires exactly `itemCount − 1` times —
-  the same contract, guaranteed by the framework. It loses because these groups sit
-  inside already-scrolling screens, so a nested `ListView` needs
-  `shrinkWrap: true` + `NeverScrollableScrollPhysics`; `shrinkWrap` builds every
-  child anyway, so laziness is lost while a viewport, hit-test layer and semantics
-  node are added. `.builder` is worse still: the API takes an already-built
-  `List<Widget>`, so there is nothing to build lazily — real laziness would need
-  `itemBuilder` + `itemCount`, which is the rejected option C. If a group ever needs
-  to be *long*, add a `HairlineGroup.builder` then.
-  Two follow-ups left open on purpose — see "Known non-blocking gaps".
+- **Grep the caller list at Phase 0 — the checklist was wrong 4 times out of 8.**
+  2.1's named two files that never referenced the component; 2.6's called a file
+  "tracker-specific" when its main caller was a game_detail screen; 2.7's claimed four
+  error levels when one was already built; 2.8's carried two callers when a grep found
+  seven, two of them holding hardcoded untranslated English nobody had recorded. This
+  is the single highest-value thing Phase 0 does.
+- **A test can pass by construction.** QA failed 2.7's first cycle for asserting
+  `find.byType(TheWidget)` after an interaction where the harness placed that widget
+  unconditionally — a self-suppressing widget would still have passed. **Prove
+  falsifiability**: inject the regression the test is meant to catch, confirm it fails,
+  revert. About two minutes. And **re-prove it if you later change the harness** — a
+  harness change can quietly turn a real test into a passing one (item 2.8's app-bar
+  fix hit exactly that).
+- **Tests import only a module's public entry point.** Item 2.4 shipped ten violations
+  (`find.byType(BottomTabBarCell)` ×10) against its own brief; QA caught them late and
+  a post-QA commit reworked all eight tests onto the public surface. Easy default to
+  fall into.
+- **"Ship unwired" is a false choice for an in-place rework.** 2.5's checklist offered
+  rework-vs-unwired as if both were available — but the same class in the same file
+  changes every caller the moment it merges. Unwired only exists by building a *second*
+  component beside the old one (2.6, 2.7). Ask which shape an item is before believing
+  a bullet that offers the fork.
+- **Removing a test often removes more than its name suggests.** 2.2 lost three
+  criteria to one deletion; 2.4 lost the only automated cover for keyboard activation
+  and for a colour correction. If asked to trim tests, say what each one carries first.
+- **A criterion phrased about position or pixels usually has a checkable form.** 2.6
+  could not test "hairline between rows only", so it pinned a count (N children → N−1
+  separators) plus the *absence* of any parameter that could move one. 2.7 and 2.8 did
+  the same. Reach for that before marking something manual-only.
 
-- **2.7 Error states** (`lib/widgets/error_states/`, commits `7d69ba4` + `9f7e6f8`) —
-  five files: `ErrorDot`, `ErrorNoticeVariant`, `ErrorNotice`,
-  `DestructiveActionPair`, `FailedItem`. First module folder since 2.4. QA PASS after
-  **2 cycles**. **Ships unwired**; `error_retry_widget.dart` and
-  `default_snackbar.dart` untouched.
-  **Three levels, not §3.4's four** — the Field level was already shipped by 2.5's
-  `LabeledTextField` and 2.7 inherits it. A BA reading §3.4 straight would rebuild it;
-  that was headed off at a gate.
-  **The scope finding that decided the run: §3.4 specs no per-section retry block.**
-  `ErrorRetryWidget`'s anatomy comes from §3.2's *Async states* row, not Error states
-  — so replacing it would have meant designing a surface no doc describes. Two more
-  caller findings worth keeping: `games_screen.dart:88` renders `ErrorRetryWidget` for
-  an **empty** state (2.8's scope), and `DefaultSnackbar`'s one caller pushes success
-  *and* failure through it, so §3.4's error-only toast (red dot) cannot replace it.
-  **The first foundations edit a component run has been permitted** — a `surfaceToast`
-  alias for `#2e3236`, because the existing token holding that value is named
-  `surfaceTabChrome` (from 2.4's tab bar). `surfaceTabChrome` was left alone. Note the
-  trap this created: `app_tokens_test.dart:38-50` asserts three *distinct* raised
-  surfaces via a `Set`, so `surfaceToast` had to stay out of it and go only into
-  `_allColors`.
-  **Two test lessons, both worth more than the component:**
-  - **QA cycle 1 caught a guard that passed by construction.** The AC14 test asserted
-    `find.byType(ErrorNotice)` after a "dismissal", but the harness placed that widget
-    unconditionally and `onDismiss` was the default no-op — a self-suppressing
-    `ErrorNotice` would still have passed. **This was proved rather than argued**: the
-    regression was injected (stateful `_dismissed` flag), the old test passed 7/7
-    against it, the replacement failed. Injecting the regression takes about two
-    minutes and is worth doing whenever a test's whole value is its falsifiability.
-  - **`tdd.md` asserted a tree-shape claim that was false.** It prescribed
-    `find.byType(ColoredBox)` scoped to `ErrorNotice` as "single-match"; the toast's
-    own `ErrorDot` also renders a `ColoredBox`. The design's proudest feature —
-    structural finder discipline — had a hole at exactly the surface it protected. A
-    tree-shape claim is verified by building the tree, not asserted in a doc.
-  **A `dart format` hunk landed unreported.** Dev formatted an allowlisted file and
-  reflowed a pre-existing `Icon` outside the authorised line range. Benign and
-  accepted, but it means **other files in the repo are unformatted** and will churn
-  whenever a formatter next touches them.
+**One convention still open, and it is the most-repeated gap in this file.**
+§3's type steps keep colliding with "dimensions are even numbers": item 1.9 hit 15px
+and left the gap open for want of a token, 2.2 hit it and shipped 14, **2.5 hit it a
+third time and shipped 14 again**. A 15px type token still does not exist and three
+runs have worked around its absence. Minting one is a foundations change, deliberately
+kept out of every component run so far. (2.6, 2.7 and 2.8 did **not** hit it — check
+rather than assume.)
 
-- **2.8 Async states: shared empty state** (`lib/widgets/empty_state_card.dart`,
-  Dev commit `6199114`) — one `EmptyStateCard`: optional glyph, caps headline, one
-  supporting line, one **required** action, on `surfaceRaised` at r16. A flat file,
-  not a module folder (2.5/2.6's shape). QA PASS, **0 cycles**. **Ships wired at
-  five sites**, and week 2's last item.
-  **The caller list was wrong for the fourth time in Stage 2** — after 2.1's, 2.6's
-  and 2.7's. The handover carried two known callers; Phase 0's grep found **seven**
-  improvised empty states. Five were fixed: `games_screen.dart` (an `ErrorRetryWidget`
-  rendering an *empty* state), `library_stats.dart`'s dashed card, and
-  `critics_grid.dart` + `countdown_releases.dart`, which both held **hardcoded,
-  untranslated English** — a defect nobody had recorded. The human ruled
-  `featured_screen.dart`'s `SizedBox.shrink()` in scope too, so a section that
-  vanished silently now recruits. **Grep at Phase 0. Four for four.**
-  **The doc the checklist named was also wrong**: the empty-state workaround note
-  lives in `.claude/skills/flutter-widgets/SKILL.md`, not `project-conventions.md`
-  — it moved in the 2026-08-07 restructuring. The skill was updated.
-  **Two spec gaps recorded rather than invented around, both at a human gate.**
-  §3.2's "art-deep card" fill **has no value anywhere in the project** and the
-  palette has no art surface at all; §2.2 calls art-deep violet while §2 rule 4
-  keeps violet out of the UI until ratified. The card ships on `surfaceRaised`, and
-  **§2.2's "art-deep is the empty-state card fill" is unimplemented app-side** —
-  this now sits beside the 15px token as a standing foundations gap. Separately,
-  §3.2's mandatory "one action" had **no target at three of the five sites**;
-  destinations were named at the gate, not assumed.
-  **AC-20 shaped the whole call-site design, and the reason generalises.** The three
-  featured widgets are each constructed **twice** in `featured_screen.dart` — once
-  for real, once inside a `Skeletonizer` loading branch — so *any* new required
-  constructor parameter forces a diff hunk in a loading branch. That is why sites 4
-  and 5 call `AutoTabsRouter.of(context).setActiveIndex(3)` on their own context
-  inside the tap callback instead of taking a callback parameter. **Browse is a tab,
-  not a route**: `router.push(BrowseRoute())` would stack it over Featured and leave
-  the tab bar's cap in the wrong place. Any future work touching those widgets
-  inherits this constraint.
-  **The 2.7 finder trap did not repeat, and it was closed by building the tree.**
-  `tdd.md` specified `ClipRRect` + `ColoredBox` (not `DecoratedBox`, which
-  `PrimaryButton`'s `Container` and `ButtonPressScale` both emit) — but the Tech
-  Lead had no Bash and could only verify it against Flutter SDK source, so it shipped
-  as an explicit caveat with a named fallback. Dev confirmed it single-match on the
-  first run. **Stating the caveat is what made it safe**; the design did not assert
-  a tree shape it hadn't verified.
-  Three non-blocking findings from QA, none gating: the glyph's **positive** case is
-  untested (mutating the widget so a glyph never renders leaves the suite green —
-  the "hides when absent" behaviour is protected, "shows when supplied" is not,
-  despite four sites passing one); five hunks of pure `dart format` churn landed in
-  `critics_grid.dart` on code the plan never asked Dev to touch, the same shape as
-  2.7's stray hunk; and `EmptyStateCard` **declares no width**, filling its parent
-  only because `PrimaryButton` sets `width: double.infinity`.
-
-**Two conventions worth knowing before the next Stage 2 item**, both learned the
-hard way this session:
-- **§3's type steps keep colliding with "dimensions are even numbers."** Item 1.9
-  hit it at 15px and left the gap open for want of a token; 2.2 hit it again and
-  shipped 14; **2.5 hit it a third time and shipped 14 again**. A 15px type token
-  still doesn't exist, and three runs have now worked around its absence. Minting
-  one is a foundations change — deliberately kept out of every component run so
-  far, but it is now the most-repeated open gap in this file.
-- **A "one file per widget family" flat `lib/widgets/` is no longer true** — but
-  neither is "always a module folder". 2.1, 2.2, 2.3 and 2.4 all ship module
-  folders with an `enum/` subfolder, human-directed each time; **2.5 deliberately
-  ships a single file**, because it has no variant enum, no painter and only two
-  parent-only helpers. Decide on the merits per item. The `flutter-widgets` skill
-  still states the flat rule as absolute — see the follow-ups.
+*The companion convention — flat file versus module folder — was settled on
+2026-08-25 and now lives in the `flutter-widgets` skill, which is the enforcing copy.*
 
 ---
 
-## Skills restructuring (2026-08-07)
+## The skills, and what they enforce
 
-Dart conventions that used to live only in `.agents/references/flutter-arch.md`,
-`dart-style.md`, and `project-conventions.md` are now split into six invokable
-skills under `.claude/skills/`, covering everything from widgets down to
-datasources:
+Dart conventions live in seven invokable skills under `.claude/skills/`, not in the
+reference docs — `flutter-widgets`, `flutter-state`, `flutter-usecase`,
+`flutter-repository`, `flutter-datasource`, `flutter-dto` (all added 2026-08-07), and
+`flutter-widget-test` (2026-08-14/15). The three old reference docs
+(`flutter-arch.md`, `dart-style.md`, `project-conventions.md`) were trimmed, not
+deleted: they still hold folder structure, the **service layer** (deliberately never
+skill-ified — explicit human decision), DI, routing, code generation, localisation,
+secrets, platform constraints and naming rules. Read them for anything the seven
+skills don't cover.
 
-- `flutter-widgets` — widget/screen placement, naming, style, UI patterns
-  (shimmer, error/retry, empty state, network image, hero transition,
-  snackbar), the widget catalogue.
-- `flutter-state` — BLoC/Cubit shape, provisioning, pagination,
-  pull-to-refresh, status-driven rendering.
-- `flutter-usecase` — use case shape, domain entities (including an explicit
-  DIP statement added 2026-08-07: an entity may depend on Dart core types and
-  `freezed` only — no Flutter, Dio, Isar, JSON, or any data/presentation-layer
-  import).
-- `flutter-repository` — repository interface + implementation together
-  (always designed as one unit in this project), `BaseRepositoryMixin`,
-  `ErrorType`.
-- `flutter-datasource` — datasource shape, Isar patterns, SharedPreferences.
-- `flutter-dto` — DTO/model shape, JSON serialisation, the `toEntity()`
-  boundary.
+**Tech Lead, Dev and QA all have Skill tool access** and are told to invoke the
+matching component skill rather than reading the old docs by hand. `ba-agent` and
+`orchestrate` deliberately do not — BA writes requirement-level criteria, not class
+shapes, and the orchestrator never designs or writes code.
 
-**Deliberately not skill-ified yet: the service layer** (Dio clients,
-Retrofit services, `TwitchAuthInterceptor`-style auth interceptors). Stays in
-`flutter-arch.md` for now — explicit human decision, revisit later.
+**A skill's silence is not authorisation.** QA checks architectural compliance against
+**two** sources — `tdd.md` (the task's own design) and the relevant skill (the
+project's standing convention) — and a skill-level violation is a FAIL even where
+`tdd.md` never mentioned it.
 
-**`tech-lead-agent`, `dev-agent`, and `qa-agent` all have Skill tool access**
-now (they didn't before) and are told to invoke the matching component
-skill(s) for whatever layer they're touching, instead of reading the old docs
-by hand. `ba-agent` and `orchestrate` were deliberately left alone — BA
-writes requirement-level criteria, not class shapes, and the orchestrator
-never designs or writes code itself. QA's "architectural compliance" check
-now checks against **two** sources: `tdd.md` (the task's specific design) and
-the relevant skill (the project's standing convention) — a skill-level
-violation is a FAIL even if `tdd.md` never mentioned it, since `tdd.md`'s
-silence isn't authorisation.
-
-The three old reference docs are trimmed, not deleted — they still hold
-folder-structure overview, the service layer, DI, routing, code generation,
-localisation, secrets, platform constraints, and naming/comment rules. Read
-them for anything the six skills don't cover.
-
-### `flutter-widget-test` skill (added 2026-08-14/15, human-authored)
-
-A seventh skill, but different from the six above: it's a widget-*testing*
-convention (naming, setup proportionality, what earns a dedicated test file,
-banned patterns like fake image bytes/`Completer`/zones), not a code-layer
-skill. Wired into all three agents: Tech Lead now decides per-widget whether
-a dedicated test file is warranted (not just testing mode), Dev applies its
-naming/setup/assertion rules when writing tests, QA checks tests against it
-independently — same "skill silence isn't authorisation" treatment as the
-six code skills.
-
-**The human revised this skill three times in one session**, each revision
-retroactively invalidating the prior full-suite pass and triggering another
-complete re-check of every existing widget test file. Expect this skill to
-keep evolving — always re-read it in full before trusting prior compliance,
-never assume a file that passed last time still passes.
-
-**A fourth revision landed 2026-08-20**, during the 1.8/1.9 run and prompted
-by the same human trimming that run's tests at the Phase 4B gate: dimensions
-are now simply not tested at all (height, width, padding, gaps, radii,
-offsets, positions — pixel appearance is a manual check), colour assertions
-need to carry meaning and name a token, and the skill now points at two
-**reference files** — `context_chip_test.dart` and `stat_pill_test.dart`,
-both human-written, one and two tests each — as the shape to copy and the
-length to stay near. The same session made widgets **comment-free**: the
-`flutter-widgets` bullet moved from "few comments" to "no comments", with a
-matching line in `execution.md`'s Code quality section.
-
-The skill got progressively stricter: v1 allowed occasional comments and
-didn't address image testing; v2 banned comments entirely and forbade
-manufacturing image-loading success (fake bytes, manual builder invocation);
-v3 added "treat visual styling deliberately" (don't assert an exact
-color/radius/position unless it's a documented contract, not just because it
-matches the widget's own implementation) and "reject redundant setup and
-assertions." See gotcha #10 for the specific async-testing trap this
-uncovered.
-
----
+**`flutter-widget-test` keeps changing, and each revision retroactively invalidates
+prior passes.** It has been revised four times; the human revised it three times in a
+single session, each round forcing a complete re-check of every existing widget test
+file. **Always re-read it in full before trusting prior compliance.** Where it stands
+now: dimensions are **not tested at all** (height, width, padding, gaps, radii,
+offsets, positions are manual checks), colour assertions must carry meaning and name a
+token, no golden tests ever, no manufactured image-loading success, and widgets carry
+**no comments at all**. `context_chip_test.dart` and `stat_pill_test.dart` are the
+human-written reference files — copy their shape and stay near their length.
 
 ## Bugs found on device (2026-08-25 sitting)
 
@@ -704,15 +453,6 @@ it has no value anywhere). Both are recorded below.
   live caller; `count == 0` unexercised in `filter_count_chip_test.dart`
   despite `tech-ac.md` naming it explicitly; two color assertions there
   hardcode literal hex instead of referencing the design token.
-- **`.claude/skills/flutter-widgets/SKILL.md`'s "one file per widget family" rule
-  text contradicts four shipped modules** (`game_card/`, `completion_ring/`,
-  `countdown/`, `bottom_tab_bar/`). Every folder was human-directed; the rule
-  sentence was deliberately not updated in any run. Flagged by QA repeatedly.
-  Item 2.5 edited that file's **catalogue row** (a gate decision) while still
-  leaving the rule sentence alone, so the contradiction has now survived a run
-  that had the file open. Note 2.5 also shipped a deliberate *single* file, so the
-  right wording is "decide per item", not a simple inversion. Whoever next edits
-  that skill should settle it.
 - **`system-foundation-specs.md` §3.2 still describes the cover-art desaturation
   filter** that was rejected at item 1.3 and rejected again at 2.1. Two runs have
   now had a BA write a criterion straight from that stale text. Correcting the
@@ -733,10 +473,6 @@ it has no value anywhere). Both are recorded below.
   Cosmetic, no diagnostic. Sweep when something else edits those files.
 - **`enum/` (singular) vs the repo's `lib/core/enums/` (plural)** — both new module
   folders use the singular. Noted so it reads as a deliberate choice, not drift.
-- ~~A live "outlines are always solid" violation in `library_stats.dart`~~ —
-  **CLOSED by item 2.8, 2026-08-25.** `_DashedBorderPainter` and its
-  `BorderStyle.none` recipe are deleted; the empty now-playing card is now an
-  `EmptyStateCard` with a solid edge. Confirming it on device is `2.8-MC-4`.
 - **`_SignOutButton` is a third hand-rolled copy of the `ActionRow` anatomy**
   (`lib/features/settings/presentation/widgets/sign_out_section.dart`), minus
   the leading mark. Deliberately left out of the 1.8/1.9 run — folding it in
@@ -805,11 +541,6 @@ it has no value anywhere). Both are recorded below.
   non-empty branches, so folding it into a one-action `EmptyStateCard` changes that
   screen's non-empty layout too. Now that the component exists, this is a small
   self-contained follow-up rather than a design question.
-- **`no_results_found` is the one empty state that still apologises.** Item 2.8's
-  site 1 (the games grid) reuses that key, so its headline reads "NO RESULTS FOUND"
-  — correct per its criterion, but against §3.2's own "empty states recruit, they
-  never apologise." Deliberately not reworded mid-run. `2.8-MC-5` asks for a human
-  eye on device before deciding whether to raise the follow-up.
 - **`horizontal_separator.dart` still hardcodes `Colors.grey` and forces
   `width: context.screenWidth`** — a §2 colour-law violation of the same shape as
   the `Colors.red` item 2.5 removed, with the `hairline` token already available,
@@ -838,69 +569,37 @@ it has no value anywhere). Both are recorded below.
 
 ## Process rules currently in force
 
-- **Tech Lead also writes `code-plan.md`** — a Dart code skeleton (class/enum/
-  freezed shapes, signatures) that's what actually gets presented in full at
-  the Phase 3 human gate, replacing a prose implementation plan.
-- **Phase 4B is review-after-push.** The Dev Agent implements and commits in
-  a single pass; the orchestrator pushes; the human reviews the pushed
-  commit (`git show --stat <sha>`), not a working tree. Revisions go back to
-  Dev as new commits — never an amend, never back to Tech Lead unless the
-  design itself was wrong. Phase 4B is still a mandatory stop; pushed does
-  not mean approved.
-- **A substantial Phase 3 revision may correct `tdd.md`/`task-brief.md` in
-  place**, not just append to `code-plan.md`'s delta — established this
-  session (item 10.1's four Phase 3 revision rounds) when the delta would
-  otherwise leave the Dev Agent's literal allowlist check reading a stale
-  file list. Small/naming-only revisions still just get a delta entry, per
-  the original rule. The `tech-lead-agent` skill's "Revision mode" section
-  was updated to say this on 2026-08-20.
-- **Tech Lead, Dev, and QA invoke component skills** (see "Skills
-  restructuring" above) for widget/state/use-case/repository/datasource/DTO
-  work, instead of reading `.agents/references/*.md` by hand for those
-  layers. The old docs are still the source for everything else.
-- **`.codex/` was deliberately left on the OLD Phase 4B rule** (two-pass,
-  uncommitted review) at the human's request — it now disagrees with
-  `.claude/` on purpose, not a bug to fix.
-- **Resume sessions run the pipeline directly on the harness-designated
-  session branch**, instead of creating a nested `feature/<slug>` branch per
-  run. Multiple runs' artifacts can coexist under `.agents/runs/` on the same
-  branch; only one run's Dev/QA phases are ever active at once. The branch
-  gets merged into `develop` directly (not via PR) once the human says so —
-  and **pure documentation/pipeline-config changes (not tied to a specific
-  run) can go straight to `develop`** rather than riding along on whatever
-  branch happens to be checked out, established this session for the skills
-  restructuring and the entity DIP addition.
-- **A human can defer widget-test authorship to themselves for a given
-  run**, via a Phase 3 revision reversing the BA's test-coverage criterion
-  (not a Tech Lead-only delta, since it changes what `tech-ac.md` requires).
-  Established for the 1.5/1.6/1.7 run — one-off by request, not a standing
-  default; ask again each time rather than assuming it repeats.
-- **The orchestrator can commit run-folder planning docs directly**, ahead
-  of Dev's own commit, when the human explicitly asks to review `code-plan.md`
-  on GitHub before approving at a gate — a deliberate, requested deviation
-  from "only the Dev Agent commits," not a standing practice to repeat
-  unprompted.
-- **Never `git add -A` while a subagent is live in the same tree.** The
-  orchestrator did this during item 2.6's Dev phase and swept the Dev Agent's
-  in-progress widget and test files into a docs commit, so that item's
-  implementation is split across two commits (`6689860` and `409fe04`) under a
-  message describing only documentation. Harmless to the code, misleading in
-  history, and it forced QA to be told to diff a range rather than read a commit.
-  Stage explicit paths, or wait for the agent to return.
-- **If a subagent dies with finished-but-uncommitted work, the orchestrator may
-  commit it** — established during item 2.6, when the Dev Agent hit an
-  account-wide session limit at its commit step with `diff-summary.md` already
-  written. Verify the baseline independently first, commit the work *unchanged*,
-  and state the authorship in the commit message. A deliberate one-off departure
-  from "only the Dev Agent commits"; the alternative is losing finished work to an
-  ephemeral container. Do not use it as licence to finish an agent's work.
-- **A Phase 3 revision that changes implementation style but no acceptance
-  criterion** (e.g. "remove this comment," "use `Expanded` not `Flexible`")
-  is Tech Lead-only — append to `code-plan.md`'s delta, no BA involvement.
-  Only route back to BA when the fix actually reverses or adds a criterion
-  in `tech-ac.md` itself.
+**Most of these now live in the pipeline docs themselves** — as of 2026-08-25 the
+branch rule, the commit exceptions and the Tech Lead's missing shell were written into
+`.claude/pipeline/rules/git.md`, `.claude/skills/orchestrate/SKILL.md` and
+`.claude/skills/tech-lead-agent/SKILL.md`, which are the enforcing copies. Read those
+first; what follows is only what has no home there yet.
 
----
+- **Tech Lead also writes `code-plan.md`** — a Dart code skeleton (class/enum/freezed
+  shapes, signatures) that is what actually gets presented at the Phase 3 gate,
+  replacing a prose implementation plan.
+- **Phase 4B is review-after-push.** Dev implements and commits in one pass; the
+  orchestrator pushes; the human reviews the pushed commit (`git show --stat <sha>`),
+  not a working tree. Revisions go back to **Dev** as new commits — never an amend,
+  never back to Tech Lead unless the design itself was wrong. Pushed does not mean
+  approved.
+- **A substantial Phase 3 revision may correct `tdd.md`/`task-brief.md` in place**,
+  not just append to `code-plan.md`'s delta, because the Dev Agent's literal allowlist
+  check would otherwise read a stale file list. Small or naming-only revisions still
+  just get a delta entry.
+- **A Phase 3 revision that changes implementation style but no acceptance criterion**
+  (e.g. "remove this comment", "use `Expanded` not `Flexible`") is Tech Lead-only.
+  Route back to BA only when the fix reverses or adds a criterion in `tech-ac.md`.
+- **A human can defer widget-test authorship to themselves for a given run**, via a
+  Phase 3 revision reversing the BA's test-coverage criterion. Established for the
+  1.5/1.6/1.7 run — **one-off by request, not a standing default**; ask each time.
+- **Never `git add -A` while a subagent is live in the same tree.** The orchestrator
+  did this during item 2.6 and swept a Dev Agent's in-progress files into a docs
+  commit, splitting that item's implementation across two commits under a misleading
+  message. Stage explicit paths, or wait for the agent to return.
+- **`.codex/` is deliberately on the OLD Phase 4B rule** (two-pass, uncommitted
+  review) at the human's request. It disagrees with `.claude/` **on purpose** — not a
+  bug to fix, and not something to sync during a cleanup.
 
 ## Gotchas that will bite
 
@@ -1086,12 +785,18 @@ is a TestFlight-equivalent Android beta around week 4.
 
 ## Where things live
 
-- `.claude/skills/` — the pipeline skills (`ba-agent`, `tech-lead-agent`,
-  `dev-agent`, `qa-agent`, `orchestrate`), the six Dart component skills
-  added 2026-08-07 (`flutter-widgets`, `flutter-state`, `flutter-usecase`,
-  `flutter-repository`, `flutter-datasource`, `flutter-dto`), and
-  `flutter-widget-test` (added 2026-08-14/15, testing conventions — see
-  "Skills restructuring").
+- `.claude/skills/` — the five pipeline skills (`orchestrate`, `ba-agent`,
+  `tech-lead-agent`, `dev-agent`, `qa-agent`), the six Dart component skills
+  (`flutter-widgets`, `flutter-state`, `flutter-usecase`, `flutter-repository`,
+  `flutter-datasource`, `flutter-dto`), and `flutter-widget-test`.
+  **`flutter-widgets` is the enforcing copy for widget conventions** — its catalogue
+  also carries the three-tier split of `lib/widgets/` (design system / live legacy /
+  never-rendered). `.claude/pipeline/` holds the shared rules (`git`, `execution`,
+  `generation`, `escalation`) and the artifact templates.
+- `.claude/agents/*.md` — the registered agent types. **Their frontmatter fixes each
+  agent's model and tool grant**, and the grants differ: `tech-lead-agent` and
+  `ba-agent` have **no Bash**, `dev-agent` and `qa-agent` do. Check the frontmatter
+  before telling an agent to run a command.
 - `.agents/references/` — product brief, design conventions, per-screen
   specs, project conventions, deferred roadmap. Trimmed 2026-08-07 where
   content moved into the component skills above.
@@ -1099,13 +804,11 @@ is a TestFlight-equivalent Android beta around week 4.
   nobody has performed, across every run. Created 2026-08-20 as the durable
   home for these; tick one off by deleting it, and if one fails it becomes a
   bug to file rather than a backlog line.
-- `.agents/runs/<run-id>/` — one folder per pipeline run; removed once a run
-  is complete with no open escalations, its record migrated somewhere durable
-  first (see gotcha #9 — verify this actually happened, don't assume).
-  **The directory doesn't currently exist** — Stage 1's six folders were retired
-  2026-08-20, and 2.1's and 2.2's on 2026-08-21, each with its record condensed
-  into "Where things stand" above and its manual checks moved to the backlog file
-  first. Git doesn't keep empty directories. The next run's Phase 0 recreates it;
+- `.agents/runs/<run-id>/` — one folder per pipeline run; removed once a run is
+  complete with no open escalations, its record migrated somewhere durable first (see
+  gotcha #9 — **verify** this happened, don't assume). **The directory does not
+  currently exist**: every run folder through item 2.8 has been retired, the last on
+  2026-08-25. Git keeps no empty directories, so the next run's Phase 0 recreates it —
   nothing to restore first.
 - `.agents/`, `.claude/`, and `.codex/` are all **git-tracked**, not ignored.
 

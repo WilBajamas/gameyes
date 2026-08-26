@@ -26,8 +26,10 @@ an existing `tech-ac.md`.
 **New run** — before spawning anything:
 1. Read `.claude/pipeline/rules/git.md`. Require `git status --short` empty;
    otherwise stop without changing anything.
-2. Record branch and HEAD SHA, create `feature/<slug>` (stop and ask if that
-   branch already exists — never force-create over it), create
+2. Record branch and HEAD SHA. On a fresh run create `feature/<slug>` (stop and ask
+   if that branch already exists — never force-create over it); **on a resume session
+   stay on the harness-designated `claude/...` branch and create no nested branch**,
+   which is now the common case. Create
    `.agents/runs/<run-id>/` (stop and ask if non-empty).
 3. Read `.claude/pipeline/templates/orchestrator.md` and write initial
    `orchestrator-state.md`.
@@ -196,7 +198,9 @@ artifact it wrote and summarise that.
 - Do not merge or deploy — the pipeline ends at QA PASS. Pushing the run branch
   after each Dev commit is expected; pushing anywhere else is not.
 - Do not run on a dirty tree, and do not clean one up yourself
-- Do not commit anything yourself — only the Dev Agent commits
+- Do not commit anything yourself — only the Dev Agent commits, with two established
+  exceptions named in `git.md` (run-folder planning docs when the human asks to review
+  `code-plan.md` on GitHub before a gate; a dead subagent's finished work)
 - Do not treat a stale (non-matching `Run:`) escalation as live, and do not
   leave a resolved one on disk
 - Do not enter Phase 6 with a live escalation
