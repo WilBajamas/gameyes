@@ -319,18 +319,16 @@ the pipeline, at the human's explicit instruction.
   filtering a real games list.
   **Carry the lesson, not just the fix**: when a criterion says "renders X in state
   Y", check that anything ever *produces* state Y.
-- **`games_bloc_test.dart`'s three failures have a root cause, now known.** They are
-  three of the ten pre-existing suite failures and were a mystery for weeks. The
-  bloc's constructor calls `add(const GamesFetched())` and both handlers use
-  `droppable()`, so **the bloc's own initial fetch is always in flight first and
-  every test's `act` event is silently dropped** — the stub then sees the
-  constructor's default arguments instead of the test's, and never matches. Two
-  further Mockito traps sit on top: `when()` on `Result<GameListEntity>` needs
-  `provideDummy` (a non-nullable sealed return type cannot be auto-dummied), and
-  argument matchers cannot be mixed with concrete values in the same `when()`.
-  **The new test sidesteps all three** by driving the constructor's own fetch with
-  all-matcher stubs rather than adding an event. Fixing the original three is a
-  separate job — they need restructuring, not a one-liner.
+- **`games_bloc_test.dart`'s three failures have a root cause, now known and
+  documented.** They are three of the ten pre-existing suite failures and were a
+  mystery for weeks. `GamesBloc`'s constructor calls `add(const GamesFetched())` and
+  both handlers use `droppable()`, so the bloc's own initial fetch is always in flight
+  first and **every test's `act` event is silently dropped**. Full explanation, the
+  two Mockito rules that compound it, and the working pattern are now in
+  `.agents/references/testing-conventions.md` under "The pattern above does NOT work
+  on a bloc that dispatches in its own constructor" —  read that before touching
+  those tests. Fixing the original three needs restructuring, not a one-liner, and
+  was deliberately left alone so the baseline did not move mid-session.
 - **65 of 167 Chinese strings are untranslated English**, in `lib/l10n/intl_zh.arb`.
   **Only `browse` (浏览) and `tracker` (追踪) were fixed** on 2026-08-25, because
   those were the two visible in the tab bar. **63 remain.** Whole surfaces are still

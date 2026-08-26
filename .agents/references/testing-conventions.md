@@ -228,6 +228,50 @@ blocTest(
 - `act` — dispatch events or call methods; use `async` even for synchronous acts
 - `expect` — list every emitted state in order; the initial state is not included
 
+### The pattern above does NOT work on a bloc that dispatches in its own constructor
+
+`GamesBloc` calls `add(const GamesFetched())` in its constructor and registers both
+handlers with `transformer: droppable()`. The consequence, found 2026-08-25:
+
+- The bloc's **own** initial fetch is always in flight first.
+- `droppable()` therefore **silently discards** the event that `act` adds.
+- The stub then sees the *constructor's* default arguments, not the test's, so a
+  `when()` written against the test's arguments never matches and the call falls
+  through to `MissingStubError` — or to `MissingDummyValueError` if no `provideDummy`
+  was registered.
+
+**This is why `test/cubit/games/games_bloc_test.dart`'s three `blocTest`s have never
+passed** — three of the suite's ten long-standing failures. They are not flaky and not
+an environment problem; the pattern cannot work as written.
+
+For a self-dispatching bloc, drive the **constructor's own** fetch instead of adding
+an event, and construct the bloc inside `build` so the stub is registered first:
+
+```dart
+provideDummy<Result<GameListEntity>>(Success(mockGamesResponse.toEntity()));
+when(
+  fetchGamesUseCase.call(
+    page: anyNamed('page'),
+    searchTerm: anyNamed('searchTerm'),
+    // ...every remaining named argument as a matcher
+  ),
+).thenAnswer((_) async => Success(mockGamesResponseEmptyResults.toEntity()));
+
+final bloc = GamesBloc(fetchGamesUseCase);
+await expectLater(
+  bloc.stream,
+  emitsThrough(
+    predicate<GamesState>((state) => state.status == GamesStatus.empty),
+  ),
+);
+```
+
+Two Mockito rules that bite here:
+- **Matchers and concrete values cannot be mixed in one `when()`.** If any argument is
+  `anyNamed(...)`, they all must be matchers — use `argThat(isA<int>(), named: 'page')`
+  for a non-nullable argument rather than a bare `1`.
+- `test/cubit/games/games_bloc_empty_test.dart` is the working example to copy.
+
 ---
 
 ## API layer tests — http_mock_adapter

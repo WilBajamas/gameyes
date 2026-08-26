@@ -1,91 +1,52 @@
 # Manual check backlog — QuestLoggd
 
-Every on-device check that a QA pass identified but nobody has performed. All of
-these shipped as `PASS — pending manual checks`: the automated side passed, and
-the remaining criterion is something only a human looking at a real device can
-confirm — paint overflow, `BackdropFilter` edge bleed, colour fidelity, a held
-drag mid-gesture.
+On-device checks a QA pass identified and nobody has performed. Each shipped as
+`PASS — pending manual checks`: the automated side passed, and what remains is
+something only a human looking at a real device can confirm — paint overflow,
+`BackdropFilter` edge bleed, colour fidelity, a held drag mid-gesture.
 
-**This file is the durable home for these.** It was created 2026-08-20 when the
-week 2 Stage 1 run folders were retired — their `qa-report.md` files had been
-the only copy, so the checks were consolidated here first (gotcha #9 in
-`handover.md`: promote before deleting, and verify the promotion happened).
+**Tick a check off by deleting it.** If one fails it stops being a backlog item and
+becomes a bug — file it in `handover.md` rather than leaving a failing check here.
 
-**Tick a check off by deleting it**, once performed and passing. If one fails,
-it stops being a backlog item and becomes a bug — file it properly rather than
-leaving a failing check sitting here.
+**74 checks**, counted from this file on 2026-08-25. **Recount rather than quoting a
+total** — four different figures (82, 88, 90, 92) have all been wrong at some point.
 
-None of these block anything. They are a debt to settle when a device is
-available, ideally in one sitting per screen rather than one item at a time.
+## Read this before spending a session here
 
-**Scheduled: after week 2 Stage 2 finishes — which it now has.** Human decision,
-2026-08-22 — the whole backlog waits until all eight Stage 2 items are shipped, then
-gets worked in one device sitting. **Item 2.8 shipped 2026-08-25 and was the last
-one, so that sitting is now the next task.**
+**Only three entries are reachable in the app as it stands**: `2.8-MC-3`, `2.8-MC-4`
+and `2.7-MC-3`. Everything else is gated on a screen that does not exist yet, so this
+is **a per-screen checklist to consult while building, not a queue to work down.**
 
-**74 checks** remaining as of 2026-08-25, **counted from this file rather than
-carried forward**. Recount here rather than trusting a quoted total — every number
-previously written down had drifted (this file said 90, `handover.md` said 82, and
-`handover.md`'s own itemised list summed to 88, against a true 92 before the sitting
-started).
+- **Most of the rest belong to components with no caller anywhere** —
+  `CompletionRing`, `LabelValueRow`, `HairlineGroup`, `ErrorNotice`, `FailedItem`,
+  `DestructiveActionPair`, `ContextChip`, `StatPill`, `CountdownTile`, `ZoneLabel`,
+  `CoverTile`. **Perform each one on the screen that first adopts it**, in week 3/4.
+- **Do not build a scratch harness.** One was built on 2026-08-25 and deleted the same
+  day: it would check components in isolation rather than in the layout they ship in,
+  and several of these checks are only meaningful in a real screen. `git show faa108b`
+  has the file if a future session wants to argue the case again.
+- **Featured's checks are low value.** That screen is on an old design and is due to be
+  rebuilt against `home-screen-design-conventions.md`. Check behaviour that survives a
+  rebuild (a tab switch working, a cubit reaching a state), not pixels. Affects
+  `2.8-MC-3` and the Featured half of `2.8-MC-4`.
 
-**The device sitting began 2026-08-25. Eighteen checks are done.** All fifteen of
-item 2.4 (see that section) plus `2.8-MC-1`, `2.8-MC-2` and `2.8-MC-5`. Among them were the two
-entries that had no automated guard at all — keyboard Enter/Space activation (the
-`ButtonPressScale`/`ActivateIntent` defect) and the selected/unselected colour
-correction, which the old bar had shipped **inverted**.
+## What the 2026-08-25 sitting actually bought
 
-**The sitting has been worth far more than the checks it ticked.** It found three
-real bugs that no check was hunting for, all filed in `handover.md`: the screen-title
-overflow at large font sizes, 65 of 167 Chinese strings being untranslated English,
-and — the significant one — **`GamesStatus.empty` never being emitted, so the games
-empty state had never once been reachable** despite two QA passes examining that
-exact branch. Do not add those back here as checks; they are bugs, two fixed and one
-(the translations) mostly outstanding.
+Eighteen checks cleared — all fifteen of item 2.4, plus `2.8-MC-1`, `2.8-MC-2` and
+`2.8-MC-5` — including the only two entries in the whole file that had no automated
+guard at all: keyboard Enter/Space activation (the `ButtonPressScale`/`ActivateIntent`
+defect) and the tab bar's selected/unselected colour correction, which the old bar had
+shipped **inverted** the entire time.
 
-Current breakdown: item 10.1's **4**, week 2 Stage 1's **19** (1.1×1, 1.2×2, 1.3×7,
-1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **52** (2.1×8, 2.2×10,
-2.3×15, 2.4×**0**, 2.5×8, 2.6×3, 2.7×5, 2.8×**2**).
+**But the checks were not the value. It found three bugs nothing was hunting for**,
+all filed in `handover.md`: the screen-title overflow at large font sizes, 65 of 167
+Chinese strings being untranslated English, and — the significant one —
+**`GamesStatus.empty` never being emitted, so the games empty state had never once
+been reachable**, despite two QA passes examining that exact branch. Two are fixed;
+the translations are being done per-screen as building continues.
 
-**Weigh Featured's checks against a rebuild before spending time on them.** Human
-note, 2026-08-25: **the Featured screen is on an old design and is due to be rebuilt**
-against `.agents/references/home-screen-design-conventions.md`, which has been
-available for weeks. Anything in this file that only verifies Featured's *current*
-layout is throwaway effort. What is still worth checking there is behaviour that will
-survive the rebuild — a tab switch working, a cubit reaching the right state — not
-pixel appearance. `2.8-MC-3` and the Featured half of `2.8-MC-4` are the entries this
-most affects.
-
-**DECIDED 2026-08-25: no scratch harness. These wait for their real callers.**
-A harness was built and then **deleted the same day** at the human's decision. The
-reasoning is worth keeping, because this file spent weeks recommending the harness:
-
-- The sixteen harness-able checks belong to components with **zero callers anywhere
-  in the app** — `CompletionRing`, `LabelValueRow`, `HairlineGroup`, `ErrorNotice`,
-  `FailedItem`, `DestructiveActionPair`. Verified by grep, not assumed. There is no
-  screen to open, which is the only reason a harness was ever proposed.
-- But a harness checks a component **in isolation, not in the layout it will ship
-  in**, and several of these checks are only meaningful in a real screen — whether a
-  row's padding clears a 44px touch target inside a group, whether a card's corners
-  clip against a real background. 2.6's own entry already said as much: *"cheapest
-  route is to check these the first time a real screen adopts the components rather
-  than building a harness twice."*
-- So they are **deferred to week 3/4**, when Game Detail and Library adopt them.
-  Check each one on the screen that adopts it. The accepted risk is finding a
-  component wrong after a screen is built on it.
-
-**Do not rebuild the harness** without raising it first — it has been built and
-discarded once. If a future session wants it back, `git show faa108b` has the whole
-file.
-
-**`2.7-MC-3` was never a harness check anyway** — "open Game Detail and confirm the
-screenshots deletion changed nothing visible" is a real-app check, and had been
-miscounted with the other four for weeks. It is doable today, on the current build,
-with no new screen needed.
-
-**2.8's remaining two are doable today** (it ships wired). Along with `2.7-MC-3`,
-those four are the only checks here reachable in the app as it stands right now —
-everything else waits on a screen that does not exist yet.
+**The lesson for the next sitting**: driving the real app found things no checklist
+entry described. Budget time for looking around, not only for ticking.
 
 ---
 
@@ -122,7 +83,7 @@ gotcha #8.
 
 - **1.2-AC6** — Render `StatusChip(status: LibraryStatus.backlog, variant:
   StatusChipVariant.onMedia)` as a `Stack` overlay on a cover image (any screen,
-  or a scratch harness) — expect the blur to stop exactly at the pill outline
+  or the first screen that adopts it) — expect the blur to stop exactly at the pill outline
   with no soft halo bleeding past the capsule's rounded edge onto the
   surrounding art. Structure is proven correct
   (`lib/widgets/glass_surface_widget.dart:21-25` clips the `BackdropFilter`
@@ -265,7 +226,7 @@ about a shipped screen changing appearance, not a new component in isolation.
 
 From the `completion-ring-20260821` run, QA `PASS — pending manual checks`. The
 ring ships **unwired** — no caller until Game Detail in week 3/4 — so these need
-a scratch harness or the first real caller before they can be performed.
+the first real caller before they can be performed — no harness, see the preamble.
 
 Six are tech-ac's own manual lines. **Four (C8, C9's colour, C10's colour, C5's
 magenta) exist because the single indigo→magenta test was removed at Phase 4B by
@@ -454,7 +415,7 @@ thirteen criteria passed automatically; these three are the ones the project's o
 rules forbid testing (dimensions, radii and stroke widths are never asserted in a
 widget test).
 
-**All three need a scratch harness** — `LabelValueRow` and `HairlineGroup` ship
+**All three wait for a real caller** (no harness — see the preamble) — `LabelValueRow` and `HairlineGroup` ship
 **unwired**, with no caller anywhere in the app. Same position 2.2's completion ring
 is still in. Cheapest route is to check these the first time a real screen adopts
 the components rather than building a harness twice.
@@ -476,7 +437,7 @@ the components rather than building a harness twice.
 From the `error-states-20260824` run, QA `PASS — pending manual checks` after 2
 cycles. Thirty of thirty-five criteria passed automatically; these five are visual.
 
-**All five need a scratch harness** — the `error_states/` module ships **unwired**,
+**All five wait for a real caller** (no harness — see the preamble) — the `error_states/` module ships **unwired**,
 with no caller anywhere. Same position as 2.2's ring and 2.6's rows. One harness
 hosting all three levels would clear these in a single sitting.
 
@@ -510,7 +471,7 @@ From the `async-empty-state-20260824` run, QA `PASS — pending manual checks`, 
 cycles. Twenty-six of twenty-eight criteria passed automatically; AC-15 and AC-16
 are worded observationally and cannot be asserted, and the rest are visual.
 
-**None of these need a scratch harness** — unlike 2.2, 2.6 and 2.7, this module
+**These need no waiting** — unlike 2.2, 2.6 and 2.7, this module
 ships **wired** at five live sites, so every check is reachable by driving the real
 app.
 
