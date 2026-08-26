@@ -48,7 +48,7 @@ The single most important element on Home. Everything else on the screen is size
 
 - Fill `--color-surface-indigo` (raised indigo `#1e2353`), `--radius-xl`, padding 20px, `gap:18px`.
 - **Signature shape**: a 180px circle at `--radius-jumbo`, `rgba(255,255,255,.08)`, positioned `top:-46px; right:-40px`, clipped by `overflow:hidden`. This is the system's oversized-shape motif at app scale — one per screen, never two.
-- **Cover** 112 × 150, `--radius-lg`, `object-fit:cover`, `filter:saturate(.5) contrast(1.05)` plus an indigo→canvas gradient veil `rgba(88,101,242,.26) → rgba(35,39,42,.6)`. Purpose: third-party art of any hue is forced into the brand's cool palette so white type stays legible over it. *(Lower stop recomputed 2026-07-30 from `rgba(10,13,58,.6)` — it is the canvas end of the veil, and the canvas is now onyx. The indigo top stop is unchanged and is what keeps the treatment brand-tinted rather than grey.)* Platform tag sits bottom-left in its own transparent-to-black ramp.
+- **Cover** 112 × 150, `--radius-lg`, `object-fit:cover`, with an indigo→canvas gradient veil `rgba(88,101,242,.26) → rgba(35,39,42,.6)`. Purpose: third-party art of any hue is forced into the brand's cool palette so white type stays legible over it. *(Lower stop recomputed 2026-07-30 from `rgba(10,13,58,.6)` — it is the canvas end of the veil, and the canvas is now onyx. The indigo top stop is unchanged and is what keeps the treatment brand-tinted rather than grey.)* Platform tag sits bottom-left in its own transparent-to-black ramp.
 - **Status pill** — `rgba(0,0,0,.28)` glass, `--radius-pill`, 11px/500 uppercase `.08em`, prefixed with a 6px **green** dot. The dot is the only green on the card besides the CTA; green means live.
 - **Title** Space Grotesk 700, 26px, line-height 1.05, all-caps. Largest type on the screen.
 - **Progress line** 13px `rgba(255,255,255,.78)` — chapter context, not a number.
@@ -80,7 +80,7 @@ Only **one** countdown is ever shown: the nearest release the user has actually 
 
 - Caption `Next 7 days`, 13px/500 `--color-ink-70` (a caption, not a zone eyebrow — the hierarchy is one level down).
 - Horizontal scroll, `gap:10px`, `margin:0 -20px; padding:0 20px` so covers **bleed to the frame edge** and the rail reads as scrollable without a scrollbar (`scrollbar-width:none`, `.ql-scroll`).
-- Tile 92px wide: date row (day 10px `.14em` `--color-ink-55` + date Space Grotesk 700 13px), cover 120px tall `--radius-lg` with the same saturate/veil treatment, then title 12px/500 with `text-overflow:ellipsis` and platform 11px `--color-ink-55`.
+- Tile 92px wide: date row (day 10px `.14em` `--color-ink-55` + date Space Grotesk 700 13px), cover 120px tall `--radius-lg` with the same veil, then title 12px/500 with `text-overflow:ellipsis` and platform 11px `--color-ink-55`.
 - **Owned marker** — 17px indigo circle, white 10px check at `stroke-width:3`, `top:5px right:5px`. Indigo = in your library, everywhere in the app.
 
 Six items ship in the data so the seventh is always partly visible — the rail must never look like it ends at the frame.
@@ -120,7 +120,7 @@ Two columns, not one: at 390px a two-up grid gives four games in one fold, and c
 
 ## 7. Cross-cutting conventions
 
-**Cover-art treatment.** Every cover in the app: `object-fit:cover`, `saturate(.5) contrast(1.05)`, indigo→canvas gradient veil. Applied uniformly so a grid of unrelated art still reads as one surface. Missing art falls back to `--color-surface-onyx` with a hairline and a gamepad glyph — never a coloured placeholder, which would read as real art.
+**Cover-art treatment.** Every cover in the app: `object-fit:cover` plus the indigo→canvas gradient veil. Applied uniformly so a grid of unrelated art still reads as one surface. Missing art falls back to `--color-surface-onyx` with a hairline and a gamepad glyph — never a coloured placeholder, which would read as real art.
 
 **Colour rationing.**
 - Green — `Log session` CTA, the live dot, critic scores. Nothing else.

@@ -1,6 +1,8 @@
 # Code Plan
-Source: `tech-ac.md` — Week 3 item 3.1 (D1–D4 in `orchestrator-state.md`)
+Source: `tech-ac.md` — Week 3 item 3.1 (D1–D5 in `orchestrator-state.md`)
 Date: 2026-08-26
+Revised: 2026-08-26 — D5. See `## Approved feedback delta` at the foot, which is
+authoritative wherever it conflicts with anything above it.
 
 ## CREATE NEW
 
@@ -70,6 +72,10 @@ Five insertion points, same relative position in each — immediately after
 The `// new` markers above are for this review only — **no comment is written into
 the file** (see `task-brief.md ## Constraints`).
 
+The `copyWith` and `lerp` blocks are the two that nothing checks at runtime under
+D5. `task-brief.md` step 2 is a source read of exactly these two bodies
+(`3.1-AC4`).
+
 ### .agents/references/system-foundation-specs.md
 
 §2 rule 4 — before:
@@ -84,8 +90,8 @@ after:
 ```text
 4. **No fourth loud accent.** Indigo, magenta and cyan are the set; nothing joins them. Violet
    `#7d4ee0` was ratified 2026-08-26 as a **surface** in exactly one place — `--surface-art-deep`
-   (§2.2) — and nowhere else. It is not an accent. Violet as a *status hue* is still the open
-   decision in §7.1.
+   — and nowhere else. It is not an accent; §2.2 states why a surface is not an accent. Violet as
+   a *status hue* is still the open decision in §7.1.
 ```
 
 §2 rule 7 — `must be logged (§5)` → `must be logged (§6)`.
@@ -112,6 +118,14 @@ and neither is derived from the other.
 |---|---|---|
 | `--surface-art` | `#2f3782` | Stands in behind cover imagery so a failed image load reads as a brand block rather than a hole (Library spec §5). Reuses the canvas-indigo step rather than minting a hex. |
 | `--surface-art-deep` | `#7d4ee0` | The empty-state recruit card fill (Library spec §11). A flat fill, never a gradient — see rule 6. |
+
+**Why violet is admissible as a surface here.** Rule 4 bars violet as a fourth loud *accent* — a
+hue competing for attention on small, repeated, interactive parts. `--surface-art-deep` is the
+opposite of that: one large flat block, non-interactive, on one empty state, carrying no status
+or action meaning. On that basis violet was ratified as a **surface** on 2026-08-26, in this one
+place and nowhere else; it remains barred as an accent, and whether it is a status hue is still
+open (§7.1). Rule 4 and §7.1 point here rather than restating this, so if the carve-out is ever
+withdrawn this is the paragraph to change.
 ```
 
 §3.2 Game card row — `Covers desaturated 50% + indigo→canvas scrim.` →
@@ -145,9 +159,9 @@ after:
 ```text
 `#7d4ee0`** · **Wishlist link cyan** · Dropped 28% white. Violet is held over from the retired
 gradient mesh. As of 2026-08-26 it is ratified as a **surface** in exactly one place,
-`--surface-art-deep` (§2.2); whether it stays a *status hue* is what this decision is about and
-is still open. Cyan is a small extension of the "inline links only" rule. Strict fallback for
-either is 55% ink.
+`--surface-art-deep` (§2.2, which states why); whether it stays a *status hue* is what this
+decision is about and is still open. Cyan is a small extension of the "inline links only" rule.
+Strict fallback for either is 55% ink.
 ```
 
 Options `1a`/`1b`/`1c` in §7.2, and register line 327, are untouched.
@@ -268,47 +282,38 @@ Line 67 (`saturate(.4) contrast(1.05)`, screen-2 key art) is **not** touched.
 
 ## TEST FILES
 
-### test/widget/theme/app_tokens_test.dart
+NONE (D5). `test/widget/theme/app_tokens_test.dart` is out of this item's scope
+entirely — not opened, not edited. The four edits this plan previously sketched
+(the value assertions, the distinctness-`Set` reason, the violet-exclusion reason,
+the `_allColors()` additions) are withdrawn; see `tdd.md ## Withdrawn design
+decisions`. No test file anywhere changes and the suite stays at exactly `+361 -10`.
 
-Four edits, no new test file.
+## Approved feedback delta
 
-- Surfaces group, new assertion — `'should expose the two art surfaces when
-  reading the dark set'` — asserts `colors.surfaceArt` is `Color(0xFF2F3782)` and
-  `colors.surfaceArtDeep` is `Color(0xFF7D4EE0)`. (`3.1-AC6`)
-- `'should expose three distinct raised surfaces…'` (`:38-50`) — **unchanged
-  members, unchanged `expect(distinct.length, 3)`**, plus the written reason:
+Human decision **D5**, Phase 3 design gate, 2026-08-26 (`orchestrator-state.md`,
+"Human decisions — 2026-08-26, Phase 3 design gate"). Authoritative on conflict.
 
-```dart
-      // surfaceArt is a deliberate alias of surfaceIndigoPanel, so it stays out
-      // of this set - adding it would leave four members with three unique
-      // values and the check below would pass without checking anything.
-      final distinct = <Color>{
-        colors.surfaceRaised,
-        colors.surfaceIndigoPanel,
-        colors.surfaceTabChrome,
-      };
-      expect(distinct.length, 3);
-```
+- `test/widget/theme/app_tokens_test.dart` is removed from the file allowlist
+  entirely. No test file is created or modified in this item.
+- `3.1-AC6` – `3.1-AC9` are retired (`tech-ac.md ## Retired criteria`) and must not
+  be implemented. `3.1-AC12a` is added and must be.
+- Testing mode is `none`, not `coverage`. Both new tokens ship with zero test
+  coverage — stated and accepted at the gate.
+- Test baseline expectation is exactly `+361 -10`, unchanged. Not "+361 plus the
+  new token assertions".
+- The implementation plan drops the three token-test steps and renumbers: 19 steps
+  → 17. A new step 2 carries `3.1-AC4` as a source read of `copyWith` and `lerp`,
+  recorded in `diff-summary.md`, because no runtime check remains behind it.
+- `system-foundation-specs.md` §2.2 must state **why** violet is admissible as a
+  surface (`3.1-AC12a`), not just the values and roles — it is now the only place
+  in the repo carrying D1's required reason. Copy is above, in the §2.2 "after"
+  block. §2 rule 4 and §7.1 cross-reference it instead of restating it.
+- Withdrawn, not overruled: the distinctness-`Set` decision and the asymmetric
+  violet-assertion handling (`surfaceArt` added / `surfaceArtDeep` excluded). Both
+  dissolve with the test edit — do not reinstate either.
+- `tdd.md` and `task-brief.md` were corrected **in place** as well, because a stale
+  `### TEST FILES` entry would have the Dev Agent's literal allowlist check
+  authorise a file that is now out of scope.
 
-- `'should keep violet out of the surface and accent tokens…'` (`:97-111`) —
-  `surfaceArt` joins the list, `surfaceArtDeep` is excluded with the reason:
-
-```dart
-      // surfaceArtDeep is left out on purpose: violet was ratified as a surface
-      // in that one place on 2026-08-26 (see system-foundation-specs.md 2.2).
-      // Every other token still has to keep clear of violet.
-      final surfacesAndAccents = <Color>[
-        colors.canvas,
-        colors.surfaceRaised,
-        colors.surfaceIndigoPanel,
-        colors.surfaceTabChrome,
-        colors.surfaceArt,
-        colors.accentIndigo,
-        colors.accentMagenta,
-        colors.accentLinkCyan,
-      ];
-      expect(surfacesAndAccents.contains(colors.statusViolet), isFalse);
-```
-
-- `_allColors()` (`:493+`) — `colors.surfaceArt` and `colors.surfaceArtDeep`
-  appended after `colors.surfaceToast`, in class order. (`3.1-AC8`)
+Unchanged by D5: both token values (`#2F3782`, `#7D4EE0`), the flat-fill shape,
+violet ratified as a surface, and all eight desaturation doc corrections.

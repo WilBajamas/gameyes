@@ -3,7 +3,7 @@ Feature: Week 3 item 3.1 — Foundations: art surfaces, and the three docs that 
 Run ID: library-foundations-20260826
 Run folder: .agents/runs/library-foundations-20260826/
 Started: 2026-08-26
-Current phase: HUMAN_GATE
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 28 info (30 issues total) — captured 2026-08-26T15:36:00Z
 Test baseline: +361 -10 — captured 2026-08-26T15:38:00Z
@@ -58,6 +58,33 @@ NONE
 
 ## Code review outcomes
 NONE
+
+## Human decisions — 2026-08-26, Phase 3 design gate
+
+**D5 — NO token-test changes. `test/widget/theme/app_tokens_test.dart` is removed
+from this item's scope entirely.** Human decision at the Phase 3 gate, given with
+approval to proceed straight to Dev (no re-gate after the artifacts are corrected).
+
+Consequences, all checked before routing:
+- **Nothing breaks.** Every test in that file uses hardcoded lists; the one that
+  "scans the whole colour set" (`:63-68`) only asserts `#1E2353` is absent. Two new
+  fields on the class fail none of them, and no test constructs `AppColorTokens(`
+  directly — it appears at 4 sites, all inside its own source file. Test baseline
+  stays **+361 -10**.
+- **`3.1-AC6` through `3.1-AC9` are retired**, not silently dropped. QA gates on
+  `tech-ac.md`, so leaving them would have forced a FAIL and burned a QA cycle.
+- **The two new tokens ship with zero test coverage.** Accepted by the human.
+- **D1's carve-out becomes documentation-only.** The Tech Lead's design excluded
+  `surfaceArtDeep` from the violet assertion at `:97-111` with a written reason;
+  with no test edit there is nothing to exclude, because the assertion never sees
+  the new surface. The reason now lives solely in the §2.2 amendment — which is
+  where D1 said to record it anyway.
+- **The distinctness-`Set` trap dissolves.** It was only a trap because the plan
+  added `surfaceArt` to a `Set` where it would collapse four members into three
+  unique values. Not touching the file removes the failure mode outright.
+- `task-brief.md`'s allowlist is corrected **in place** rather than by delta —
+  the Dev Agent's allowlist check is literal and would otherwise still list the
+  test file.
 
 ## Run notes
 

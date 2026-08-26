@@ -1,6 +1,9 @@
 # Technical Acceptance Criteria
-Source: `.agents/week-3-task-briefs.md` — Stage 3, item 3.1; `.agents/handover.md` "Stage 3 brief" rulings 2, 3 and 5; human decisions D1–D4 in `orchestrator-state.md` ("Human decisions — 2026-08-26, Phase 1 escalation")
+Source: `.agents/week-3-task-briefs.md` — Stage 3, item 3.1; `.agents/handover.md` "Stage 3 brief" rulings 2, 3 and 5; human decisions D1–D4 in `orchestrator-state.md` ("Human decisions — 2026-08-26, Phase 1 escalation") and D5 ("Human decisions — 2026-08-26, Phase 3 design gate")
 Date: 2026-08-26
+Revised: 2026-08-26 — D5 retires `3.1-AC6` – `3.1-AC9` to `## Retired criteria`. No
+other criterion's substance changes; `3.1-AC4` and `3.1-AC23` are reworded only to
+restate verification without the token test.
 BA Agent version: 1.0
 
 ## Feature summary
@@ -9,18 +12,25 @@ Add two flat colour tokens, `surfaceArt` and `surfaceArtDeep`, to `AppColorToken
 and close the design-doc loops that keep re-seeding rejected criteria. Both tokens
 reuse existing project hexes rather than minting brand colour (D2): `surfaceArt` is
 `#2F3782`, `surfaceArtDeep` is `#7D4EE0`. `surfaceArtDeep` is violet, which is
-ratified as a surface by D1 — so two standing colour-law statements and one token
-test assertion are amended in the same change, each with the reason written down
-rather than silently deleted. `surfaceArtDeep` is a single flat `Color`, not a
-gradient (D3), which also corrects the Library spec's recruit card. Seven doc sites
-carrying the three-times-rejected `saturate(.5) contrast(1.05)` cover filter are
-corrected, plus one back-reference to it; the indigo→canvas veil survives at every
-one. Token file, token test and five reference docs only — no screen, no widget, no
-runtime behaviour change.
+ratified as a surface by D1 — so two standing colour-law statements are amended in
+the same change, each with the reason written down rather than silently deleted.
+`surfaceArtDeep` is a single flat `Color`, not a gradient (D3), which also corrects
+the Library spec's recruit card. Seven doc sites carrying the three-times-rejected
+`saturate(.5) contrast(1.05)` cover filter are corrected, plus one back-reference to
+it; the indigo→canvas veil survives at every one. Token file and five reference docs
+only — **no test change (D5)**, no screen, no widget, no runtime behaviour change.
+Both new tokens therefore ship with zero test coverage, a trade-off stated and
+accepted at the Phase 3 gate.
 
 ## Technical acceptance criteria
 
 ### Colour tokens
+
+Means of verification for `3.1-AC1` – `3.1-AC5` is a **source read** of
+`lib/config/theme/tokens/app_color_tokens.dart` — its five sites (field group,
+constructor, `dark`, `copyWith`, `lerp`) — plus a diff check that no existing field
+changed. D5 removed the token test from scope, so nothing asserts either new value at
+runtime; QA verifies these by reading the source.
 
 [3.1-AC1] THEME TOKENS: `AppColorTokens` exposes a `surfaceArt` field of type
 `Color`, grouped with the existing surface fields, resolving to `Color(0xFF2F3782)`
@@ -42,6 +52,11 @@ every field on the class remains a `Color` or an existing token group.
 
 [3.1-AC4] THEME TOKENS: both new fields are required constructor parameters and are
 carried through `copyWith` and `lerp` exactly as every existing colour field is.
+  Verification: read the `copyWith` and `lerp` bodies directly and confirm each new
+  field appears in both, in the same form as its neighbours. There is no
+  lerp-coverage assertion for these two fields — the `_allColors()` helper that
+  would have provided one is out of scope under D5, so a source read is the only
+  check and QA must perform it explicitly rather than infer it from a green suite.
   Failure case: a field omitted from `lerp` silently drops to the `a`-side value on
   every theme transition; one omitted from `copyWith` cannot be overridden in tests.
 
@@ -50,36 +65,6 @@ carried through `copyWith` and `lerp` exactly as every existing colour field is.
 including `playing` — are untouched.
   Failure case: any existing hex change is out of this item's scope and breaks the
   assertions already covering it.
-
-### Token tests
-
-[3.1-AC6] TOKEN TEST: `test/widget/theme/app_tokens_test.dart` asserts
-`colors.surfaceArt` is `Color(0xFF2F3782)` and `colors.surfaceArtDeep` is
-`Color(0xFF7D4EE0)`.
-  Failure case: without a pinned assertion a later edit can fork either token from
-  the hex D2 fixed, with nothing catching it.
-
-[3.1-AC7] TOKEN TEST: the violet-exclusion test at `:97-111` still asserts that
-`statusViolet` appears in none of the surface and accent tokens it lists, with
-`surfaceArtDeep` excluded from that list and the exclusion carrying a written reason
-naming D1's ratification. `surfaceArt` is subject to no exclusion.
-  Failure case: adding `surfaceArtDeep` to the list fails the test; deleting or
-  weakening the whole assertion instead removes the guard for every other token,
-  which D1 explicitly requires to stay meaningful.
-
-[3.1-AC8] TOKEN TEST: both new tokens are present in the `_allColors()` helper at
-`:493+`, so the lerp-coverage assertion at `:460-462` iterates them.
-  Failure case: a token missing from `_allColors()` is excluded from lerp coverage
-  and from the `#1e2353` scan, so a broken `lerp` entry for it goes undetected.
-
-[3.1-AC9] TOKEN TEST: the raised-surface distinctness `Set` at `:44-49` keeps
-exactly its three current members and its `expect(distinct.length, 3)`. Neither new
-token is added, and the test carries a written reason that `surfaceArt` is a
-deliberate alias of `surfaceIndigoPanel` rather than a fourth distinct surface —
-the same shape as 2.7's `surfaceToast`.
-  Failure case: adding an alias to the `Set` collapses it to three unique values
-  from four members, so the assertion still passes while no longer asserting
-  distinctness — a silently dead test.
 
 ### `system-foundation-specs.md`
 
@@ -106,6 +91,14 @@ for §12. §7.1's separate open status-hue decision (violet and cyan as status d
 options `1a`/`1b`/`1c`) is left as it stands.
   Failure case: an unamended §7.1 is the second contradiction of the ratified token;
   over-editing it instead closes an open decision nobody made.
+
+[3.1-AC12a] DESIGN DOC: the §2.2 amendment states **why** violet is admissible as a
+surface here — the reason D1 required to be written down. Since D5 removed the token
+test from scope, §2.2 is the sole place that reason exists; §2 rule 4 and §7.1
+cross-reference it rather than restating it.
+  Failure case: D1 required the carve-out's reason to be recorded, not just the
+  carve-out. With no test edit to carry it, a §2.2 amendment that lists the hex
+  without the reason leaves the ratification undocumented anywhere in the repo.
 
 [3.1-AC13] DESIGN DOC: the §6 Local additions register row for
 `--surface-art` / `--surface-art-deep` (line 320) carries both values, and §2 rule
@@ -185,16 +178,79 @@ which describes a rejected hero-ramp option rather than a cover treatment.
   still open.
 
 [3.1-AC23] REPO: no file under `lib/` other than
-`lib/config/theme/tokens/app_color_tokens.dart` is modified, and no test other than
-`test/widget/theme/app_tokens_test.dart` is modified. The analyzer stays at the
-recorded baseline (30 issues / 0 errors / 2 warnings / 28 info) and the suite stays
-at +361 -10 plus whatever new token assertions add.
+`lib/config/theme/tokens/app_color_tokens.dart` is modified, and **no test file is
+modified at all**, `test/widget/theme/app_tokens_test.dart` included (D5). The
+analyzer stays at the recorded baseline (30 issues / 0 errors / 2 warnings / 28
+info) and the suite stays at exactly +361 -10 — no added tests, no changed count.
   Failure case: 28 total issues means the deliberate `_TaskReminder` pair was
-  "fixed"; any screen or widget diff means a criterion leaked out of this item's
-  scope into Stage 4's.
+  "fixed"; any test-file diff contradicts D5; a passing count other than 361 means
+  something entered the suite that this item does not authorise; any screen or
+  widget diff means a criterion leaked out of this item's scope into Stage 4's.
+
+## Retired criteria — withdrawn by human decision D5, 2026-08-26
+
+**These are not open criteria. QA must not check them and must not fail this item
+for their absence.** They were withdrawn at the Phase 3 design gate by D5
+(`orchestrator-state.md`, "Human decisions — 2026-08-26, Phase 3 design gate"),
+which removed `test/widget/theme/app_tokens_test.dart` from this item's scope
+entirely. Nothing in that file changes. They are preserved verbatim so it is visible
+that they were withdrawn by decision, not missed.
+
+The accepted consequence, stated at the gate: **`surfaceArt` and `surfaceArtDeep`
+ship with zero test coverage.** `3.1-AC1` – `3.1-AC5` are verified by source read
+instead (see the note under `### Colour tokens`).
+
+~~### Token tests~~
+
+~~[3.1-AC6]~~ WITHDRAWN (D5) — TOKEN TEST: `test/widget/theme/app_tokens_test.dart`
+asserts `colors.surfaceArt` is `Color(0xFF2F3782)` and `colors.surfaceArtDeep` is
+`Color(0xFF7D4EE0)`.
+  Original failure case: without a pinned assertion a later edit can fork either
+  token from the hex D2 fixed, with nothing catching it.
+  Retirement note: this risk is real and is now accepted, not mitigated. The hexes
+  live only in `app_color_tokens.dart` and in `system-foundation-specs.md` §2.2
+  (`3.1-AC10`), which is the doc a future drift would have to be checked against.
+
+~~[3.1-AC7]~~ WITHDRAWN (D5) — TOKEN TEST: the violet-exclusion test at `:97-111`
+still asserts that `statusViolet` appears in none of the surface and accent tokens
+it lists, with `surfaceArtDeep` excluded from that list and the exclusion carrying a
+written reason naming D1's ratification. `surfaceArt` is subject to no exclusion.
+  Original failure case: adding `surfaceArtDeep` to the list fails the test;
+  deleting or weakening the whole assertion instead removes the guard for every
+  other token, which D1 explicitly requires to stay meaningful.
+  Retirement note: the assertion uses a hardcoded list, so it never sees the new
+  tokens and stays exactly as meaningful as it is today for every token it does
+  list. Nothing to exclude, nothing to weaken. D1's requirement that the carve-out
+  carry a written reason moves wholly to the §2.2 amendment — `3.1-AC12a`.
+
+~~[3.1-AC8]~~ WITHDRAWN (D5) — TOKEN TEST: both new tokens are present in the
+`_allColors()` helper at `:493+`, so the lerp-coverage assertion at `:460-462`
+iterates them.
+  Original failure case: a token missing from `_allColors()` is excluded from lerp
+  coverage and from the `#1e2353` scan, so a broken `lerp` entry for it goes
+  undetected.
+  Retirement note: this is the one retirement that removes a real check. `3.1-AC4`
+  now carries an explicit source-read verification of `lerp` and `copyWith` in its
+  place. Precedent for an uncovered field already exists — `glass42` is absent from
+  the same helper (see `## Out of scope`).
+
+~~[3.1-AC9]~~ WITHDRAWN (D5) — TOKEN TEST: the raised-surface distinctness `Set` at
+`:44-49` keeps exactly its three current members and its `expect(distinct.length,
+3)`. Neither new token is added, and the test carries a written reason that
+`surfaceArt` is a deliberate alias of `surfaceIndigoPanel` rather than a fourth
+distinct surface — the same shape as 2.7's `surfaceToast`.
+  Original failure case: adding an alias to the `Set` collapses it to three unique
+  values from four members, so the assertion still passes while no longer asserting
+  distinctness — a silently dead test.
+  Retirement note: this criterion existed only to stop an edit that is no longer
+  being made. With the file untouched the `Set` already keeps its three members and
+  its assertion, so the failure mode it guarded against cannot occur.
 
 ## Out of scope
 
+- **`test/widget/theme/app_tokens_test.dart` — the whole file (D5).** Removed from
+  this item's scope at the Phase 3 gate. No assertion is added, changed or removed;
+  the two new tokens ship untested by decision. See `## Retired criteria`.
 - **Every screen and every widget.** No `LibraryScreen`, no cover placeholder
   widget, no recruit card, no empty state. Nothing consumes `surfaceArt` or
   `surfaceArtDeep` in this item — they are minted unused on purpose.
@@ -219,7 +275,8 @@ at +361 -10 plus whatever new token assertions add.
   status hue; that register row stands.
 - **`glass42` is absent from `_allColors()`** (`:517-519` list the .30/.32/.34 steps
   and stop), so it carries no lerp coverage. Pre-existing, unrelated to this item,
-  flagged not fixed.
+  flagged not fixed — and now unreachable here in any case, since D5 puts that file
+  out of scope.
 - **`.agents/handover.md`.** Recording this item's outcome there is the
   orchestrator's close-out, not a criterion.
 - **Item 4.5's recruit card.** D3 forbids reintroducing a ramp there; that is a
@@ -248,3 +305,12 @@ sentence's meaning, matching each doc's existing table/prose style.
 
 ASSUMPTION: the two new tokens sit in `AppColorTokens`'s existing `// ** Surfaces`
 group rather than a new group, since D1 ratifies `surfaceArtDeep` as a surface.
+
+ASSUMPTION (D5): a criterion retired for having no verification path is retired, not
+re-verified another way — with one exception. [3.1-AC4]'s `lerp`/`copyWith` carriage
+was already flagged as source-read-verifiable and is kept as an active criterion on
+that basis; [3.1-AC6]'s value-pinning is not re-expressed as a source read, because
+[3.1-AC1] and [3.1-AC2] already state the exact values and a source read of them is
+the same check. No new criterion is invented to replace a withdrawn one, other than
+[3.1-AC12a], which relocates a requirement D1 made (the written reason) rather than
+adding one.

@@ -33,7 +33,7 @@ The most distinctive element in the app.
 
 - Height 300px (new) / 262px (owned), `background:var(--surface-art)`, `padding:20px`, `align-items:flex-end`.
 - **`border-radius:0 0 88px 88px`** — the design system's directional bottom-only swoop, taken from the marketing hero media block and applied at app scale. It is the reason this screen is recognisable at a glance and appears **nowhere else** in the app.
-- Key art `object-fit:cover` with `filter:saturate(.5) contrast(1.05)`, the app-wide cover treatment.
+- Key art `object-fit:cover` with the app-wide cover treatment — the indigo→canvas veil.
 - **Three-stop legibility ramp**, not a two-stop scrim: `.3 0%` → `.6 48%` → `.93 100%`. Near-opaque at the base so 34px white display type survives any artwork.
 
   > **⚠ NEEDS A DESIGN DECISION — 2026-07-30, canvas change.** The ramp colour was `rgba(10,13,58,…)`, and its stated rationale was *"indigo-tinted rather than black, so the art is pushed toward the canvas hue instead of being greyed out."* Both halves of that sentence were true when the canvas was indigo. They now conflict: onyx `#23272a` is a near-neutral dark grey, so tinting toward the canvas hue **is** greying the art out. I have deliberately not picked for you. Two options:

@@ -82,7 +82,7 @@ Three tiles, `--radius-lg`, tilted so the eye reads depth without a shadow scale
 - centre `124 × 166`, `rotate(2deg)`, `bottom:112px`, `box-shadow: var(--shadow-float)`
 
 Only the centre tile floats — `--shadow-float` marks the focal tile and nothing else.
-Every cover image gets `filter: saturate(.5) contrast(1.05)` plus a top-to-bottom
+Every cover image gets a top-to-bottom
 indigo→canvas tint so no cover can out-shout the UI. The centre tile carries a small
 status chip (`Playing`) with a 5px dot.
 

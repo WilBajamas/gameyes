@@ -1,10 +1,12 @@
 # Ambiguities Report
 Source: `.agents/week-3-task-briefs.md` — Stage 3, item 3.1 (with preamble "How to use this", "What week 3 does NOT touch", "Baselines"); rulings 2, 3 and 5 in `.agents/handover.md` "Stage 3 brief"
 Date: 2026-08-26 (re-issued after the Phase 1 escalation was answered)
+Revised: 2026-08-26 — D5 at the Phase 3 design gate. No new question is opened; the
+consequences are recorded under `## RESOLVED CONSEQUENCES — D5`.
 
 ## CRITICAL (pipeline blocked — requires human decision before proceeding)
 
-NONE — all three are resolved below. `tech-ac.md` is written.
+NONE — all three are resolved below. `tech-ac.md` is written. D5 opens nothing new.
 
 ## RESOLVED (were CRITICAL — answered by the human, 2026-08-26)
 
@@ -16,16 +18,22 @@ RESOLVED-1 (was CRITICAL-1): no hex existed anywhere for `surfaceArt` /
   **Answered by D2 — reuse existing tokens, mint no new brand colour.**
   `surfaceArt` = `#2F3782` (`surfaceIndigoPanel`), `surfaceArtDeep` = `#7D4EE0`
   (`statusViolet`). This was option B; D1 is what makes it coherent.
-  Carried into `tech-ac.md` as 3.1-AC1, 3.1-AC2, 3.1-AC6.
+  Carried into `tech-ac.md` as 3.1-AC1 and 3.1-AC2. (It was also carried as 3.1-AC6,
+  the test that pinned both hexes; D5 retired that one — the values are now verified
+  by source read only.)
 
 RESOLVED-2 (was CRITICAL-2): a violet `surfaceArtDeep` contradicted
 `system-foundation-specs.md` §2 rule 4 ("not a UI colour until ratified") and §7.1
 ("never a surface").
   **Answered by D1 — violet IS ratified as a surface. §2.2 wins.** Both statements
-  are amended in this same edit with the carve-out recorded, and the new surface is
-  excluded from the `app_tokens_test.dart:97-111` violet assertion **with a
-  documented reason**, that assertion staying meaningful for every other token.
-  Carried into `tech-ac.md` as 3.1-AC7, 3.1-AC11, 3.1-AC12.
+  are amended in this same edit with the carve-out recorded. D1 also called for the
+  new surface to be excluded from the `app_tokens_test.dart:97-111` violet assertion
+  with a documented reason; **D5 removed that half** — the assertion uses a
+  hardcoded list, never sees the new token, and stays meaningful for every token it
+  does list without any edit. The documented reason lives solely in the §2.2
+  amendment, which is where D1 said to record it. See `## RESOLVED CONSEQUENCES`.
+  Carried into `tech-ac.md` as 3.1-AC11, 3.1-AC12 and 3.1-AC12a (was also 3.1-AC7,
+  retired by D5).
 
 RESOLVED-3 (was CRITICAL-3): flat fill or gradient — the token's shape depended on
 the answer.
@@ -53,18 +61,55 @@ survived in further places this item did not name.
   treatment"), not a literal occurrence, and `:51` is a literal occurrence this
   report missed. `:83` is now carried as an assumption below.
   Carried into `tech-ac.md` as 3.1-AC14, 3.1-AC15, 3.1-AC19 through 3.1-AC22.
+  Untouched by D5 — every one of these is a documentation edit.
+
+## RESOLVED CONSEQUENCES — D5 (2026-08-26, Phase 3 design gate)
+
+**D5: `test/widget/theme/app_tokens_test.dart` is out of this item's scope
+entirely.** Recorded in `orchestrator-state.md`, "Human decisions — 2026-08-26,
+Phase 3 design gate". Nothing below is a question — these are the settled
+consequences, logged so a later reader does not reopen them.
+
+CONSEQUENCE-1: **D1's carve-out is documentation-only.** D1 asked for two things —
+that violet's ratification as a surface be recorded in the docs, and that the new
+surface be excluded from the violet assertion with a documented reason. The second
+has nothing to act on: with no test edit, the assertion's hardcoded list never sees
+`surfaceArtDeep`, so there is no exclusion to write and no reason to attach to one.
+The reason now lives **solely** in the §2.2 amendment, which is the location D1
+named in the first place. `tech-ac.md` 3.1-AC12a makes that explicit so the written
+reason does not fall out of the change along with the retired test criterion. This
+resolves the earlier reading in RESOLVED-2; it is not a new ambiguity.
+
+CONSEQUENCE-2: **3.1-AC6 – 3.1-AC9 are retired, not dropped.** They are preserved
+verbatim in `tech-ac.md ## Retired criteria` with a per-criterion retirement note.
+QA gates on `tech-ac.md`, so a withdrawn criterion left in the active list would be
+an automatic FAIL against a change nobody was asked to make.
+
+CONSEQUENCE-3: **the two new tokens ship with zero test coverage**, stated and
+accepted by the human. The only check that retirement genuinely removes is
+3.1-AC8's lerp coverage; 3.1-AC4 now carries an explicit source-read verification of
+`copyWith` and `lerp` in its place. There is precedent in the same helper —
+`glass42` has carried no lerp coverage for some time.
+
+CONSEQUENCE-4: **the distinctness-`Set` trap and the `_allColors()` question both
+dissolve.** Both were live only because the plan was editing that file. With the
+file untouched, the `Set` keeps its three members and its assertion unchanged, and
+nothing is added to `_allColors()`.
+
+CONSEQUENCE-5: **no baseline movement.** The suite stays at exactly +361 -10 rather
+than "+361 plus new assertions". `tech-ac.md` 3.1-AC23 is reworded to say so, and to
+forbid any test-file diff at all.
 
 ## ASSUMPTIONS (minor — pipeline may proceed)
 
-ASSUMPTION: The item's file reference `test/widget/components/app_tokens_test.dart`
-does not exist. The file is `test/widget/theme/app_tokens_test.dart`. The violet
-assertion is at `:97-111` (matches the item's "~97-110"). The cited `:496-500` is
-**not** the distinctness `Set` — it is inside the `_allColors()` helper (`:493+`)
-that feeds the lerp coverage test, and `surfaceToast` is *inside* that list at
-`:500`. The distinctness `Set` that `surfaceToast` is kept outside of is at
-`:44-49`. Both sites are in play for different reasons: the two new tokens join
-`_allColors()` so lerp coverage holds (3.1-AC8), and the `:44-49` Set is a separate
-deliberate call (3.1-AC9). Confirmed independently by the orchestrator.
+ASSUMPTION (superseded by D5, retained for the record): The item's file reference
+`test/widget/components/app_tokens_test.dart` does not exist; the file is
+`test/widget/theme/app_tokens_test.dart`. The rest of this assumption worked out
+which sites in that file were in play — the violet assertion at `:97-111`, the
+`_allColors()` helper at `:493+` (which is what the item's `:496-500` actually
+points at, not the distinctness `Set`), and the distinctness `Set` at `:44-49`. D5
+puts the whole file out of scope, so none of those sites is in play any more. The
+file-path correction still stands as a fact; the site analysis is moot.
 
 ASSUMPTION: `system-foundation-specs.md` "§5" in the item text and in §2 rule 7
 means **§6 Local additions register** (header line 308, the art-surfaces row line
@@ -128,14 +173,17 @@ group rather than a new group, since D1 ratifies `surfaceArtDeep` as a surface.
   not over-edit it while amending §7.1 two sections above.
 - `glass42` is missing from `_allColors()` in `app_tokens_test.dart` (the helper
   lists glass30/32/34 and stops), so it carries no lerp coverage. Pre-existing and
-  unrelated; not this item's to fix, but the next run touching that helper should.
+  unrelated; not this item's to fix — and unreachable from this item at all under
+  D5. The next run that opens that file should fix it, and should add `surfaceArt`
+  and `surfaceArtDeep` at the same time, since D5 leaves them uncovered for the same
+  reason.
 - `.agents/manual-check-backlog.md:191-192` describes the 50% desaturation clause as
   a spec requirement shipping deliberately unmet. Once the specs are corrected that
   framing is stale, but the entry records the `1.3-AC7` check and is not a spec.
 
 ## SCOPE NOTE
 
-Nothing is blocked. All four answers landed, the escalation is cleared, and
-`tech-ac.md` covers the token half and the doc half in one pass. The item changes
-`app_color_tokens.dart`, `app_tokens_test.dart` and five reference docs — no screen,
-no widget, no runtime behaviour.
+Nothing is blocked. All four Phase 1 answers landed, the escalation is cleared, and
+D5 narrows the item rather than reopening it. `tech-ac.md` now covers the token half
+and the doc half with no test half. The item changes `app_color_tokens.dart` and
+five reference docs — no test, no screen, no widget, no runtime behaviour.

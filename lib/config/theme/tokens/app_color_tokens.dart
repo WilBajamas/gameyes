@@ -24,6 +24,8 @@ class AppColorTokens {
     required this.surfaceMagentaPanel,
     required this.surfaceTabChrome,
     required this.surfaceToast,
+    required this.surfaceArt,
+    required this.surfaceArtDeep,
     required this.accentIndigo,
     required this.accentMagenta,
     required this.accentLinkCyan,
@@ -61,6 +63,8 @@ class AppColorTokens {
   final Color surfaceMagentaPanel;
   final Color surfaceTabChrome;
   final Color surfaceToast;
+  final Color surfaceArt;
+  final Color surfaceArtDeep;
 
   // ** Accents
   final Color accentIndigo;
@@ -110,6 +114,8 @@ class AppColorTokens {
     surfaceMagentaPanel: Color(0xFF8A2F86),
     surfaceTabChrome: Color(0xFF2E3236),
     surfaceToast: Color(0xFF2E3236),
+    surfaceArt: Color(0xFF2F3782),
+    surfaceArtDeep: Color(0xFF7D4EE0),
     accentIndigo: _accentIndigo,
     accentMagenta: _accentMagenta,
     accentLinkCyan: _accentLinkCyan,
@@ -178,6 +184,8 @@ class AppColorTokens {
     Color? surfaceMagentaPanel,
     Color? surfaceTabChrome,
     Color? surfaceToast,
+    Color? surfaceArt,
+    Color? surfaceArtDeep,
     Color? accentIndigo,
     Color? accentMagenta,
     Color? accentLinkCyan,
@@ -214,6 +222,8 @@ class AppColorTokens {
       surfaceMagentaPanel: surfaceMagentaPanel ?? this.surfaceMagentaPanel,
       surfaceTabChrome: surfaceTabChrome ?? this.surfaceTabChrome,
       surfaceToast: surfaceToast ?? this.surfaceToast,
+      surfaceArt: surfaceArt ?? this.surfaceArt,
+      surfaceArtDeep: surfaceArtDeep ?? this.surfaceArtDeep,
       accentIndigo: accentIndigo ?? this.accentIndigo,
       accentMagenta: accentMagenta ?? this.accentMagenta,
       accentLinkCyan: accentLinkCyan ?? this.accentLinkCyan,
@@ -261,6 +271,8 @@ class AppColorTokens {
       )!,
       surfaceTabChrome: Color.lerp(a.surfaceTabChrome, b.surfaceTabChrome, t)!,
       surfaceToast: Color.lerp(a.surfaceToast, b.surfaceToast, t)!,
+      surfaceArt: Color.lerp(a.surfaceArt, b.surfaceArt, t)!,
+      surfaceArtDeep: Color.lerp(a.surfaceArtDeep, b.surfaceArtDeep, t)!,
       accentIndigo: Color.lerp(a.accentIndigo, b.accentIndigo, t)!,
       accentMagenta: Color.lerp(a.accentMagenta, b.accentMagenta, t)!,
       accentLinkCyan: Color.lerp(a.accentLinkCyan, b.accentLinkCyan, t)!,

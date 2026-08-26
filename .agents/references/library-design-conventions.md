@@ -38,7 +38,7 @@ Controls stack top to bottom in decreasing frequency of use: search is used most
 Seven chips — `All · Playing · Backlog · Completed · On hold · Wishlist · Dropped` — in one horizontal scroller, `gap:8px`, `margin:0 -20px; padding:0 20px` so the row bleeds to the frame edge and reads as scrollable (`scrollbar-width:none`, `.ql-scroll`).
 
 - Chip: 35px tall, `padding:0 13px`, `--radius-pill`, 13px/500. Inactive `--color-ink-08` with `--color-ink-70` label; **active `#5865f2` with white label** — indigo is the app's active-state colour, same as the tab bar.
-- Every chip carries a 7px status dot and a live count. Dots follow the status system exactly: Playing white, Backlog 55% white, Completed magenta `#ec48bd`, On hold violet `#7d4ee0`, Wishlist link cyan `#00b0f4`, Dropped 28% white. `All` has no dot.
+- Every chip carries a 7px status dot and a live count. Dots follow the status system exactly: Playing indigo `#5865f2`, Backlog 55% white, Completed magenta `#ec48bd`, On hold violet `#7d4ee0`, Wishlist link cyan `#00b0f4`, Dropped 28% white. `All` has no dot. On the **active** Playing chip the dot reverts to ink: the filled pill already carries the hue, so an indigo dot on it would be invisible (this ships today).
 - Counts are dimmer than the label (`rgba(255,255,255,.4)`, or 72% white on the active chip) and are load-bearing: they tell you a slice has contents before you tap it, so a filter never presents as a dead end.
 
 **Why chips and not tabs or status cards.** Six statuses plus All will not fit as a segmented control at 390px, tabs would cap the set at four, and status cards (the Backlogr pattern) cost a tap to reach any game at all. Chips scroll, carry counts, and keep the shelf on screen while you switch.
@@ -62,7 +62,7 @@ The toggle is neutral, not indigo: it changes how you look, not what you are loo
 
 Two columns, `repeat(2,minmax(0,1fr))`, `align-items:start`, `gap:12px`.
 
-- Card: `--radius-lg`, `--color-ink-08`, `overflow:hidden`. Cover `aspect-ratio:3/4` on `--surface-art` with the app-wide treatment (`saturate(.5) contrast(1.05)` plus an indigo→canvas veil).
+- Card: `--radius-lg`, `--color-ink-08`, `overflow:hidden`. Cover `aspect-ratio:3/4` on `--surface-art` with the app-wide indigo→canvas veil.
 - **Status pill**, bottom left of every cover: `rgba(0,0,0,.42)` glass, `--radius-pill`, 10px/500 uppercase `.08em`, 5px status dot. It is on every card, not just some, because at `All` the status *is* the sort you are reading.
 - Footer `9px 11px 11px`: title 13px/500 `--color-ink`, meta 11px `--color-ink-55` as `platform · contextual number` (`PS5 · 24h · Ch. 9`, `NSW · Added 3d ago`, `PS5 · Out 14 Aug`). Both lines nowrap and ellipsise.
 - No library tick. Indigo means "in your library" everywhere else in the app; inside the Library it would be on all 312 covers.
@@ -140,7 +140,7 @@ A user with 3 games and a user with 312 get the same screen; the small library d
 ## 11. Empty — 0 games
 
 - Header, then the search field at `opacity:.5`. No chips, no sort, no toggle.
-- **Recruit card**: `--surface-art-deep` gradient, `--radius-xl`, `padding:24px`. 26px gamepad glyph, headline `START WITH ONE GAME` in display 700 24px caps, one line of body at 14px `rgba(255,255,255,.84)`, then the screen's single green CTA `Log a game` full width with a black label. No decorative oversized circle — the gradient carries the card on its own.
+- **Recruit card**: flat `--surface-art-deep` fill (`#7d4ee0`), `--radius-xl`, `padding:24px`. 26px gamepad glyph, headline `START WITH ONE GAME` in display 700 24px caps, one line of body at 14px `rgba(255,255,255,.84)`, then the screen's single green CTA `Log a game` full width with a black label. No decorative oversized circle — on an otherwise empty screen the violet block is already the one loud shape, and a second would pull attention off the CTA. *(Flat, not a gradient, decided 2026-08-26 under colour law rule 6. The card was originally drawn around a ramp; the trade-off was accepted. Do not reintroduce one.)*
 - Two lighter routes under it in one hairline group on `#2f333c`: `Import from Steam or PSN` and `Browse this month's releases`, each with a 19px glyph, a one-line reason, and a chevron. They exist because the fastest path to a full shelf is rarely typing a title.
 - Count line reads `Showing 0 games out of 0`.
 
@@ -151,7 +151,7 @@ Empty states recruit. They do not apologise, and they name the action that fills
 ## 12. Cross-cutting conventions
 
 **Colour rationing on this screen.**
-- Indigo `#5865f2` — active status chip, active tab. Nothing else.
+- Indigo `#5865f2` — active status chip, active tab, and the Playing status dot wherever it appears: the chip row (§3), the grid cover's status pill (§5) and the list row's status line (§6). Nothing else.
 - Magenta — the Completed status dot only.
 - Violet `#7d4ee0` / cyan `#00b0f4` — On hold and Wishlist dots (both flagged in the component brief).
 - Green — one CTA, and only in the empty state (`Log a game`). The populated and cold-start screens carry no green at all, because their highest-intent action is a neutral cell inside the shelf.

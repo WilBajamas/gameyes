@@ -1,6 +1,12 @@
 # Technical Design Document
-Source: `tech-ac.md` — Week 3 item 3.1 (`.agents/week-3-task-briefs.md` Stage 3; handover rulings 2, 3, 5; decisions D1–D4 in `orchestrator-state.md`)
+Source: `tech-ac.md` — Week 3 item 3.1 (`.agents/week-3-task-briefs.md` Stage 3; handover rulings 2, 3, 5; decisions D1–D5 in `orchestrator-state.md`)
 Date: 2026-08-26
+Revised: 2026-08-26 — D5 at the Phase 3 design gate removes
+`test/widget/theme/app_tokens_test.dart` from scope entirely. The `## Token test
+design` section is withdrawn, testing mode is corrected, and two design decisions
+this document made are recorded as withdrawn rather than deleted. The token values,
+the flat-fill shape, violet's ratification and all eight doc corrections stand
+unchanged.
 
 ## Feature summary
 
@@ -9,8 +15,8 @@ through its five sites (constructor, field group, `dark`, `copyWith`, `lerp`).
 Nothing consumes them. The rest of the item is prose: five reference docs under
 `.agents/references/` are corrected so the colour law matches the ratified token
 (D1), the token stays flat (D3), and the three-times-rejected cover filter is
-removed from all eight sites (D4 + `3.1-AC20`). No screen, no widget, no runtime
-behaviour, no code generation, no new package.
+removed from all eight sites (D4 + `3.1-AC20`). No test, no screen, no widget, no
+runtime behaviour, no code generation, no new package.
 
 **Scope guard.** Any design decision that would touch a screen or a widget belongs
 to a later item, not this one. Three came up while designing and all three are
@@ -21,9 +27,9 @@ behaviour `3.1-AC16` writes down).
 ## Layer map
 
 - `3.1-AC1` – `3.1-AC5`: theme tokens (`lib/config/theme/tokens/`) — no other layer.
-- `3.1-AC6` – `3.1-AC9`: token contract test (`test/widget/theme/`).
-- `3.1-AC10` – `3.1-AC21`: documentation (`.agents/references/`) — no layer.
+- `3.1-AC10` – `3.1-AC21`, `3.1-AC12a`: documentation (`.agents/references/`) — no layer.
 - `3.1-AC22`, `3.1-AC23`: cross-cutting verification, no edit of its own.
+- No test layer. `3.1-AC6` – `3.1-AC9` were retired by D5 and are not designed for.
 
 ## Data layer
 
@@ -68,9 +74,24 @@ minted unused on purpose so Stage 4 has a hex to build against.
   particular `surfaceIndigoPanel`'s literal is **not** refactored into a shared
   private const — see the reuse decision below.
 - No comment is added to the token file. The two duplicated hexes are explained in
-  the token test (`3.1-AC7`, `3.1-AC9`) and in `system-foundation-specs.md` §2.2,
-  which is where a reader asking "why two identical values?" is sent. This matches
-  `surfaceToast`, which duplicates `surfaceTabChrome`'s literal uncommented.
+  `system-foundation-specs.md` §2.2 (`3.1-AC12a`), which is where a reader asking
+  "why two identical values?" is sent, and which under D5 is the only place that
+  explanation exists at all. This matches `surfaceToast`, which duplicates
+  `surfaceTabChrome`'s literal uncommented.
+
+### `3.1-AC4` has no runtime check behind it
+
+Under D5 nothing asserts that the two fields are carried through `copyWith` and
+`lerp`. The `_allColors()` lerp iteration that would have covered them is out of
+scope, so the suite is green whether or not the entries exist. A field missing from
+`lerp` silently drops to the `a`-side value on every theme transition; a field
+missing from `copyWith` cannot be overridden.
+
+The design's answer is a **source read carried as its own plan step**
+(`task-brief.md` step 2), not a note. Dev reads both bodies back after the edit,
+confirms each new field appears in the same form as its neighbours, and records the
+confirmation in `diff-summary.md`. QA repeats the read against `tech-ac.md`
+`3.1-AC4` and must not accept a green suite as evidence — the suite cannot see this.
 
 ### Reuse decisions
 
@@ -82,84 +103,49 @@ minted unused on purpose so Stage 4 has a hex to build against.
   decision*: `system-foundation-specs.md` §7.1 and register line 327 still hold
   violet-as-a-status-dot open (options `1a`/`1b`/`1c`), so a later edit resolving
   that decision against violet would silently move a surface it never intended to
-  touch. Two independent literals, each pinned by `3.1-AC6`, fail loudly instead.
-  The same reasoning applies to `surfaceArt` vs `surfaceIndigoPanel`.
+  touch. Under D5 this matters more, not less: with no test pinning either value,
+  a shared const is a change vector with nothing watching it, whereas two
+  independent literals can only drift one at a time and are checked against §2.2 by
+  source read. The same reasoning applies to `surfaceArt` vs `surfaceIndigoPanel`.
 - The alias shape itself is precedented: `surfaceToast` (`#2E3236`) already
   duplicates `surfaceTabChrome` from item 2.7.
 
-## Token test design
+## Token test design — WITHDRAWN (D5)
 
-`test/widget/theme/app_tokens_test.dart` (modify). Four separate sites, three
-different purposes. The whole file is a **token-contract test**, not a widget
-test — its exact-value assertions *are* the design system's contract, so the
-`flutter-widget-test` rule against asserting token values (which governs widgets
-rendering with a theme) does not apply here and its existing `setUpAll` token
-resolution stays. Do not "simplify" this file.
+`test/widget/theme/app_tokens_test.dart` is out of this item's scope entirely. No
+assertion is added, changed or removed; the file is not opened. The two new tokens
+ship with zero test coverage, a trade-off stated and accepted at the Phase 3 gate.
 
-### 1. The distinctness `Set` at `:44-49` — the decision, and why
+The two design decisions this document previously made about that file are recorded
+in `## Withdrawn design decisions` below, so nobody reinstates them from a stale
+read of an earlier revision.
 
-**Decision: the `Set` keeps exactly its three current members
-(`surfaceRaised`, `surfaceIndigoPanel`, `surfaceTabChrome`) and its
-`expect(distinct.length, 3)`. Neither new token is added. A written reason is
-added naming `surfaceArt` as a deliberate alias** (`3.1-AC9`).
+## Withdrawn design decisions
 
-Reasoning, recorded because getting this wrong produces a green suite:
+Both are **dissolved by D5, not overruled** — the situation each was reasoning
+about no longer arises. Neither should be reinstated by a later item without
+re-deciding it on its own facts.
 
-- `surfaceArt` is value-identical to `surfaceIndigoPanel` (`#2F3782`, D2). Adding
-  it gives the `Set` **four members that collapse to three unique values**, so
-  `expect(distinct.length, 3)` still passes — while no longer asserting that
-  anything is distinct from anything. The test would be dead and look alive.
-  This is the same trap `surfaceToast` was kept out of at item 2.7.
-- Adding `surfaceArtDeep` instead (four members, four unique values) would fail
-  the assertion, and "fixing" it by bumping the literal to `4` changes what the
-  test is about: it guards the three **raised onyx/indigo surfaces** that must
-  stay visually separable, and a violet empty-state fill is not one of them.
-- No extra `expect(colors.surfaceArt, colors.surfaceIndigoPanel)` identity
-  assertion is added. Both values are pinned as literals — `surfaceIndigoPanel` at
-  `:41` and `surfaceArt` by `3.1-AC6` — so a fork of either already fails one of
-  those two assertions. An identity assertion would be a third way of saying the
-  same thing.
+1. **The distinctness-`Set` decision (was `3.1-AC9`).** This document argued at
+   length that `surfaceArt` must be kept out of the `Set` at `:44-49`, because
+   adding a value-identical alias would leave four members collapsing to three
+   unique values — `expect(distinct.length, 3)` would still pass while asserting
+   nothing, a dead test that looks alive. That reasoning is sound but now moot:
+   nothing is added to the `Set`, so the silent-pass trap cannot occur. The `Set`
+   keeps its three members and its assertion untouched, as it does today.
+   *It becomes live again the moment some later item adds an alias token to that
+   `Set` — that is when to re-read this.*
+2. **The asymmetric violet-assertion handling (was `3.1-AC7`).** This document
+   specified that `surfaceArt` be added to the `surfacesAndAccents` list at
+   `:97-111` while `surfaceArtDeep` was excluded with a written reason naming D1.
+   With no test edit the assertion's hardcoded list never sees either token, so
+   there is nothing to add and nothing to exclude, and the assertion stays exactly
+   as meaningful as it is today for every token it does list. D1's requirement that
+   the carve-out carry a written reason does not disappear with it — it relocates
+   wholly to the §2.2 amendment, which is `3.1-AC12a`.
 
-The reason is written as a short comment inside that test, next to the `Set`, in
-plain English: `surfaceArt` deliberately aliases `surfaceIndigoPanel`, so it is
-kept out of this `Set` — adding it would leave four members with three unique
-values and the assertion would pass without asserting anything.
-
-### 2. The violet-exclusion assertion at `:97-111` — the other site, other purpose
-
-Per `3.1-AC7` and D1: the assertion stays and stays meaningful for every other
-token. `surfaceArtDeep` is **excluded from the `surfacesAndAccents` list** and the
-exclusion carries a written reason naming D1's ratification (2026-08-26) and
-pointing at `system-foundation-specs.md` §2.2. `surfaceArt` **is added** to the
-list — it carries no exclusion (`3.1-AC7`), it is not violet, and adding it keeps
-the assertion's coverage complete as the surface set grows.
-
-Deleting or weakening the assertion is the failure mode D1 names explicitly. It is
-not an option.
-
-### 3. `_allColors()` at `:493+` — coverage, not distinctness
-
-Both new tokens are appended in the same order they appear on the class
-(`3.1-AC8`), so the `#1e2353` scan at `:63-67` and the lerp iteration at
-`:460-462` see them. Duplicate values in this list are harmless: both consumers
-use `contains` / element iteration, and nothing asserts its length or uniqueness
-(verified by grep — `_allColors` has exactly two call sites).
-
-**Caveat, recorded rather than glossed:** the lerp consumer is
-`for (final color in _allColors(lerped.color)) expect(color, isNotNull);`. `Color`
-is non-nullable, so that expectation cannot fail — membership of `_allColors()`
-buys real coverage for the `#1e2353` scan but only nominal coverage for `lerp`.
-`3.1-AC8` is still implemented exactly as written (it is the canonical criterion
-and the `#1e2353` half is genuine), but **`3.1-AC4`'s lerp/`copyWith` carriage is
-verified by reading the source, not by that loop** — QA should check the two
-fields appear in `copyWith` and `lerp` directly. Strengthening the loop is a
-pre-existing concern for whoever next owns that helper, alongside the already-
-flagged missing `glass42`; it is not this item's to fix and would widen scope.
-
-### 4. Value assertions
-
-`3.1-AC6` adds the two pinned literals in the surfaces group, in the existing
-`'should ...'` naming style.
+Also withdrawn with them: the `_allColors()` membership design (was `3.1-AC8`) and
+the two shell caveats that only concerned that helper.
 
 ## Documentation design
 
@@ -170,17 +156,28 @@ true, in each doc's existing style.
 
 **Locate every edit by its quoted text, never by line number.** The line numbers in
 `tech-ac.md` are pre-edit values, and `system-foundation-specs.md` §2.2 grows from
-three prose lines to a table, which shifts every later line in that file.
+three prose lines to a table plus a paragraph, which shifts every later line in that
+file.
 
 `system-foundation-specs.md`
 - §2.2 → a two-row table with both values, both stated as flat fills, and the two
   roles stated **separately**; explicit "not a pair, not a ramp" (`3.1-AC10`, D3).
+  **Plus a short paragraph stating why violet is admissible as a surface here**
+  (`3.1-AC12a`): rule 4 bars violet as a fourth loud *accent* — a hue competing for
+  attention on small interactive parts — and `--surface-art-deep` is a single large,
+  flat, non-interactive block on one empty state, carrying no status or action
+  meaning. That is the reason D1 required to be written down. Under D5 there is no
+  test carrying any part of it, so §2.2 is the sole place it exists in the repo, and
+  the paragraph is load-bearing rather than decorative. It is also the one paragraph
+  to change if the carve-out is ever withdrawn.
 - §2 rule 4 → records violet ratified as a surface in exactly one place, dated, and
-  keeps the rule's real subject (no fourth loud *accent*). It also states that
-  violet as a *status hue* is still §7.1's open decision, so the amendment cannot
-  be read as closing it (`3.1-AC11`).
-- §7.1 → the "never a surface" clause becomes the same dated carve-out; the
-  options `1a`/`1b`/`1c` and the rest of §7.1 are untouched (`3.1-AC12`).
+  keeps the rule's real subject (no fourth loud *accent*). It **points at §2.2 for
+  the reason rather than restating it** (`3.1-AC12a`), and states that violet as a
+  *status hue* is still §7.1's open decision, so the amendment cannot be read as
+  closing it (`3.1-AC11`).
+- §7.1 → the "never a surface" clause becomes the same dated carve-out, likewise
+  cross-referencing §2.2; the options `1a`/`1b`/`1c` and the rest of §7.1 are
+  untouched (`3.1-AC12`).
 - §6 register row → carries both hexes; §2 rule 7's "(§5)" → "(§6)" (`3.1-AC13`).
   Register line 327 (violet/cyan as status *dots*) is left standing.
 - §3.2 Game card row → the desaturation clause goes, the indigo→canvas scrim
@@ -237,38 +234,46 @@ the `.5` string.
 
 ## Testing mode
 
-`coverage` — `AppColorTokens` is the app-wide theme extension consumed by far more
-than three features. No new test file: no widget or screen changes, so per
-`flutter-widget-test` no widget qualifies for a dedicated test, and the existing
-token-contract test already owns this contract. The only test edits are the four
-sites `3.1-AC6` – `3.1-AC9` name.
+`none` — no test file is created or modified (D5).
+
+The change is two unused colour constants plus prose. No widget or screen changes,
+so per `flutter-widget-test` nothing qualifies for a dedicated test file.
+`AppColorTokens` is an app-wide shared utility, which would ordinarily match the
+`coverage` rule; D5 overrides that at the human's decision and accepts zero
+coverage for both new tokens. `3.1-AC1` – `3.1-AC5` are verified by source read
+(`task-brief.md` steps 1 and 2), and the suite is expected at exactly `+361 -10`,
+unchanged (`3.1-AC23`).
+
+The residual risk is stated rather than mitigated: nothing catches a later edit
+forking either hex from D2's value. The hexes live in `app_color_tokens.dart` and
+in §2.2, and §2.2 is what a future drift would be checked against. The next run
+that opens `app_tokens_test.dart` should add both tokens to `_allColors()` at the
+same time as the already-flagged missing `glass42`.
 
 ## Caveats — I have no shell
 
-I cannot run `flutter analyze`, `flutter test`, or `build_runner`. Three claims
-rest on reading rather than executing; each has a fallback, and Dev records the
-outcome as a self-correction either way.
+I cannot run `flutter analyze`, `flutter test`, or `build_runner`. One claim rests
+on reading rather than executing; it has a fallback, and Dev records the outcome as
+a self-correction either way.
 
 1. **Adding two required constructor parameters breaks no call site.** Reasoned
    from grep: `AppColorTokens(` appears at four places, all inside
    `app_color_tokens.dart` itself (declaration, `dark`, `copyWith`, `lerp`); no
    test or screen constructs it directly. *Fallback:* if the analyzer reports a
    missing-argument error at a file outside the allowlist, that is a scope breach
-   under `3.1-AC23` — escalate, do not edit the file.
-2. **`expect(color, isNotNull)` over `_allColors()` cannot fail.** Reasoned from
-   Dart null safety on a non-nullable `Color`. *Fallback:* none needed — nothing
-   in the plan depends on that loop catching anything; `3.1-AC4` is verified by
-   source read. If Dev finds it can fail, say so and leave the loop alone.
-3. **Duplicate values in `_allColors()` break neither consumer.** Reasoned from
-   both consumers using `contains` / iteration and from grep finding no third
-   consumer and no length or uniqueness assertion. *Fallback:* if a hidden
-   consumer trips, keep `3.1-AC8` and report — do not solve it by removing a
-   token from the helper.
+   under `3.1-AC23` — escalate, do not edit the file. In particular, if the breach
+   is in a test file, escalate; D5 forbids the edit that would fix it.
+
+The two earlier caveats about `_allColors()` — that `expect(color, isNotNull)`
+cannot fail, and that duplicate values break neither consumer — are withdrawn with
+that helper's design. Neither is reachable from this item any more.
 
 No scratch files were created by this agent.
 
 ## Out of scope
 
+- **`test/widget/theme/app_tokens_test.dart` — the whole file (D5).** No test file
+  changes at all. Both tokens ship uncovered by decision.
 - **Every screen and every widget**, including `LibraryScreen`, the cover
   placeholder, the recruit card and the empty state. The tokens ship unused.
 - **`status_chip.dart`** — `3.1-AC16` documents shipped behaviour
@@ -284,7 +289,7 @@ No scratch files were created by this agent.
   `system-foundation-specs.md` §6 register line 327, and
   `.agents/manual-check-backlog.md:191-192` — all explicitly left standing.
 - **Strengthening the `_allColors()` lerp loop and adding the missing `glass42`** —
-  pre-existing, flagged not fixed.
+  pre-existing, flagged not fixed, and unreachable from this item under D5.
 - **`.agents/handover.md`** — the orchestrator's close-out, not a criterion.
 
 ## Open questions

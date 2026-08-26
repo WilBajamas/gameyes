@@ -178,12 +178,14 @@ at the final size and drop licensed art in.
 3. **Cyan is for links.** Inline links, plus the paired `See all` / `Calendar` zone links at
    13px/500. Wishlist state borrows it — a flagged extension, resolved by the open status-hue
    decision (option `1c`).
-4. **No fourth loud accent.** Violet `#7d4ee0` exists inside `--gradient-mesh` only; it is not a
-   UI colour until ratified.
+4. **No fourth loud accent.** Indigo, magenta and cyan are the set; nothing joins them. Violet
+   `#7d4ee0` was ratified 2026-08-26 as a **surface** in exactly one place — `--surface-art-deep`
+   — and nowhere else. It is not an accent; §2.2 states why a surface is not an accent. Violet as
+   a *status hue* is still the open decision in §7.1.
 5. **Separation is a lightness step, not a hue.** Raised blocks on onyx are lighter steps of the
    same family (`#2f333c` above onyx, `#2f3782` above canvas indigo).
 6. **No hard gradients in the app.** Flat fills, plain translucent circles for atmosphere.
-7. **Every literal hex or rgba in a design is a local addition** and must be logged (§5).
+7. **Every literal hex or rgba in a design is a local addition** and must be logged (§6).
 
 ### 2.1 Error ramp *(local — pending promotion)*
 
@@ -201,9 +203,21 @@ the same component — magenta means Completed.
 
 ### 2.2 Art surfaces *(local — pending promotion)*
 
-`--surface-art` and `--surface-art-deep` — indigo and violet fills standing in behind cover
-imagery so a failed image load still reads as a brand block rather than a hole. `art-deep` is
-also the empty-state card fill.
+Two flat fills, resolved 2026-08-26. They are **not a pair and not a ramp** — each has one role,
+and neither is derived from the other.
+
+| Token | Value | Role |
+|---|---|---|
+| `--surface-art` | `#2f3782` | Stands in behind cover imagery so a failed image load reads as a brand block rather than a hole (Library spec §5). Reuses the canvas-indigo step rather than minting a hex. |
+| `--surface-art-deep` | `#7d4ee0` | The empty-state recruit card fill (Library spec §11). A flat fill, never a gradient — see rule 6. |
+
+**Why violet is admissible as a surface here.** Rule 4 bars violet as a fourth loud *accent* — a
+hue competing for attention on small, repeated, interactive parts. `--surface-art-deep` is the
+opposite of that: one large flat block, non-interactive, on one empty state, carrying no status
+or action meaning. On that basis violet was ratified as a **surface** on 2026-08-26, in this one
+place and nowhere else; it remains barred as an accent, and whether it is a status hue is still
+open (§7.1). Rule 4 and §7.1 point here rather than restating this, so if the carve-out is ever
+withdrawn this is the paragraph to change.
 
 ---
 
@@ -233,7 +247,7 @@ This is the full anatomy reference — sizes, treatments, and the load-bearing n
 
 | Component | Essentials |
 |---|---|
-| **Game card** | One anatomy, three sizes: `xs` 64px (no footer), `sm` 132px (library default — title, platform, one number), `md` 220px+ (date, platforms, inline add). Cover 3:4 at r16 at every size. Overlays: indigo library tick top-right, status chip bottom-left, green critic badge top-left. Covers desaturated 50% + indigo→canvas scrim. Missing art = onyx fill + hairline + gamepad glyph, never a title initial. |
+| **Game card** | One anatomy, three sizes: `xs` 64px (no footer), `sm` 132px (library default — title, platform, one number), `md` 220px+ (date, platforms, inline add). Cover 3:4 at r16 at every size. Overlays: indigo library tick top-right, status chip bottom-left, green critic badge top-left. Covers carry an indigo→canvas scrim. Missing art = onyx fill + hairline + gamepad glyph, never a title initial. |
 | **Status system** | Six glass pills: dot + label + count. Playing is the only filled state (indigo); the rest on 8% ink. Counts are load-bearing — a filter never reads as a dead end. Dot hues in §6.1. |
 | **Completion ring** | A ring, not a bar. Indigo the whole way up, closed magenta ring at 100% matching the Completed dot. 60px inline / 80px specimen / 88px detail panel; percentage in display face at centre. |
 | **Stat pill** | Figure in display 700, label beneath 11–12px at 55% ink, on 8% ink at r16. Used in threes; never more than three at 390px. (The glass `--radius-pill` variant is the hero-panel form — see §3.3.) |
@@ -252,7 +266,7 @@ One anatomy per concept, **sized rather than redrawn**.
 
 | Pattern | Anatomy | Sizes |
 |---|---|---|
-| **Cover tile** | Image at `saturate(.5) contrast(1.05)` + flat indigo wash, `--radius-lg`, optional bottom-left status chip | mini `26×34` r5 · row `112×150` · fan `100×134` / focal `124×166` |
+| **Cover tile** | Image with a flat indigo wash, `--radius-lg`, optional bottom-left status chip | mini `26×34` r5 · row `112×150` · fan `100×134` / focal `124×166` |
 | **Status chip** | Glass capsule, `--radius-pill`, `rgba(0,0,0,.42)` + `--blur-glass`, 6–7px dot + `11px/500` label | on-media 6px dot · list 7px dot |
 | **Filter / count chip** | `--radius-pill`, active `--color-primary` white text; inactive `--color-ink-08`, `--color-ink` label + `--color-ink-55` count | `8px 14px`, `14px/500` |
 | **Context chip** | Glass, `top:54px` in a hero, `rgba(0,0,0,.30–.34)` + blur, `11px/500` `.08em` caps, 13px leading icon | one per hero |
@@ -317,7 +331,7 @@ Everything below is used in this project and has no token in the bound system. P
 | `rgba(30,20,64,.5)` | key-art wash | Flat wash replacing a scrim gradient |
 | `rgba(10,13,58,.42)` | cover tile wash | Keeps covers from out-shouting UI |
 | `#2e3236` | tab-bar chrome, toasts | Third onyx step |
-| `--surface-art` / `--surface-art-deep` | cover fallbacks, empty states | Brand block behind failed imagery |
+| `--surface-art` `#2f3782` / `--surface-art-deep` `#7d4ee0` | cover fallbacks, empty states | Flat fills (§2.2); art-deep is also the empty-state card |
 | `rgba(255,255,255,.24)` | placeholder borders | No `--color-ink-24` exists |
 | `rgba(255,255,255,.18)` / `.32` | provider mark slots | Removed when licensed marks land |
 | `radius 5px` | mini cover stack | Below `--radius-xs`; smallest media in the system |
@@ -333,8 +347,10 @@ Everything below is used in this project and has no token in the bound system. P
 
 Current dots: Playing white on indigo · Backlog 55% white · Completed magenta · **On hold violet
 `#7d4ee0`** · **Wishlist link cyan** · Dropped 28% white. Violet is held over from the retired
-gradient mesh as a status hue only and is never a surface; cyan is a small extension of the
-"inline links only" rule. Strict fallback for either is 55% ink.
+gradient mesh. As of 2026-08-26 it is ratified as a **surface** in exactly one place,
+`--surface-art-deep` (§2.2, which states why); whether it stays a *status hue* is what this
+decision is about and is still open. Cyan is a small extension of the "inline links only" rule.
+Strict fallback for either is 55% ink.
 
 ### 7.2 Register
 
