@@ -60,7 +60,9 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
 
     final newState = switch (result) {
       Success(value: final response) => state.copyWith(
-          status: GamesStatus.success,
+          status: response.items.isEmpty
+              ? GamesStatus.empty
+              : GamesStatus.success,
           response: response,
           games: response.items,
           currentPage: 1,

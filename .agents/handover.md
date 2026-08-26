@@ -534,6 +534,33 @@ the pipeline, at the human's explicit instruction.
   again after, since changing a harness can silently turn a real test into a
   pass-by-construction one. 8 of 9 fail against the unfixed widget; the one that
   passes is the scale-1.0 case that was never broken.
+- **`GamesStatus.empty` was never emitted — the games empty state had never once
+  been reachable.** **FIXED 2026-08-25** in `games_bloc.dart`; a successful fetch
+  returning zero items now emits `empty` instead of `success`. Guarded by
+  `test/cubit/games/games_bloc_empty_test.dart`.
+  **This is the most valuable thing the device sitting found**, because two QA
+  passes had already looked straight at it. Item 2.7 flagged `games_screen.dart:88`
+  as "an empty state wearing an error component" and 2.8 dutifully swapped
+  `ErrorRetryWidget` for `EmptyStateCard` — **but the status driving that branch was
+  dead the whole time**, so neither the old widget nor the new one had ever
+  rendered. `grep -rn "GamesStatus.empty" lib/` returned exactly one hit: the
+  render condition. Nothing set it. A widget test cannot catch this — the branch is
+  correct, its trigger simply never fires — which is why it survived to a human
+  filtering a real games list.
+  **Carry the lesson, not just the fix**: when a criterion says "renders X in state
+  Y", check that anything ever *produces* state Y.
+- **`games_bloc_test.dart`'s three failures have a root cause, now known.** They are
+  three of the ten pre-existing suite failures and were a mystery for weeks. The
+  bloc's constructor calls `add(const GamesFetched())` and both handlers use
+  `droppable()`, so **the bloc's own initial fetch is always in flight first and
+  every test's `act` event is silently dropped** — the stub then sees the
+  constructor's default arguments instead of the test's, and never matches. Two
+  further Mockito traps sit on top: `when()` on `Result<GameListEntity>` needs
+  `provideDummy` (a non-nullable sealed return type cannot be auto-dummied), and
+  argument matchers cannot be mixed with concrete values in the same `when()`.
+  **The new test sidesteps all three** by driving the constructor's own fetch with
+  all-matcher stubs rather than adding an event. Fixing the original three is a
+  separate job — they need restructuring, not a one-liner.
 - **65 of 167 Chinese strings are untranslated English**, in `lib/l10n/intl_zh.arb`.
   **Only `browse` (浏览) and `tracker` (追踪) were fixed** on 2026-08-25, because
   those were the two visible in the tab bar. **63 remain.** Whole surfaces are still
