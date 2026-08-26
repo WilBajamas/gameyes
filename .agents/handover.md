@@ -11,8 +11,11 @@ merged at `41829d0`. Full detail below.
 in `lib/widgets/` on 2026-08-25 rather than read off the checklist's ticks — this
 file once claimed Stage 1 complete while 1.8 and 1.9 had never been built, so the
 claim above was checked the way that mistake taught. `.agents/week-2-task-briefs.md`
-is now fully ticked, including the three "Open decisions" that had gone stale
-(2.5's and 2.7's were settled inside their own runs and never ticked).
+was fully ticked — including the three "Open decisions" that had gone stale (2.5's
+and 2.7's were settled inside their own runs and never ticked) — and then **deleted
+2026-08-25**, per its own top note. Its three surviving scope rulings were promoted
+into this file first (see "Three scope rulings promoted out of..." below); the rest
+lives in git history.
 
 **The next task is the manual-check backlog** — see `.agents/manual-check-backlog.md`,
 **95 checks**, deliberately deferred through all of Stage 2 for one device sitting.
@@ -85,9 +88,8 @@ repeating there once it exists.
 
 **Week 2 Stage 1 (primitives) — all 9 items done, merged to `develop`.**
 Items 1.1–1.9, across 6 pipeline runs (1.5/1.6/1.7 combined into one, 1.8/1.9
-into another, both at human request). `.agents/week-2-task-briefs.md` still
-exists — do NOT delete it yet, Stage 2 (8 composite items) hasn't started and
-the checklist's own top note says delete only once the whole week ships. Every
+into another, both at human request). `.agents/week-2-task-briefs.md` has since
+been **deleted** (2026-08-25), once the whole week shipped, per its own note. Every
 Stage 1 box in it was ticked 2026-08-20; they had stayed unticked through
 every merge until then.
 
@@ -148,12 +150,31 @@ is what's left, plus `.agents/manual-check-backlog.md`):
     hug-content exception, approved at Phase 3.
 
 **Week 2 Stage 2 (composites) — 7 of 8 done, only 2.8 left.** 2.1–2.4 shipped
-2026-08-21, 2.5–2.7 on 2026-08-24; run folders retired. Read `.agents/week-2-task-briefs.md`'s "How to use this"
-section before the next one — it points at the visual spec
-(`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
+2026-08-21, 2.5–2.7 on 2026-08-24, 2.8 on 2026-08-25; run folders retired. The
+checklist that sequenced them is deleted; the standing sources it pointed at are the
+visual spec (`system-foundation-specs.md` §3) and the `flutter-widgets`/`flutter-widget-test`
 skills. Explicitly out of scope there: `system-foundation-specs.md` §3.1 (an
 external, bound design bundle for a different property — not a Flutter build
 target), and the Add-to-library sheet (needs week 3's Library feature first).
+
+**Three scope rulings promoted out of `week-2-task-briefs.md` before it was deleted
+on 2026-08-25** — this is now their only home:
+- **§3.1 is never a Flutter build target.** Its components (`Button`, `Badge`,
+  `NavBar`, `Hero`, `FeatureCard`, `PricingTable`, `FaqAccordion`, `CtaBand`,
+  `MarqueeBand`, `DataTable`, `Modal`, `Toast`, `EmptyState`, `TextInput`,
+  `AuthFormCard`) are mounted via
+  `<x-import component-from-global-scope="QuestLoggdDesignSystem_347483.<Name>">` —
+  an external bound bundle for a **different property**, reading as a
+  marketing/landing-site set. Verified: `x-import` appears nowhere else in this repo.
+  Do not build these in Flutter, and do not read §3.1's `EmptyState` as related to
+  item 2.8's `EmptyStateCard`.
+- **§3.5's "Device frame" is not an in-app component** — a `330×714` showcase frame
+  with a label above it, a presentation convention for design mockups. Irrelevant to
+  the shipping app; never build it.
+- **`add_content_dialog.dart` is NOT the Add-to-library sheet under an old name.**
+  It is a tracker-era dialog: no status pre-select, no platform or rating, no green
+  CTA, and a `Dialog` rather than a bottom sheet. Building the real sheet before
+  week 3's Library entity/status model exists means building it twice.
 
 **Condensed record of items 2.1 and 2.2:**
 - **2.1 Game card** (`lib/widgets/game_card/`, Dev commit `26b5951`) — three
@@ -1005,12 +1026,13 @@ fastest way to understand why the plan looks the way it does).
 
 **Current phase: week 2 is COMPLETE** — component library, all 9 Stage 1
 primitives and all 8 Stage 2 composites built and merged to `develop`. The
-remaining week 2 work is not code: the **92-check manual backlog**, and deleting
-`.agents/week-2-task-briefs.md` per its own top note. **That file is still present
-and now fully ticked** — before deleting it, see gotcha #9 and actually grep the
-destination to confirm anything worth keeping was promoted here or into
-`.agents/references/`; week 1's checklist was deleted on that assumption and the
-content briefly survived only in git history. Week 3 (Library feature) is next,
+remaining week 2 work is not code. `.agents/week-2-task-briefs.md` was fully ticked
+and **deleted 2026-08-25**, its three surviving scope rulings promoted into this file
+first (gotcha #9 was actually honoured this time — the destination was grepped, and
+§3.5's device frame turned out NOT to have been promoted, so it was written in before
+the delete). The **74-check manual backlog** remains, but most of it is now gated on
+screens that do not exist yet rather than being work anyone can pick up. Week 3
+(Library feature) is next,
 and it is blocked on a design spec — see "Open decisions that could block". Target
 is a TestFlight-equivalent Android beta around week 4.
 
@@ -1092,19 +1114,21 @@ once claimed Stage 1 complete while 1.8 and 1.9 had never been built.
 **There is no pipeline item queued.** The next work is one of three things, and the
 human picks:
 
-1. **The 92-check manual backlog** (`.agents/manual-check-backlog.md`) -- deferred
-   through all of Stage 2 for one device sitting, which the human began 2026-08-25.
-   Ask where they got to before assuming it is untouched. **Recount the total in
-   that file rather than quoting one**: three different totals (82, 88, 90) were all
-   wrong before 2026-08-25. Start with 2.4-MC-1 and 2.4-MC-2, the only two with no
-   automated guard at all. 2.2's ten + 2.6's three + 2.7's five need **one** scratch
-   harness between them (those modules ship unwired); 2.8's five need none and four
-   sit on Featured.
-2. **Delete `.agents/week-2-task-briefs.md`**, per its own top note now that every
-   box is ticked. **See gotcha #9 first** -- actually grep the destination to confirm
-   anything worth keeping was promoted into this file or `.agents/references/`.
-   Week 1's checklist was deleted on the assumption an earlier step had handled it,
-   and the content briefly survived only in git history.
+1. **The manual-check backlog** (`.agents/manual-check-backlog.md`) -- **74 left, and
+   the easy value is already extracted.** The 2026-08-25 sitting cleared eighteen,
+   including every one of item 2.4's fifteen. **Recount the total in that file rather
+   than quoting one**: four different totals (82, 88, 90, 92) have been wrong at
+   various points. Only **three** entries are reachable in the app as it stands --
+   `2.8-MC-3`, `2.8-MC-4` and `2.7-MC-3` -- and the first two are Featured pixel
+   checks the human has deprioritised because that screen is due for a rebuild.
+   **Everything else waits on screens that do not exist yet**, so treat this file as
+   a per-screen checklist to consult when building, not a queue to work down.
+   **Do not build a scratch harness** -- one was built and deleted the same day; the
+   reasoning is recorded in that file.
+2. **The remaining Chinese translations** -- 63 keys still hold English values.
+   Human decision 2026-08-25: **translate them as each screen is built**, rather than
+   as one sweep. So this is not a standalone task; it is a rule for whoever touches a
+   screen next.
 3. **Week 3, the Library feature** -- but it is **blocked on a design spec that does
    not exist**. See "Open decisions that could block": the Library is the biggest
    screen in the app, has no spec, and the brief flags the hard part (it must work at
