@@ -23,34 +23,38 @@ available, ideally in one sitting per screen rather than one item at a time.
 gets worked in one device sitting. **Item 2.8 shipped 2026-08-25 and was the last
 one, so that sitting is now the next task.**
 
-**80 checks** remaining as of 2026-08-25, **counted from this file rather than
+**75 checks** remaining as of 2026-08-25, **counted from this file rather than
 carried forward**. Recount here rather than trusting a quoted total — every number
 previously written down had drifted (this file said 90, `handover.md` said 82, and
 `handover.md`'s own itemised list summed to 88, against a true 92 before the sitting
 started).
 
-**The device sitting began 2026-08-25. Twelve checks are done, three are not.**
-Item 2.4's `MC-1, 2, 3, 5, 6, 7, 8, 9, 11, 14, 12, 15` were performed and **all
-passed**, including both entries that had no automated guard at all — keyboard
-Enter/Space activation (the `ButtonPressScale`/`ActivateIntent` defect) and the
-selected/unselected colour correction. They are deleted below, per this file's
-tick-off rule.
+**The device sitting began 2026-08-25. Seventeen checks are done.** All fifteen of
+item 2.4 (see that section) plus `2.8-MC-1` and `2.8-MC-2`. Among them were the two
+entries that had no automated guard at all — keyboard Enter/Space activation (the
+`ButtonPressScale`/`ActivateIntent` defect) and the selected/unselected colour
+correction, which the old bar had shipped **inverted**.
 
-**Three 2.4 checks remain and each is annotated with why it did not settle** —
-read those notes before retrying, they will save you the sitting: `MC-4` and
-`MC-13` are **not observable by naked eye** (0ms vs 140ms) and need one
-frame-accurate recording between them; `MC-10` is blocked on a second bottom-inset
-condition, which a second AVD or a navigation-mode switch provides — no second
-physical device required.
-
-**The sitting also found two real bugs, neither of which any check was looking
-for.** Both are filed in `handover.md`'s "Known non-blocking gaps": 65 of 167
-Chinese strings are untranslated English, and the screen titles overflow at
-Android's largest font size. Neither is a manual check — do not add them back here.
+**The sitting has been worth far more than the checks it ticked.** It found three
+real bugs that no check was hunting for, all filed in `handover.md`: the screen-title
+overflow at large font sizes, 65 of 167 Chinese strings being untranslated English,
+and — the significant one — **`GamesStatus.empty` never being emitted, so the games
+empty state had never once been reachable** despite two QA passes examining that
+exact branch. Do not add those back here as checks; they are bugs, two fixed and one
+(the translations) mostly outstanding.
 
 Current breakdown: item 10.1's **4**, week 2 Stage 1's **19** (1.1×1, 1.2×2, 1.3×7,
-1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **57** (2.1×8, 2.2×10,
-2.3×15, 2.4×**3**, 2.5×8, 2.6×3, 2.7×5, 2.8×5).
+1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **52** (2.1×8, 2.2×10,
+2.3×15, 2.4×**0**, 2.5×8, 2.6×3, 2.7×5, 2.8×**3**).
+
+**Weigh Featured's checks against a rebuild before spending time on them.** Human
+note, 2026-08-25: **the Featured screen is on an old design and is due to be rebuilt**
+against `.agents/references/home-screen-design-conventions.md`, which has been
+available for weeks. Anything in this file that only verifies Featured's *current*
+layout is throwaway effort. What is still worth checking there is behaviour that will
+survive the rebuild — a tab switch working, a cubit reaching the right state — not
+pixel appearance. `2.8-MC-3` and the Featured half of `2.8-MC-4` are the entries this
+most affects.
 
 **DECIDED 2026-08-25: no scratch harness. These wait for their real callers.**
 A harness was built and then **deleted the same day** at the human's decision. The
@@ -79,9 +83,9 @@ screenshots deletion changed nothing visible" is a real-app check, and had been
 miscounted with the other four for weeks. It is doable today, on the current build,
 with no new screen needed.
 
-**2.8's five are also doable today** (it ships wired), and four of them sit on
-Featured, so they go in one Featured sitting. Along with `2.7-MC-3`, those six are
-the only checks here reachable in the app as it stands right now.
+**2.8's remaining three are doable today** (it ships wired). Along with `2.7-MC-3`,
+those four are the only checks here reachable in the app as it stands right now —
+everything else waits on a screen that does not exist yet.
 
 ---
 
@@ -508,23 +512,25 @@ are worded observationally and cannot be asserted, and the rest are visual.
 
 **None of these need a scratch harness** — unlike 2.2, 2.6 and 2.7, this module
 ships **wired** at five live sites, so every check is reachable by driving the real
-app. Sites 3, 4 and 5 all live on **Featured**, so one Featured sitting covers
-2.8-MC-1 through 2.8-MC-4.
+app.
 
-- **2.8-MC-1** `[2.8-AC15]` — Featured, with a countdown game present but the weekly
-  releases list empty (site 4, the card headed "LOOK FURTHER AHEAD" below the
-  countdown card) — tap **Browse games**. Expect the home tab bar to move its active
-  cap to Browse and Browse's own content to appear, with the back gesture returning
-  to the previous tab — *not* to Featured underneath a pushed page. This is the
-  check that the tab-switch design (`setActiveIndex`, not `router.push`) actually
-  behaves as intended.
-- **2.8-MC-2** `[2.8-AC16]` — Featured with no countdown game and no weekly releases
-  (site 5, the card headed "START A COUNTDOWN") — expect the Right Now section to
-  render the card in the slot that previously rendered nothing, with no section
-  heading above it, and the sections below pushed down but not visually broken. Tap
-  **Browse games** and expect the same tab switch as 2.8-MC-1. **This section had
-  zero height before this item**, so it is the most likely place for a layout
-  surprise.
+**`MC-1` and `MC-2` passed 2026-08-25** — both Browse tab-switch actions work, and
+site 5's card now renders where the section used to vanish silently.
+
+**Three sites cannot be reached without forcing them**, because they only appear
+when the app genuinely has no data. Flip the guard, hot-restart, look, then revert
+(`git checkout lib/` clears them all):
+`featured_screen.dart:200` → `if (false)` for site 5,
+`countdown_releases.dart:87` → `if (true)` for site 4 **plus** the featured_screen
+edit above (the two sites are mutually exclusive — forcing only `countdown_releases`
+does nothing, because the parent returns site 5's card and never builds that widget),
+`critics_grid.dart:149` → `if (true)` for site 3,
+`library_stats.dart:271` → `if (true)` for site 2.
+
+**Site 1 needed no forcing after 2026-08-25** — it was unreachable for a different
+reason entirely (`GamesStatus.empty` was never emitted; see `handover.md`), and a
+real filter that returns nothing now shows it.
+
 - **2.8-MC-3** `[2.8-AC14]` — **Human-approved side effect, confirm it looks right.**
   Featured with genre preferences selected and the critics grid empty (site 3, "OPEN
   UP YOUR GENRES") — tap **Show every pick**. Expect exactly one reload, and expect
