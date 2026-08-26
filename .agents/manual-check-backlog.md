@@ -23,20 +23,30 @@ available, ideally in one sitting per screen rather than one item at a time.
 gets worked in one device sitting. **Item 2.8 shipped 2026-08-25 and was the last
 one, so that sitting is now the next task.**
 
-**92 checks** as of 2026-08-25, **counted from this file rather than carried
-forward**. Every previously quoted total was wrong: this file said 90 and
-`handover.md` said 82, while the itemised list in `handover.md` summed to 88. The
-real breakdown is item 10.1's **4**, week 2 Stage 1's **19** (not twenty — 1.1×1,
-1.2×2, 1.3×7, 1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **69**
-(2.1×8, 2.2×10, 2.3×15, 2.4×15, 2.5×8, 2.6×3, 2.7×5, 2.8×5). Recount here rather
-than trusting a quoted total — three of them had drifted. Note 2.2's ten, 2.6's three and 2.7's
-five all need a scratch harness — those three modules ship unwired — so build one
-harness and clear eighteen at once; 2.8's five need no harness, and four of them sit
-on Featured in one sitting. Do not interrupt a pipeline run to perform these, and do not
-read the growing count as a problem. **Start with `2.4-MC-1` and `2.4-MC-2`** when
-the sitting happens: keyboard activation and the tab bar's colour correction are
-the only two entries here with no automated guard at all — everything else is
-either cosmetic or has a test standing behind it.
+**82 checks** remaining as of 2026-08-25, **counted from this file rather than
+carried forward**. Recount here rather than trusting a quoted total — every number
+previously written down had drifted (this file said 90, `handover.md` said 82, and
+`handover.md`'s own itemised list summed to 88, against a true 92 before the sitting
+started).
+
+**The device sitting began 2026-08-25 and ten checks are already done.** Item 2.4's
+`MC-1, 2, 3, 5, 6, 7, 8, 9, 11, 14` were performed and **all passed**, including
+both of the two that had no automated guard at all — keyboard Enter/Space activation
+(the `ButtonPressScale`/`ActivateIntent` defect) and the selected/unselected colour
+correction. They have been deleted from item 2.4's section below, per this file's own
+tick-off rule. **Five 2.4 checks remain**, each needing a settings or hardware change
+rather than just the app.
+
+Current breakdown: item 10.1's **4**, week 2 Stage 1's **19** (1.1×1, 1.2×2, 1.3×7,
+1.4×3, 1.5×1, 1.6×1, 1.7×2, 1.8×1, 1.9×1), and Stage 2's **59** (2.1×8, 2.2×10,
+2.3×15, 2.4×**5**, 2.5×8, 2.6×3, 2.7×5, 2.8×5).
+
+**Where to go next**, now that 2.4's highest-priority pair is cleared: **2.2's ten,
+2.6's three and 2.7's five need one scratch harness between them** — those three
+modules ship unwired — so building a single harness clears eighteen at once, and is
+the largest remaining win in this file. **2.8's five need no harness** (it ships
+wired) and four of them sit on Featured, so they go in one Featured sitting. Do not
+interrupt a pipeline run to perform these, and do not read the count as a problem.
 
 ---
 
@@ -331,60 +341,26 @@ carries more manual weight than any item so far for two reasons: four widget
 tests were removed at Phase 4B by human decision, and the bar deliberately lost
 a shipped behaviour.
 
-**The first two are the highest priority in this whole backlog** — each is the
-only remaining check on something this run either fixed or could silently break.
+**Ten of the fifteen were performed and passed on 2026-08-25**, including both of
+the two that carried no automated guard: `MC-1` (keyboard Enter/Space activation,
+the `ButtonPressScale`/`ActivateIntent` defect) and `MC-2` (the selected/unselected
+colour correction, which the old `CustomNavigationDestination` had shipped
+inverted). Also cleared: `MC-3, 5, 6, 7, 8, 9, 11, 14`. **The bar's colour
+correction and its keyboard activation are now confirmed on device, not merely
+inferred.** The five below all need a settings or hardware change rather than just
+the running app, which is why they were held back.
 
-- **2.4-MC-1** — HIGHEST. Home, with a hardware/Bluetooth keyboard (or a desktop
-  or web build). Tab forward from the body into the bar — expect focus to land on
-  Featured, Games, Tracker, Browse, Settings in that visual order, on nothing else
-  inside the bar, then leave. With Tracker focused press Enter, then Space —
-  expect each to switch to the Tracker tab with no pointer involved. **This is
-  exactly the defect that made `ButtonPressScale` unusable here** (its
-  `FocusableActionDetector` registers no `ActivateIntent`); `InkWell` supplies
-  activation now and nothing automated proves it.
-- **2.4-MC-2** — HIGHEST. Home, on each of the five tabs in turn — expect the
-  SELECTED destination's glyph and label in `accentIndigo` `#5865F2` and the other
-  four in `ink55`. **This run corrects a live shipped inversion** (the old
-  `CustomNavigationDestination` painted unselected indigo and selected grey), and
-  nothing automated proves the correction holds.
-- **2.4-MC-3** — Home, any tab — the bar's fill is onyx `surfaceTabChrome`
-  `#2E3236`, visibly one lightness step off the canvas, with no top border,
-  hairline, shadow or elevation tint. That lightness step is the entire separation
-  mechanism; if the bar reads as the same colour as the canvas it has regressed.
 - **2.4-MC-4** — With OS reduce-motion ON, tap between tabs — colour and cap snap
   instantly, no fade. Turn it off and repeat — a short 140ms ease.
-- **2.4-MC-5** — With a destination focused from the keyboard — a solid 2px green
-  outline at 2px offset inside the cell, not clipped by the bar's edges, and the
-  row must NOT shift or reflow as focus arrives or leaves.
-- **2.4-MC-6** — Press and hold a destination — scales to 0.97 with no colour
-  change, and NO ripple, splash, hover fill or press highlight at any point. A
-  press with no visible response at all also fails.
-- **2.4-MC-7** — Home — an 18×3 fully-rounded indigo cap directly above the
-  selected glyph and no other. Tap through all five watching the glyph and label
-  baselines — zero vertical shift as the cap moves.
-- **2.4-MC-8** — Home — labels at 10px weight 500 in sentence case ("Featured",
-  not "FEATURED"), identical size, weight and family selected vs unselected, only
-  the colour differing.
-- **2.4-MC-9** — Home — all five glyphs outline-only at 20px, 2px stroke, none
-  filled. Confirm each still reads as the same concept as before this item.
 - **2.4-MC-10** — A device with a home indicator or gesture bar — labels clear the
   indicator, no overlap and no dead band beneath. Then one reporting a zero bottom
   inset — the bar must not sit flush to the screen edge (22 fallback).
-- **2.4-MC-11** — Home — the five destinations are exactly equal fifths. Tap in
-  the gap between two labels, and near the top and bottom of a slot — every tap
-  inside a fifth activates that destination, no dead zones, at least 44 in both
-  dimensions at default text scale.
 - **2.4-MC-12** — `zh` at maximum OS text size — each over-long label stays on ONE
   line and ellipsizes, glyphs stay put, bar height does not grow, no destination
   squeezes its neighbours.
 - **2.4-MC-13** — Tap between tabs at normal motion — only colours and the cap
   animate, ~140ms standard ease. No indicator sliding horizontally, no animation
   of the bar's height, position or background.
-- **2.4-MC-14** — **Deliberate behaviour change.** Scroll each of the five tabs
-  hard, including a fast fling — the bar stays fully visible at all times, never
-  hiding, shrinking, fading or clipping. It used to collapse to zero height on
-  scroll-down; that was dropped by human decision and should be seen once rather
-  than only inferred.
 - **2.4-MC-15** — Open each of the five tabs — same five routes, same content,
   each still scrolling as before, and the selected destination tracks the active
   tab in both directions (tap the bar, and change tab via any other route change).

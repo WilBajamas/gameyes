@@ -522,8 +522,13 @@ uncovered.
   unreachable now that `supabase_igdb_client.dart` — the only producer of
   `FunctionException` — is gone. Still present and still passing.
 - **The whole on-device manual-check backlog now lives in
-  `.agents/manual-check-backlog.md`** — **92 checks** as of 2026-08-25, every one
-  still unperformed. **Do not quote that number from here; recount in the file.**
+  `.agents/manual-check-backlog.md`** — **82 checks** remaining as of 2026-08-25.
+  **The device sitting has started**: item 2.4's `MC-1, 2, 3, 5, 6, 7, 8, 9, 11, 14`
+  were performed and **all passed**, including both entries that had no automated
+  guard at all — keyboard Enter/Space activation and the tab bar's selected/unselected
+  colour correction. **Both are now confirmed on device rather than inferred**, which
+  retires the largest untested risk 2.4 left behind. **Do not quote the count from
+  here; recount in the file.**
   Every total previously written down was wrong: this file said 82, the backlog
   file said 90, and the itemised list here summed to 88. The counted breakdown is
   now recorded once, in the backlog file itself, and the Stage 1 group is **19**,
