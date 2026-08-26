@@ -22,6 +22,10 @@ class DefaultSliverAppBar extends StatelessWidget {
   static const double _subtitleMaxFontSize = 13;
   static const double _subtitleMinFontSize = 11;
   static const double _maxTextScale = 1;
+  static const double _lineHeightFactor = 1.35;
+  static const double _topPadding = 12;
+  static const double _bottomPadding = 8;
+  static const double _titleSubtitleGap = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +33,19 @@ class DefaultSliverAppBar extends StatelessWidget {
       context,
     ).clamp(maxScaleFactor: _maxTextScale).scale(1);
 
+    final contentHeight =
+        _topPadding +
+        _titleMaxFontSize * textScale * _lineHeightFactor +
+        (subtitle == null
+            ? 0
+            : _titleSubtitleGap +
+                  _subtitleMaxFontSize * textScale * _lineHeightFactor) +
+        _bottomPadding;
+
     return SliverAppBar(
-      toolbarHeight: kToolbarHeight + 12,
+      toolbarHeight: contentHeight > kToolbarHeight + 12
+          ? contentHeight
+          : kToolbarHeight + 12,
       backgroundColor: context.themeData.scaffoldBackgroundColor,
       actions: [
         if (actionOne?.$1 != null)

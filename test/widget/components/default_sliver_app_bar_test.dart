@@ -3,12 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_sliver_app_bar.dart';
 
 void main() {
-  Widget buildSubject({required double textScale, String? subtitle}) {
+  Widget buildSubject({
+    required double textScale,
+    String? subtitle,
+    double topInset = 24,
+  }) {
     return MaterialApp(
       home: MediaQuery(
         data: MediaQueryData(
           textScaler: TextScaler.linear(textScale),
-          padding: const EdgeInsets.only(top: 24),
+          padding: EdgeInsets.only(top: topInset),
         ),
         child: Scaffold(
           body: CustomScrollView(
@@ -39,6 +43,24 @@ void main() {
             buildSubject(
               textScale: scale,
               subtitle: 'Search for your favourite games here',
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+
+    for (final scale in <double>[1, 1.5, 2]) {
+      testWidgets(
+        'does not overflow with a subtitle and no status bar inset at $scale',
+        (tester) async {
+          await tester.pumpWidget(
+            buildSubject(
+              textScale: scale,
+              subtitle: 'Search for your favourite games here',
+              topInset: 0,
             ),
           );
           await tester.pumpAndSettle();
