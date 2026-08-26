@@ -82,10 +82,15 @@ class CriticsGridWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Personalize Your Discover Feed',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              const Expanded(
+                child: Text(
+                  'Personalize Your Discover Feed',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
               ),
+              const SizedBox(width: 12),
               GestureDetector(
                 onTap: onSkipPressed,
                 child: Text(

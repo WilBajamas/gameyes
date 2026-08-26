@@ -21,7 +21,7 @@ class DefaultSliverAppBar extends StatelessWidget {
   static const double _titleMinFontSize = 22;
   static const double _subtitleMaxFontSize = 13;
   static const double _subtitleMinFontSize = 11;
-  static const double _maxTextScale = 1.3;
+  static const double _maxTextScale = 1;
 
   @override
   Widget build(BuildContext context) {
