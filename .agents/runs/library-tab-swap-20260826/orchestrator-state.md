@@ -3,7 +3,7 @@ Feature: Week 3 item 3.2 — Tab swap, Library shell, Tracker and Browse tab ret
 Run ID: library-tab-swap-20260826
 Run folder: .agents/runs/library-tab-swap-20260826/
 Started: 2026-08-26
-Current phase: BA
+Current phase: HUMAN_GATE
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 28 info (30 issues total) — captured 2026-08-26T17:30:00Z
 Test baseline: +361 -10 — captured 2026-08-26T17:32:00Z

@@ -888,14 +888,23 @@ at `15f068f` and answers all four of the brief's open design questions.
    `presentation/screens/`. Delete the file, the `AutoRoute` at
    `auto_route_config.dart:28`, the `BrowseRoute()` at `home_screen.dart:20`, and
    the enum value, then regenerate.
-   **The human's stated intent is that the Games screen is eventually renamed
+   ~~**The human's stated intent is that the Games screen is eventually renamed
    Browse** under new conventions and designs. That is a later week's work — for
    now Games keeps its name and `Icons.gamepad_outlined`. Do not pre-emptively
-   rename it or hand it `Icons.search_outlined`.
+   rename it or hand it `Icons.search_outlined`.~~
+   **STRUCK 2026-08-26 — D6 reversed this sentence's premise.** The relabel is no
+   longer "a later week's work": slot 2 *is* Browse as of item 3.2, so its glyph is
+   a live Phase 3 decision rather than a settled "don't touch". Kept struck rather
+   than deleted because it read as current guidance for most of a day and a later
+   session may remember it. What still holds from it: the *code-facing* names
+   (`lib/features/games/`, `GamesScreen`, `GamesRoute`, the bloc, the repository)
+   do stay — only the user-visible label moves.
    Two things not to sweep while deleting Browse: the l10n keys `browse_games` and
-   `browse_for_your_next_game` are **still live** on Featured's empty states — only
-   the bare `browse` key becomes unreferenced (gotcha #1: intl_utils will drop its
-   getter, which is correct here, but check the other two survive). And
+   `browse_for_your_next_game` are **still live** on Featured's empty states.
+   ~~only the bare `browse` key becomes unreferenced~~ — **also struck by D6**: the
+   `browse` key is now **kept** as slot 2's label (already translated, 浏览), and it
+   is **`games`** (游戏) that becomes unreferenced, alongside `tracker`. Gotcha #1
+   still applies — intl_utils drops the getter of any key you delete. And
    `browse_screen.dart` is one of `ScrollNotifier`'s three writer sites; deleting it
    leaves **two** (settings_screen, home_screen). The notifier stays orphaned-but-
    deliberate exactly as 2.4 left it — this does not reopen that follow-up.
