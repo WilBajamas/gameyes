@@ -23,9 +23,9 @@ class AppRouter extends RootStackRouter {
       guards: [_authGuard],
       children: [
         AutoRoute(path: 'featured', page: FeaturedRoute.page),
+        AutoRoute(path: 'library', page: LibraryRoute.page),
         AutoRoute(path: 'games', page: GamesRoute.page),
-        AutoRoute(path: 'tracker', page: TrackerRoute.page),
-        AutoRoute(path: 'browse', page: BrowseRoute.page),
+        AutoRoute(path: 'feed', page: FeedRoute.page),
         AutoRoute(path: 'settings', page: SettingsRoute.page),
       ],
     ),

@@ -15,9 +15,9 @@ class HomeScreen extends StatelessWidget {
     return AutoTabsRouter(
       routes: [
         FeaturedRoute(),
+        LibraryRoute(),
         GamesRoute(),
-        TrackerRoute(),
-        BrowseRoute(),
+        FeedRoute(),
         SettingsRoute(),
       ],
       builder: (context, child) {

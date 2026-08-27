@@ -8,17 +8,17 @@ import 'package:google_fonts/google_fonts.dart';
 
 List<String> _destinationLabels() => [
   S.current.featured,
-  S.current.games,
-  S.current.tracker,
+  S.current.library,
   S.current.browse,
+  S.current.feed,
   S.current.settings,
 ];
 
 List<(String label, IconData icon)> _destinationLabelsAndIcons() => [
   (S.current.featured, Icons.featured_play_list_outlined),
-  (S.current.games, Icons.gamepad_outlined),
-  (S.current.tracker, Icons.format_list_numbered_rtl),
+  (S.current.library, Icons.collections_bookmark_outlined),
   (S.current.browse, Icons.search_outlined),
+  (S.current.feed, Icons.dynamic_feed_outlined),
   (S.current.settings, Icons.settings_outlined),
 ];
 
@@ -95,16 +95,16 @@ void main() {
       buildSubject(selectedIndex: 0, onDestinationSelected: reported.add),
     );
 
-    await tester.tap(find.text(S.current.games));
-    await tester.tap(find.byIcon(Icons.gamepad_outlined));
+    await tester.tap(find.text(S.current.browse));
+    await tester.tap(find.byIcon(Icons.search_outlined));
 
     final cell = find.ancestor(
-      of: find.text(S.current.games),
+      of: find.text(S.current.browse),
       matching: find.byType(InkWell),
     );
     await tester.tapAt(tester.getTopLeft(cell) + const Offset(2, 2));
 
-    expect(reported, [1, 1, 1]);
+    expect(reported, [2, 2, 2]);
   });
 
   testWidgets(
@@ -121,11 +121,11 @@ void main() {
         isSemantics(isSelected: true),
       );
       expect(
-        tester.getSemantics(find.text(S.current.games)),
+        tester.getSemantics(find.text(S.current.browse)),
         isSemantics(isSelected: false),
       );
 
-      await tester.tap(find.text(S.current.games));
+      await tester.tap(find.text(S.current.browse));
       await tester.pump();
 
       expect(
@@ -133,12 +133,12 @@ void main() {
         isSemantics(isSelected: true),
       );
       expect(
-        tester.getSemantics(find.text(S.current.games)),
+        tester.getSemantics(find.text(S.current.browse)),
         isSemantics(isSelected: false),
       );
 
       await tester.pumpWidget(
-        buildSubject(selectedIndex: 1, onDestinationSelected: (_) {}),
+        buildSubject(selectedIndex: 2, onDestinationSelected: (_) {}),
       );
 
       expect(
@@ -146,7 +146,7 @@ void main() {
         isSemantics(isSelected: false),
       );
       expect(
-        tester.getSemantics(find.text(S.current.games)),
+        tester.getSemantics(find.text(S.current.browse)),
         isSemantics(isSelected: true),
       );
 
@@ -163,13 +163,13 @@ void main() {
         buildSubject(selectedIndex: 0, onDestinationSelected: (_) {}),
       );
 
-      final label = tester.getSemantics(find.text(S.current.tracker)).label;
-      final context = tester.element(find.text(S.current.tracker));
+      final label = tester.getSemantics(find.text(S.current.browse)).label;
+      final context = tester.element(find.text(S.current.browse));
       final position = MaterialLocalizations.of(
         context,
       ).tabLabel(tabIndex: 3, tabCount: 5);
 
-      expect(label.split(S.current.tracker).length - 1, 1);
+      expect(label.split(S.current.browse).length - 1, 1);
       expect(label, contains(position));
 
       handle.dispose();
@@ -187,10 +187,10 @@ void main() {
         ),
       );
 
-      await tester.longPress(find.text(S.current.games));
+      await tester.longPress(find.text(S.current.browse));
       await tester.pump(const Duration(seconds: 2));
 
-      expect(find.byTooltip(S.current.games), findsOneWidget);
+      expect(find.byTooltip(S.current.browse), findsOneWidget);
       expect(reportedCount, 0);
     },
   );

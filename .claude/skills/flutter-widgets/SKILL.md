@@ -157,7 +157,7 @@ so they are not deletable without changing a shipped screen: `ErrorRetryWidget`
 (3 callers, all genuine error states), `DefaultSnackbar` (pushes success *and*
 failure, so §3.4's error-only toast cannot replace it), `HorizontalSeparator`
 (hardcoded `Colors.grey`, sizes to screen width — superseded by `HairlineGroup`
-but its main caller is a Game Detail screen), `SavedGameItem`, `TaskItem`,
+but its main caller is a Game Detail screen), `TaskItem`,
 `GroupTaskItem`, `AddContentDialog`, `MetacriticIndicator`, `LegendIndicator`,
 `MultiTypeValuesSelection`, `TypeValuesSelection`, the `Default*` buttons and
 filter app bars, and the shimmers. **Retire each one in the run that adopts its
@@ -199,7 +199,6 @@ never to have been reachable in the app's history.
 | `GameScreenshot` | `game_screenshot.dart` | Single screenshot viewer |
 | `GameDetailSectionPoint` | `game_detail_section_point.dart` | Bullet-point row for detail sections |
 | `PlatformRowList` | `platform_row_list.dart` | Horizontal row of platform icons |
-| `SavedGameItem` | `saved_game_item.dart` | Saved game list row with swipe actions |
 | `SavedGameStatusTag` | `saved_game_status_tag.dart` | Status tag chip for saved games |
 | `GroupTaskItem` | `group_task_item.dart` | Task group row in tracker |
 | `TaskItem` | `task_item.dart` | Individual task row |

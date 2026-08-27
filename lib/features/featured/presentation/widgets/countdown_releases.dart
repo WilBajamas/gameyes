@@ -90,7 +90,7 @@ class CountdownReleasesWidget extends StatelessWidget {
         headline: S.current.look_further_ahead,
         supportingLine: S.current.browse_for_your_next_game,
         actionLabel: S.current.browse_games,
-        onActionPressed: () => AutoTabsRouter.of(context).setActiveIndex(3),
+        onActionPressed: () => AutoTabsRouter.of(context).setActiveIndex(2),
       );
     }
 

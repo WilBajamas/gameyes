@@ -1,6 +1,11 @@
 # Task Brief
 Source: `.agents/runs/library-tab-swap-20260826/tech-ac.md` (Week 3 item 3.2 — Tab swap, Library and Feed shells, Tracker tab retirement, Browse relabel)
 Date: 2026-08-27 (revision 2 — retargeted from the superseded four-tab shape to D6's five)
+Revised: 2026-08-27 (revision 3) — D8 removes `test/widget/feed/feed_screen_test.dart`
+from this item's scope entirely. The testing-mode justification, the file allowlist,
+plan step 17 and step 19's expected suite movement are corrected in place. Nothing
+else changes: the five-tab shape, the ordering design, the three retirements, the
+l10n inversion, the slot-2 route path and the three glyphs all stand.
 
 ## Context
 
@@ -10,18 +15,25 @@ instead of moving ones, ship throwaway Library and Feed shells so neither new ta
 dead on arrival, and relabel the existing Games screen as Browse without renaming
 anything in code.
 
-**This brief was rewritten, not amended.** The four-tab target of revision 1 is dead
-(`orchestrator-state.md` D6). The allowlist below is the one the Dev Agent checks
-literally, and it has changed: two files were added to MODIFY EXISTING and one to
-TEST FILES.
+**This brief was rewritten at revision 2, not amended.** The four-tab target of
+revision 1 is dead (`orchestrator-state.md` D6). The allowlist below is the one the
+Dev Agent checks literally, and it has changed twice: revision 2 added two files to
+MODIFY EXISTING and one to TEST FILES, and **revision 3 removes
+`test/widget/feed/feed_screen_test.dart` from TEST FILES again (D8)**. Only one test
+file is created by this item.
 
 ## Testing mode
 
 **smoke** — Rule applied: *UI-only with no new logic, isolated with no shared
 dependencies.* Justification: two new screens with no bloc, no repository and no
-datasource, plus index, label and localisation edits to existing UI. Two new test
-files (`library_screen_test.dart` per [3.2-AC29], `feed_screen_test.dart` per
-[3.2-AC34]) and one existing test file edited. Never a golden test.
+datasource, plus index, label and localisation edits to existing UI. **One** new test
+file (`library_screen_test.dart` per [3.2-AC29]) and one existing test file edited.
+
+The mode is set by what the change touches, not by how many test files it produces,
+so D8 does not move it. What D8 changes is the count: `feed_screen_test.dart` is not
+written, no test in the repository touches `feed_screen.dart`, and the Feed shell
+ships with zero coverage by decision. [3.2-AC32] and [3.2-AC33] are carried by step
+17's source read instead. Never a golden test.
 
 ## File allowlist
 
@@ -47,9 +59,16 @@ files (`library_screen_test.dart` per [3.2-AC29], `feed_screen_test.dart` per
 - `lib/widgets/saved_game_item.dart`
 
 ### TEST FILES
-- `test/widget/components/bottom_tab_bar_test.dart` — retarget the five-destination fixtures and every index and label the swap moves. **Two of its numbers are already correct and must not be edited** — see step 15.
-- `test/widget/library/library_screen_test.dart` — the shell renders its title and empty state, and its action reports index 2.
-- `test/widget/feed/feed_screen_test.dart` — the shell renders its title and centred line, and renders **no** `EmptyStateCard`.
+- `test/widget/components/bottom_tab_bar_test.dart` (modify) — retarget the five-destination fixtures and every index and label the swap moves. **Two of its numbers are already correct and must not be edited** — see step 15.
+- `test/widget/library/library_screen_test.dart` (create) — the shell renders its title and empty state, and its action reports index 2 ([3.2-AC29], unaffected by D8).
+
+**`test/widget/feed/feed_screen_test.dart` is OUT OF SCOPE (D8) and is NOT created.**
+Do not create that file, do not create `test/widget/feed/`, and do not add a Feed
+assertion to any other test file. **No test in the repository may touch
+`feed_screen.dart`.** The Feed shell ships untested by human decision (`tech-ac.md
+## Retired criteria`); [3.2-AC32] and [3.2-AC33] are verified by step 17's source
+read instead. **Exactly two test files appear in the diff — one modified, one
+created.** If something looks like it needs a Feed test, escalate; do not write one.
 
 Generated outputs are implicit for the allowlisted annotated sources and are not
 listed: `lib/config/route/auto_route_config.gr.dart` and `lib/generated/`
@@ -93,7 +112,8 @@ Step 4: Create `lib/features/feed/presentation/screens/feed_screen.dart` per
 `code-plan.md`. `const` constructor. **No `EmptyStateCard`, no glyph, no button, no
 `setActiveIndex`, no `ScrollController`, no `ScrollNotifier` write** ([3.2-AC32],
 [3.2-AC33]). The asymmetry with step 3 is a human decision, not an oversight — do
-not make the two screens match. No comments anywhere in the file.
+not make the two screens match. No comments anywhere in the file. **Nothing
+automated will ever check this file** (D8) — step 17 is what checks it.
 
 Step 5: Delete `lib/features/browse/presentation/screens/browse_screen.dart` and the
 now-empty `lib/features/browse/` directory tree. It is 59 lines with its own
@@ -195,18 +215,41 @@ find-and-replace on `games`, `tracker` or `browse` gets this wrong.
   public surface is `BottomTabBar`, tests included.
 
 Step 16: Create `test/widget/library/library_screen_test.dart` per `code-plan.md` —
-two tests. Read `test/widget/components/context_chip_test.dart` first for shape and
+two tests. **This is the only test file this item creates.** Read
+`test/widget/components/context_chip_test.dart` first for shape and
 `test/widget/components/empty_state_card_test.dart` for the harness. If the
 `Fake`-based `TabsRouter` double will not compile, apply `tdd.md` caveat C-1's
 fallback (Mockito `@GenerateNiceMocks`, plus one extra `build_runner` run before
 `flutter test`) and record it as a self-correction.
 
-Step 17: Create `test/widget/feed/feed_screen_test.dart` per `code-plan.md` — **one
-test**, carrying the title, the centred line and `expect(find.byType(EmptyStateCard),
-findsNothing)` together ([3.2-AC34]). **It needs no `TabsRouterScope` and no
-`TabsRouter` double** — Feed calls `setActiveIndex` nowhere. If you find yourself
-copying the Library test's harness wholesale, stop: that is the signal you have
-given Feed behaviour it must not have.
+Step 17: **Feed verification by source read — a real step, not a formality, and not
+a test file.** [3.2-AC34] was retired by D8, so **nothing automated guards the Feed
+shell**: no test in the repository touches `feed_screen.dart`, and step 19's green
+suite is evidence of nothing about it. Perform all three checks below and **record
+the outcome of each, verbatim, in `diff-summary.md`** — QA reads that record, it does
+not infer it.
+  a. Read `lib/features/feed/presentation/screens/feed_screen.dart` in full — it is a
+     few dozen lines — and confirm each fact individually: the title reads
+     `S.current.feed`; exactly one `Text` sits inside a `Center`; and the strings
+     `EmptyStateCard`, `Icons.`, `ElevatedButton`, `TextButton`, `InkWell`,
+     `GestureDetector`, `onPressed`, `onTap` and `setActiveIndex` appear nowhere in
+     the file ([3.2-AC32]).
+  b. List `lib/features/feed/` recursively — it holds the one screen file and nothing
+     else. No `bloc/`, `cubit/`, `data/`, `domain/` or `di/` directory, no DTO,
+     entity, repository, use case or datasource, none of them declared inline in the
+     screen, and no Feed type registered in the DI container ([3.2-AC33]).
+  c. **The `ScrollNotifier` check — the one with no backstop of any kind.** Grep
+     `lib/features/feed/` for `ScrollNotifier`, `ScrollController` and `addListener`:
+     all three must return nothing. Then grep `lib/` repo-wide and confirm
+     `ScrollNotifier` still has exactly **two** writers, `settings_screen` and
+     `home_screen` ([3.2-AC12], [3.2-AC33]). Feed is the second new screen in this
+     item and the second of exactly two chances to reopen item 2.4's closed
+     follow-up, which this item forbids. **A third writer compiles, runs and passes
+     the entire suite** — this grep is the only thing that goes red.
+  Do not satisfy any of these checks by writing a test: that is precisely the file
+  D8 removed from scope. If a check fails, fix `feed_screen.dart` and repeat the whole
+  step; if the repo-wide writer count is not two for a reason outside the allowlist,
+  escalate rather than edit.
 
 Step 18: `.claude/skills/flutter-widgets/SKILL.md` — two lines. Remove
 `` `SavedGameItem`, `` from the legacy-but-live list at `:160`, and delete the whole
@@ -223,22 +266,36 @@ being `test/repository/tracker/tracker_repository_test.dart` (4),
 `test/cubit/game_detail/game_detail_cubit_test.dart` (3),
 `test/cubit/games/games_bloc_test.dart` (3). The analyzer must still report **30
 issues, 2 warnings** — **28 issues means something in the protected task tree was
-deleted**, which is a failure, not a cleanup. Passing count should rise by steps 16
-and 17's new tests. Do not "fix" the three `games_bloc_test` failures.
+deleted**, which is a failure, not a cleanup. **Passing count rises by step 16's two
+Library tests and by nothing else**, and **exactly one new test file appears in the
+diff** ([3.2-AC31], D8). A rise sized for two new test files, or any file under
+`test/widget/feed/`, means a Feed test was written after all — that contradicts D8;
+report it, do not keep it. Do not "fix" the three `games_bloc_test` failures.
 
 19 non-generation steps, 2 generation checkpoints.
 
 ## Acceptance criteria source
 
 Canonical: `tech-ac.md ## Technical acceptance criteria`
-IDs in scope: 3.2-AC1 through 3.2-AC39 (all 39). Note the file is not ID-ordered end
-to end — AC32–AC39 sit in their logical sections, not at the end.
+IDs in scope: `3.2-AC1` – `3.2-AC33` and `3.2-AC35` – `3.2-AC39` — 38 of 39. Note the
+file is not ID-ordered end to end — AC32–AC39 sit in their logical sections, not at
+the end.
+
+**`3.2-AC34` is retired by D8** and lives in `tech-ac.md ## Retired criteria` — do
+not implement it. `3.2-AC32` and `3.2-AC33` are **not** retired: they stand in full
+and are verified by step 17's source read rather than by the suite. `3.2-AC29`, the
+Library shell's test, is unaffected.
 
 One required edit falls under [3.2-AC31] rather than having its own ID — step 15e,
 the long-press tooltip test. See `tdd.md` "Findings — TL-5".
 
 ## Constraints
 
+- **No test file for the Feed shell, anywhere (D8).** `test/widget/feed/` is not
+  created and no test in the repository may reference `FeedScreen` or
+  `feed_screen.dart`. The bareness of that screen is protected by step 17's source
+  read, by `tech-ac.md` prose, and by nothing else — that trade-off was stated and
+  accepted at the gate. Do not "restore" the coverage.
 - **Widget files carry no comments at all** — not a header, not a `///`, not a note.
   This is stricter than the project-wide comment rule and it governs
   `library_screen.dart`, `feed_screen.dart` and the `library_stats.dart` edit
@@ -291,8 +348,10 @@ the long-press tooltip test. See `tdd.md` "Findings — TL-5".
 ## Self-correction budget
 
 Max attempts per failure: 3 (see `execution.md`). Do not modify test files to make
-tests pass. Do not add packages to `pubspec.yaml` or touch files outside the
-allowlist — escalate instead. Three named fallbacks in `tdd.md` are pre-approved and
-do not count as deviations needing escalation — C-1's Mockito route, C-2's
-delete-and-regenerate, and C-4's `收藏` if the zh Library label overflows the tab
-cell at a raised text scale — but record which path was taken in `diff-summary.md`.
+tests pass, and do not add a test file that is not in the allowlist — creating
+`test/widget/feed/feed_screen_test.dart` is a scope breach, not a fix. Do not add
+packages to `pubspec.yaml` or touch files outside the allowlist — escalate instead.
+Three named fallbacks in `tdd.md` are pre-approved and do not count as deviations
+needing escalation — C-1's Mockito route, C-2's delete-and-regenerate, and C-4's
+`收藏` if the zh Library label overflows the tab cell at a raised text scale — but
+record which path was taken in `diff-summary.md`.

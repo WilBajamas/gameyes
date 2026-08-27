@@ -168,7 +168,7 @@ class GamesAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultSliverAppBar(
-      title: S.current.games,
+      title: S.current.browse,
       subtitle: S.current.games_screen_subtitle,
       actionOne: (
         IconButton(

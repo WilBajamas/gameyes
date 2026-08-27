@@ -148,8 +148,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "featured_subtitle": MessageLookupByLibrary.simpleMessage(
       "Everything in one glance",
     ),
+    "feed": MessageLookupByLibrary.simpleMessage("动态"),
     "from": MessageLookupByLibrary.simpleMessage("从"),
-    "games": MessageLookupByLibrary.simpleMessage("游戏"),
     "games_screen_subtitle": MessageLookupByLibrary.simpleMessage(
       "Search for your favourite games here",
     ),
@@ -164,6 +164,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "keep_it_short": MessageLookupByLibrary.simpleMessage("Keep it short"),
     "last_updated": MessageLookupByLibrary.simpleMessage("Last Updated"),
     "latest_releases": MessageLookupByLibrary.simpleMessage("最新版本"),
+    "library": MessageLookupByLibrary.simpleMessage("游戏库"),
     "loading_game_release_title": MessageLookupByLibrary.simpleMessage(
       "加载游戏发布标题",
     ),
@@ -273,7 +274,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "toBuy": MessageLookupByLibrary.simpleMessage("To Buy"),
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
     "total_games": MessageLookupByLibrary.simpleMessage("总游戏数"),
-    "tracker": MessageLookupByLibrary.simpleMessage("追踪"),
     "try_widening_your_filters": MessageLookupByLibrary.simpleMessage(
       "放宽筛选条件，就能看到更多游戏。",
     ),

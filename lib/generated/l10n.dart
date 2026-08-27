@@ -245,9 +245,14 @@ class S {
     return Intl.message('Featured', name: 'featured', desc: '', args: []);
   }
 
-  /// `Games`
-  String get games {
-    return Intl.message('Games', name: 'games', desc: '', args: []);
+  /// `Library`
+  String get library {
+    return Intl.message('Library', name: 'library', desc: '', args: []);
+  }
+
+  /// `Feed`
+  String get feed {
+    return Intl.message('Feed', name: 'feed', desc: '', args: []);
   }
 
   /// `Settings`
@@ -528,11 +533,6 @@ class S {
       desc: '',
       args: [],
     );
-  }
-
-  /// `Tracker`
-  String get tracker {
-    return Intl.message('Tracker', name: 'tracker', desc: '', args: []);
   }
 
   /// `Recently changed`

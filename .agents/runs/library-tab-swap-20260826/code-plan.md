@@ -1,6 +1,8 @@
 # Code Plan
 Source: `.agents/runs/library-tab-swap-20260826/tech-ac.md` (Week 3 item 3.2 — Tab swap, Library and Feed shells, Tracker tab retirement, Browse relabel)
 Date: 2026-08-27 (revision 2 — retargeted from the superseded four-tab shape to D6's five)
+Revised: 2026-08-27 (revision 3) — D8: design approved, `feed_screen_test.dart` out
+of scope. See `## Approved feedback delta — revision 3 (D8)` at the foot of this file.
 
 ## CREATE NEW
 
@@ -91,6 +93,10 @@ no `setActiveIndex`, no `ScrollController`, no `ScrollNotifier` write, no bloc
 explicit decision at the Phase 3 gate — Library's empty state is what item 4.5
 evolves, Feed's placeholder is replaced wholesale. Do not make them match.
 
+**No test will ever touch this file (D8).** Its two criteria are checked by
+`task-brief.md` step 17's source read, whose result goes into `diff-summary.md`; a
+green suite says nothing about it.
+
 `SliverFillRemaining(hasScrollBody: false)` rather than `SliverToBoxAdapter`, so the
 `Center` actually centres — the deleted `browse_screen.dart:51-53` used the latter
 and centred nothing. `coming_soon` is an existing key with a real Chinese value
@@ -153,7 +159,8 @@ enum BottomTabBarDestination {
 
 Still five values. `browse` is **reused**, not re-created — it keeps the
 `Icons.search_outlined` it already carries and the `S.current.browse` it already
-resolves; only its position moves, 3 → 2. `games` and `tracker` go.
+resolves; only its position moves, 3 → 2. `games` and `tracker` go. All three glyphs
+were approved as written at the gate (D8).
 
 ### lib/config/route/auto_route_config.dart
 
@@ -171,7 +178,7 @@ resolves; only its position moves, 3 → 2. `games` and `tracker` go.
 
 Slot 2 keeps the path `games` — decided in `tdd.md` "Routing", because the path is
 code-facing (no Android `VIEW` intent filter, so deep links are undeliverable) and
-every other code-facing name stays `Games`.
+every other code-facing name stays `Games`. Not overruled at the gate (D8).
 
 ### lib/features/home/presentation/screens/home_screen.dart
 
@@ -360,26 +367,23 @@ Harness notes: `TestWidgetsFlutterBinding.ensureInitialized()`,
 assertion, no third test. If `Fake implements TabsRouter` will not compile, switch to
 `@GenerateNiceMocks([MockSpec<TabsRouter>()])` per `tdd.md` caveat C-1.
 
-### test/widget/feed/feed_screen_test.dart (create)
+**This is the only test file this item creates** ([3.2-AC29], unaffected by D8).
 
-```dart
-Widget buildSubject() => MaterialApp(
-  theme: buildDarkTheme(),
-  localizationsDelegates: const [S.delegate, /* the three Global* delegates */],
-  supportedLocales: S.delegate.supportedLocales,
-  home: const FeedScreen(),
-);
-```
+### test/widget/feed/feed_screen_test.dart — NOT CREATED (D8)
 
-- `'shows the feed title and a coming-soon line with no empty-state card'` —
-  asserts `find.text(S.current.feed)`, `find.text(S.current.coming_soon)` and
-  `expect(find.byType(EmptyStateCard), findsNothing)` ([3.2-AC34]).
+No skeleton, because there is no file. `test/widget/feed/feed_screen_test.dart` was
+removed from this item's scope by the human at the Phase 3 gate; [3.2-AC34] is
+retired (`tech-ac.md ## Retired criteria`). **Do not create the file or the
+directory, and do not put a Feed assertion in any other test file** — no test in the
+repository may touch `feed_screen.dart`.
 
-**One test, not two.** The absence assertion is the whole reason this file exists —
-it is the only thing protecting the human's explicit decision that Feed stays bare.
-**No `TabsRouterScope` and no `TabsRouter` double**: Feed calls `setActiveIndex`
-nowhere, so a routing harness here would be a sign behaviour had crept in. Same
-`ensureInitialized` / `allowRuntimeFetching` / `S.load` preamble as the Library test.
+What replaces it is not another test but `task-brief.md` step 17: a source read of
+`feed_screen.dart`, a recursive listing of `lib/features/feed/`, and a grep for
+`ScrollNotifier` / `ScrollController` / `addListener` plus a repo-wide
+`ScrollNotifier` writer count of exactly two — each result written into
+`diff-summary.md`. [3.2-AC33] is the criterion that most needs it: a third
+`ScrollNotifier` writer added on Feed compiles, runs and passes the whole suite, so
+the grep is the only thing that can go red.
 
 ## Approved feedback delta
 
@@ -395,8 +399,9 @@ list, one line each:
   label plus `games_screen.dart:171`'s app-bar title; no code rename anywhere.
 - **`games_screen.dart` added to the allowlist** (MODIFY EXISTING, one line).
 - **Feed added:** new `feed_screen.dart` (CREATE NEW), new
-  `test/widget/feed/feed_screen_test.dart` (TEST FILES), `FeedRoute` in both route
-  lists, `feed` enum value, `feed` l10n key. Deliberately bare — no
+  `test/widget/feed/feed_screen_test.dart` (TEST FILES) — *the test file was
+  subsequently withdrawn by D8, see the revision-3 delta below* — `FeedRoute` in both
+  route lists, `feed` enum value, `feed` l10n key. Deliberately bare — no
   `EmptyStateCard`, no `setActiveIndex`, no `ScrollNotifier` write.
 - **`.claude/skills/flutter-widgets/SKILL.md` added to the allowlist** for
   [3.2-AC39]'s two-line `SavedGameItem` removal (D7). `:220` is now correct and is
@@ -434,3 +439,39 @@ list, one line each:
   orphaned, `default_sliver_app_bar_test.dart`'s `'Browse'` fixture staying
   untouched, and the ordering design (`.arb` → `intl_utils` → new screens →
   deletions → one uninterrupted block → single `build_runner` → tests).
+
+## Approved feedback delta — revision 3 (D8)
+
+D8 (`orchestrator-state.md`, "## Human decisions — 2026-08-26, Phase 3 design gate
+(revision 2)") **approves the design** and makes exactly one change: the Feed shell
+gets no widget test. Substantial, because the allowlist and the plan would otherwise
+tell the Dev Agent to create a file that is out of scope — so `tdd.md` and
+`task-brief.md` were corrected in place too. Change list:
+
+- **`test/widget/feed/feed_screen_test.dart` is removed from TEST FILES and is NOT
+  created.** The allowlist now says so explicitly, in the same shape `task-brief.md`
+  used for D5's out-of-scope test file, so the Dev Agent's literal check cannot be
+  satisfied by creating it. No Feed assertion may go into any other test file either.
+- **`[3.2-AC34]` is retired**; the criteria in scope are `3.2-AC1` – `3.2-AC33` and
+  `3.2-AC35` – `3.2-AC39`. `[3.2-AC29]`, the Library shell's test, is untouched and
+  still required.
+- **Plan step 17 no longer creates the Feed test.** It is now the Feed **source-read
+  verification** — read `feed_screen.dart` back, list `lib/features/feed/`, grep for
+  `ScrollNotifier` / `ScrollController` / `addListener`, confirm a repo-wide writer
+  count of exactly two — with every result recorded in `diff-summary.md`. Same
+  treatment `3.1-AC4` got under D5. Step numbering is otherwise unchanged: 19
+  non-generation steps, 2 generation checkpoints.
+- **`[3.2-AC33]` gets the strongest wording of the three**, in `task-brief.md` step
+  17c and `tdd.md` "Verifying the Feed shell without a test": a third
+  `ScrollNotifier` writer on Feed compiles, runs and passes the entire suite, so a
+  green run is not evidence and must not be reported as such.
+- **Expected suite movement corrected everywhere:** the passing count rises by
+  [3.2-AC29]'s two Library tests only, and **exactly one new test file appears in the
+  diff**. A rise sized for two new files, or any file under `test/widget/feed/`,
+  contradicts D8.
+- **Testing mode stays `smoke`**, restated so it no longer rests on there being two
+  test files — the mode follows what the change touches, which D8 did not move.
+- **Everything else stands unchanged:** five tabs, the ordering design, the three
+  retirements and `saved_game_status_tag.dart`'s non-retirement, the l10n inversion,
+  TL-1 and TL-5, the two-line `SKILL.md` fix, the slot-2 route path staying `games`
+  (not overruled), and the three approved glyphs.

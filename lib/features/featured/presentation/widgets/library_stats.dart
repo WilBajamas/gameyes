@@ -311,8 +311,7 @@ class LibraryStatsWidget extends StatelessWidget {
       child: InkWell(
         onTap: () {
           if (extraCount >= 1) {
-            // Route to Tracker tab [Z1-BL-04]
-            AutoTabsRouter.of(context).setActiveIndex(2);
+            AutoTabsRouter.of(context).setActiveIndex(1);
           } else {
             // Go to Tracker detail for this game
             context.router.push(

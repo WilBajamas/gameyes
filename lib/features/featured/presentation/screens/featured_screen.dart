@@ -141,10 +141,10 @@ class _YouSection extends StatelessWidget {
           step2Completed: state.step2Completed,
           step3Completed: state.step3Completed,
           checklistProgress: state.checklistProgress,
-          onAddPlayedGame: () => AutoTabsRouter.of(context).setActiveIndex(1),
-          onMarkNowPlaying: () => AutoTabsRouter.of(context).setActiveIndex(1),
+          onAddPlayedGame: () => AutoTabsRouter.of(context).setActiveIndex(2),
+          onMarkNowPlaying: () => AutoTabsRouter.of(context).setActiveIndex(2),
           onWishlistUpcoming: () =>
-              AutoTabsRouter.of(context).setActiveIndex(1),
+              AutoTabsRouter.of(context).setActiveIndex(2),
         );
       },
     );
@@ -204,7 +204,7 @@ class _RightNowSection extends StatelessWidget {
                 supportingLine: S.current.wishlist_a_game_to_track_release,
                 actionLabel: S.current.browse_games,
                 onActionPressed: () =>
-                    AutoTabsRouter.of(context).setActiveIndex(3),
+                    AutoTabsRouter.of(context).setActiveIndex(2),
               );
             }
 

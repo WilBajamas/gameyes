@@ -168,8 +168,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "featured_subtitle": MessageLookupByLibrary.simpleMessage(
       "Everything in one glance",
     ),
+    "feed": MessageLookupByLibrary.simpleMessage("Feed"),
     "from": MessageLookupByLibrary.simpleMessage("From"),
-    "games": MessageLookupByLibrary.simpleMessage("Games"),
     "games_screen_subtitle": MessageLookupByLibrary.simpleMessage(
       "Search for your favourite games here",
     ),
@@ -184,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "keep_it_short": MessageLookupByLibrary.simpleMessage("Keep it short"),
     "last_updated": MessageLookupByLibrary.simpleMessage("Last Updated"),
     "latest_releases": MessageLookupByLibrary.simpleMessage("Latest Releases"),
+    "library": MessageLookupByLibrary.simpleMessage("Library"),
     "loading_game_release_title": MessageLookupByLibrary.simpleMessage(
       "Loading Game Release Title",
     ),
@@ -313,7 +314,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "toBuy": MessageLookupByLibrary.simpleMessage("To Buy"),
     "top_rated": MessageLookupByLibrary.simpleMessage("Top rated"),
     "total_games": MessageLookupByLibrary.simpleMessage("Total Games"),
-    "tracker": MessageLookupByLibrary.simpleMessage("Tracker"),
     "try_widening_your_filters": MessageLookupByLibrary.simpleMessage(
       "Widen your filters and more of the catalogue comes into view.",
     ),

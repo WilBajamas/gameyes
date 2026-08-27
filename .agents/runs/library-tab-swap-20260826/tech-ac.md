@@ -1,6 +1,11 @@
 # Technical Acceptance Criteria
-Source: `.agents/week-3-task-briefs.md` — Stage 3, item 3.2 (as corrected 2026-08-26 at the Phase 3 gate), with the preamble "What week 3 does NOT touch" and "Baselines"; `.agents/handover.md` "Stage 3 brief" rulings 1 and 6 and the six-row `setActiveIndex` table; `orchestrator-state.md` "## Human decisions — 2026-08-26, Phase 3 design gate" (D6, D7), "## Orchestrator decision — 2026-08-26, Phase 1" and "## Corrections to the checklist's inherited claims"
+Source: `.agents/week-3-task-briefs.md` — Stage 3, item 3.2 (as corrected 2026-08-26 at the Phase 3 gate), with the preamble "What week 3 does NOT touch" and "Baselines"; `.agents/handover.md` "Stage 3 brief" rulings 1 and 6 and the six-row `setActiveIndex` table; `orchestrator-state.md` "## Human decisions — 2026-08-26, Phase 3 design gate" (D6, D7), "## Human decisions — 2026-08-26, Phase 3 design gate (revision 2)" (D8), "## Orchestrator decision — 2026-08-26, Phase 1" and "## Corrections to the checklist's inherited claims"
 Date: 2026-08-27 (revision 2 — retargeted from the superseded four-tab shape to D6's five)
+Revised: 2026-08-27 (revision 3) — D8 retires `3.2-AC34` to `## Retired criteria`;
+`test/widget/feed/feed_screen_test.dart` leaves scope entirely. `3.2-AC32` and
+`3.2-AC33` stand, each with an explicit source-read verification. The only other
+change is `3.2-AC31`'s passing-count expectation, which no longer counts a Feed
+test. Nothing else in this document is reopened.
 BA Agent version: 1.0
 
 ## Feature summary
@@ -21,6 +26,8 @@ title plus a centred line of text, no card. Neither has a bloc, repository or
 datasource. Three source files retire (`tracker_screen.dart`,
 `saved_game_item.dart`, all of `lib/features/browse/`) and four l10n key edits
 follow. This item ships no data, no persistence and no Library or Feed behaviour.
+The Library shell is tested; **the Feed shell is not** (D8) — see
+`## Retired criteria`.
 
 **Revision note.** IDs are stable across this revision — a criterion that still
 holds keeps its number. New criteria are numbered from 32 up and sit in their
@@ -176,10 +183,26 @@ design — no recruit card, no `surfaceArtDeep`, no green CTA, no
 
 ### The Feed shell
 
+> **Both criteria in this section are verified by reading the source, not by
+> running the suite.** D8 removed `test/widget/feed/feed_screen_test.dart` from
+> scope, so **no test in the repository touches `feed_screen.dart`**. A green
+> suite is not evidence for [3.2-AC32] or [3.2-AC33] and must not be reported as
+> such. QA opens `lib/features/feed/presentation/screens/feed_screen.dart` and
+> reads it. This is the same treatment `3.1-AC4` received under D5.
+
 [3.2-AC32] PRESENTATION: a new Feed screen renders, in the Feed tab, a title
 reading the localized `feed` string and a single centred `Text` — nothing else. It
 renders **no** `EmptyStateCard`, no glyph, no action and no button, and it calls
 `setActiveIndex` nowhere.
+  Verification (source read, no test): read `feed_screen.dart` in full — it is a
+  file of a few dozen lines — and confirm each fact individually: (a) the title
+  reads `S.current.feed`; (b) exactly one `Text` sits inside a `Center`; (c) the
+  string `EmptyStateCard` does not appear in the file; (d) no `Icon`, `Icons.` or
+  image widget appears; (e) no `ElevatedButton`, `TextButton`, `InkWell`,
+  `GestureDetector`, `onPressed` or `onTap` appears; (f) the string
+  `setActiveIndex` does not appear. A grep of `lib/features/feed/` for
+  `EmptyStateCard`, `Icons.` and `setActiveIndex` returning nothing satisfies (c),
+  (d) and (f) in one pass. The suite says nothing about any of them.
   Failure case: giving Feed the Library shell's `EmptyStateCard` treatment
   contradicts an explicit human decision at the Phase 3 gate — the asymmetry is
   deliberate, because Feed is replaced wholesale when it is designed while
@@ -189,9 +212,26 @@ renders **no** `EmptyStateCard`, no glyph, no action and no button, and it calls
 [3.2-AC33] ARCHITECTURE: the Feed shell introduces no bloc, cubit, repository, use
 case, datasource, DTO, entity or DI registration, registers no `ScrollController`
 listener, and performs no write to `ScrollNotifier`.
+  Verification (source read, no test — **perform this read before passing the
+  item**): after D8 **nothing automated guards this criterion at all**. No test
+  would have caught a `ScrollNotifier` write even before D8, and now there is not
+  even a Feed test file to notice the screen changed shape. QA must perform, and
+  must report having performed, both of these:
+  1. List `lib/features/feed/` recursively — it holds the screen file and nothing
+     else. No `bloc/`, `cubit/`, `data/`, `domain/` or `di/` directory, no DTO,
+     entity, repository, use case or datasource, and none declared inline in
+     `feed_screen.dart`. No Feed type is registered in the DI container.
+  2. Grep `lib/features/feed/` for `ScrollNotifier`, `ScrollController` and
+     `addListener` — all three return **nothing** — and confirm a repo-wide grep
+     still shows exactly **two** `ScrollNotifier` writers, `settings_screen` and
+     `home_screen` ([3.2-AC12]).
   Failure case: `ScrollNotifier`'s writer count must land at two ([3.2-AC12]).
-  Feed is the second new screen in this item and the second chance to reopen item
-  2.4's closed follow-up.
+  Feed is the second new screen in this item and **the second of exactly two
+  chances to reopen item 2.4's closed `ScrollNotifier` follow-up**, which this
+  item's text explicitly forbids. Library's half of that risk is covered by a test
+  ([3.2-AC29]); Feed's half is covered by this read and by nothing else. A third
+  writer added here compiles, runs, and passes the entire suite. If QA skips this
+  read, the regression ships silently and a failing item reports as a pass.
 
 ### The relabelled Browse tab (the Games screen)
 
@@ -371,17 +411,12 @@ the literal string `'Browse'` appears twice as an app-bar title fixture and is
 
 [3.2-AC29] TEST: the Library shell gets a widget test covering [3.2-AC11] — the
 title renders, the empty state renders, and tapping the action reports index 2. No
-`matchesGoldenFile`, in this or any test.
+`matchesGoldenFile`, in this or any test. **This criterion is unaffected by D8** —
+the Library shell keeps its test; only the Feed shell's was withdrawn, and the
+asymmetry is deliberate.
   Failure case: the shell is throwaway but the index it hands to Browse is not —
   that literal is exactly the class of value [3.2-AC6] shows survives by looking
   correct.
-
-[3.2-AC34] TEST: the Feed shell gets a widget test covering [3.2-AC32] — the title
-renders, the centred text renders, and `EmptyStateCard` is asserted **absent**
-(`findsNothing`).
-  Failure case: without the absence assertion, the one thing the human explicitly
-  decided about this screen is the one thing no test protects, and the next run to
-  touch Feed "improves" it into the Library shell's shape.
 
 [3.2-AC30] TEST: no test in the repository pumps `HomeScreen` or asserts the tab
 route list. The four test files importing `auto_route_config`
@@ -395,11 +430,15 @@ asserts no app-bar title string, so [3.2-AC35] does not reach it.
 errors / 2 warnings / 28 info**, and `flutter test` reports the same ten
 pre-existing failures and no new ones — `tracker_repository_test` (4),
 `game_detail_cubit_test` (3), `games_bloc_test` (3). Passing count is at least 361
-(it rises by [3.2-AC29]'s and [3.2-AC34]'s new tests).
+and rises by **[3.2-AC29]'s Library shell tests only**. No Feed test enters the
+suite (D8), so no part of the rise is attributable to Feed and exactly one new test
+file appears in the diff.
   Failure case: 28 analyzer issues means part of the protected task tree was
   deleted ([3.2-AC18]). A new failure in `tracker_cubit_test` means `TrackerCubit`
   was swept ([3.2-AC17]). The three `games_bloc_test` failures are explicitly out of
-  scope and must not be "fixed" here.
+  scope and must not be "fixed" here. A rise sized for two new test files means a
+  Feed test was written after all, which contradicts D8 — flag it rather than pass
+  it silently.
 
 ### Documentation
 
@@ -413,8 +452,48 @@ destinations … the other four" — is **not** edited: it is correct at five ta
   `:220` to say four carries the superseded shape into the file that most
   aggressively propagates it.
 
+## Retired criteria — withdrawn by human decision D8, 2026-08-26
+
+**This is not an open criterion. QA must not check it and must not fail this item
+for its absence.** `3.2-AC34` was withdrawn at the Phase 3 design gate by D8
+(`orchestrator-state.md`, "## Human decisions — 2026-08-26, Phase 3 design gate
+(revision 2)"), which removed `test/widget/feed/feed_screen_test.dart` from this
+item's scope entirely. That file is **not created**, and no test in the repository
+touches `feed_screen.dart`. The absence of a Feed test is the decided outcome, not
+an omission — a QA report that raises it as a gap, or fails the item for it, is
+itself wrong. It is preserved verbatim below so it is visible that it was withdrawn
+by decision, not missed.
+
+The accepted consequence, stated at the gate: **the Feed shell ships with zero test
+coverage.** `3.2-AC32` and `3.2-AC33` remain fully in force and are verified by
+source read instead — see the note at the head of `### The Feed shell`, and note in
+particular that `3.2-AC33` has no automated guard of any kind after this
+retirement.
+
+Scope of the retirement, exactly: **only `3.2-AC34`**. `3.2-AC29` (the Library
+shell's test) is untouched and still required. Every other criterion in this
+document stands as written.
+
+~~### Feed shell test~~
+
+~~[3.2-AC34]~~ WITHDRAWN (D8) — TEST: the Feed shell gets a widget test covering
+[3.2-AC32] — the title renders, the centred text renders, and `EmptyStateCard` is
+asserted **absent** (`findsNothing`).
+  Original failure case: without the absence assertion, the one thing the human
+  explicitly decided about this screen is the one thing no test protects, and the
+  next run to touch Feed "improves" it into the Library shell's shape.
+  Retirement note: that risk is real and is now accepted, not mitigated — the human
+  made the call with the trade-off stated. The bareness of the screen survives only
+  as prose: `3.2-AC32` in this document, `3.2-AC33`'s source read, and the D6/D8
+  record in `orchestrator-state.md`. The next run to touch Feed has nothing that
+  goes red.
+
 ## Out of scope
 
+- **`test/widget/feed/feed_screen_test.dart` — the whole file (D8).** Removed from
+  this item's scope at the Phase 3 gate. The file is not created and the Feed shell
+  ships untested by decision. See `## Retired criteria`. [3.2-AC29]'s Library shell
+  test is **not** affected.
 - Renaming `lib/features/games/`, `GamesScreen`, `GamesBloc`, the games repository
   or datasource, and the Games screen's own redesign. The relabel here is the tab
   label and the app-bar title only ([3.2-AC35], [3.2-AC36]).
@@ -497,3 +576,11 @@ ASSUMPTION: `library` generates and compiles as an `S` member ([3.2-AC22]). It i
 Dart built-in identifier, not a reserved word, so this is expected to work; it has
 not been compiled here because BA has no shell. `library_tab` is the fallback only if
 the generator or analyzer actually rejects it.
+
+ASSUMPTION (D8): a criterion retired for having no verification path is retired, not
+re-verified another way — but a criterion that never depended on the retired test is
+kept and given the verification it always had. `3.2-AC34` asserted the *existence of
+a test file* and so dies with it. `3.2-AC32` and `3.2-AC33` assert facts about
+`feed_screen.dart` itself, which the retired test would only have sampled; they are
+kept and their source-read verification is made explicit rather than left implied.
+No new criterion is invented to replace `3.2-AC34`.

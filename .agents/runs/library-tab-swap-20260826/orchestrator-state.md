@@ -3,7 +3,7 @@ Feature: Week 3 item 3.2 — Tab swap, Library shell, Tracker and Browse tab ret
 Run ID: library-tab-swap-20260826
 Run folder: .agents/runs/library-tab-swap-20260826/
 Started: 2026-08-26
-Current phase: HUMAN_GATE
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 28 info (30 issues total) — captured 2026-08-26T17:30:00Z
 Test baseline: +361 -10 — captured 2026-08-26T17:32:00Z
@@ -111,6 +111,33 @@ the other four" becomes **correct again** and needs no edit. Only `:160` and
 correction rides in this item or a follow-up was not explicitly answered — treat
 it as in scope, since it is two lines inside the same class of staleness item 3.1
 exists to close, and a skill file is the *enforcing* copy agents are told to obey.
+
+## Human decisions — 2026-08-26, Phase 3 design gate (revision 2)
+
+**D8 — the design is APPROVED, with no widget test for the Feed shell.**
+`test/widget/feed/feed_screen_test.dart` leaves scope; the human approved
+proceeding straight to Dev afterwards, so there is no re-gate.
+
+Scope of D8, checked before routing:
+- **Only `3.2-AC34` is retired.** It is the sole test-bound Feed criterion.
+- **`3.2-AC32` and `3.2-AC33` survive as source reads.** AC32 (a title plus one
+  centred `Text`, no `EmptyStateCard`, no glyph, no action, no `setActiveIndex`)
+  and AC33 (no bloc/cubit/repository/use case/datasource/DTO/entity/DI, no
+  `ScrollController` listener, no `ScrollNotifier` write) are both verifiable by
+  reading `feed_screen.dart`. QA must read the file, not infer from a green suite —
+  the same treatment `3.1-AC4` received under D5.
+- **`3.2-AC33` is the one that matters most without a test.** It is the second of
+  two chances in this item to reopen item 2.4's closed `ScrollNotifier` follow-up,
+  and now nothing automated guards it.
+- **The Library shell keeps its test** (`3.2-AC29`). Only Feed's goes.
+- **The expected suite count changes**: it rises by the Library shell's tests only,
+  no longer by Feed's. Any criterion quoting a post-change total needs that.
+- The three glyphs are approved as proposed: Library
+  `Icons.collections_bookmark_outlined`, Browse `Icons.search_outlined`, Feed
+  `Icons.dynamic_feed_outlined`. The struck ruling-1 sentence that forbade
+  `search_outlined` stays struck.
+- The Tech Lead's call that slot 2's **route path stays `games`** was not
+  overruled, so it stands.
 
 ## Deviation approvals
 NONE
