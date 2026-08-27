@@ -1,6 +1,72 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. Last updated 2026-08-25: **week 2 is COMPLETE — all 8 Stage 2
+Written 2026-07-29. **Last updated 2026-08-26: week 3 has STARTED. Items 3.1 and
+3.2 are complete and QA-PASSed, on two stacked branches that are NOT merged.**
+
+## Read this first — the state of week 3
+
+**Both stage 3 blockers are cleared.** `.agents/references/library-design-conventions.md`
+landed on `develop` at `15f068f` and answers all four of the product brief's open
+design questions. The navigation decision is settled. Eight human decisions (D1–D8)
+were taken across this session; **D1–D5 are recorded in
+`.agents/runs/library-foundations-20260826/orchestrator-state.md`, D6–D8 in
+`.agents/runs/library-tab-swap-20260826/orchestrator-state.md`**, and the six that
+bind the whole week are in the "Stage 3 brief" section below.
+
+**Week 3 is sequenced in `.agents/week-3-task-briefs.md`** — Stage 3 (3.1–3.4,
+foundations and data) then Stage 4 (4.1–4.6, the Library screen). That file is
+ephemeral and must be deleted when week 3 ships, with its content promoted first.
+
+### Two branches, unmerged, and they MUST merge in order
+
+| Branch | Item | Impl SHA | Head | QA |
+|---|---|---|---|---|
+| `feature/library-foundations` | 3.1 | `e1ada3a` | `14da82c` | PASS, 0 cycles |
+| `feature/library-tab-swap` | 3.2 | `e7dcee4` | `35b498c` | PASS pending manual checks, 0 cycles |
+
+**3.2 is stacked on 3.1**, deliberately: cutting it from `develop` would have handed
+its BA the *uncorrected* design docs, which is the exact recurrence 3.1 exists to
+prevent. **Merge 3.1 first, then 3.2.** If 3.1 is ever revised, rebase 3.2 onto it.
+`develop` is at `ab586dc` and has neither.
+
+### Baselines moved twice — the current numbers are 28 and +363
+
+- **Analyzer: 28 issues (0 errors, 2 warnings, 26 info)** on `feature/library-tab-swap`.
+  It was 30 before item 3.2 deleted three files; the drop is info-level lints that
+  lived only in those files. **The number that carries meaning is the 2 warnings** —
+  the deliberate `_TaskReminder` pair in `task_detail_screen.dart`. They prove the
+  protected task tree survived, and they are NOT anyone's to fix.
+  **A cautionary tale worth keeping:** the orchestrator briefed Dev that "28 means
+  something broke". That was a claim about the *warnings*, wrongly generalised to the
+  total. Dev hit 28, investigated rather than obeying, and was right. Do not restate
+  a warning-count invariant as a total-count invariant.
+- **Suite: +363 -10.** The 10 are the same pre-existing set as ever
+  (`tracker_repository_test` 4, `game_detail_cubit_test` 3, `games_bloc_test` 3).
+  The pass count has now moved six times. **Verify both at Phase 0 regardless.**
+
+### The tab structure, final
+
+`Featured(0) · Library(1) · Browse(2) · Feed(3) · Settings(4)`. **This ruling changed
+twice in one day**; two superseded shapes are recorded in the Stage 3 brief below so
+a later session reads them as dead, not as alternatives. "Browse" now means **the
+Games screen** — the old `browse_screen.dart` stub is deleted and its name passed to
+Games, whose code-facing names (`lib/features/games/`, `GamesScreen`, `GamesRoute`,
+its bloc and repository) all deliberately stayed put.
+
+### Six new manual checks, and unusually all are reachable today
+
+`.agents/manual-check-backlog.md`, section "Week 3 Stage 3 — item 3.2". Most of that
+file waits on screens that do not exist; these six do not. **Recount the file's total
+rather than quoting one** — five different figures have been wrong at various points.
+The two that carry real risk are **MC-2** (the zh Library label 游戏库 is the first
+three-character label the tab bar has carried, in a cell that did not grow; `收藏` is
+the pre-approved fallback and the cell must never be widened) and **MC-4** (the Feed
+tab has zero automated coverage by decision D8, so that sitting is its only run-time
+look before it ships).
+
+---
+
+Previously, 2026-08-25: **week 2 is COMPLETE — all 8 Stage 2
 composites and all 9 Stage 1 primitives are built and merged to `develop`.** Items
 2.1 (Game card), 2.2 (Completion ring), 2.3 (Countdown) and 2.4 (Tab bar) shipped
 2026-08-21; 2.5 (Form fields), 2.6 (Rows & hairline groups) and 2.7 (Error states)
@@ -357,6 +423,16 @@ different claims** and only the first is true.
 `DestructiveActionPair`, `ContextChip`, `StatPill`, `CountdownTile`, `ZoneLabel`,
 `CoverTile`. `StatusChip` and `FilterCountChip` sit between the two — composed by
 other widgets, never placed by a feature.
+
+**Updated 2026-08-26 (item 3.2):** `EmptyStateCard` gained a **6th** site — the
+Library shell — and `saved_game_item.dart` (243 lines) was deleted with the Tracker
+tab. **The 11-never-rendered list is unchanged**, and all 11 were read against their
+manual-check entries at this session's Phase 0 and confirmed sound, every recorded
+trade-off still holding. Stage 4 is where they finally get proven: **4.1 is first use
+for `CoverTile` and `StatusChip(onMedia)`, 4.2 for `HairlineGroup`, 4.4 for
+`FilterCountChip`.** One new find from that read: `zone_label.dart` carries 4 comment
+lines, violating "widgets carry no comments at all" — it predates the rule; sweep it
+whenever that file is next open. Every other one of the 11 is comment-free.
 
 **Treat the first use of any unproven component as first use.** Things go wrong at
 the seam between a component and a real screen, and 11 of these have never had that
@@ -1063,133 +1139,95 @@ runs — decide whether stage 3 mints them rather than working around them a fou
 ## Next-session prompt
 
 ```text
-Resume QuestLoggd. Checkout develop first. Read .agents/handover.md in full
-(it's long, read it anyway).
+Resume QuestLoggd — week 3, stage 3. Checkout develop, read .agents/handover.md in
+full (it's long; read it anyway, starting with "Read this first — the state of
+week 3"), then .agents/week-3-task-briefs.md.
 
-Before anything else:
-- Check `git status` is clean. `.agents/`, `.claude/` and `.codex/` are tracked.
-- No Flutter in a fresh container. Install 3.41.4 to match `.fvmrc` (a
-  /etc/profile.d/flutter.sh script works well so every login shell picks it up
-  automatically, including subagents' Bash calls), then `flutter pub get` and
-  `dart run build_runner build --delete-conflicting-outputs` before trusting any
-  baseline.
-- Expect **30 analyzer issues (0 errors, 2 warnings, 28 info)** and **+347 -10** on
-  the test suite. Both are correct and neither is drift. **The analyzer baseline
-  moved down from 33 at item 2.8** — `library_stats.dart` lost 122 lines including
-  `_DashedBorderPainter`, taking 3 info issues with them. The 2 warnings are still
-  the deliberate `_TaskReminder` pair; the 10 failures are pre-existing in
-  tracker_repository_test (4), game_detail_cubit_test (3), games_bloc_test (3). The
-  suite has never been green. Verify both yourself at Phase 0 rather than inheriting
-  them -- the pass count has now moved four times (312 -> 315 -> 325 -> 343 -> 347)
-  and the analyzer count twice.
+Setup: no Flutter in a fresh container. Install 3.41.4 to match .fvmrc (put it on
+PATH via /etc/profile.d/flutter.sh so subagents pick it up), then flutter pub get
+and dart run build_runner build --delete-conflicting-outputs. Budget ~15 minutes:
+the SDK tarball is ~1.5GB and build_runner's first run takes 80s.
 
-**Current state: week 2 is COMPLETE.** All 9 Stage 1 primitives and all 8 Stage 2
-composites are built and merged to `develop` (2.8 merged 2026-08-25 at `41829d0`).
-This was verified by confirming all 18 files/folders exist in `lib/widgets/`, not by
-reading the checklist's ticks -- do the same before believing it, because this file
-once claimed Stage 1 complete while 1.8 and 1.9 had never been built.
+BEFORE ANYTHING ELSE — two branches are finished and unmerged, and they must merge
+in order:
+  feature/library-foundations   item 3.1, impl e1ada3a, head 14da82c, QA PASS
+  feature/library-tab-swap      item 3.2, impl e7dcee4, head 35b498c, QA PASS
+                                (pending manual checks)
+3.2 is stacked on 3.1 deliberately. Merge 3.1 to develop first, then 3.2. develop
+is at ab586dc and has neither. Ask me before merging — I may want the six manual
+checks done on device first.
 
-**There is no pipeline item queued.** The next work is one of three things, and the
-human picks:
+Baselines depend on where you are, and this bit me last session:
+  develop / 3.1:  30 issues (0 errors, 2 warnings, 28 info), suite +361 -10
+  3.2 branch:     28 issues (0 errors, 2 warnings, 26 info), suite +363 -10
+The 2-issue drop is info lints that lived only in the three files 3.2 deleted. The
+number that carries meaning is the 2 WARNINGS — the deliberate _TaskReminder pair
+in task_detail_screen.dart, proving the protected task tree survived. Do not
+restate that as a total-count invariant: last session's orchestrator told Dev "28
+means something broke", Dev hit 28, investigated instead of obeying, and was right.
+Verify all of it at Phase 0 rather than inheriting it; the pass count has moved six
+times now.
 
-1. **The manual-check backlog** (`.agents/manual-check-backlog.md`) -- **74 left, and
-   the easy value is already extracted.** The 2026-08-25 sitting cleared eighteen,
-   including every one of item 2.4's fifteen. **Recount the total in that file rather
-   than quoting one**: four different totals (82, 88, 90, 92) have been wrong at
-   various points. Only **three** entries are reachable in the app as it stands --
-   `2.8-MC-3`, `2.8-MC-4` and `2.7-MC-3` -- and the first two are Featured pixel
-   checks the human has deprioritised because that screen is due for a rebuild.
-   **Everything else waits on screens that do not exist yet**, so treat this file as
-   a per-screen checklist to consult when building, not a queue to work down.
-   **Do not build a scratch harness** -- one was built and deleted the same day; the
-   reasoning is recorded in that file.
-2. **The remaining Chinese translations** -- 63 keys still hold English values.
-   Human decision 2026-08-25: **translate them as each screen is built**, rather than
-   as one sweep. So this is not a standalone task; it is a rule for whoever touches a
-   screen next.
-3. **Week 3, the Library feature** -- but it is **blocked on a design spec that does
-   not exist**. See "Open decisions that could block": the Library is the biggest
-   screen in the app, has no spec, and the brief flags the hard part (it must work at
-   3 games and at 300). That spec is a human deliverable, not something to invent.
+WHAT IS DONE
+- 3.1 Foundations — minted surfaceArt (#2F3782) and surfaceArtDeep (#7D4EE0),
+  closing the second standing foundations gap. Corrected the rejected
+  saturate(.5) contrast(1.05) cover filter out of ALL EIGHT sites across five
+  design docs (the indigo->canvas veil survives everywhere; only the desaturation
+  went). Ratified violet as a surface. First item in this project to finish
+  without adding a single manual check.
+- 3.2 Tab swap — five tabs Featured/Library/Browse/Feed/Settings, Library and Feed
+  shells, Tracker tab retired, Browse tab deleted and its name passed to the Games
+  screen. Six setActiveIndex literals corrected. Added six manual checks.
 
-**Five things recurred across every one of 2.1-2.8 and will recur again:**
-- **Grep the caller list at Phase 0. The checklist was wrong four times out of
-  eight** -- 2.1's named two files that never referenced the component, 2.6's called
-  a file "tracker-specific" when its main caller was a game_detail screen, 2.7's
-  claimed four levels when one was already built, and 2.8's carried two callers when
-  a grep found seven (two of them holding hardcoded untranslated English that nobody
-  had recorded). This is the single highest-value thing Phase 0 does.
-- **A spec gap is escalated, not filled in.** 2.8's BA halted on §3.2's "art-deep
-  card" having no value anywhere in the project, and on "one action" having no target
-  at three sites. Both went to a human gate and were settled in minutes. A BA that
-  guesses here costs a whole run.
-- BAs write criteria straight from §3 even where a human decision already overruled
-  that text (twice on the desaturation filter, once nearly on §3.4's field level).
-  Check §3 claims against this file's records first.
-- Screen docs outrank §3 where they disagree (precedence rule at
-  system-foundation-specs.md lines 6-8).
-- **A criterion phrased about position or pixels usually has a checkable form.** 2.6
-  pinned a COUNT plus the ABSENCE of a parameter that could break the rule; 2.7 and
-  2.8 both did the same. Reach for that before marking something manual-only.
+WHAT IS NEXT: item 3.3, schema migration and the remote data layer. Start it with
+/orchestrate. library_entries cannot serve the Library spec as it stands — it needs
+platform, rating, playtime_hours, progress_percent, genre and updated_at. The
+migration is mostly a PROMOTION, not new invention: the Isar SavedGame already
+carries hoursLogged, manualProgressPercentage, platforms and genres, all with zero
+writers. One genuine ambiguity to escalate rather than guess: legacy `toBuy`
+collides with `wishlist`, which the legacy model holds as a separate boolean.
 
-**Two test traps, both found the hard way:**
-- **A test can pass by construction.** Prove it by injecting the regression the test
-  is meant to catch and confirming it fails -- about two minutes. 2.8's Dev and QA
-  both did this independently (QA mutated the widget six ways in a scratch copy).
-- **An unscoped `find.byType` can match something else entirely.** Scope finders with
-  `find.descendant(of: find.byType(TheComponent))`. **A tree-shape claim is verified
-  by BUILDING the tree, not asserted in a design doc** -- and if the phase that
-  writes the design cannot build it, say so as an explicit caveat with a named
-  fallback, which is what made 2.8's `ColoredBox` finder safe.
+3.3 is also what finally unblocks item 3's on-device cross-account RLS check,
+blocked since week 1 because nothing writes to library_entries.
 
-Conventions, stricter than older code and older run artifacts show -- re-read the
-skills, do not pattern-match off existing files:
-- Widgets carry NO comments at all. Not "few" -- none.
-- Widget tests never assert dimensions, gaps, radii or positions; colour assertions
-  must carry meaning and name a token; never a golden test. context_chip_test.dart
-  and stat_pill_test.dart are the reference files for shape and length.
-- Tests must import only a module's public entry point.
-- **Module folder vs single file is a per-item judgement, not a rule either way.**
-  2.1-2.4 and 2.7 ship module folders; 2.5, 2.6 and 2.8 deliberately ship flat files.
-  The flutter-widgets skill still states the flat rule as absolute, matching neither
-  -- a live follow-up, not a rule to obey blindly. QA has now flagged it six times.
+FIVE THINGS THAT COST REAL CYCLES LAST SESSION
+- Grep the caller list at Phase 0. The checklist has now been wrong FIVE times out
+  of nine, and the fifth time the wrong checklist was the orchestrator's own: it
+  listed saved_game_status_tag.dart for retirement, written before the human's
+  decision to keep the task tree and never re-checked against it. Its only caller
+  is inside the protected tree. The BA caught it by grepping.
+- A design decision can change twice in one day. The tab structure went four tabs
+  -> five -> a different five. Both superseded shapes are recorded as DEAD in the
+  Stage 3 brief. When a gate answer moves, correct handover.md and the checklist
+  in the same pass, and STRIKE obsolete sentences rather than deleting them — two
+  lines in ruling 1 stood as live guidance for most of a day.
+- When a human narrows scope at a gate, route it through the BA before Dev. QA
+  gates on tech-ac.md, so a criterion left standing with no corresponding change
+  is an automatic FAIL and a burned cycle. This happened twice (D5, D8) and both
+  times the fix was: BA retires the criterion to a labelled section, Tech Lead
+  corrects task-brief.md IN PLACE because Dev's allowlist check is literal.
+- When a test is dropped, the criteria it carried do not vanish — they become
+  source reads, and QA must be told to READ rather than infer from a green suite.
+  3.2-AC33 (the Feed shell writing to ScrollNotifier) is the live example: a third
+  writer would compile, run and pass the entire suite.
+- Watch for the vacuous test. app_tokens_test.dart's _allColors() lerp assertion is
+  expect(color, isNotNull) over a non-nullable Color — it cannot fail. Adding
+  tokens to it grows coverage on paper only.
 
-**Agent-definition gotcha, corrected 2026-08-25:** `tech-lead-agent` has **no Bash
-tool** (Read/Write/Grep/Glob/Skill only) -- it is not a session-level restriction, it
-is that agent's definition, so do not tell it to "just run the command". `dev-agent`
-and `qa-agent` both do have Bash. Separately, gotcha #7's missing-agent-type problem
-and the Skill-tool-disabled problem from 2.6/2.7 may still recur; the fallbacks are
-in gotcha #7 and are to read `.claude/skills/<name>/SKILL.md` from disk.
-
-**Two process rules that earned their place during 2.6-2.8:**
-- **Never `git add -A` while a subagent is live in the same tree.** Stage explicit
-  paths.
-- **If a subagent dies with finished-but-uncommitted work**, the orchestrator may
-  commit it -- verify the baseline independently first, commit unchanged, state the
-  authorship. 2.8 also hit a subagent dying with *nothing* finished (a session limit
-  mid-phase); there the answer is simply to re-spawn the phase from scratch and
-  delete any scratch file it left behind.
-
-Known follow-ups, none blocking, all itemised in "Known non-blocking gaps": item 3's
-on-device cross-account RLS check (blocked on week 3's Library feature), item 10.1's
-dead-code cleanup, the orphaned ScrollNotifier ecosystem from 2.4, the flutter-widgets
-rule text contradicting eight shipped items in two directions, §3.2's stale
-desaturation text, §1.9 platform-mark conformance, primary_button.dart's unexplained
-third color.green, ButtonPressScale registering no ActivateIntent, _SignOutButton as a
-third copy of the ActionRow anatomy, add_content_dialog.dart's super.initState() inside
-a pattern-match branch, LabeledTextField.onChanged having zero call sites,
-horizontal_separator.dart's hardcoded Colors.grey and screen-width sizing, §4.4's green
-"Day one" price having no home in LabelValueRow's API, §3.4's badge/library-tick slot
-collision, the dormant screenshots chain behind the file 2.7 deleted (note
-game_screenshot.dart is LIVE and must not be swept up), **the 15px type token and
-§2.2's unimplemented art-deep surface -- now two standing foundations gaps, not one**,
-**the two tracker empty states 2.8 left out of scope**, **EmptyStateCard's untested
-glyph positive case**, **`no_results_found` being the one empty state that still
-apologises**, and **files not being `dart format` clean, which has now produced stray
-churn in two consecutive runs** and is the argument for one deliberate repo-wide pass.
-
-One environment thing that will waste your time otherwise: remote branch deletion is
-blocked by the egress proxy (gotcha #11 -- merged claude/* branches have to be deleted
-by hand in the GitHub UI, don't retry the 403). `claude/async-states-empty-state-guasva`
-joins that list, merged 2026-08-25.
+STILL TRUE, STILL BINDING
+- The tracker task tree is DORMANT BY DECISION and must not be cleaned up. 3.2
+  deleted its only real entry point; tracker_game_detail_screen, task_detail_screen,
+  TaskCubit, GroupTask, SavedGameTask, TaskStep and the Isar SavedGame store all
+  survive deliberately. A design convention for it is coming from the human — pick
+  it up when that lands, not before. saved_game_status_tag.dart retires with it.
+- No 15px type token; ship 14. Settled after four items. Stop raising it.
+- Translate the strings on screens you touch; retire each legacy widget in the run
+  that replaces it; perform each component's manual checks on the screen that first
+  adopts it. Not separate tasks.
+- tech-lead-agent and ba-agent have NO Bash tool. dev-agent and qa-agent do.
+- git.md rule 6: NO AI signature, no Co-Authored-By trailer, on any pipeline
+  commit. It overrides the harness default. (Two docs commits early last session
+  carry one; they were caught late and history is additive.)
+- Remote branch deletion is blocked by the egress proxy — merged claude/* branches
+  must be deleted by hand in the GitHub UI. Don't retry the 403.
 ```
