@@ -3,15 +3,18 @@ Feature: Week 3 item 3.2 — Tab swap, Library shell, Tracker and Browse tab ret
 Run ID: library-tab-swap-20260826
 Run folder: .agents/runs/library-tab-swap-20260826/
 Started: 2026-08-26
-Current phase: DEV
+Current phase: COMPLETE
+Result: PASS — pending manual checks
+Completed: 2026-08-26
 QA cycles used: 0
-Analyzer baseline: 0 errors, 2 warnings, 28 info (30 issues total) — captured 2026-08-26T17:30:00Z
+Analyzer baseline: 0 errors, 2 warnings, 28 info (30 issues total) — captured 2026-08-26T17:30:00Z, PRE-deletion
+Analyzer at completion: 0 errors, 2 warnings, 26 info (28 issues total) — the drop is info lints in the three deleted files; later items in this stage should expect 28
 Test baseline: +361 -10 — captured 2026-08-26T17:32:00Z
 Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart (4), test/cubit/game_detail/game_detail_cubit_test.dart (3), test/cubit/games/games_bloc_test.dart (3)
 Branch: feature/library-tab-swap
 Base branch: feature/library-foundations (item 3.1) — NOT develop
 Base SHA: 14da82c3aad19e48fe52c78d14eaff49209b5583
-Dev commit: NONE
+Dev commit: e7dcee40ac820649a8af333874a63da9dab6449f
 Last updated: 2026-08-26T17:32:00Z
 
 ## Escalation history
@@ -143,7 +146,29 @@ Scope of D8, checked before routing:
 NONE
 
 ## Code review outcomes
-NONE
+2026-08-26T19:40:00Z e7dcee40ac820649a8af333874a63da9dab6449f — Reviewed and approved by human
+
+### Two things the orchestrator verified at this gate, both worth carrying
+
+**The analyzer baseline for this branch is now 28 issues, not 30 — and that is
+correct, not drift.** The orchestrator's Dev briefing said "a result of 28 means
+something broke". That heuristic was about the **2 warnings** (the `_TaskReminder`
+pair, which proves the protected task tree survived) and was wrongly generalised
+to the total. Dev hit 28, investigated instead of forcing it back, and traced the
+drop to info-level lints that lived only in the three deleted files. Verified
+independently at the gate: 0 errors; **2 warnings, both still in
+`task_detail_screen.dart`**; and no new issue in any file this item touched — the
+five hits in `featured_screen.dart:195,270` and `bottom_tab_bar.dart:22` are
+pre-existing (unrelated `_` patterns, and the redundant `elevation: 0` that item
+2.4 knowingly kept). **Later items in this stage should expect 28 / 2 warnings.**
+
+**Dev ran `git stash` once while diagnosing that count, which `git.md` forbids
+outright.** It self-reported, popped immediately, and confirmed the tree. Verified
+rather than trusted: `git stash list` is empty and the working tree is clean, so
+nothing was stranded. Recorded because an agent reaching for a forbidden command
+under diagnostic pressure is worth knowing — and it happened because the
+orchestrator's own wrong instruction sent it hunting a problem that did not exist.
+The rule held because the agent reported itself.
 
 ## Run notes
 

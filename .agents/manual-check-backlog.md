@@ -515,6 +515,45 @@ real filter that returns nothing now shows it.
   `PrimaryButton` sets `width: double.infinity`.
 ---
 
+## Week 3 Stage 3 — item 3.2 (Tab swap, Library and Feed shells)
+
+From the `library-tab-swap-20260826` run, QA `PASS — pending manual checks`, 0 QA
+cycles. 38 of 39 criteria passed automatically (`3.2-AC34` was retired by human
+decision D8). **These six are reachable in the app right now** — unlike most of this
+file, they need no screen that does not exist yet.
+
+- **3.2-MC-1** `[3.2-AC1]` — Open the app, any tab — expect five tabs left to right:
+  Featured (`featured_play_list_outlined`), Library (`collections_bookmark_outlined`),
+  Browse (`search_outlined`), Feed (`dynamic_feed_outlined`), Settings
+  (`settings_outlined`), the selected one indigo in glyph, label and cap, the other
+  four ink-55.
+- **3.2-MC-2** `[3.2-AC1]/[3.2-AC19]` — **The highest-risk check of the six.** Switch
+  the device locale to Chinese — expect 精选 · 游戏库 · 浏览 · 动态 · 设置, and expect
+  **游戏库 not to clip or wrap**. It is the first three-character label this bar has
+  ever carried, in a cell that did not grow. The `textScaleFactor: 2` case passes in
+  the suite, so this is a visual-fit check at normal scale, not a correctness one.
+  **`收藏` is pre-approved as the fallback if it clips. Never widen the cell.**
+- **3.2-MC-3** `[3.2-AC11]/[3.2-AC14]` — Open Library — expect the title "Library" and
+  one `EmptyStateCard` (NO GAMES SAVED, its supporting line, a "Browse games" button),
+  with no spinner, no error state, no recruit card, no status chips, no search field,
+  no view toggle and no count line. Tapping the button must land on **Browse**, the
+  third tab.
+- **3.2-MC-4** `[3.2-AC32]` — Open Feed — expect the title "Feed" and a single
+  vertically centred "Coming Soon": no card, no glyph, no button. **This screen has
+  zero automated coverage by human decision D8, so this is the only run-time look it
+  will get before it ships.**
+- **3.2-MC-5** `[3.2-AC35]` — Open Browse — expect the app-bar title to read "Browse"
+  with the existing subtitle "Search for your favourite games here" unchanged beneath
+  it.
+- **3.2-MC-6** `[3.2-AC6]` — **Cannot be performed yet, and is not a normal backlog
+  entry.** `library_stats.dart:314` sits in the `playingGames.isNotEmpty` branch,
+  which has never rendered because Featured's `statusEqualTo('Playing')` filter has no
+  writers. Nothing manual can confirm it today. **Whoever lands item 3.4 must confirm
+  that card opens Library and not Browse** — 3.4 is what makes the branch fire for the
+  first time in the app's history.
+
+---
+
 ## Also deferred, for a different reason
 
 Not QA manual checks, but the same "needs a device or a thing that doesn't exist
