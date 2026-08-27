@@ -855,11 +855,34 @@ The two blockers below ("no Library design spec", "navigation still open") are
 questions. `.agents/references/library-design-conventions.md` landed on `develop`
 at `15f068f` and answers all four of the brief's open design questions.
 
-1. **Tab structure: `Featured · Library · Games · Settings` — FOUR tabs.** Library
-   replaces Tracker *and* moves to slot 2 (index 1); Games shifts 1 → 2; **the
-   Browse tab is deleted** and Settings shifts 4 → 3. (Superseded a five-tab
-   version of this ruling made earlier the same day — the five-tab shape is gone,
-   do not restore it.)
+1. **Tab structure: `Featured · Library · Browse · Feed · Settings` — FIVE tabs.**
+   Final as of 2026-08-26. This ruling changed twice in one day; **this is the
+   version that stands**, and the two superseded shapes are recorded only so a
+   later session recognises them as dead rather than as alternatives:
+   - superseded: `Featured · Library · Games · Browse · Settings` (five, Games kept)
+   - superseded: `Featured · Library · Games · Settings` (four, Browse deleted)
+
+   | Index | Tab | What it is |
+   |---|---|---|
+   | 0 | Featured | unchanged |
+   | 1 | Library | **new** — replaces Tracker, which loses its tab |
+   | 2 | Browse | **the existing Games screen, relabelled.** Was index 1 |
+   | 3 | Feed | **new, deliberately an empty placeholder** |
+   | 4 | Settings | unchanged — it does *not* move |
+
+   **"Browse" means the Games screen from here on.** The old `browse_screen.dart`
+   stub is deleted; its name is inherited by the Games screen, which is itself due
+   for a redesign under new conventions later. There is no longer any such thing as
+   "the Browse tab" in its old sense — do not go looking for it.
+   **Scope of the relabel is the user-visible label, not the feature.**
+   `lib/features/games/` keeps its name, bloc, repository and datasource;
+   `GamesScreen` keeps its class name. Renaming the feature folder would be a large
+   diff on code already slated for replacement. Whether the *route path* moves
+   `games` → `browse` is a Tech Lead call: nothing user-visible depends on it,
+   because Android has no `VIEW` intent filter so URL deep links cannot be
+   delivered at all (see the deep-link gap below).
+   **`games_screen.dart:171` uses `S.current.games` as its own app-bar title** —
+   it must follow the tab, or the screen and its tab disagree.
    **Deleting Browse is free**: `browse_screen.dart` is the entire feature — one
    file, `Center(child: Text('Browse'))`, no bloc, no datasource, no folder beyond
    `presentation/screens/`. Delete the file, the `AutoRoute` at
@@ -903,12 +926,18 @@ is what makes this safe, since a stale literal cannot survive by looking correct
 
 | Site | Now | Becomes | Destination |
 |---|---|---|---|
-| `featured_screen.dart:144` | 1 | **2** | Games |
-| `featured_screen.dart:145` | 1 | **2** | Games |
-| `featured_screen.dart:147` | 1 | **2** | Games |
-| `featured_screen.dart:207` | 3 | **2** | Games (was Browse) |
-| `countdown_releases.dart:93` | 3 | **2** | Games (was Browse) |
+| `featured_screen.dart:144` | 1 | **2** | Browse (the Games screen) |
+| `featured_screen.dart:145` | 1 | **2** | Browse (the Games screen) |
+| `featured_screen.dart:147` | 1 | **2** | Browse (the Games screen) |
+| `featured_screen.dart:207` | 3 | **2** | Browse — was the deleted stub |
+| `countdown_releases.dart:93` | 3 | **2** | Browse — was the deleted stub |
 | `library_stats.dart:315` | 2 | **1** | Library (was Tracker) |
+
+The five-tab revision did not change this table: every "go find a game" site still
+lands on index 2, and `library_stats` still moves to 1. It did change two things
+around it — **Settings no longer moves** (it stays at 4, where it already is), and
+the Library shell adds a **seventh** literal, so "the count is six" is a
+pre-change fact only.
 
 The last row is the one with no compiler help and the one the navigation blocker
 warned about: it currently means Tracker, and Tracker is gone. Grep for

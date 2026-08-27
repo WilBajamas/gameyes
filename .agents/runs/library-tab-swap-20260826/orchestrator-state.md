@@ -3,7 +3,7 @@ Feature: Week 3 item 3.2 — Tab swap, Library shell, Tracker and Browse tab ret
 Run ID: library-tab-swap-20260826
 Run folder: .agents/runs/library-tab-swap-20260826/
 Started: 2026-08-26
-Current phase: HUMAN_GATE
+Current phase: BA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 28 info (30 issues total) — captured 2026-08-26T17:30:00Z
 Test baseline: +361 -10 — captured 2026-08-26T17:32:00Z
@@ -69,6 +69,48 @@ current intent.
   `task_detail_screen.dart` also uses it and survives. `TrackerCubit` and
   `default_filter_list_app_bar.dart` genuinely are orphaned; both are flagged, not
   swept, and neither is an analyzer issue.
+
+## Human decisions — 2026-08-26, Phase 3 design gate
+
+**D6 — the tab set is FIVE, not four: `Featured(0) · Library(1) · Browse(2) ·
+Feed(3) · Settings(4)`.** This supersedes the four-tab target the BA and Tech Lead
+built to, so both artifacts are stale and this run returns to Phase 1.
+
+- **Browse = the existing Games screen, relabelled.** Not the old
+  `browse_screen.dart` stub, which is still deleted. The relabel is **user-visible
+  only**: `lib/features/games/` keeps its name, bloc, repository and datasource;
+  `GamesScreen` keeps its class name. That screen is due for its own redesign, so
+  renaming the feature now is a large diff on code slated for replacement. The
+  route path (`games` → `browse`) is a Tech Lead call — nothing user-visible turns
+  on it, because Android has no `VIEW` intent filter and URL deep links cannot be
+  delivered at all.
+- **`games_screen.dart:171` uses `S.current.games` as its own app-bar title** and
+  must follow the tab, or screen and tab disagree.
+- **Feed is a new, deliberately BARE placeholder** — title plus `Center(Text(...))`.
+  The human explicitly chose this over the `EmptyStateCard` shell the Library tab
+  gets. It is replaced wholesale when Feed is designed. It must not write to
+  `ScrollNotifier`.
+- **Settings does NOT move.** It stays at index 4.
+
+**What D6 does not change:** the six-row `setActiveIndex` table is unaffected —
+every "go find a game" site still lands on 2, and `library_stats.dart:315` still
+moves to 1.
+
+**What D6 inverts:** the `browse` l10n key is now **kept** (it is slot 2's label,
+and is already translated as 浏览). The orphaned key is **`games`** (游戏), plus
+`tracker`. `library` and `feed` are both added, and both need real zh values.
+
+**What D6 makes cheaper:** `bottom_tab_bar_test.dart` stays at five destinations,
+so `tabCount: 5` and `selectedIndex: 4` remain valid — much less churn than the
+four-tab shape. TL-1's two run-time-failing assertions still apply unchanged.
+
+**D7 — TL-4 resolved, and it mostly dissolves.** Because the app returns to five
+tabs, `.claude/skills/flutter-widgets/SKILL.md:220`'s "five fixed destinations …
+the other four" becomes **correct again** and needs no edit. Only `:160` and
+`:202`, which list the deleted `SavedGameItem`, go stale. Whether that two-line
+correction rides in this item or a follow-up was not explicitly answered — treat
+it as in scope, since it is two lines inside the same class of staleness item 3.1
+exists to close, and a skill file is the *enforcing* copy agents are told to obey.
 
 ## Deviation approvals
 NONE

@@ -130,11 +130,28 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         for fixing a design doc when a decision reverses it.
       No screen changes. No widget changes.
 
-- [ ] **3.2 — Tab swap, Library shell, Tracker and Browse tab retirement.**
+- [ ] **3.2 — Tab swap, Library and Feed shells, Tracker retirement.**
       The IA change, isolated so nothing later is built on a moving index.
-      Target: **`Featured(0) · Library(1) · Games(2) · Settings(3)`** — four tabs.
-      - Rewrite `bottom_tab_bar/enum/bottom_tab_bar_destination.dart`: Library
-        replaces Tracker and takes slot 2; the `browse` value is deleted.
+      Target: **`Featured(0) · Library(1) · Browse(2) · Feed(3) · Settings(4)`** —
+      **five tabs.** Revised 2026-08-26 at the Phase 3 gate, replacing an earlier
+      four-tab shape. **Settings does NOT move**; it stays at 4.
+      - **"Browse" is the existing Games screen, relabelled** — not the old
+        `browse_screen.dart` stub, which is still deleted. The relabel is
+        **user-visible only**: `lib/features/games/` keeps its name, bloc, repository
+        and datasource, and `GamesScreen` keeps its class name, because that screen
+        is itself due for a redesign later and renaming the feature would be a large
+        diff on code slated for replacement. Whether the *route path* moves
+        `games` → `browse` is a Tech Lead call — nothing user-visible turns on it,
+        since Android has no `VIEW` intent filter and URL deep links cannot be
+        delivered at all.
+      - **`games_screen.dart:171` uses `S.current.games` as its own app-bar title.**
+        It must follow the tab, or the screen and its tab disagree.
+      - **Feed is a new, deliberately bare placeholder** — a title and a
+        `Center(Text(...))`. Human decision: *not* the `EmptyStateCard` shell the
+        Library tab gets. It is replaced wholesale when Feed is designed.
+      - Rewrite `bottom_tab_bar/enum/bottom_tab_bar_destination.dart`: five values
+        in the new order. The `browse` value **survives and is reused** for the Games
+        screen; `games` and `tracker` values go; `feed` is added.
         `bottom_tab_bar.dart` itself needs **no change** — it derives every index
         from `values`.
       - `home_screen.dart:16-22` routes list (order *is* the index) and
@@ -150,9 +167,10 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         indices before anything sits on them.
       - **Retires here, in the run that replaces them:** `tracker_screen.dart`,
         `saved_game_item.dart`, and the whole of `lib/features/browse/`. These lose
-        their only reachable caller the moment the tabs change. Browse is one file
-        with no bloc and no datasource — a 59-line `StatefulWidget` whose body is
-        `Center(child: Text('Browse'))`.
+        their only reachable caller the moment the tabs change. The old Browse is one
+        file with no bloc and no datasource — a 59-line `StatefulWidget` whose body
+        is `Center(child: Text('Browse'))`. Its *name* passes to the Games screen;
+        its *code* is deleted. Do not confuse the two.
       - **`saved_game_status_tag.dart` is NOT retired here.** Corrected 2026-08-26,
         mid-run: this list was written before the human's decision to keep the task
         tree, and never re-checked against it. Its only caller is
@@ -166,19 +184,29 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         test). Neither is an analyzer issue and neither is on the retirement list —
         flagged, not swept. `default_alert_dialog.dart` is **not** orphaned:
         `task_detail_screen.dart` still uses it, and that file survives.
-      - **Do not over-delete l10n.** `browse_games` and `browse_for_your_next_game`
-        are still live on Featured's empty states; only the bare `browse` key becomes
-        unreferenced. Gotcha #1: `intl_utils` regenerates strictly from the `.arb`
-        files, so a deleted key silently takes its getter. Add `library` to both
-        files, then `dart pub global run intl_utils:generate`.
-      - `bottom_tab_bar_test.dart` fixtures drop from five destinations to four.
+      - **l10n, and the five-tab revision inverted this.** `browse` is **kept** —
+        it is now slot 2's label, and it is already translated (浏览). The key that
+        becomes unreferenced is **`games`** (游戏), along with `tracker` (追踪).
+        Add `library` and `feed` to both files. `browse_games` and
+        `browse_for_your_next_game` remain live on Featured's empty states
+        throughout. Gotcha #1: `intl_utils` regenerates strictly from the `.arb`
+        files, so a deleted key silently takes its getter — then
+        `dart pub global run intl_utils:generate`.
+      - `bottom_tab_bar_test.dart` **stays at five destinations**, so `tabCount: 5`
+        at `:166-172` and `selectedIndex: 4` at `:80` remain valid — far less churn
+        than the four-tab shape would have caused. What changes is *which* labels the
+        fixtures name, plus two index-dependent assertions that fail at **run time,
+        not compile time**: `:107`'s `expect(reported, [1, 1, 1])` after tapping the
+        Games/Browse cell (that cell moves 1 → 2) and `:141`'s `selectedIndex: 1`
+        asserting Games is selected (index 1 is Library now).
       - Note `browse_screen.dart` is one of `ScrollNotifier`'s three writer sites;
         this leaves two. The notifier stays orphaned-but-deliberate exactly as 2.4
-        left it. **This does not reopen that follow-up.**
-      - Translation note: `browse` (浏览) and `tracker` (追踪) were the only two
-        Chinese strings ever fixed, and both are deleted by this item. No real loss
-        (浏览 survives in the two keys that stay) — but the untranslated count will
-        not drop the way it looks like it should.
+        left it. **This does not reopen that follow-up.** The new Feed placeholder
+        must not write to it either.
+      - Translation note: of the only two Chinese strings ever fixed, `browse`
+        (浏览) now **survives** and `tracker` (追踪) is deleted. `feed` and `library`
+        need real zh values written, not English placeholders — that is the
+        translate-as-you-touch rule, not extra scope.
 
 - [ ] **3.3 — Schema migration and the remote data layer.**
       `library_entries` **cannot serve the spec as it stands.** It holds
