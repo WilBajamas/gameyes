@@ -2,7 +2,7 @@
 Source: `.agents/runs/library-tab-swap-20260826/tech-ac.md` (Week 3 item 3.2 — Tab swap, Library and Feed shells, Tracker tab retirement, Browse relabel)
 Date: 2026-08-27
 Branch: feature/library-tab-swap
-Commit: PENDING — recorded after commit
+Commit: e7dcee40ac820649a8af333874a63da9dab6449f
 
 ## Files created
 lib/features/library/presentation/screens/library_screen.dart — Library tab shell: title plus one unconditional `EmptyStateCard` whose action calls `setActiveIndex(2)` (Browse).
