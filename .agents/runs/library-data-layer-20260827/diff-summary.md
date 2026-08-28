@@ -94,3 +94,35 @@ Caveats from `tdd.md ## Caveats I could not execute`, recorded as required:
 3.3-AC33: satisfied
 3.3-AC34: satisfied
 3.3-AC35: satisfied
+
+## Phase 4B revision round — 2026-08-28
+Human sent commit `6c89deb` back at the Phase 4B gate: clear the 11 new
+`use_null_aware_elements` info lints in `library_remote_datasource.dart` before
+they settle into the analyzer baseline. Everything else about the commit was
+approved.
+
+Converted 10 of the 11 `if (x != null) key: x` map entries to `key: ?x`
+null-aware elements: `coverUrl`, `rating`, `platform`, `genre`,
+`playtimeHours`, `progressPercent` in `add`; `platform`, `genre`,
+`playtimeHours`, `progressPercent` in `update`. `releaseDate` in `add` was
+never flagged (it needs `.toIso8601String()` applied) and was left as-is.
+
+Line 103, the `else if (rating != null)` half of the `clearRating` /
+`rating` pair in `update`, was deliberately left unconverted. That pair
+relies on `if (clearRating) ... key: null` writing an explicit null to erase
+a rating (3.3-AC26), while `key: ?value` omits the map entry entirely when
+`value` is null — the opposite behaviour. No form of null-aware element
+preserves both "send explicit null to clear" and "send nothing when
+`rating` is absent", so the pair is left exactly as it was in `6c89deb`, one
+remaining info lint and no risk to 3.3-AC26.
+
+Verification: `flutter analyze` — 0 errors, 2 warnings (`_TaskReminder`
+pair, unchanged), 27 info (down from 37, one `use_null_aware_elements` lint
+remains at line 101 — the trap). `flutter test` — +394 -10, the 10 being
+the same pre-existing set by name (`tracker_repository_test` 4,
+`game_detail_cubit_test` 3, `games_bloc_test` 3), no new failures, no drop
+in passing count. `test/use_case/library/update_library_entry_use_case_test.dart`
+(file untouched) still passes all 3 tests including "should forward
+clearRating when the rating is being removed".
+
+Commit: PENDING

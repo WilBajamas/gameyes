@@ -60,16 +60,14 @@ class LibraryRemoteDatasource {
           LibraryEntryConstants.igdbId: igdbId,
           LibraryEntryConstants.title: title,
           LibraryEntryConstants.status: status.columnValue,
-          if (coverUrl != null) LibraryEntryConstants.coverUrl: coverUrl,
+          LibraryEntryConstants.coverUrl: ?coverUrl,
           if (releaseDate != null)
             LibraryEntryConstants.releaseDate: releaseDate.toIso8601String(),
-          if (rating != null) LibraryEntryConstants.rating: rating,
-          if (platform != null) LibraryEntryConstants.platform: platform,
-          if (genre != null) LibraryEntryConstants.genre: genre,
-          if (playtimeHours != null)
-            LibraryEntryConstants.playtimeHours: playtimeHours,
-          if (progressPercent != null)
-            LibraryEntryConstants.progressPercent: progressPercent,
+          LibraryEntryConstants.rating: ?rating,
+          LibraryEntryConstants.platform: ?platform,
+          LibraryEntryConstants.genre: ?genre,
+          LibraryEntryConstants.playtimeHours: ?playtimeHours,
+          LibraryEntryConstants.progressPercent: ?progressPercent,
         })
         .select()
         .single();
@@ -102,12 +100,10 @@ class LibraryRemoteDatasource {
             LibraryEntryConstants.rating: null
           else if (rating != null)
             LibraryEntryConstants.rating: rating,
-          if (platform != null) LibraryEntryConstants.platform: platform,
-          if (genre != null) LibraryEntryConstants.genre: genre,
-          if (playtimeHours != null)
-            LibraryEntryConstants.playtimeHours: playtimeHours,
-          if (progressPercent != null)
-            LibraryEntryConstants.progressPercent: progressPercent,
+          LibraryEntryConstants.platform: ?platform,
+          LibraryEntryConstants.genre: ?genre,
+          LibraryEntryConstants.playtimeHours: ?playtimeHours,
+          LibraryEntryConstants.progressPercent: ?progressPercent,
         })
         .eq(LibraryEntryConstants.userId, userId)
         .eq(LibraryEntryConstants.igdbId, igdbId)
