@@ -3,6 +3,20 @@ Source: `.agents/runs/library-bloc-preferences-20260827/tech-ac.md` (item 3.4 �
 `LibraryBloc`, preferences, and the Featured repair)
 Date: 2026-08-28
 
+> **Split note (D16).** Item 3.4 is split at the Featured seam and this document
+> deliberately still covers **both halves**, unchanged — 3.4b's task brief is cut from it
+> and from `code-plan.md` without re-deriving anything.
+> **3.4a** (this run — criteria AC1–AC25, AC37–AC41): D-B, D-C, D-D, D-E, D-F; the
+> `LibraryRemoteDatasource`, `AppPreferencesDatasource`, `LibraryRepository` and
+> `LibraryPreferencesRepository` entries; the Library half of `## Domain layer`; all of
+> `## State layer`; caveats 1–3.
+> **3.4b** (a later run — criteria AC26–AC36): D-A; the `FeaturedRepositoryImpl` and
+> `FeaturedLocalDatasource` entries; `NowPlayingGameEntity` and the
+> `LibrarySnapshotEntity` modify; all of `## UI layer`, including the widget-test scoping
+> decision.
+> Where a brief and this document disagree, `task-brief.md` wins. The step-ceiling gate
+> item recorded under `## Open questions` is what D16 resolved; it is no longer open.
+
 ## Feature summary
 
 The Library gains a screen-scoped `LibraryBloc` that owns status filter, sort, view

@@ -2,6 +2,17 @@
 Source: `.agents/runs/library-bloc-preferences-20260827/tech-ac.md` (item 3.4)
 Date: 2026-08-28
 
+> **Split note (D16).** Item 3.4 is split at the Featured seam and this plan deliberately
+> still covers **both halves**, unchanged — 3.4b's task brief is cut from it and from
+> `tdd.md` without re-deriving anything.
+> **3.4b** (a later run — criteria AC26–AC36) owns exactly these entries:
+> `now_playing_game_entity.dart`, `library_snapshot_entity.dart`,
+> `featured_repository_impl.dart`, `featured_local_datasource.dart`,
+> `library_stats.dart`, `featured_repository_test.dart`,
+> `library_stats_cubit_test.dart` and `library_stats_test.dart`.
+> **3.4a** (this run — criteria AC1–AC25, AC37–AC41) owns everything else here.
+> `task-brief.md` is scoped to 3.4a and wins on any conflict.
+
 ## CREATE NEW
 
 ### lib/core/enums/library_view_mode.dart
