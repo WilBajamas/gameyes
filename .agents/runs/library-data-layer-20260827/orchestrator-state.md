@@ -163,3 +163,7 @@ NONE
 ## Code review outcomes
 2026-08-27 Phase 3 gate — approved, with one Tech Lead-only revision (D13, the
 `Dto` → `Model` rename). The architecture was re-opened and re-confirmed as D12.
+2026-08-27 Phase 4B — `6c89deb` — Sent back to Dev: clear the 11 new
+`use_null_aware_elements` info lints in `library_remote_datasource.dart` before QA,
+rather than letting them settle into the analyzer baseline. Everything else about
+the commit was approved.
