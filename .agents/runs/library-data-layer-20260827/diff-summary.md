@@ -2,7 +2,7 @@
 Source: `.agents/week-3-task-briefs.md` item 3.3 (lines 211–232), via `tech-ac.md`
 Date: 2026-08-27
 Branch: claude/questloggd-week-3-stage-3-4sxzix
-Commit: PENDING — filled in after commit
+Commit: 6c89deba18ed356bf2f9ddcc6d810230875f70e0
 
 ## Files created
 supabase/migrations/20260827120000_library_entries_details.sql — additive migration: six new columns and three check constraints on `library_entries`.
