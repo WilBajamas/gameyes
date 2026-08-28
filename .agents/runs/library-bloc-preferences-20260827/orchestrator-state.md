@@ -50,9 +50,11 @@ while the null-aware form omits the entry. **Do not "fix" it.**
   `BaseRepositoryMixin`. Callers can now tell an RLS denial from a constraint
   violation from a unique conflict.
 - `LibrarySnapshotEntity` no longer holds an Isar `SavedGame`; it holds
-  `TrackerSavedGameEntity`. `library_stats.dart:317` still pushes
+  `TrackerSavedGameEntity`. ~~`library_stats.dart:317` still pushes
   `TrackerGameDetailRoute`, which is the sole surviving entry point into the
-  dormant tracker tree and must keep working.
+  dormant tracker tree and must keep working.~~ **Struck by D14 below — that push
+  is removed in this item and the route keeps no caller.** The `TrackerSavedGameEntity`
+  retype itself still stands.
 
 ## Two things 3.3 deliberately did not do — this item must claim them
 
