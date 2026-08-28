@@ -17,6 +17,9 @@ sealed class TrackerSavedGameEntity with _$TrackerSavedGameEntity {
     List<PlatformEntity>? platforms,
     List<PlatformEntity>? availablePlatforms,
     DateTime? dateModified,
+    double? hoursLogged,
+    double? averageCompletionHours,
+    double? manualProgressPercentage,
     @Default([]) List<TrackerGroupTaskEntity> groupTasks,
   }) = _TrackerSavedGameEntity;
 }

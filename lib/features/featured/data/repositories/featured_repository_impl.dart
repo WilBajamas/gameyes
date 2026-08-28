@@ -41,7 +41,7 @@ class FeaturedRepositoryImpl
 
       final snapshot = LibrarySnapshotEntity(
         totalGamesCount: totalCount,
-        nowPlayingGames: nowPlaying,
+        nowPlayingGames: nowPlaying.map((game) => game.toEntity()).toList(),
         thisWeekPlayHours: playHours,
         wishlistCount: wishlisted.length,
         ownedGameIds: ownedIds,

@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
+import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/empty_state_card.dart';
@@ -266,7 +266,7 @@ class LibraryStatsWidget extends StatelessWidget {
 
   Widget _buildNowPlayingCard(
     BuildContext context,
-    List<SavedGame> playingGames,
+    List<TrackerSavedGameEntity> playingGames,
   ) {
     if (playingGames.isEmpty) {
       return EmptyStateCard(
@@ -314,9 +314,7 @@ class LibraryStatsWidget extends StatelessWidget {
             AutoTabsRouter.of(context).setActiveIndex(1);
           } else {
             // Go to Tracker detail for this game
-            context.router.push(
-              TrackerGameDetailRoute(game: topGame.toEntity()),
-            );
+            context.router.push(TrackerGameDetailRoute(game: topGame));
           }
         },
         borderRadius: BorderRadius.circular(16),
