@@ -3,7 +3,7 @@ Feature: Item 3.4 — `LibraryBloc`, preferences, and the Featured repair (`.age
 Run ID: library-bloc-preferences-20260827
 Run folder: .agents/runs/library-bloc-preferences-20260827/
 Started: 2026-08-27
-Current phase: BA
+Current phase: ESCALATED
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 total) — captured 2026-08-27T18:45:00Z
 Test baseline: +394 -10 — captured 2026-08-27T18:47:00Z
@@ -78,7 +78,11 @@ while the null-aware form omits the entry. **Do not "fix" it.**
 - The tracker task tree is dormant by human decision and must not be cleaned up.
 
 ## Escalation history
-NONE
+OPEN 2026-08-27T19:05:00Z Phase 1 — BA Agent — 2 CRITICAL ambiguities. CRITICAL-1:
+repointing Featured's now-playing shelf fires a tap that has never executed, and its
+destination (the protected `TrackerGameDetailRoute`) needs an Isar row id that a
+library entry cannot supply. CRITICAL-2: after the repair one stat row reads two
+stores, showing `Total Games 0` beside `Wishlist 3`. `tech-ac.md` withheld.
 
 ## Deviation approvals
 NONE
