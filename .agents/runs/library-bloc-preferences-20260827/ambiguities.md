@@ -1,61 +1,47 @@
 # Ambiguities Report
-Source: `.agents/week-3-task-briefs.md` item 3.4 (lines 234–258), with
-`.agents/references/library-design-conventions.md` §3, §8, §9 as the consuming spec.
-Carried decisions D9, D12 and the handover's dormant-tracker ruling
-(`handover.md:466-481`).
+Source: `.agents/week-3-task-briefs.md` item 3.4 (lines 240–264), with
+`.agents/references/library-design-conventions.md` §2, §3, §8, §9, §10 as the consuming
+spec. Carried decisions D9, D10, D12 and human decisions D14, D15
+(`orchestrator-state.md ## Human decisions`).
 Date: 2026-08-28
 
 ## CRITICAL (pipeline blocked — requires human decision before proceeding)
 
-CRITICAL-1: item 3.4, Featured repair — **repointing the now-playing shelf at
-`library_entries` makes a never-executed tap live, and its destination needs an Isar
-id that `library_entries` cannot supply.**
-`library_stats.dart:308-318` is inside the `playingGames.isNotEmpty` branch. With
-exactly one playing game it pushes `TrackerGameDetailRoute(game: topGame)` — the sole
-surviving entry point into the dormant tracker tree, which `handover.md:474-476` and
-3.3-AC32 both forbid removing. That route's screen builds `TrackerDetailCubit`, which
-subscribes to Isar by `game.id` (`tracker_detail_cubit.dart:24,76`) and whose section
-does an unguarded `state.game!` (`tracker_game_detail_section.dart:27`). A library
-entry has a uuid `id` and an `igdbId`; it has no Isar row id. The branch has never
-rendered, so this tap has never fired — this item is what fires it.
-  Options:
-  A — Restrict the shelf to playing entries that also have a local `SavedGame`
-      (match on igdb id) and push that row's real Isar id. Both rulings intact; the
-      shelf still renders empty for anyone whose playing games were never saved
-      through Game Detail, so the reported bug is only partly fixed.
-  B — Put the whole playing slice on the shelf and send the single-game tap to the
-      Library tab (`setActiveIndex(1)`), matching the multi-game branch. Fixes the
-      shelf completely and deletes the protected tracker entry point.
-  C — Put the whole playing slice on the shelf, keep the push, and fall back to the
-      Library tab only for entries with no matching Isar row. Fixes the shelf, keeps
-      the entry point, at the cost of a tap whose destination varies invisibly.
-  Not viable: synthesising a `TrackerSavedGameEntity` with a placeholder id. The
-  stream then emits null and `tracker_game_detail_section.dart:27` throws; a
-  colliding autoincrement id sends `TrackerDetailCubit.setPlatform` (`:55-60`) into
-  another game's row.
-  Recommended: C.
-  Decision needed from: Human (Product Owner) — the handover reserves the tracker
-  tree's re-keying for a design convention that has not landed
-  (`handover.md:478-481`), so a BA or Tech Lead cannot settle it.
+NONE. Both criticals raised 2026-08-27 were settled by the human on the same day; see
+`## RESOLVED` below. `tech-ac.md` written.
 
-CRITICAL-2: item 3.4, Featured repair scope — **after the repair, one row of three
-stat tiles reads two different stores.**
-`getLibrarySnapshot` (`featured_repository_impl.dart:34-57`) sources `totalGamesCount`
-from Isar (`countSavedGames()`) and `ownedGameIds` from Isar (`getOwnedGameIds()`),
-while the wishlist figure moves to `library_entries`. `library_stats.dart:232-249`
-renders Total Games and Wishlist side by side, and `library_stats_cubit.dart:40-42`
-derives the three checklist steps from both. `ownedGameIds` also drives the owned
-marks at `featured_screen.dart:161,238`. Left as is, a user who added games only
-through the Library sees `Total Games 0` next to `Wishlist 3`, and their games carry
-no owned mark.
-  Options: repoint `countSavedGames()` and `getOwnedGameIds()` at `library_entries`
-  too (the count capability this item must build serves the first directly) | leave
-  both on Isar for now and accept the mixed row until the Isar store retires.
-  Recommended: repoint both.
-  Decision needed from: Human (Product Owner). One line answers it; if the answer is
-  "leave them", nothing else in this item changes.
+## RESOLVED (decided by the human — kept for the record, no longer blocking)
 
-## ASSUMPTIONS (minor — pipeline may proceed once the criticals are settled)
+RESOLVED CRITICAL-1 — **the now-playing tap's destination.** Raised because repointing
+the shelf at `library_entries` made a never-executed tap live, and the tap's single-game
+branch (`library_stats.dart:308-318`) pushed `TrackerGameDetailRoute`, which needs an
+Isar row id a library entry cannot supply.
+  **Decision: D14, option B, 2026-08-27.** Every now-playing tap goes to the Library tab.
+  Both branches call `setActiveIndex(1)`; the destination no longer depends on how many
+  games are playing, and the **whole** playing slice renders on the card, so the reported
+  bug is fully fixed rather than half fixed.
+  **Consequences the human accepted and authorised:**
+  - The tracker task tree becomes **fully unreachable**. Two standing rules said it must
+    keep an entry point; both were overridden deliberately.
+  - `handover.md` and `week-3-task-briefs.md` are amended, with the superseded sentences
+    **struck rather than deleted**.
+  - **"Do not delete the tracker tree" still stands.** `tracker_game_detail_screen.dart`,
+    `task_detail_screen.dart`, `TaskCubit`, `GroupTask`, `SavedGameTask` and `TaskStep`
+    all stay, compiling and passing their tests, until the design convention lands.
+    Carried into 3.4-AC29; no criterion in `tech-ac.md` removes or tidies any of them.
+  - **3.3-AC32 is retired** by D14 and is not binding on this run.
+  - Removing the last push may orphan the route registration and produce new info-level
+    lints. Expected, not breakage; the 2-warning invariant is unaffected.
+
+RESOLVED CRITICAL-2 — **one stat row reading two stores.** Raised because
+`getLibrarySnapshot` sourced `totalGamesCount` and `ownedGameIds` from Isar while the
+wishlist figure moved to `library_entries`, so a Library-only user would have seen
+`Total Games 0` beside `Wishlist 3` with no owned marks on Featured.
+  **Decision: D15, 2026-08-27.** `countSavedGames()` and `getOwnedGameIds()` repoint at
+  `library_entries` too. The count capability this item builds serves the first directly.
+  Carried into 3.4-AC26 and 3.4-AC27.
+
+## ASSUMPTIONS (minor — pipeline may proceed)
 
 ASSUMPTION: Counts are served by a new count capability computed server-side (a
 Supabase count query), returning a count for each of the six statuses plus the
@@ -69,6 +55,9 @@ so they are whole-status figures.
 ASSUMPTION: The count line's first figure reflects everything currently applied —
 status **and** search — because §8:101 says it confirms the filter did something; its
 second figure is the unfiltered library total, unaffected by status or search.
+
+ASSUMPTION: Counts are fetched with the first-page load of a slice and are not
+recomputed while paging through it, since paging does not change any slice's size.
 
 ASSUMPTION: Search matches the entry title only, case-insensitive substring. §2:30
 scopes it to the library and names no other field.
@@ -97,12 +86,17 @@ key and its read/write behaviour, so `TrackerCubit` (`tracker_cubit.dart:19,28`)
 working; the library keys are new and separate.
 
 ASSUMPTION: For Featured, a failed or signed-out library read degrades to an empty
-now-playing list and a zero wishlist count rather than failing the whole snapshot.
-That is exactly what those two figures have always shown, so nothing regresses.
+now-playing list, a zero wishlist count, a zero total and an empty owned-id set rather
+than failing the whole snapshot. That is exactly what those figures have always shown,
+so nothing regresses.
 
 ASSUMPTION: Featured's now-playing list is ordered by `updated_at` descending, the
 nearest equivalent of today's `sortByDateModifiedDesc`
 (`featured_local_datasource.dart:47`).
+
+ASSUMPTION: `getThisWeekPlayHours()` stays on Isar `playSessionLogs`. D15 names two
+methods and there is no play-session table in Supabase, so the This Week tile is
+unchanged by this item.
 
 ## OBSERVATIONS (verified against source, not inherited)
 
@@ -118,14 +112,16 @@ item names), `:63` (`getCountdownGame`'s wishlist ids) and `:131`
 (`getOutThisWeekGames`'s wishlist-first ordering). Both unnamed callers key on IGDB
 ids, which `library_entries.igdb_id` supplies exactly, so repointing fixes all three —
 but a criterion set written for the stat alone leaves two callers on a dead filter.
+Carried into 3.4-AC25.
 
 OBSERVATION-3: `library_stats.dart:287-305` verified. Its three progress branches read
 `manualProgressPercentage`, `hoursLogged` and `averageCompletionHours`.
 `library_entries` has `progress_percent` and `playtime_hours` but **no**
 average-completion column, so once the shelf renders, branch 1 (`:287-291`) and branch
-3 (`:302-305`) fire and branch 2 (`:292-301`) stays permanently unreachable. Flagged
-so it is not inherited as live; adding an average-completion source is not in this
-item, and deleting the branch is the task tree's convention to decide.
+3 (`:302-305`) fire and branch 2 (`:292-301`) stays **permanently unreachable**.
+Recorded in `tech-ac.md ## Known gaps` rather than written as a criterion that cannot
+pass. Adding an average-completion source is not in this item; deleting the branch is
+the task tree's convention to decide.
 
 OBSERVATION-4: `TrackerPreferencesDatasource` and `TrackerSortRepository` are as the
 item describes — `SharedPreferences`, one key (`const.dart:28` `tracker_sort_tag`),
@@ -141,7 +137,7 @@ references to `LibraryRemoteDatasource` under `test/` are
 `library_repository_test.dart:18`'s `@GenerateMocks` and its generated mock; the four
 use case tests mock `LibraryRepository`. Nothing executes the query building, the
 insert/update payloads, or `clearRating`'s explicit null
-(`library_remote_datasource.dart:99-102`).
+(`library_remote_datasource.dart:99-102`). Carried into 3.4-AC33 and 3.4-AC34.
 
 OBSERVATION-6: Search is a third gap of the same kind as counts.
 `LibraryRepository.fetchPage` takes status, sort, limit and offset only, so
@@ -149,16 +145,24 @@ search-within-status has no data-layer support either.
 
 OBSERVATION-7: `3.2-MC-6` (`manual-check-backlog.md:548-553`) belongs to this run. The
 multi-game branch at `library_stats.dart:314` (`setActiveIndex(1)`) has never
-executed; this item fires it, so confirming the card opens Library and not Browse is
-this run's manual check.
+executed; this item fires it — and after D14 it is the **only** branch — so confirming
+the card opens Library and not Browse is this run's manual check.
 
-OBSERVATION-8: The brief's preamble (lines 76–78) still says the analyzer baseline is
+OBSERVATION-8: The brief's preamble (lines 82–84) still says the analyzer baseline is
 30 issues and "a run that reports 28 has broken something". Phase 0 measured 29 (0
 errors, 2 warnings, 27 info) and `+394 -10`. The 2 warnings are the invariant; the
 total is not, and the preamble is stale.
 
 OBSERVATION-9: `games_bloc_test`'s three failures are out of scope, but the cause is
 in scope as a constraint: `GamesBloc` self-dispatches in its constructor with
-`droppable()` handlers (`testing-conventions.md:231-245`). The new Library bloc must
-not repeat that shape, or its own tests will be untestable in the house `blocTest`
-style from day one.
+`droppable()` handlers, so `droppable()` discards the event `act` adds and the stub
+never matches (`testing-conventions.md:231-245`). The new Library bloc must not repeat
+that shape, or its own tests are untestable in the house `blocTest` style from day
+one. Carried into 3.4-AC11.
+
+OBSERVATION-10: `TrackerSavedGameEntity.id` is a **required non-nullable int**
+(`tracker_saved_game_entity.dart:10`) that today carries the Isar row id. After D14
+nothing taps through to an Isar-keyed screen, but the field still has to be populated
+from a library entry that has no such id. Constrained by 3.4-AC30: whatever value is
+used must never reach an Isar lookup. How to satisfy it — retype the seam, or supply a
+value that is never keyed on — is a Tech Lead call.
