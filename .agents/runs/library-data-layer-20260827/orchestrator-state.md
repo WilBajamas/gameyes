@@ -3,7 +3,7 @@ Feature: Item 3.3 — Schema migration and the remote data layer (`.agents/week-
 Run ID: library-data-layer-20260827
 Run folder: .agents/runs/library-data-layer-20260827/
 Started: 2026-08-27
-Current phase: DEV
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 26 info (28 total) — captured 2026-08-27T16:05:00Z
 Test baseline: +363 -10 — captured 2026-08-27T16:12:00Z
@@ -11,7 +11,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: claude/questloggd-week-3-stage-3-4sxzix
 Base branch: develop
 Base SHA: d881052dd10891246a6d481f9adeb38fb0674ce8
-Dev commit: NONE
+Dev commit: 6c89deb (implementation), 9f22b6b (Phase 4B revision round)
 Last updated: 2026-08-27T16:45:00Z
 
 ## Phase 0 notes
@@ -167,3 +167,17 @@ NONE
 `use_null_aware_elements` info lints in `library_remote_datasource.dart` before QA,
 rather than letting them settle into the analyzer baseline. Everything else about
 the commit was approved.
+2026-08-27 Phase 4B — `9f22b6b` — Reviewed and approved by human. 10 of the 11
+lints cleared; the `else if (rating != null)` branch left as-is by design, because
+`clearRating` must write an explicit null and `key: ?value` omits the entry
+instead, which would break 3.3-AC26. Analyzer 0 errors / 2 warnings / 27 info;
+suite +394 -10 with the same pre-existing failures; `test/` untouched across both
+rounds.
+**Corrected after QA:** the surviving lint is at **line 101**, not 103 — line 103
+is `platform`, which was converted. The orchestrator quoted 103 at the gate.
+**Also corrected after QA:** the gate summary said the `clearRating` test still
+passing was meaningful evidence that AC26 holds. It is not. No test anywhere
+constructs a real `LibraryRemoteDatasource` — it is mocked in the repository test
+and the use case tests mock the repository above it — so the behaviour AC26 turns
+on never executes in the suite. The decision to leave the branch unconverted is
+still correct on the merits; it simply has no automated guard behind it.
