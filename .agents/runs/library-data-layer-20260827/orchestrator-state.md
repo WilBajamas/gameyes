@@ -94,6 +94,64 @@ cannot inherit it — the same doc-correction precedent item 1.4 set and item 3.
 followed for the desaturation filter. Whether that edit lands in this run or a
 follow-up is a Tech Lead call.
 
+**D12 — the architecture was re-opened at the Phase 3 gate and lands back where it
+started: Supabase is the source of truth.**
+The human questioned whether the library should be remote at all. Two alternatives
+were worked through in full and rejected:
+- *Isar as truth, no remote at all* — rejected because a device change or reinstall
+  loses the user's whole library, while the app requires an account, which sets the
+  opposite expectation.
+- *Isar as truth, Supabase as backup mirror* — rejected once it became clear it
+  converges on the same implementation as remote-truth-with-offline-writes. Both
+  need an outbox, a retry path and a conflict rule; naming which side is "the truth"
+  changes the read path, not the cost.
+**What settles it:** `questloggd-design-product-brief.md` §8 already rules offline
+out of scope for this phase, so v1 does not need offline *writes* at all. Writes go
+straight to Supabase and fail with an inline error when there is no connection.
+That removes the outbox, the conflict rule and last-writer-wins from v1 entirely.
+Consequences worth recording, because two earlier notes in this run were wrong:
+- **No doc correction is needed after all.** `roadmap-deferred.md`'s "this decision
+  is what makes Postgres the right backend" is simply true again, and brief §8
+  stands. An earlier note in this run claimed both needed correcting; that was
+  written while the local-truth option was live.
+- **Item 3's cross-account RLS check unblocks in this item**, exactly as the
+  original brief said. An earlier note claimed it could never unblock.
+- The human's stated direction is to move to local-truth in a later phase. The
+  Isar read cache below is the stepping stone, so it is worth building well.
+
+**D13 — data models are never suffixed `Dto`.**
+`library_entry_dto.dart` / `LibraryEntryDto` becomes `library_entry_model.dart` /
+`LibraryEntryModel`. The tree contains **zero** `*_dto.dart` files, and the
+`flutter-dto` skill's own rule is `File: [entity_name].dart` — the skill is only
+*named* "dto" and never prescribes the suffix. `LibraryEntryModel` also pairs
+readably against `LibraryEntryEntity`.
+Routed as a **Tech Lead-only** Phase 3 revision: `tech-ac.md` uses "DTO" as a
+generic term only and contains no occurrence of the concrete class or file name, so
+no criterion moves and no BA round is needed. `task-brief.md`'s allowlist is
+corrected **in place** rather than by delta, because the Dev Agent's allowlist check
+is literal and would otherwise read a stale filename.
+
+## Deferred out of item 3.3 by D12 — new items, after 3.4
+
+Recorded here so they are not lost; none of them is 3.3's work.
+
+1. **Isar read cache.** Load from Supabase, keep a local snapshot, read the snapshot
+   when there is no connection. The library is readable offline but not editable.
+2. **IGDB refresh ("sync").** Staleness check, cooldown, three auto-sync triggers
+   (app entry, library screen, library game detail), a non-blocking info-bar when
+   auto-sync is off, a Settings toggle, and manual per-game sync.
+   The cheap staleness check is two calls, not a property-by-property comparison:
+   fetch `id, updated_at` for every saved game in one request, compare a single
+   number per game, then fetch full records only for the ids that moved.
+3. **Task-tree backup.** `GroupTask`, `SavedGameTask` and `TaskStep` have no remote
+   tables. Deferred until the human's task-tree design convention lands, since
+   building remote schema for a feature about to be redesigned is throwaway work.
+4. **Offline-read amendment to `questloggd-design-product-brief.md` §8.** Human
+   decision: land this at the end of stage 3, not now. §8 currently rules offline
+   out of scope, which stays true for writes but not for reads once item 1 ships.
+5. **Save-a-game control on browse list items.** No design convention exists yet.
+   Deferred by the human.
+
 ## Escalation history
 2026-08-27T16:45:00Z Phase 1 — BA Agent — 3 CRITICAL ambiguities (status mapping,
 `rating` semantics, `Ch. 9` grid meta); `tech-ac.md` withheld — Resolved:
@@ -103,4 +161,5 @@ human decisions D9, D10 and D11 recorded above, 2026-08-27T16:52:00Z. BA re-spaw
 NONE
 
 ## Code review outcomes
-NONE
+2026-08-27 Phase 3 gate — approved, with one Tech Lead-only revision (D13, the
+`Dto` → `Model` rename). The architecture was re-opened and re-confirmed as D12.
