@@ -3,7 +3,7 @@ Feature: Item 3.4 — `LibraryBloc`, preferences, and the Featured repair (`.age
 Run ID: library-bloc-preferences-20260827
 Run folder: .agents/runs/library-bloc-preferences-20260827/
 Started: 2026-08-27
-Current phase: TECH_LEAD
+Current phase: ESCALATED
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 total) — captured 2026-08-27T18:45:00Z
 Test baseline: +394 -10 — captured 2026-08-27T18:47:00Z
@@ -120,6 +120,11 @@ and a user who added games only through the Library sees `Total Games 0` beside
 build already serves the first of the two directly.
 
 ## Escalation history
+OPEN 2026-08-28T10:40:00Z Phase 2 — Tech Lead Agent — the plan needs 26 non-generation
+steps against the 20-step ceiling. Design is complete with no open questions; the item
+is simply larger than one Dev pass is scoped for. Tech Lead recommends splitting at the
+Featured seam (3.4a state/preferences/counts/search ≈19 steps, then 3.4b Featured repair
+≈9); the alternative is a deviation approval to run all 26 in one pass.
 2026-08-27T19:05:00Z Phase 1 — BA Agent — 2 CRITICAL ambiguities (the now-playing
 tap's destination; the split-store stat row) — Resolved: human decisions D14 and
 D15 recorded above, 2026-08-27T19:30:00Z. Docs amended. BA re-spawned.
