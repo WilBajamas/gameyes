@@ -89,13 +89,13 @@ extension LibraryStatusColumn on LibraryStatus {
 }
 ```
 
-### lib/features/library/data/models/library_entry_dto.dart
+### lib/features/library/data/models/library_entry_model.dart
 ```dart
 @freezed
-sealed class LibraryEntryDto with _$LibraryEntryDto {
-  const LibraryEntryDto._();
+sealed class LibraryEntryModel with _$LibraryEntryModel {
+  const LibraryEntryModel._();
 
-  const factory LibraryEntryDto({
+  const factory LibraryEntryModel({
     @JsonKey(name: LibraryEntryConstants.id) required String id,
     @JsonKey(name: LibraryEntryConstants.userId) required String userId,
     @JsonKey(name: LibraryEntryConstants.igdbId) required int igdbId,
@@ -111,10 +111,10 @@ sealed class LibraryEntryDto with _$LibraryEntryDto {
     double? progressPercent,
     @JsonKey(name: LibraryEntryConstants.genre) String? genre,
     @JsonKey(name: LibraryEntryConstants.updatedAt) required DateTime updatedAt,
-  }) = _LibraryEntryDto;
+  }) = _LibraryEntryModel;
 
-  factory LibraryEntryDto.fromJson(Map<String, dynamic> json) =>
-      _$LibraryEntryDtoFromJson(json);
+  factory LibraryEntryModel.fromJson(Map<String, dynamic> json) =>
+      _$LibraryEntryModelFromJson(json);
 
   LibraryEntryEntity toEntity() {
     final parsed = LibraryStatusColumn.fromColumnValue(status);
@@ -151,7 +151,7 @@ class LibraryRemoteDatasource {
 
   final SupabaseClient _client;
 
-  Future<List<LibraryEntryDto>> fetchPage({
+  Future<List<LibraryEntryModel>> fetchPage({
     LibraryStatus? status,
     required LibrarySort sort,
     required int limit,
@@ -173,10 +173,10 @@ class LibraryRemoteDatasource {
         .order(column, ascending: !isDescending)
         .range(offset, offset + limit - 1);
 
-    return rows.map(LibraryEntryDto.fromJson).toList();
+    return rows.map(LibraryEntryModel.fromJson).toList();
   }
 
-  Future<LibraryEntryDto> add({
+  Future<LibraryEntryModel> add({
     required int igdbId,
     required String title,
     String? coverUrl,
@@ -214,10 +214,10 @@ class LibraryRemoteDatasource {
         .select()
         .single();
 
-    return LibraryEntryDto.fromJson(row);
+    return LibraryEntryModel.fromJson(row);
   }
 
-  Future<LibraryEntryDto> update({
+  Future<LibraryEntryModel> update({
     required int igdbId,
     LibraryStatus? status,
     int? rating,
@@ -254,7 +254,7 @@ class LibraryRemoteDatasource {
         .select()
         .single();
 
-    return LibraryEntryDto.fromJson(row);
+    return LibraryEntryModel.fromJson(row);
   }
 
   Future<void> remove({required int igdbId}) async {
@@ -611,7 +611,7 @@ The rule text `platform · contextual number` is unchanged.
 - `'should parse each stored status back to its enum value'` — the six literals.
 - `'should return null for a status the app does not know'` — `'to_buy'`.
 
-### test/api/library/library_entry_dto_test.dart
+### test/api/library/library_entry_model_test.dart
 - `'should read every column into its field when the row is fully populated'`
 - `'should keep null for every optional column when the row is empty'` — asserts
   `isNull`, explicitly not `0`, `0.0` or `''`.
@@ -656,3 +656,35 @@ The rule text `platform · contextual number` is unchanged.
 ### test/features/featured/presentation/blocs/library_stats_cubit_test.dart (modify)
 - `:99` builds `TrackerSavedGameEntity(id: 1, gameId: 1, name: 'Playing Game')`
   in place of the `SavedGame`. No assertion changes.
+
+## Approved feedback delta
+
+Phase 3 gate, 2026-08-27 — approved with one revision (D13).
+
+- **`LibraryEntryDto` → `LibraryEntryModel`; `library_entry_dto.dart` →
+  `library_entry_model.dart`.** Data models are never suffixed `Dto`. Carries to the
+  generated outputs (`library_entry_model.freezed.dart`, `library_entry_model.g.dart`)
+  and to the test file `test/api/library/library_entry_dto_test.dart` →
+  `test/api/library/library_entry_model_test.dart`.
+  Why: the tree contains **zero** `*_dto.dart` files — every existing data model is a
+  bare noun (`game.dart`, `saved_game.dart`) or `*_model.dart` (`games_model.dart`,
+  `game_detail_model.dart`) — and the `flutter-dto` skill's own rule is
+  `File: [entity_name].dart`; the skill is only *named* "dto" and never prescribes the
+  suffix. `LibraryEntryModel` also reads correctly against `LibraryEntryEntity`.
+  Applied **in place** to `task-brief.md` (allowlist, implementation plan,
+  constraints) and `tdd.md` (feature summary, layer map, Models, Datasource,
+  Repositories, Domain layer, and the new D-G), because the Dev Agent's allowlist
+  check is literal and a stale filename anywhere in it breaks the run.
+  `tech-ac.md` is untouched — it uses "DTO" only as a generic term and names no class
+  or file, so no criterion moved.
+
+- **Nothing else about the design changes.** The migration and its six columns, the
+  three check constraints, the datasource, the repository, the four use cases, the
+  `BaseRepositoryMixin` widening, the `LibrarySnapshotEntity` seam fix, the
+  hand-written status serialiser, the flat-file layout and the
+  `library-design-conventions.md` line-67 correction all stand as designed.
+
+- **Out of scope, recorded not actioned (D12).** The architecture was re-opened at the
+  gate and Supabase re-confirmed as the source of truth. The Isar read cache, the IGDB
+  refresh system and remote task-tree backup are all decided and real, but they are
+  separate items after 3.4 and no part of them enters this task brief.

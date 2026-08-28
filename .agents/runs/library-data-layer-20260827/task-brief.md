@@ -5,7 +5,7 @@ Date: 2026-08-27
 ## Context
 
 Widen `library_entries` with the six columns the Library spec needs and give the app
-its first read/write path to that table — DTO, entity, status mapping, Supabase
+its first read/write path to that table — model, entity, status mapping, Supabase
 datasource, repository on `Result<T>`, four use cases — while breaking
 `LibrarySnapshotEntity`'s dependency on the Isar `SavedGame` without losing the
 tracker-detail push that depends on it.
@@ -26,11 +26,11 @@ per-value test catches.
 - `lib/core/enums/library_sort.dart` — the five sort options from
   `library-design-conventions.md:54`.
 - `lib/features/library/const.dart` — `LibraryEntryConstants`: table name and column
-  names, shared by the DTO's `@JsonKey`s and the datasource.
+  names, shared by the model's `@JsonKey`s and the datasource.
 - `lib/features/library/data/models/library_status_column.dart` —
   `LibraryStatus` ↔ column-value mapping, both directions, no fallback branch.
-- `lib/features/library/data/models/library_entry_dto.dart` — freezed DTO over the
-  full column set, with `toEntity()`.
+- `lib/features/library/data/models/library_entry_model.dart` — freezed
+  `LibraryEntryModel` over the full column set, with `toEntity()`.
 - `lib/features/library/data/datasources/library_remote_datasource.dart` — Supabase
   table access: paged filtered sorted read, insert, partial update, delete.
 - `lib/features/library/data/repositories/library_repository_impl.dart` — the
@@ -71,7 +71,7 @@ per-value test catches.
 - `test/api/library/library_status_column_test.dart` — each of the six enum values
   serialises to its literal, individually; each of the six literals parses back;
   an unknown string yields null.
-- `test/api/library/library_entry_dto_test.dart` — full-column `fromJson`/`toJson`
+- `test/api/library/library_entry_model_test.dart` — full-column `fromJson`/`toJson`
   on the column-name keys; an all-nulls row yields `null` (not `0`/`0.0`/`''`);
   `toEntity()` produces a `LibraryStatus` and throws on an unknown status string.
 - `test/repository/library/library_repository_test.dart` — the error mapping
@@ -117,8 +117,9 @@ Step 6: Create `lib/features/library/domain/entities/library_entry_entity.dart`.
 Step 7: Create `lib/features/library/data/models/library_status_column.dart`.
 The `columnValue` switch has no `default` branch.
 
-Step 8: Create `lib/features/library/data/models/library_entry_dto.dart`, including
-`toEntity()`, which throws `FormatException` when `fromColumnValue` returns null.
+Step 8: Create `lib/features/library/data/models/library_entry_model.dart`, holding
+`LibraryEntryModel`, including `toEntity()`, which throws `FormatException` when
+`fromColumnValue` returns null.
 
 **Checkpoint:** `dart run build_runner build --delete-conflicting-outputs`
 (freezed + json_serializable).
@@ -131,8 +132,8 @@ Every method `async`; one private session-id helper that throws
 Step 10: Create `lib/features/library/domain/repositories/library_repository.dart`.
 
 Step 11: Create `lib/features/library/data/repositories/library_repository_impl.dart`.
-**Every DTO→entity conversion happens inside the future handed to `fetchData`, never
-via `result.map(...)` afterwards** — `toEntity()` can throw and must be caught.
+**Every model→entity conversion happens inside the future handed to `fetchData`,
+never via `result.map(...)` afterwards** — `toEntity()` can throw and must be caught.
 
 Step 12: Create the four use case files under
 `lib/features/library/domain/use_cases/`. Grouped as one step because each is a
@@ -162,7 +163,7 @@ Step 15: Edit `.agents/references/library-design-conventions.md` line 67 only.
 
 Step 16: Write `test/api/library/library_status_column_test.dart`.
 
-Step 17: Write `test/api/library/library_entry_dto_test.dart`.
+Step 17: Write `test/api/library/library_entry_model_test.dart`.
 
 Step 18: Write `test/repository/library/library_repository_test.dart` with
 `@GenerateMocks([LibraryRemoteDatasource])`.
@@ -191,10 +192,18 @@ IDs in scope: 3.3-AC1 – 3.3-AC35.
 3.3-AC30 is manual and on-device — it cannot be unit tested and no test should
 pretend to. Leave it for the QA manual checklist.
 
+`tech-ac.md` uses "DTO" as a generic term for the data-layer model. The concrete
+class is `LibraryEntryModel` in `library_entry_model.dart` (D13); no criterion names
+a class or file, so nothing in `tech-ac.md` moved.
+
 ## Constraints
 
 - **Do not add a package.** Everything needed (`supabase_flutter`, `freezed`,
   `json_serializable`, `injectable`, `mockito`) is already in `pubspec.yaml`.
+- **No data model is suffixed `Dto`** (D13). The class is `LibraryEntryModel` and the
+  file is `library_entry_model.dart`; do not create `library_entry_dto.dart` or a
+  `LibraryEntryDto` under any circumstance, whatever the `flutter-dto` skill is
+  named.
 - `dart-style.md`: single quotes, trailing commas on multi-line argument lists, 80
   columns, no `default:` in a switch over an enum or sealed class, no `dynamic`, no
   `late`, no `print`, no bare top-level constants.
@@ -214,6 +223,9 @@ pretend to. Leave it for the QA manual checklist.
   `isWishlistedEqualTo(true)` — that is item 3.4's Featured repair.
 - Do not add a count use case, a wishlist boolean column, a chapter column, or a
   legacy `Status` → `LibraryStatus` mapping.
+- Do not add an Isar read cache, an IGDB refresh/sync path, or remote task-tree
+  tables. All three are real and decided (D12), and all three are separate items
+  after 3.4.
 - `tdd.md ## Caveats I could not execute` lists five claims that need runtime
   confirmation, each with a named fallback. Record the outcome of each as a
   self-correction in `diff-summary.md`, whichever way it goes.

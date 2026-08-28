@@ -6,7 +6,7 @@ Date: 2026-08-27
 
 One additive SQL migration widens `public.library_entries` with six columns and
 three check constraints, touching nothing that already exists on the table. On the
-app side a new `library` data layer lands: a freezed `LibraryEntryDto` on the
+app side a new `library` data layer lands: a freezed `LibraryEntryModel` on the
 column names, a hand-written `LibraryStatus` ↔ column-value mapping, a
 `LibraryRemoteDatasource` that builds every filter/order/range server-side against
 the injected `SupabaseClient`, a `LibraryRepository` + impl on `Result<T>`, and
@@ -23,8 +23,8 @@ the use cases.
 - 3.3-AC1 … 3.3-AC7: storage (SQL migration)
 - 3.3-AC8, 3.3-AC10: data (status ↔ column mapping)
 - 3.3-AC9: test
-- 3.3-AC11: data (DTO → entity), repository
-- 3.3-AC12, 3.3-AC13: data (DTO)
+- 3.3-AC11: data (model → entity), repository
+- 3.3-AC12, 3.3-AC13: data (model)
 - 3.3-AC14, 3.3-AC15: domain (entity)
 - 3.3-AC16 … 3.3-AC20: data (datasource query), domain (use case input)
 - 3.3-AC21 … 3.3-AC25: data (datasource), repository
@@ -35,6 +35,9 @@ the use cases.
 - 3.3-AC32, 3.3-AC33: UI (`library_stats.dart`)
 - 3.3-AC34: data (`FeaturedRepositoryImpl` keeps its `FeaturedLocalDatasource` source)
 - 3.3-AC35: data (Isar `SavedGame` — additive mapping only, no field removed)
+
+Note on wording: `tech-ac.md` says "DTO" as a generic term for the data-layer
+model. The concrete type this design creates is `LibraryEntryModel` — see D-G.
 
 ---
 
@@ -167,7 +170,7 @@ annotation silently serialises to its `.name`, which is how `onHold` → `'onHol
 gets into the app in the first place (3.3-AC8).
 
 Supporting reasons: 3.3-AC9 wants each of the six values asserted individually, and
-a plain function is directly callable without constructing a DTO; and it keeps
+a plain function is directly callable without constructing a model; and it keeps
 `json_annotation` out of `lib/core/enums/library_status.dart`, which global widgets
 (`status_chip.dart`, `cover_tile.dart`, `game_card.dart`) import.
 
@@ -175,7 +178,7 @@ Shape: `extension LibraryStatusColumn on LibraryStatus` with `String get
 columnValue` and `static LibraryStatus? fromColumnValue(String value)`, in
 `lib/features/library/data/models/library_status_column.dart`. Named for what it is
 — the value stored in the `status` column. `fromColumnValue` returns `null` for an
-unrecognised string; the DTO turns that null into a `FormatException` so the read
+unrecognised string; the model turns that null into a `FormatException` so the read
 fails (3.3-AC11) instead of defaulting.
 
 The **sort** mapping (3.3-AC17) gets the same no-`default` switch treatment but
@@ -194,7 +197,7 @@ is explicitly per-component, not absolute: it earns its place for "a variant enu
 deliberate flat files as both being correct. None of that reaches the data layer,
 where `flutter-arch.md`'s three-layer folder structure and `dart-style.md`'s
 one-file-per-type naming table already answer the question, and where every existing
-DTO, datasource, repository and use case in the tree is a flat file. Nothing here
+model, datasource, repository and use case in the tree is a flat file. Nothing here
 has a variant enum or internal sub-parts to hide.
 
 The one folder that is new is `lib/features/library/{data,domain}/` itself, plus
@@ -213,6 +216,26 @@ would ship two use cases with no caller for a week — the same "no writer / no
 reader" defect D11 railed against. **Item 3.4's brief must name the count capability
 as its own work**; if it does not, its BA will find a spec line it cannot serve.
 Flagged, not invented.
+
+### D-G — the data model is `LibraryEntryModel`, never `LibraryEntryDto`
+
+**Decision (D13, Phase 3 gate): the class is `LibraryEntryModel` and the file is
+`lib/features/library/data/models/library_entry_model.dart`.** The earlier draft of
+this design called it `LibraryEntryDto`; that name is withdrawn.
+
+Reasons, recorded so this is not re-argued:
+- The tree contains **zero** `*_dto.dart` files. Every existing data model is either
+  a bare noun (`game.dart`, `saved_game.dart`) or `*_model.dart`
+  (`games_model.dart`, `game_detail_model.dart`).
+- The `flutter-dto` skill's own naming rule is `File: [entity_name].dart`. The skill
+  is only *named* "dto"; it never prescribes the suffix, so following the skill and
+  dropping `Dto` are the same act.
+- `LibraryEntryModel` reads correctly opposite `LibraryEntryEntity`, which is the
+  pairing every consumer of this layer will see.
+
+`tech-ac.md` is unaffected: it uses "DTO" only as a generic term for the data-layer
+model and contains no occurrence of the concrete class or file name, so no criterion
+moved. The rest of this document uses "model" for the same generic sense.
 
 ---
 
@@ -245,9 +268,10 @@ Flagged, not invented.
 
 ### Models
 
-`LibraryEntryDto` (create) — `lib/features/library/data/models/library_entry_dto.dart`
-— `@freezed sealed class` + `const LibraryEntryDto._();` + `fromJson`.
-Fields, all `@JsonKey(name: …)` against `LibraryEntryConstants` so the DTO and the
+`LibraryEntryModel` (create) —
+`lib/features/library/data/models/library_entry_model.dart`
+— `@freezed sealed class` + `const LibraryEntryModel._();` + `fromJson`.
+Fields, all `@JsonKey(name: …)` against `LibraryEntryConstants` so the model and the
 datasource share one source of truth for column names (3.3-AC12):
 
 | Dart | Type | JSON key | Nullable |
@@ -273,14 +297,14 @@ deserialises to `null` and never to `0`, `0.0` or `''` (3.3-AC13).
 `status` is held as the **raw column string**, not as `LibraryStatus`, so that
 parsing happens in `toEntity()` where it can fail loudly:
 `toEntity()` calls `LibraryStatusColumn.fromColumnValue(status)` and throws
-`FormatException` when it returns null (3.3-AC11). The DTO is read-only in practice
+`FormatException` when it returns null (3.3-AC11). The model is read-only in practice
 — write payloads are built as maps in the datasource (see 3.3-AC23) — but `toJson`
 exists and is exercised by the test.
 
-File name deviates from the `flutter-dto` skill's `[entity_name].dart` example
-(`game.dart`): the class is `LibraryEntryDto` per the item brief, and
-`dart-style.md` requires the file to be the class in snake_case. `game_detail_model.dart`
-is the same deviation already in the tree.
+Naming follows D-G / D13: `LibraryEntryModel` in `library_entry_model.dart`, matching
+`games_model.dart` and `game_detail_model.dart` already in the tree, and matching
+`dart-style.md`'s rule that the file is the class in snake_case. The item brief's
+word "DTO" is generic, not a class name.
 
 `LibraryStatusColumn` (create) — `lib/features/library/data/models/library_status_column.dart`
 — extension on `LibraryStatus`. `String get columnValue` is a no-`default` switch
@@ -289,7 +313,7 @@ producing the six literals `playing`, `backlog`, `completed`, `on_hold`, `wishli
 null for anything else (3.3-AC8, 3.3-AC10, 3.3-AC11).
 
 `LibraryEntryConstants` (create) — `lib/features/library/const.dart` — `static const`
-table name and column names. Used by the DTO's `@JsonKey`s and by every `eq`,
+table name and column names. Used by the model's `@JsonKey`s and by every `eq`,
 `order` and payload key in the datasource.
 
 `LibrarySort` (create) — `lib/core/enums/library_sort.dart` — `recentlyAdded`,
@@ -320,7 +344,7 @@ private helper that throws `AuthSessionMissingException()` when there is no sess
 future and reaches the mixin.
 
 - `fetchPage({LibraryStatus? status, required LibrarySort sort, required int limit, required int offset})`
-  → `Future<List<LibraryEntryDto>>`.
+  → `Future<List<LibraryEntryModel>>`.
   `.from(table).select().eq('user_id', userId)`, then `.eq('status', status.columnValue)`
   **only when a status is supplied** (3.3-AC19), then `.order(column, ascending:, nullsFirst: false)`
   from the private sort switch (3.3-AC17, and `nullsFirst: false` is the package
@@ -329,13 +353,13 @@ future and reaches the mixin.
   Dart (3.3-AC16). An offset past the end returns `[]`, and a short page is returned
   as-is (3.3-AC20). No default or capped page size (page size is item 3.4's).
 - `add({required int igdbId, required String title, String? coverUrl, DateTime? releaseDate, required LibraryStatus status, int? rating, String? platform, String? genre, double? playtimeHours, double? progressPercent})`
-  → `Future<LibraryEntryDto>`. `.insert(payload).select().single()`. `user_id` comes
+  → `Future<LibraryEntryModel>`. `.insert(payload).select().single()`. `user_id` comes
   from the session and is never a parameter (3.3-AC21). A plain insert, not an
   upsert: the unique conflict raises `23505`, which surfaces as
   `ErrorType.duplicateEntry()` and leaves the stored row untouched (3.3-AC22).
   `updated_at` is left to the column default (3.3-AC24).
 - `update({required int igdbId, LibraryStatus? status, int? rating, bool clearRating = false, String? platform, String? genre, double? playtimeHours, double? progressPercent})`
-  → `Future<LibraryEntryDto>`. Builds the payload from **only the arguments that were
+  → `Future<LibraryEntryModel>`. Builds the payload from **only the arguments that were
   supplied**, plus `updated_at` (3.3-AC23, 3.3-AC24), then
   `.update(payload).eq('user_id', userId).eq('igdb_id', igdbId).select().single()`.
   `clearRating: true` writes `rating: null` and wins over any `rating` value —
@@ -365,7 +389,7 @@ Implementation `LibraryRepositoryImpl` (create) —
 `lib/features/library/data/repositories/library_repository_impl.dart` —
 `@Injectable(as: LibraryRepository)`, `with BaseRepositoryMixin`.
 
-**Every path goes through `fetchData`, and the DTO → entity conversion happens
+**Every path goes through `fetchData`, and the model → entity conversion happens
 inside the future that `fetchData` awaits.** This is the one subtle correctness
 point in the file: `GamesRepositoryImpl` and `GameDetailRepositoryImpl` both call
 `result.map((m) => m.toEntity())` *after* `fetchData` returns, which is outside the
@@ -387,9 +411,9 @@ class`. Fields: `id` (`String`), `igdbId` (`int`), `title` (`String`), `coverUrl
 
 Exactly one rating field, no `score` (D10, 3.3-AC14). `userId` is deliberately
 **not** on the entity — it is an RLS mechanic, the row is always the signed-in
-user's, and no consumer needs it. It stays on the DTO because 3.3-AC12 names it.
-The file imports `freezed_annotation` and `core/enums/library_status.dart` only —
-nothing from a data or persistence package (3.3-AC15).
+user's, and no consumer needs it. It stays on `LibraryEntryModel` because 3.3-AC12
+names it. The file imports `freezed_annotation` and `core/enums/library_status.dart`
+only — nothing from a data or persistence package (3.3-AC15).
 
 Use cases, all `@injectable`, all a single `call()` returning `Future<Result<T>>`,
 all depending on the interface (`lib/features/library/domain/use_cases/`):
@@ -508,6 +532,9 @@ self-correction either way.
   code — ruled out at `handover.md:475-477`; there are no rows to map.
 - Filter axes beyond status.
 - Applying the migration to the remote project — this pipeline plans the file only.
+- The **Isar read cache**, the **IGDB refresh/sync system** and **remote task-tree
+  backup**. All three are decided and real (D12), and all three are separate items
+  after 3.4. Nothing in this item anticipates them.
 
 ## Open questions
 
