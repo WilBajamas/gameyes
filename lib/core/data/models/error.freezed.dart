@@ -55,7 +55,7 @@ extension ErrorTypePatterns on ErrorType {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ResponseError value)?  responseError,TResult Function( ConnectionTimeout value)?  connectionTimeout,TResult Function( ReceiveTimeout value)?  receiveTimeout,TResult Function( SendTimeout value)?  sendTimeout,TResult Function( UnknownError value)?  unknown,TResult Function( SignInCancelled value)?  signInCancelled,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ResponseError value)?  responseError,TResult Function( ConnectionTimeout value)?  connectionTimeout,TResult Function( ReceiveTimeout value)?  receiveTimeout,TResult Function( SendTimeout value)?  sendTimeout,TResult Function( UnknownError value)?  unknown,TResult Function( SignInCancelled value)?  signInCancelled,TResult Function( DuplicateEntry value)?  duplicateEntry,TResult Function( InvalidValue value)?  invalidValue,TResult Function( NotAllowed value)?  notAllowed,TResult Function( NotSignedIn value)?  notSignedIn,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ResponseError() when responseError != null:
@@ -64,7 +64,11 @@ return connectionTimeout(_that);case ReceiveTimeout() when receiveTimeout != nul
 return receiveTimeout(_that);case SendTimeout() when sendTimeout != null:
 return sendTimeout(_that);case UnknownError() when unknown != null:
 return unknown(_that);case SignInCancelled() when signInCancelled != null:
-return signInCancelled(_that);case _:
+return signInCancelled(_that);case DuplicateEntry() when duplicateEntry != null:
+return duplicateEntry(_that);case InvalidValue() when invalidValue != null:
+return invalidValue(_that);case NotAllowed() when notAllowed != null:
+return notAllowed(_that);case NotSignedIn() when notSignedIn != null:
+return notSignedIn(_that);case _:
   return orElse();
 
 }
@@ -82,7 +86,7 @@ return signInCancelled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ResponseError value)  responseError,required TResult Function( ConnectionTimeout value)  connectionTimeout,required TResult Function( ReceiveTimeout value)  receiveTimeout,required TResult Function( SendTimeout value)  sendTimeout,required TResult Function( UnknownError value)  unknown,required TResult Function( SignInCancelled value)  signInCancelled,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ResponseError value)  responseError,required TResult Function( ConnectionTimeout value)  connectionTimeout,required TResult Function( ReceiveTimeout value)  receiveTimeout,required TResult Function( SendTimeout value)  sendTimeout,required TResult Function( UnknownError value)  unknown,required TResult Function( SignInCancelled value)  signInCancelled,required TResult Function( DuplicateEntry value)  duplicateEntry,required TResult Function( InvalidValue value)  invalidValue,required TResult Function( NotAllowed value)  notAllowed,required TResult Function( NotSignedIn value)  notSignedIn,}){
 final _that = this;
 switch (_that) {
 case ResponseError():
@@ -91,7 +95,11 @@ return connectionTimeout(_that);case ReceiveTimeout():
 return receiveTimeout(_that);case SendTimeout():
 return sendTimeout(_that);case UnknownError():
 return unknown(_that);case SignInCancelled():
-return signInCancelled(_that);}
+return signInCancelled(_that);case DuplicateEntry():
+return duplicateEntry(_that);case InvalidValue():
+return invalidValue(_that);case NotAllowed():
+return notAllowed(_that);case NotSignedIn():
+return notSignedIn(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -105,7 +113,7 @@ return signInCancelled(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ResponseError value)?  responseError,TResult? Function( ConnectionTimeout value)?  connectionTimeout,TResult? Function( ReceiveTimeout value)?  receiveTimeout,TResult? Function( SendTimeout value)?  sendTimeout,TResult? Function( UnknownError value)?  unknown,TResult? Function( SignInCancelled value)?  signInCancelled,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ResponseError value)?  responseError,TResult? Function( ConnectionTimeout value)?  connectionTimeout,TResult? Function( ReceiveTimeout value)?  receiveTimeout,TResult? Function( SendTimeout value)?  sendTimeout,TResult? Function( UnknownError value)?  unknown,TResult? Function( SignInCancelled value)?  signInCancelled,TResult? Function( DuplicateEntry value)?  duplicateEntry,TResult? Function( InvalidValue value)?  invalidValue,TResult? Function( NotAllowed value)?  notAllowed,TResult? Function( NotSignedIn value)?  notSignedIn,}){
 final _that = this;
 switch (_that) {
 case ResponseError() when responseError != null:
@@ -114,7 +122,11 @@ return connectionTimeout(_that);case ReceiveTimeout() when receiveTimeout != nul
 return receiveTimeout(_that);case SendTimeout() when sendTimeout != null:
 return sendTimeout(_that);case UnknownError() when unknown != null:
 return unknown(_that);case SignInCancelled() when signInCancelled != null:
-return signInCancelled(_that);case _:
+return signInCancelled(_that);case DuplicateEntry() when duplicateEntry != null:
+return duplicateEntry(_that);case InvalidValue() when invalidValue != null:
+return invalidValue(_that);case NotAllowed() when notAllowed != null:
+return notAllowed(_that);case NotSignedIn() when notSignedIn != null:
+return notSignedIn(_that);case _:
   return null;
 
 }
@@ -131,7 +143,7 @@ return signInCancelled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? message,  String? error,  int? statusCode)?  responseError,TResult Function()?  connectionTimeout,TResult Function()?  receiveTimeout,TResult Function()?  sendTimeout,TResult Function()?  unknown,TResult Function()?  signInCancelled,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? message,  String? error,  int? statusCode)?  responseError,TResult Function()?  connectionTimeout,TResult Function()?  receiveTimeout,TResult Function()?  sendTimeout,TResult Function()?  unknown,TResult Function()?  signInCancelled,TResult Function()?  duplicateEntry,TResult Function()?  invalidValue,TResult Function()?  notAllowed,TResult Function()?  notSignedIn,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ResponseError() when responseError != null:
 return responseError(_that.message,_that.error,_that.statusCode);case ConnectionTimeout() when connectionTimeout != null:
@@ -139,7 +151,11 @@ return connectionTimeout();case ReceiveTimeout() when receiveTimeout != null:
 return receiveTimeout();case SendTimeout() when sendTimeout != null:
 return sendTimeout();case UnknownError() when unknown != null:
 return unknown();case SignInCancelled() when signInCancelled != null:
-return signInCancelled();case _:
+return signInCancelled();case DuplicateEntry() when duplicateEntry != null:
+return duplicateEntry();case InvalidValue() when invalidValue != null:
+return invalidValue();case NotAllowed() when notAllowed != null:
+return notAllowed();case NotSignedIn() when notSignedIn != null:
+return notSignedIn();case _:
   return orElse();
 
 }
@@ -157,7 +173,7 @@ return signInCancelled();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? message,  String? error,  int? statusCode)  responseError,required TResult Function()  connectionTimeout,required TResult Function()  receiveTimeout,required TResult Function()  sendTimeout,required TResult Function()  unknown,required TResult Function()  signInCancelled,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? message,  String? error,  int? statusCode)  responseError,required TResult Function()  connectionTimeout,required TResult Function()  receiveTimeout,required TResult Function()  sendTimeout,required TResult Function()  unknown,required TResult Function()  signInCancelled,required TResult Function()  duplicateEntry,required TResult Function()  invalidValue,required TResult Function()  notAllowed,required TResult Function()  notSignedIn,}) {final _that = this;
 switch (_that) {
 case ResponseError():
 return responseError(_that.message,_that.error,_that.statusCode);case ConnectionTimeout():
@@ -165,7 +181,11 @@ return connectionTimeout();case ReceiveTimeout():
 return receiveTimeout();case SendTimeout():
 return sendTimeout();case UnknownError():
 return unknown();case SignInCancelled():
-return signInCancelled();}
+return signInCancelled();case DuplicateEntry():
+return duplicateEntry();case InvalidValue():
+return invalidValue();case NotAllowed():
+return notAllowed();case NotSignedIn():
+return notSignedIn();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -179,7 +199,7 @@ return signInCancelled();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? message,  String? error,  int? statusCode)?  responseError,TResult? Function()?  connectionTimeout,TResult? Function()?  receiveTimeout,TResult? Function()?  sendTimeout,TResult? Function()?  unknown,TResult? Function()?  signInCancelled,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? message,  String? error,  int? statusCode)?  responseError,TResult? Function()?  connectionTimeout,TResult? Function()?  receiveTimeout,TResult? Function()?  sendTimeout,TResult? Function()?  unknown,TResult? Function()?  signInCancelled,TResult? Function()?  duplicateEntry,TResult? Function()?  invalidValue,TResult? Function()?  notAllowed,TResult? Function()?  notSignedIn,}) {final _that = this;
 switch (_that) {
 case ResponseError() when responseError != null:
 return responseError(_that.message,_that.error,_that.statusCode);case ConnectionTimeout() when connectionTimeout != null:
@@ -187,7 +207,11 @@ return connectionTimeout();case ReceiveTimeout() when receiveTimeout != null:
 return receiveTimeout();case SendTimeout() when sendTimeout != null:
 return sendTimeout();case UnknownError() when unknown != null:
 return unknown();case SignInCancelled() when signInCancelled != null:
-return signInCancelled();case _:
+return signInCancelled();case DuplicateEntry() when duplicateEntry != null:
+return duplicateEntry();case InvalidValue() when invalidValue != null:
+return invalidValue();case NotAllowed() when notAllowed != null:
+return notAllowed();case NotSignedIn() when notSignedIn != null:
+return notSignedIn();case _:
   return null;
 
 }
@@ -417,6 +441,134 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'ErrorType.signInCancelled()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class DuplicateEntry extends ErrorType {
+  const DuplicateEntry(): super._();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DuplicateEntry);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ErrorType.duplicateEntry()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class InvalidValue extends ErrorType {
+  const InvalidValue(): super._();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvalidValue);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ErrorType.invalidValue()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class NotAllowed extends ErrorType {
+  const NotAllowed(): super._();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotAllowed);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ErrorType.notAllowed()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class NotSignedIn extends ErrorType {
+  const NotSignedIn(): super._();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotSignedIn);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ErrorType.notSignedIn()';
 }
 
 

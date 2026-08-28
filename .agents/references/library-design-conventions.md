@@ -64,7 +64,7 @@ Two columns, `repeat(2,minmax(0,1fr))`, `align-items:start`, `gap:12px`.
 
 - Card: `--radius-lg`, `--color-ink-08`, `overflow:hidden`. Cover `aspect-ratio:3/4` on `--surface-art` with the app-wide indigo→canvas veil.
 - **Status pill**, bottom left of every cover: `rgba(0,0,0,.42)` glass, `--radius-pill`, 10px/500 uppercase `.08em`, 5px status dot. It is on every card, not just some, because at `All` the status *is* the sort you are reading.
-- Footer `9px 11px 11px`: title 13px/500 `--color-ink`, meta 11px `--color-ink-55` as `platform · contextual number` (`PS5 · 24h · Ch. 9`, `NSW · Added 3d ago`, `PS5 · Out 14 Aug`). Both lines nowrap and ellipsise.
+- Footer `9px 11px 11px`: title 13px/500 `--color-ink`, meta 11px `--color-ink-55` as `platform · contextual number` (`PS5 · 24h`, `NSW · Added 3d ago`, `PS5 · Out 14 Aug` — two segments, no chapter/progress-marker column exists; decided 2026-08-27, D11). Both lines nowrap and ellipsise.
 - No library tick. Indigo means "in your library" everywhere else in the app; inside the Library it would be on all 312 covers.
 
 **Why two-up and not three.** This is the middle option between a pure cover wall and a list: 168px covers stay recognisable, and the footer strip plus the status pill mean the grid carries platform, status and one number per game. Three columns would drop the footer and turn the shelf back into wallpaper.

@@ -14,6 +14,11 @@ mixin BaseRepositoryMixin {
       // Supabase - IGDB exceptions
     } on FunctionException catch (functionException) {
       return Failure(ErrorType.supabaseIgdbError(exception: functionException));
+      // A table read or write, where the database says which rule was broken.
+    } on PostgrestException catch (postgrestException) {
+      return Failure(ErrorType.postgrestError(exception: postgrestException));
+    } on AuthSessionMissingException {
+      return Failure(const ErrorType.notSignedIn());
     } catch (_) {
       return Failure(ErrorType.unknown());
     }

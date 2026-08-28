@@ -111,6 +111,20 @@ import 'package:gaming_library_assessment_flutter/features/games/services/games_
     as _i706;
 import 'package:gaming_library_assessment_flutter/features/home/presentation/notifier/scroll_notifier.dart'
     as _i1017;
+import 'package:gaming_library_assessment_flutter/features/library/data/datasources/library_remote_datasource.dart'
+    as _i591;
+import 'package:gaming_library_assessment_flutter/features/library/data/repositories/library_repository_impl.dart'
+    as _i120;
+import 'package:gaming_library_assessment_flutter/features/library/domain/repositories/library_repository.dart'
+    as _i1040;
+import 'package:gaming_library_assessment_flutter/features/library/domain/use_cases/add_library_entry_use_case.dart'
+    as _i556;
+import 'package:gaming_library_assessment_flutter/features/library/domain/use_cases/fetch_library_page_use_case.dart'
+    as _i478;
+import 'package:gaming_library_assessment_flutter/features/library/domain/use_cases/remove_library_entry_use_case.dart'
+    as _i739;
+import 'package:gaming_library_assessment_flutter/features/library/domain/use_cases/update_library_entry_use_case.dart'
+    as _i383;
 import 'package:gaming_library_assessment_flutter/features/onboarding/presentation/blocs/welcome_cubit.dart'
     as _i403;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/datasources/local/game_local_datasource.dart'
@@ -212,6 +226,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i445.AuthDatasource>(
       () => _i445.AuthDatasource(gh<_i454.SupabaseClient>()),
     );
+    gh.factory<_i591.LibraryRemoteDatasource>(
+      () => _i591.LibraryRemoteDatasource(gh<_i454.SupabaseClient>()),
+    );
+    gh.factory<_i1040.LibraryRepository>(
+      () => _i120.LibraryRepositoryImpl(gh<_i591.LibraryRemoteDatasource>()),
+    );
     gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>(
       (initialState, _) => _i669.FilterCubit(initialState: initialState),
     );
@@ -223,6 +243,18 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i656.SupabaseConnectionChecker>(
       () => _i656.SupabaseConnectionChecker(gh<_i124.SupabasePing>()),
+    );
+    gh.factory<_i556.AddLibraryEntryUseCase>(
+      () => _i556.AddLibraryEntryUseCase(gh<_i1040.LibraryRepository>()),
+    );
+    gh.factory<_i478.FetchLibraryPageUseCase>(
+      () => _i478.FetchLibraryPageUseCase(gh<_i1040.LibraryRepository>()),
+    );
+    gh.factory<_i739.RemoveLibraryEntryUseCase>(
+      () => _i739.RemoveLibraryEntryUseCase(gh<_i1040.LibraryRepository>()),
+    );
+    gh.factory<_i383.UpdateLibraryEntryUseCase>(
+      () => _i383.UpdateLibraryEntryUseCase(gh<_i1040.LibraryRepository>()),
     );
     gh.factory<_i671.GetTrackerSortUseCase>(
       () => _i671.GetTrackerSortUseCase(gh<_i922.TrackerSortRepository>()),

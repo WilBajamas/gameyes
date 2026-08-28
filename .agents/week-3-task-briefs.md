@@ -107,7 +107,7 @@ the untouched tree at Phase 0 of every item** rather than quoting these.
 Nothing user-visible except the tab itself. Build the substrate first so Stage 4
 composes it instead of improvising. Same shape as week 2's primitives → composites.
 
-- [ ] **3.1 — Foundations: art surfaces, and the three docs that keep re-seeding bad
+- [x] **3.1 — Foundations: art surfaces, and the three docs that keep re-seeding bad
       criteria.**
       Mint `surfaceArt` and `surfaceArtDeep` in `app_color_tokens.dart`, closing the
       second of the two standing foundations gaps. §2.2 and §5 of
@@ -130,7 +130,7 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         for fixing a design doc when a decision reverses it.
       No screen changes. No widget changes.
 
-- [ ] **3.2 — Tab swap, Library and Feed shells, Tracker retirement.**
+- [x] **3.2 — Tab swap, Library and Feed shells, Tracker retirement.**
       The IA change, isolated so nothing later is built on a moving index.
       Target: **`Featured(0) · Library(1) · Browse(2) · Feed(3) · Settings(4)`** —
       **five tabs.** Revised 2026-08-26 at the Phase 3 gate, replacing an earlier
@@ -208,7 +208,7 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         need real zh values written, not English placeholders — that is the
         translate-as-you-touch rule, not extra scope.
 
-- [ ] **3.3 — Schema migration and the remote data layer.**
+- [x] **3.3 — Schema migration and the remote data layer.**
       `library_entries` **cannot serve the spec as it stands.** It holds
       `igdb_id, title, cover_url, release_date, status, created_at`. Add `platform`,
       `rating`, `playtime_hours`, `progress_percent`, `genre`, `updated_at` — without
