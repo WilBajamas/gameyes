@@ -1,9 +1,9 @@
 # Orchestrator State
-Feature: Item 3.4 — `LibraryBloc`, preferences, and the Featured repair (`.agents/week-3-task-briefs.md` lines 234–258)
+Feature: Item 3.4a — `LibraryBloc`, preferences, counts and search (split from 3.4 by D16; the Featured repair is 3.4b)
 Run ID: library-bloc-preferences-20260827
 Run folder: .agents/runs/library-bloc-preferences-20260827/
 Started: 2026-08-27
-Current phase: ESCALATED
+Current phase: TECH_LEAD
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 total) — captured 2026-08-27T18:45:00Z
 Test baseline: +394 -10 — captured 2026-08-27T18:47:00Z
@@ -113,6 +113,28 @@ produce new info-level lints. That is expected, not breakage. The **2-warning**
 invariant is unaffected — `_TaskReminder` lives in `task_detail_screen.dart`, which
 survives.
 
+**D16 — item 3.4 is split in two, at the Featured seam. This run is 3.4a.**
+Resolves the Tech Lead's step-ceiling escalation, option A. The plan needed 26
+non-generation steps against a ceiling of 20, across 26 source and 10 test files.
+- **3.4a (this run)** — `LibraryBloc`, preferences, counts, search, datasource test.
+  ~19 steps. Criteria 3.4-AC1–AC25 and AC37–AC41.
+- **3.4b (a later run)** — the Featured repair. ~9 steps. Criteria 3.4-AC26–AC36.
+The dependency runs **one way only**: 3.4b needs 3.4a's `fetchCounts` and
+`fetchAllEntries`, so 3.4a lands first. `tdd.md` and `code-plan.md` already cover
+both halves and are reused unchanged — only `task-brief.md`'s plan re-cuts, so the
+split costs almost nothing.
+Why this over a deviation approval: **the two halves fail differently.** 3.4b's
+whole value is one observable outcome — a shelf that has never once rendered with
+data finally rendering — plus an on-device check, and burying that behind nineteen
+steps of substrate is how it ends up verified by inspection rather than by looking.
+3.4a's risk is concentrated somewhere else entirely: renaming a live
+`SharedPreferences` key. One Dev pass carrying a 3-attempt self-correction budget
+across PostgREST query building, a preferences key rename **and** a Supabase-for-Isar
+swap in Featured is the shape long passes historically fail in.
+`tech-ac.md` is **not** re-cut — it stays whole at 41 criteria, and each half's QA
+scopes to its own range. D14's guardrail (3.4-AC32, the six tracker artefacts still
+present and compiling) belongs to 3.4b.
+
 **D15 — `countSavedGames()` and `getOwnedGameIds()` repoint at `library_entries`.**
 Resolves CRITICAL-2. Without this, one row of stat tiles reads two different stores
 and a user who added games only through the Library sees `Total Games 0` beside
@@ -120,11 +142,10 @@ and a user who added games only through the Library sees `Total Games 0` beside
 build already serves the first of the two directly.
 
 ## Escalation history
-OPEN 2026-08-28T10:40:00Z Phase 2 — Tech Lead Agent — the plan needs 26 non-generation
-steps against the 20-step ceiling. Design is complete with no open questions; the item
-is simply larger than one Dev pass is scoped for. Tech Lead recommends splitting at the
-Featured seam (3.4a state/preferences/counts/search ≈19 steps, then 3.4b Featured repair
-≈9); the alternative is a deviation approval to run all 26 in one pass.
+2026-08-28T10:40:00Z Phase 2 — Tech Lead Agent — the plan needs 26 non-generation
+steps against the 20-step ceiling — Resolved: human took option A, the split at the
+Featured seam, recorded as D16. This run continues as 3.4a; 3.4b opens its own run
+afterwards. Tech Lead re-spawned to re-cut `task-brief.md`.
 2026-08-27T19:05:00Z Phase 1 — BA Agent — 2 CRITICAL ambiguities (the now-playing
 tap's destination; the split-store stat row) — Resolved: human decisions D14 and
 D15 recorded above, 2026-08-27T19:30:00Z. Docs amended. BA re-spawned.
