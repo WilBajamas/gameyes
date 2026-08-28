@@ -471,10 +471,28 @@ it has no value anywhere). Both are recorded below.
   to `TrackerGameDetailRoute` and `TaskDetailRoute`. After it merges,
   `tracker_game_detail_screen.dart`, `task_detail_screen.dart`, `TaskCubit`,
   `GroupTask`, `SavedGameTask` and `TaskStep` still compile and still pass their
-  tests, but are reachable only from `library_stats.dart:319`. That is deliberate,
+  tests, but are ~~reachable only from `library_stats.dart:319`~~ **reachable from
+  nowhere at all — updated 2026-08-27 by D14, see below**. That is deliberate,
   not an oversight — **do not "clean up" the orphan, and do not delete the Isar
   store to tidy the two-store situation.** The two stores hold different data and
   never need syncing while this holds.
+  **D14, 2026-08-27 — the last entry point is gone, by human decision.** Item 3.4's
+  Featured repair makes the now-playing card render for the first time in the app's
+  history, and its single-game tap pushed `TrackerGameDetailRoute` with a
+  `TrackerSavedGameEntity`. That screen looks its game up by **Isar row id**, which a
+  Supabase library entry cannot supply; a placeholder id crashes on
+  `tracker_game_detail_section.dart:27`'s unguarded `state.game!`, and a colliding
+  id would let `setPlatform` write into a different game's row. The human chose to
+  send **every** tap to the Library tab regardless of how many games are playing,
+  and explicitly authorised amending this file to match.
+  **So the tracker tree is now fully unreachable, not near-unreachable.** The rule
+  that changed is *"it must keep an entry point"*; the rule that did **not** change
+  is *"do not delete it"* — `tracker_game_detail_screen.dart`,
+  `task_detail_screen.dart`, `TaskCubit`, `GroupTask`, `SavedGameTask` and
+  `TaskStep` all stay in the tree, still compiling and still passing their tests,
+  until the design convention lands. This also retires **3.3-AC32**, which pinned
+  `library_stats.dart` still pushing that route; that criterion belonged to a run
+  that is already merged and closed, so nothing re-gates on it.
   The human will supply a new design convention covering task detail, groups and
   group items. **Pick this up when that lands, not before.** The likely shape is
   re-keying tasks onto `library_entries.igdb_id` so the Isar store can retire in

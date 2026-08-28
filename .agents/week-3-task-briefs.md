@@ -67,11 +67,17 @@ decision, carried from week 2):
 **The tracker task tree.** Human decision 2026-08-26. `tracker_game_detail_screen.dart`,
 `task_detail_screen.dart`, `TaskCubit`, `GroupTask`, `SavedGameTask` and `TaskStep`
 all stay. Item 3.2 deletes their only real entry point, so they go **dormant** —
-reachable only from `library_stats.dart:319`. That is deliberate. Do not clean up the
+~~reachable only from `library_stats.dart:319`~~ **reachable from nowhere at all,
+updated 2026-08-27 by D14**. That is deliberate. Do not clean up the
 orphan, and do not delete the Isar `SavedGame` store to tidy the resulting two-store
 situation. A design convention for task detail, groups and group items is coming from
 the human; pick it up **when that lands, not before**. Full note in the handover's
 "Known non-blocking gaps".
+
+**D14, 2026-08-27:** item 3.4 sends *every* now-playing tap to the Library tab, so
+the last `TrackerGameDetailRoute` push is gone. The rule that changed is "it must
+keep an entry point"; **"do not delete it" still stands.** The tree stays in the
+repo, compiling and passing its tests, until the design convention lands.
 
 **Consequence:** the analyzer baseline stays **30 issues / 2 warnings** all week,
 because `_TaskReminder` lives in `task_detail_screen.dart` and that file survives.
