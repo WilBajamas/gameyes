@@ -240,7 +240,7 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
       **This is what finally unblocks item 3's on-device cross-account RLS check**,
       blocked since week 1 on nothing writing to `library_entries`.
 
-- [ ] **3.4a — `LibraryBloc`, preferences, counts, search, datasource test.**
+- [x] **3.4a — `LibraryBloc`, preferences, counts, search, datasource test.**
       Split from the original item 3.4 at the Featured seam, D16 (2026-08-28);
       3.4a lands first, and 3.4b depends on it.
       - Status filter, sort, view mode, pagination, search-within-status. Per §9,

@@ -1,9 +1,72 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. **Last updated 2026-08-26: week 3 has STARTED. Items 3.1 and
-3.2 are complete and QA-PASSed, on two stacked branches that are NOT merged.**
+Written 2026-07-29. **Last updated 2026-08-28: stage 3 is nearly done. Items 3.1,
+3.2 and 3.3 are MERGED to `develop` at `618bed1`. Item 3.4a is complete and
+QA-PASSed on `feature/library-bloc-preferences`, unmerged. Only 3.4b is left.**
 
 ## Read this first — the state of week 3
+
+**Everything below the next two sections predates 2026-08-28 and describes an
+earlier state. Read these two first.**
+
+### Where the code actually is
+
+| | |
+|---|---|
+| `develop` | `618bed1` — carries 3.1, 3.2 and **3.3** (a `--no-ff` merge, so 3.3 has a real marker; 3.1 and 3.2 arrived by fast-forward and do not) |
+| `feature/library-bloc-preferences` | 17 commits ahead of `develop`; holds **3.4a**, QA PASS, 0 cycles, **unmerged** |
+| Next | **3.4b — the Featured repair.** Then stage 3 is done and stage 4 begins. |
+
+**Baselines on the 3.4a branch, verified 2026-08-28:** analyzer **29 issues, 0
+errors, 2 warnings, 27 info**; suite **+435 -10**. On `develop` the suite is
+**+394 -10** with the same analyzer figures. The ten failures are the usual set.
+**The 2 warnings are the invariant; the total is not** — it has moved 30 → 28 → 29
+this week alone.
+
+### Nine human decisions were taken after D8 — D9 through D17
+
+D9–D11 are in `.agents/runs/library-data-layer-20260827/orchestrator-state.md`;
+**D12–D17 are in `.agents/runs/library-bloc-preferences-20260827/orchestrator-state.md`**
+and several of them overturn things this file says further down. The three that
+change standing rules:
+
+- **D12 — Supabase is the source of truth, and this was re-opened and re-confirmed
+  at a gate.** Two alternatives (Isar-as-truth with no remote; Isar-as-truth with a
+  Supabase backup mirror) were worked through in full and rejected. The deciding
+  argument: both converge on the same implementation as remote-truth-with-offline-
+  writes — an outbox, a retry path and a conflict rule — so naming which side is
+  "the truth" changes the read path, not the cost. The product brief §8 already
+  rules offline out of scope, so **v1 has no offline writes at all**. The human's
+  stated direction is to move to local-truth in a later phase.
+- **D14 — the tracker task tree is now reachable from NOWHERE**, not from one place.
+  Item 3.4b removes the last `TrackerGameDetailRoute` push. Two standing rules
+  required it to keep an entry point; the human overrode them deliberately. **"Do
+  not delete it" still stands** — the tree stays compiling and passing its tests
+  until the design convention lands. Unreachable is not unwanted.
+- **D16 — item 3.4 was split.** 3.4a (state, preferences, counts, search) is done;
+  3.4b (the Featured repair) is a separate run. `tech-ac.md` in that run folder is
+  **not** re-cut: it stays whole at 43 criteria, and each half scopes to its own
+  range. **3.4b's range is AC26–AC36.**
+
+### Five things are deferred out of stage 3 and have no item yet
+
+Recorded in `library-bloc-preferences-20260827/orchestrator-state.md` under D12:
+the **Isar read cache** (load from Supabase, keep a local snapshot, read it offline
+— also the stepping stone to local-truth later), the **IGDB refresh system**
+(staleness check, cooldown, three auto-sync triggers, info-bar, settings toggle,
+manual sync), **task-tree backup** (no remote tables exist; deferred until the task
+design convention lands), the **§8 offline-read amendment** to the product brief
+(human said end of stage 3), and a **save control on browse list items** (no design
+convention yet).
+
+**The cheap IGDB staleness check, worked out and worth not re-deriving:** ask IGDB
+for `id, updated_at` only, for every saved game in one request; compare a single
+number per game; fetch full records only for the ids that moved. A 300-game library
+where nothing changed costs one small request and zero writes.
+
+---
+
+**Everything from here down was written before 2026-08-28.**
 
 **Both stage 3 blockers are cleared.** `.agents/references/library-design-conventions.md`
 landed on `develop` at `15f068f` and answers all four of the product brief's open
@@ -1157,95 +1220,96 @@ runs — decide whether stage 3 mints them rather than working around them a fou
 ## Next-session prompt
 
 ```text
-Resume QuestLoggd — week 3, stage 3. Checkout develop, read .agents/handover.md in
-full (it's long; read it anyway, starting with "Read this first — the state of
-week 3"), then .agents/week-3-task-briefs.md.
+Resume QuestLoggd — week 3, stage 3, item 3.4b. Checkout
+feature/library-bloc-preferences (do NOT cut a new branch; continue on this one),
+then read .agents/handover.md starting at "Read this first — the state of week 3",
+then .agents/week-3-task-briefs.md item 3.4b.
 
-Setup: no Flutter in a fresh container. Install 3.41.4 to match .fvmrc (put it on
-PATH via /etc/profile.d/flutter.sh so subagents pick it up), then flutter pub get
+Setup: no Flutter in a fresh container. Install 3.41.4 to match .fvmrc, put it on
+PATH via /etc/profile.d/flutter.sh so subagents pick it up, then flutter pub get
 and dart run build_runner build --delete-conflicting-outputs. Budget ~15 minutes:
-the SDK tarball is ~1.5GB and build_runner's first run takes 80s.
+the tarball is ~1.5GB and build_runner's first run takes 75s.
 
-BEFORE ANYTHING ELSE — two branches are finished and unmerged, and they must merge
-in order:
-  feature/library-foundations   item 3.1, impl e1ada3a, head 14da82c, QA PASS
-  feature/library-tab-swap      item 3.2, impl e7dcee4, head 35b498c, QA PASS
-                                (pending manual checks)
-3.2 is stacked on 3.1 deliberately. Merge 3.1 to develop first, then 3.2. develop
-is at ab586dc and has neither. Ask me before merging — I may want the six manual
-checks done on device first.
+WHERE THINGS ARE
+  develop                          618bed1 — has 3.1, 3.2, 3.3
+  feature/library-bloc-preferences 17 commits ahead — has 3.4a, QA PASS, UNMERGED
+3.4a is finished and reviewed but not merged. Ask me before merging.
 
-Baselines depend on where you are, and this bit me last session:
-  develop / 3.1:  30 issues (0 errors, 2 warnings, 28 info), suite +361 -10
-  3.2 branch:     28 issues (0 errors, 2 warnings, 26 info), suite +363 -10
-The 2-issue drop is info lints that lived only in the three files 3.2 deleted. The
-number that carries meaning is the 2 WARNINGS — the deliberate _TaskReminder pair
-in task_detail_screen.dart, proving the protected task tree survived. Do not
-restate that as a total-count invariant: last session's orchestrator told Dev "28
-means something broke", Dev hit 28, investigated instead of obeying, and was right.
-Verify all of it at Phase 0 rather than inheriting it; the pass count has moved six
-times now.
+BASELINES — verify at Phase 0, do not inherit. On the 3.4a branch:
+  analyzer 29 issues (0 errors, 2 warnings, 27 info), suite +435 -10
+The 2 WARNINGS are the invariant — the deliberate _TaskReminder pair in
+task_detail_screen.dart. The TOTAL is not: it has moved 30 -> 28 -> 29 this week
+and will move again as files are added. A run that reports a different total has
+probably just added files. Check the warnings, then find out why.
+Also: one use_null_aware_elements info lint in library_remote_datasource.dart is a
+deliberate, human-approved survivor. Converting it breaks 3.3-AC26, because
+clearRating must write an explicit null and the null-aware form omits the entry.
+Do not "fix" it.
+
+WHAT IS NEXT: item 3.4b, the Featured repair. Start it with /orchestrate.
+Its criteria are 3.4-AC26 through AC36, already written — reuse tech-ac.md, tdd.md
+and code-plan.md from .agents/runs/library-bloc-preferences-20260827/ rather than
+re-deriving them. That run folder's "What 3.4b inherits" section names exactly what
+3.4a handed over. Open a NEW run folder for 3.4b.
+
+Three things are already decided for it and must not be re-opened:
+- D14: EVERY now-playing tap goes to the Library tab (setActiveIndex(1)), whether
+  one game is playing or many. The single-game branch stops pushing
+  TrackerGameDetailRoute. This makes the tracker task tree fully unreachable, which
+  is intended and doc-amended. "Do not delete it" still stands.
+- D15: countSavedGames() and getOwnedGameIds() repoint at library_entries, so one
+  stat row stops reading two stores.
+- Human instruction: _buildNowPlayingCard becomes a StatelessWidget, not a helper
+  method returning a Widget.
+
+Fold in one gap QA found in 3.4a and did not fail the run for: reverting ONLY the
+next-page handler's hasReachedEnd to the withdrawn short-page rule leaves the whole
+bloc suite green. The append half of AC7 has no guard while the first-page half
+does. Add that test.
 
 WHAT IS DONE
-- 3.1 Foundations — minted surfaceArt (#2F3782) and surfaceArtDeep (#7D4EE0),
-  closing the second standing foundations gap. Corrected the rejected
-  saturate(.5) contrast(1.05) cover filter out of ALL EIGHT sites across five
-  design docs (the indigo->canvas veil survives everywhere; only the desaturation
-  went). Ratified violet as a surface. First item in this project to finish
-  without adding a single manual check.
-- 3.2 Tab swap — five tabs Featured/Library/Browse/Feed/Settings, Library and Feed
-  shells, Tracker tab retired, Browse tab deleted and its name passed to the Games
-  screen. Six setActiveIndex literals corrected. Added six manual checks.
+- 3.3 Schema migration and remote data layer. Six columns, the model/datasource/
+  repository/four use cases, BaseRepositoryMixin widened so RLS, check-constraint
+  and unique-conflict failures stop collapsing into unknown(). Merged.
+- 3.4a LibraryBloc, a separate LibraryPreferencesDatasource, per-status counts,
+  search-within-status, and the first test that constructs a real
+  LibraryRemoteDatasource — closing the gap where eight of 3.3's criteria rested on
+  code inspection alone.
 
-WHAT IS NEXT: item 3.3, schema migration and the remote data layer. Start it with
-/orchestrate. library_entries cannot serve the Library spec as it stands — it needs
-platform, rating, playtime_hours, progress_percent, genre and updated_at. The
-migration is mostly a PROMOTION, not new invention: the Isar SavedGame already
-carries hoursLogged, manualProgressPercentage, platforms and genres, all with zero
-writers. One genuine ambiguity to escalate rather than guess: legacy `toBuy`
-collides with `wishlist`, which the legacy model holds as a separate boolean.
-
-3.3 is also what finally unblocks item 3's on-device cross-account RLS check,
-blocked since week 1 because nothing writes to library_entries.
-
-FIVE THINGS THAT COST REAL CYCLES LAST SESSION
-- Grep the caller list at Phase 0. The checklist has now been wrong FIVE times out
-  of nine, and the fifth time the wrong checklist was the orchestrator's own: it
-  listed saved_game_status_tag.dart for retirement, written before the human's
-  decision to keep the task tree and never re-checked against it. Its only caller
-  is inside the protected tree. The BA caught it by grepping.
-- A design decision can change twice in one day. The tab structure went four tabs
-  -> five -> a different five. Both superseded shapes are recorded as DEAD in the
-  Stage 3 brief. When a gate answer moves, correct handover.md and the checklist
-  in the same pass, and STRIKE obsolete sentences rather than deleting them — two
-  lines in ruling 1 stood as live guidance for most of a day.
-- When a human narrows scope at a gate, route it through the BA before Dev. QA
-  gates on tech-ac.md, so a criterion left standing with no corresponding change
-  is an automatic FAIL and a burned cycle. This happened twice (D5, D8) and both
-  times the fix was: BA retires the criterion to a labelled section, Tech Lead
-  corrects task-brief.md IN PLACE because Dev's allowlist check is literal.
-- When a test is dropped, the criteria it carried do not vanish — they become
-  source reads, and QA must be told to READ rather than infer from a green suite.
-  3.2-AC33 (the Feed shell writing to ScrollNotifier) is the live example: a third
-  writer would compile, run and pass the entire suite.
-- Watch for the vacuous test. app_tokens_test.dart's _allColors() lerp assertion is
-  expect(color, isNotNull) over a non-nullable Color — it cannot fail. Adding
-  tokens to it grows coverage on paper only.
+FOUR THINGS THAT COST REAL CYCLES, OR NEARLY DID
+- The Phase 3 gate is worth doing properly. The human's own read of code-plan.md
+  found four real defects in 3.4a that all the agents had missed: a debounce that
+  cleared the list before it waited (so every keystroke flashed a loader), a
+  next-page response that could append the old filter's games onto the new filter's
+  list, hasReachedEnd burning a wasted request whenever the total was an exact
+  multiple of the page size, and a debounce riding implicitly on restartable's
+  cancellation where a later edit would break it silently.
+- Route a gate revision through the BA when it moves a criterion. Four of those
+  seven did. QA gates on tech-ac.md, so a criterion left standing with no matching
+  change is an automatic FAIL and a burned cycle.
+- Prove falsifiability by copying the tree, not by editing it. 3.4a's QA ran
+  cp -a to a scratch copy, mutated it, confirmed each test fails, and left the
+  project untouched. That is the method to keep — the previous run's QA correctly
+  refused to edit source and had to fall back to inspection.
+- Grep the caller list at Phase 0. The checklist has now been wrong SIX times out
+  of ten. In 3.4 it claimed getWishlistedGames() had one caller; it has three, and
+  criteria written for the named one would have left two on a dead filter.
 
 STILL TRUE, STILL BINDING
-- The tracker task tree is DORMANT BY DECISION and must not be cleaned up. 3.2
-  deleted its only real entry point; tracker_game_detail_screen, task_detail_screen,
-  TaskCubit, GroupTask, SavedGameTask, TaskStep and the Isar SavedGame store all
-  survive deliberately. A design convention for it is coming from the human — pick
-  it up when that lands, not before. saved_game_status_tag.dart retires with it.
+- Supabase is the source of truth (D12). The Isar read cache, the IGDB refresh
+  system and task-tree backup are later items with no run yet — do not pull them
+  into 3.4b.
+- The tracker task tree is dormant and must not be cleaned up or deleted.
 - No 15px type token; ship 14. Settled after four items. Stop raising it.
-- Translate the strings on screens you touch; retire each legacy widget in the run
-  that replaces it; perform each component's manual checks on the screen that first
-  adopts it. Not separate tasks.
 - tech-lead-agent and ba-agent have NO Bash tool. dev-agent and qa-agent do.
-- git.md rule 6: NO AI signature, no Co-Authored-By trailer, on any pipeline
-  commit. It overrides the harness default. (Two docs commits early last session
-  carry one; they were caught late and history is additive.)
+- git.md rule 6: NO AI signature, no Co-Authored-By trailer, on any pipeline commit.
 - Remote branch deletion is blocked by the egress proxy — merged claude/* branches
   must be deleted by hand in the GitHub UI. Don't retry the 403.
+
+OPEN MANUAL CHECKS, none blocking
+- 3.3: five, including item 3's cross-account RLS check — blocked since week 1 on
+  nothing writing to library_entries, and now finally performable.
+- 3.4a: two — preferences surviving a relaunch, and no visible grid-to-list switch
+  on first paint.
+- 3.2: six, all reachable in the app today.
 ```
