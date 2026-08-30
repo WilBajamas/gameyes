@@ -3,7 +3,7 @@ Feature: Item 3.4a — `LibraryBloc`, preferences, counts and search (split from
 Run ID: library-bloc-preferences-20260827
 Run folder: .agents/runs/library-bloc-preferences-20260827/
 Started: 2026-08-27
-Current phase: TECH_LEAD
+Current phase: BA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 total) — captured 2026-08-27T18:45:00Z
 Test baseline: +394 -10 — captured 2026-08-27T18:47:00Z
