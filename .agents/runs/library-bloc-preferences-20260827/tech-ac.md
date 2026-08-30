@@ -1,10 +1,33 @@
 # Technical Acceptance Criteria
 Source: `.agents/week-3-task-briefs.md` item 3.4 (lines 240–264), with
 `.agents/references/library-design-conventions.md` §2, §3, §8, §9, §10 as the consuming
-spec. Human decisions D9, D10, D12, D14, D15
+spec. Human decisions D9, D10, D12, D14, D15, D16, D17
 (`orchestrator-state.md ## Human decisions`).
-Date: 2026-08-28
+Date: 2026-08-28 (revised 2026-08-30 for D17)
 BA Agent version: 1.0
+
+## Changelog
+
+**2026-08-30 — D17, the human's `code-plan.md` review at the Phase 3 gate.** Four of the
+seven revisions move or reverse a criterion. Nothing is renumbered: `tdd.md`,
+`task-brief.md` and `orchestrator-state.md` all cross-reference these by ID.
+
+| ID | Change | Why |
+| --- | --- | --- |
+| 3.4-AC7 | **Reversed.** End-of-results is derived from the paged query's total matched count, not from a page shorter than the requested limit. | D17.8 — 40 rows at a page size of 20 burn a wasted third request and briefly show a "loading more" state with nothing to add. |
+| 3.4-AC22 | **Rewritten.** Its premise — a *renamed* shared preferences datasource — is gone. It now requires the tracker datasource and its key be left untouched, with a separate library datasource added beside it. | D17.1 — a class nobody edits cannot disturb the live `tracker_sort_tag` key, which was this criterion's own stated failure case. The new shape is strictly safer than the rename it described. |
+| 3.4-AC42 | **New.** A search in flight must not blank the list, and the debounce must elapse before any loading state is emitted. | D17.5 — the plan emitted `loading` with an empty entry list *before* awaiting the debounce, so every keystroke cleared the list and flashed a loader. 3.4-AC9 protects loaded entries during a next-page append only, never during a search. |
+| 3.4-AC43 | **New.** A next-page response whose query is no longer current is discarded without emitting. | D17.7 — scroll to trigger a next page, then tap a different status chip, and the old status's page 2 is appended onto the new status's list. 3.4-AC6 covers duplicate appends from two overlapping next-page requests only, not this race. |
+
+The other three D17 revisions are **implementation placement with no criterion change**
+— the Tech Lead's to place, not QA's to check against this file: a plain-English comment
+on the parallel-call idiom (D17.3), `_pattern` moving to
+`lib/core/utils/postgrest_utils.dart` as a public `postgrestLikePattern` (D17.4), and
+declaring `stream_transform` for a named `debounce()` transformer in place of the
+hand-rolled `Future.delayed` (D17.6).
+
+D17.2 — `_buildNowPlayingCard` becoming a `StatelessWidget` — belongs to **3.4b**.
+3.4-AC26 through 3.4-AC36 are untouched by this revision.
 
 ## Feature summary
 
@@ -15,9 +38,9 @@ decision, which is why it lands here and not on the screen. The data layer gains
 search predicate on the paged query and a server-side count capability (per-status counts
 plus the library total), neither of which item 3.3 provided; without them §3's chip
 counts and §8's `Showing 12 out of 312` have no source. View mode and sort persist
-device-side through the existing tracker preferences datasource, renamed and extended
-rather than duplicated. Featured's never-rendering now-playing shelf and wishlist stat
-are repaired against `library_entries`, together with the total-games and owned-ids
+device-side through a new library-only preferences datasource, added beside the tracker's
+and leaving it untouched (D17). Featured's never-rendering now-playing shelf and wishlist
+stat are repaired against `library_entries`, together with the total-games and owned-ids
 figures per D15, and every now-playing tap goes to the Library tab per D14. A datasource
 test against a fake `SupabaseClient` retires the inspection-only status of eight of
 3.3's criteria. No Library screen and no widget: Stage 4 composes this.
@@ -61,10 +84,16 @@ replacing them, and carries the offset of the already-loaded count. A next-page 
 made while one is in flight does not produce a duplicated or doubled append.
   Failure case: a fast scroll fires twice and the same twelve games appear twice.
 
-3.4-AC7 PRESENTATION: A page shorter than the requested limit sets the end-of-results
-flag, and further next-page requests while it is set issue no query. Resetting the
-status, sort or search clears the flag.
-  Failure case: the end of a 312-game list issues a query per scroll event forever.
+3.4-AC7 PRESENTATION: The end-of-results flag is derived from the total matched count
+the paged query already returns (`page.matchedCount`): the flag is set once the loaded
+entry count is greater than or equal to that total. It is **not** inferred from a page
+being shorter than the requested limit. Further next-page requests while the flag is set
+issue no query, and changing the status, sort or search term clears it.
+  Failure case (revised, D17): with 40 matching rows and a page size of 20, the
+  short-page rule cannot know the list has ended until it fetches an empty third page —
+  a wasted request on every exact multiple of the page size, plus a "loading more" state
+  that briefly shows with nothing to add. The original failure case still stands: the end
+  of a 312-game list must not issue a query per scroll event forever.
 
 3.4-AC8 PRESENTATION: Search input is debounced 300ms — three keystrokes inside the
 window issue one query, not three — and a whitespace-only term is treated as no search.
@@ -97,6 +126,28 @@ initial value, and the first externally-added event is handled rather than dropp
   and the stub written for the test's arguments never matches
   (`testing-conventions.md:231-245`). That is the cause of three of the suite's ten
   standing failures, and repeating it ships this bloc untestable from day one.
+
+3.4-AC42 PRESENTATION: The already-loaded entries stay readable for the whole time a
+search is in flight, and no loading state is emitted before the 3.4-AC8 debounce window
+has elapsed. A keystroke inside the window emits nothing at all; only the query that
+actually issues may move the state into loading, and the entries it replaces stay
+readable until its results arrive.
+  Failure case: emitting a loading state with an empty entry list before the debounce is
+  awaited makes typing strobe the screen — every keystroke clears the list and flashes a
+  loader, so the debounce saves network calls while saving nothing the user sees. Not
+  covered by 3.4-AC9, which protects loaded entries during a next-page append only.
+
+3.4-AC43 PRESENTATION: A next-page response is discarded without emitting if the query
+it was issued for is no longer the current one — that is, if the status, sort or search
+term changed after the request went out. The check is made when the response arrives, not
+only before the request is issued. This also covers two next-page responses arriving out
+of order. "Cancel" here means discarding the response: the Supabase client exposes no
+request cancellation, and the observable behaviour is identical either way.
+  Failure case: scroll far enough to trigger a next page, then tap a different status
+  chip, and the old status's page 2 is appended onto the new status's list — visibly the
+  wrong games under the chip. Not covered by 3.4-AC6, which covers duplicate appends from
+  two overlapping next-page requests; a guard that runs only before the await cannot see
+  a change that happens during it.
 
 ### Counts
 
@@ -151,12 +202,17 @@ the null-last rule from 3.3-AC18 still holds.
 
 ### Preferences
 
-3.4-AC22 DATA: The renamed preferences datasource keeps reading and writing the existing
-`tracker_sort_tag` key with unchanged semantics, and `TrackerCubit` still resolves from
-DI and still round-trips its sort tag. The existing tracker preference and sort-repository
-tests pass against the renamed types.
-  Failure case: a rename that changes the key silently discards every existing user's
-  stored tracker sort.
+3.4-AC22 DATA: `TrackerPreferencesDatasource` is not renamed, moved, extended or edited,
+and the `tracker_sort_tag` key keeps its exact name and semantics (D17). `TrackerCubit`
+still resolves from DI and still round-trips its sort tag, and the existing tracker
+preference and sort-repository tests pass unmodified against unchanged types. Library
+preferences are served by a **separate** `LibraryPreferencesDatasource` registered
+alongside it.
+  Failure case: this criterion originally guarded a rename, whose failure case was a
+  changed key silently discarding every existing user's stored tracker sort. A class
+  nobody edits cannot reach that failure at all, which is why the separate-datasource
+  shape is strictly safer — but only if the tracker datasource is genuinely left alone.
+  A "while I'm here" edit to it puts the live key back in play.
 
 3.4-AC23 DATA: View mode and library sort persist under their own new keys, separate
 from `tracker_sort_tag`, and survive an app restart. Persistence is device-scoped.
@@ -283,8 +339,10 @@ entirely.
 3.4-AC39 TEST: The bloc's tests cover, at minimum: initial state, first-page load
 success and failure, status change resetting pagination, sort change resetting
 pagination, view-mode change issuing no fetch, search composing with the active status,
-debounce collapsing rapid input, append-on-next-page, and the end-of-results flag. They
-are written in the house `blocTest` style and pass.
+debounce collapsing rapid input, append-on-next-page, the end-of-results flag derived
+from the matched count (3.4-AC7), entries staying readable through a search (3.4-AC42),
+and a stale next-page response being discarded (3.4-AC43). They are written in the house
+`blocTest` style and pass.
   Failure case: a bloc whose only proof is a passing analyzer, handed to Stage 4 as the
   substrate for six items.
 
@@ -336,6 +394,9 @@ outside them.
 - **Correcting the brief's stale 30-issue analyzer preamble** (lines 82–84). Real, but a
   doc edit outside this item's allowlist decision — flagged in `ambiguities.md`
   OBSERVATION-8 for the Tech Lead to place.
+- **Any change to `TrackerPreferencesDatasource` or the `tracker_sort_tag` key** (D17).
+  Previously in scope as a rename; now explicitly excluded, and 3.4-AC22 guards the
+  exclusion.
 
 ## Assumptions
 
@@ -345,3 +406,8 @@ The load-bearing ones: counts are server-side and status counts ignore search
 substring (3.4-AC18); the debounce is 300ms (3.4-AC8); only view mode and sort persist
 (3.4-AC25); page size is one constant in the library feature's own `const.dart`; and
 Featured's now-playing order is `updated_at` descending (3.4-AC26).
+
+ASSUMPTION (D17, 3.4-AC7): the total matched count the flag is derived from is the one
+the paged query already returns and 3.4-AC16 already defines — filtered by the active
+status and search term, unaffected by limit and offset. No second query and no new
+endpoint is implied.
