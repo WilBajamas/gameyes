@@ -1,17 +1,22 @@
 # Code Plan
 Source: `.agents/runs/library-bloc-preferences-20260827/tech-ac.md` (item 3.4)
-Date: 2026-08-28
+Date: 2026-08-28 (revised 2026-08-30 for D17)
 
 > **Split note (D16).** Item 3.4 is split at the Featured seam and this plan deliberately
-> still covers **both halves**, unchanged — 3.4b's task brief is cut from it and from
-> `tdd.md` without re-deriving anything.
+> still covers **both halves** — 3.4b's task brief is cut from it and from `tdd.md`
+> without re-deriving anything.
 > **3.4b** (a later run — criteria AC26–AC36) owns exactly these entries:
 > `now_playing_game_entity.dart`, `library_snapshot_entity.dart`,
 > `featured_repository_impl.dart`, `featured_local_datasource.dart`,
 > `library_stats.dart`, `featured_repository_test.dart`,
 > `library_stats_cubit_test.dart` and `library_stats_test.dart`.
-> **3.4a** (this run — criteria AC1–AC25, AC37–AC41) owns everything else here.
+> **3.4a** (this run — criteria AC1–AC25, AC37–AC43) owns everything else here.
 > `task-brief.md` is scoped to 3.4a and wins on any conflict.
+
+> **D17 revision note.** Every change from the human's Phase 3 review is folded into the
+> skeletons below and summarised in `## Approved feedback delta` at the foot of this file.
+> `tdd.md` and `task-brief.md` were corrected in place too, because the allowlist and the
+> step list both moved.
 
 ## CREATE NEW
 
@@ -20,30 +25,48 @@ Date: 2026-08-28
 enum LibraryViewMode { grid, list }
 ```
 
-### lib/core/data/datasource/app_preferences_datasource.dart
+### lib/core/utils/postgrest_utils.dart
+```dart
+/// Wraps [term] as a PostgREST `ilike` pattern that matches it literally.
+String postgrestLikePattern(String term) {
+  // Backslash is what LIKE escapes with, so it has to be doubled first or the
+  // escapes added below would themselves be escaped.
+  final escaped = term
+      .replaceAll(r'\', r'\\')
+      .replaceAll('%', r'\%')
+      .replaceAll('_', r'\_');
+
+  return '%$escaped%';
+}
+```
+A top-level function, not a class: no state and no builder chain to hold. Sits beside
+`igdb_query_builder.dart` because it is query syntax, not Library knowledge (D17.4).
+
+### lib/features/library/data/datasources/library_preferences_datasource.dart
 ```dart
 @injectable
-class AppPreferencesDatasource {
-  AppPreferencesDatasource(this._preferences);
+class LibraryPreferencesDatasource {
+  LibraryPreferencesDatasource(this._preferences);
 
   final SharedPreferences _preferences;
 
-  String? readTrackerSortTagName();
-  Future<void> writeTrackerSortTagName(String name);
+  String? readViewModeName();
+  Future<void> writeViewModeName(String name);
 
-  String? readLibraryViewModeName();
-  Future<void> writeLibraryViewModeName(String name);
-
-  String? readLibrarySortName();
-  Future<void> writeLibrarySortName(String name);
+  String? readSortName();
+  Future<void> writeSortName(String name);
 }
 ```
 Every body is the shape already in `tracker_preferences_datasource.dart`: a
 `_preferences.getString(StorageConstants.<key>)` or `setString` wrapped in
 `try { ... } catch (_) { }`, returning `null` on a failed read and swallowing a failed
-write. `StorageConstants.trackerSortTagKey` is reused unchanged; the two library keys are
-new. One comment, on the write side, saying persistence is best-effort — the existing
-one, kept.
+write. One comment, on the write side, saying persistence is best-effort.
+
+**`TrackerPreferencesDatasource` is not renamed, moved, extended, edited or deleted**
+(D17.1, 3.4-AC22). It is not in the allowlist, and neither is
+`tracker_sort_repository_impl.dart` or its test. The small try/catch duplication between
+the two datasources is the deliberate, human-approved cost of leaving the live
+`tracker_sort_tag` key completely alone.
 
 ### lib/features/library/domain/entities/library_counts_entity.dart
 ```dart
@@ -106,21 +129,21 @@ abstract interface class LibraryPreferencesRepository {
 class LibraryPreferencesRepositoryImpl implements LibraryPreferencesRepository {
   LibraryPreferencesRepositoryImpl(this._datasource);
 
-  final AppPreferencesDatasource _datasource;
+  final LibraryPreferencesDatasource _datasource;
 
   @override
   LibraryViewMode getViewMode() { /* match .name over values, else grid */ }
 
   @override
   Future<void> saveViewMode(LibraryViewMode mode) =>
-      _datasource.writeLibraryViewModeName(mode.name);
+      _datasource.writeViewModeName(mode.name);
 
   @override
   LibrarySort getSort() { /* match .name over values, else recentlyAdded */ }
 
   @override
   Future<void> saveSort(LibrarySort sort) =>
-      _datasource.writeLibrarySortName(sort.name);
+      _datasource.writeSortName(sort.name);
 }
 ```
 
@@ -200,6 +223,8 @@ sealed class LibraryState with _$LibraryState {
   }) = _LibraryState;
 }
 ```
+No generation counter here — it lives on the bloc as a private field, so state equality
+and every UI rebuild are unaffected (D17.7).
 
 ### lib/features/library/presentation/blocs/library_event.dart
 ```dart
@@ -276,6 +301,20 @@ final class LibraryNextPageRequested extends LibraryEvent {
 ```dart
 part 'library_event.dart';
 
+// Typing waits until it stops; a chip or sort tap is deliberate and runs at
+// once. Merging the two back together keeps one handler, so the newest query
+// always supersedes the one before it.
+EventTransformer<LibraryQueryChanged> _latestQuery() {
+  return (events, mapper) {
+    final searches = events
+        .where((event) => event is LibrarySearchTermChanged)
+        .debounce(LibraryConstants.searchDebounce);
+    final rest = events.where((event) => event is! LibrarySearchTermChanged);
+
+    return restartable<LibraryQueryChanged>()(rest.merge(searches), mapper);
+  };
+}
+
 @injectable
 class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   LibraryBloc(
@@ -285,9 +324,7 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
     this._saveLibraryViewModeUseCase,
     this._saveLibrarySortUseCase,
   ) : super(const LibraryState()) {
-    // One handler for the whole family, so the newest query always wins:
-    // separate registrations would let a chip tap and a search race.
-    on<LibraryQueryChanged>(_onQueryChanged, transformer: restartable());
+    on<LibraryQueryChanged>(_onQueryChanged, transformer: _latestQuery());
     on<LibraryViewModeSelected>(_onViewModeSelected);
     on<LibraryNextPageRequested>(_onNextPageRequested, transformer: droppable());
   }
@@ -298,10 +335,16 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   final SaveLibraryViewModeUseCase _saveLibraryViewModeUseCase;
   final SaveLibrarySortUseCase _saveLibrarySortUseCase;
 
+  // Goes up every time the query changes. A page that comes back under an
+  // older number was asked for on behalf of a list nobody is looking at now.
+  int _queryGeneration = 0;
+
   Future<void> _onQueryChanged(
     LibraryQueryChanged event,
     Emitter<LibraryState> emit,
   ) async {
+    _queryGeneration++;
+
     final preferences = event is LibraryStarted
         ? _getLibraryPreferencesUseCase()
         : null;
@@ -317,8 +360,9 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
         ? event.term.trim()
         : state.searchTerm;
 
-    // The stored view mode and sort land in the same emit as the first
-    // loading state, so nothing ever paints in the wrong view.
+    // The stored view mode and sort land in the same emit as the first loading
+    // state, so nothing ever paints in the wrong view. The entries already on
+    // screen are left alone so a search never blanks the list.
     emit(
       state.copyWith(
         activeStatus: activeStatus,
@@ -327,23 +371,18 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
         searchTerm: searchTerm,
         status: LibraryLoadStatus.loading,
         nextPageStatus: LibraryNextPageStatus.initial,
-        entries: const [],
         hasReachedEnd: false,
         error: null,
         nextPageError: null,
       ),
     );
 
-    if (event is LibrarySearchTermChanged) {
-      await Future<void>.delayed(LibraryConstants.searchDebounce);
-      // A newer event superseded this one while we waited.
-      if (emit.isDone) return;
-    }
-
     if (event is LibrarySortSelected) {
       _saveLibrarySortUseCase(sort).ignore();
     }
 
+    // Both calls are started before either is awaited so they run side by
+    // side; awaiting the page first would leave the counts queued behind it.
     final pageCall = _fetchLibraryPageUseCase(
       status: activeStatus,
       sort: sort,
@@ -373,7 +412,7 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
               : LibraryLoadStatus.success,
           entries: page.entries,
           matchedCount: page.matchedCount,
-          hasReachedEnd: page.entries.length < LibraryConstants.pageSize,
+          hasReachedEnd: page.entries.length >= page.matchedCount,
           counts: counts,
         ),
         Failure(error: final error) => state.copyWith(
@@ -405,6 +444,8 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       return;
     }
 
+    final generation = _queryGeneration;
+
     emit(state.copyWith(nextPageStatus: LibraryNextPageStatus.loading));
 
     final result = await _fetchLibraryPageUseCase(
@@ -415,13 +456,19 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
       searchTerm: state.searchTerm.isEmpty ? null : state.searchTerm,
     );
 
+    // The filter, sort or search changed while this page was on its way, so
+    // these rows would be appended under the wrong heading. Drop them; the
+    // query that replaced it has already reset the next-page state.
+    if (generation != _queryGeneration) return;
+
     emit(
       switch (result) {
         Success(value: final page) => state.copyWith(
           nextPageStatus: LibraryNextPageStatus.initial,
           entries: List.of(state.entries)..addAll(page.entries),
           matchedCount: page.matchedCount,
-          hasReachedEnd: page.entries.length < LibraryConstants.pageSize,
+          hasReachedEnd:
+              state.entries.length + page.entries.length >= page.matchedCount,
         ),
         Failure(error: final error) => state.copyWith(
           nextPageStatus: LibraryNextPageStatus.failed,
@@ -437,6 +484,21 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
 
 ## MODIFY EXISTING
 
+### pubspec.yaml
+```yaml
+  # Bloc Transformer
+  bloc_concurrency: ^0.3.0
+
+  # Stream transformer, for the search debounce
+  stream_transform: ^2.1.1
+```
+One line plus its comment, and nothing else. `bloc_concurrency` **stays** —
+`restartable()` and `droppable()` have no `stream_transform` equivalent. The package is
+already resolved at 2.1.1 in `pubspec.lock` as a transitive dependency, so
+`flutter pub get` only flips that entry's `dependency:` field to `direct main`. This is
+the single human-authorised exception to `execution.md`'s read-only rule on this file
+(D17.6).
+
 ### lib/core/res/const.dart
 ```dart
 class StorageConstants {
@@ -446,6 +508,7 @@ class StorageConstants {
   static const librarySortKey = 'library_sort';
 }
 ```
+`trackerSortTagKey` is untouched — the two library keys are additions beside it.
 
 ### lib/features/library/const.dart
 ```dart
@@ -479,7 +542,10 @@ class LibraryConstants {
       query = query.eq(LibraryEntryConstants.status, status.columnValue);
     }
     if (searchTerm != null) {
-      query = query.ilike(LibraryEntryConstants.title, _pattern(searchTerm));
+      query = query.ilike(
+        LibraryEntryConstants.title,
+        postgrestLikePattern(searchTerm),
+      );
     }
 
     final response = await query
@@ -513,21 +579,12 @@ class LibraryConstants {
   Future<List<LibraryEntryModel>> fetchAllEntries({
     LibraryStatus? status,
   }) async { /* eq(user), optional eq(status), order(updatedAt, desc) */ }
-
-  // Backslash is what LIKE escapes with, so it has to be doubled first or the
-  // escapes we add below get escaped themselves.
-  String _pattern(String term) {
-    final escaped = term
-        .replaceAll(r'\', r'\\')
-        .replaceAll('%', r'\%')
-        .replaceAll('_', r'\_');
-
-    return '%$escaped%';
-  }
 ```
-The precise builder-chain typing around `.count()` and the conditional `.eq` /
-`.ilike` reassignment is Dev's to settle against the analyzer; the request shape above is
-the contract. `add`, `update`, `remove`, `_currentUserId` and `_sortColumn` are unchanged.
+**No `_pattern` helper in this file** — the escaping is `postgrestLikePattern` in
+`lib/core/utils/postgrest_utils.dart` (D17.4). The precise builder-chain typing around
+`.count()` and the conditional `.eq` / `.ilike` reassignment is Dev's to settle against the
+analyzer; the request shape above is the contract. `add`, `update`, `remove`,
+`_currentUserId` and `_sortColumn` are unchanged.
 
 ### lib/features/library/domain/repositories/library_repository.dart
 ```dart
@@ -602,25 +659,6 @@ abstract interface class LibraryRepository {
   );
 ```
 
-### lib/features/tracker/data/repositories/tracker_sort_repository_impl.dart
-```dart
-class TrackerSortRepositoryImpl implements TrackerSortRepository {
-  TrackerSortRepositoryImpl(this._datasource);
-
-  final AppPreferencesDatasource _datasource;
-
-  @override
-  SavedGameFilterTag getSortTag() {
-    final name = _datasource.readTrackerSortTagName();
-    // body unchanged
-  }
-
-  @override
-  Future<void> saveSortTag(SavedGameFilterTag tag) =>
-      _datasource.writeTrackerSortTagName(tag.name);
-}
-```
-
 ### lib/features/featured/domain/entities/library_snapshot_entity.dart
 ```dart
 class LibrarySnapshotEntity {
@@ -646,6 +684,8 @@ class LibrarySnapshotEntity {
   @override
   Future<Result<LibrarySnapshotEntity>> getLibrarySnapshot() async {
     try {
+      // Both reads are started before either is awaited so they run side by
+      // side; awaiting the entries first would leave the counts queued.
       final entriesCall = _libraryRepository.fetchAllEntries();
       final countsCall = _libraryRepository.fetchCounts();
       final playHours = await _localDatasource.getThisWeekPlayHours();
@@ -701,7 +741,7 @@ class LibrarySnapshotEntity {
 `getCountdownGame` and `getOutThisWeekGames` replace their
 `_localDatasource.getWishlistedGames()` blocks with `await _wishlistIds()`. Everything
 else in both methods, and all of `getCriticsChoiceGames` and the genre-preference
-methods, is unchanged.
+methods, is unchanged. **3.4b's file.**
 
 ### lib/features/featured/data/datasources/featured_local_datasource.dart
 ```dart
@@ -710,13 +750,17 @@ methods, is unchanged.
 // Kept unchanged: getThisWeekPlayHours, saveGenrePreferences,
 // getSavedGenrePreferences, getSavedGames, _getDb.
 ```
+**3.4b's file.**
 
 ### lib/features/featured/presentation/widgets/library_stats.dart
 ```dart
-  Widget _buildNowPlayingCard(
-    BuildContext context,
-    List<NowPlayingGameEntity> playingGames,
-  ) {
+class _NowPlayingCard extends StatelessWidget {
+  const _NowPlayingCard(this.playingGames);
+
+  final List<NowPlayingGameEntity> playingGames;
+
+  @override
+  Widget build(BuildContext context) {
     if (playingGames.isEmpty) { /* EmptyStateCard, unchanged */ }
 
     final topGame = playingGames.first;
@@ -746,10 +790,14 @@ methods, is unchanged.
         onTap: () => AutoTabsRouter.of(context).setActiveIndex(1),
         // ...
               Text(topGame.title, maxLines: 2, ...),
+  }
+}
 ```
-`topGame.imageUrl` becomes `topGame.coverUrl`; the `name ?? emptyStringPlaceholder`
-fallback goes because `title` is non-nullable. The
+`_buildNowPlayingCard` becomes this `StatelessWidget` (D17.2) — a method cannot be
+`const` and rebuilds with its parent. `topGame.imageUrl` becomes `topGame.coverUrl`; the
+`name ?? emptyStringPlaceholder` fallback goes because `title` is non-nullable. The
 `config/route/auto_route_config.gr.dart` import is removed with the push. No comments.
+**3.4b's file.**
 
 ### .agents/week-3-task-briefs.md (lines 82–84 only)
 ```markdown
@@ -771,7 +819,8 @@ proves nothing.
 - `'should add a case-insensitive title predicate when a search term is supplied'`
 - `'should keep both predicates when a status and a search term are supplied'`
 - `'should escape percent, underscore and backslash in the search term'` — the built
-  pattern matches them literally and adds no wildcard
+  pattern matches them literally and adds no wildcard (3.4-AC19, and the coverage
+  `postgrestLikePattern` gets in place of its own test file)
 - `'should keep a comma in the search term inside a single predicate'`
 - `'should use the expected column and direction for each sort option'`
 - `'should request the second page when a non-zero offset is supplied'`
@@ -785,6 +834,7 @@ Harness per `tdd.md ## Caveats` item 3: loopback `HttpServer`, real `SupabaseCli
 `auth.setInitialSession`, and `tearDown` that disposes both. No new package.
 
 ### test/repository/library/library_preferences_repository_test.dart
+Mocks `LibraryPreferencesDatasource`.
 - `'should return grid and recently added when nothing is stored'`
 - `'should return the stored view mode and sort'`
 - `'should fall back to the defaults when the stored value is unrecognised'`
@@ -819,15 +869,17 @@ Then `blocTest`s:
 - `'emits a new view mode without fetching'`
 - `'sends both the status and the search term when a term is entered under an active status'`
 - `'issues one query for three keystrokes inside the debounce window'`
+- `'emits nothing and keeps the loaded entries until the debounce window elapses'` (3.4-AC42)
 - `'appends the next page rather than replacing the loaded entries'`
-- `'sets the end-of-results flag on a short page and issues no further query'`
+- `'sets the end-of-results flag once the loaded count reaches the matched count'` (3.4-AC7)
+- `'does not set the end-of-results flag on a full page that is not the last'` (3.4-AC7 —
+  the 40-rows-at-20 case the old short-page rule got wrong)
+- `'discards a next-page response that arrives after the status changed'` (3.4-AC43)
 - `'applies the stored view mode and sort before the first fetch'`
 - `'reads the counts once and not again when the status changes'`
 
-### test/repository/tracker/tracker_sort_repository_test.dart (modify)
-Mock type swaps to `AppPreferencesDatasource` and the stubbed methods to
-`readTrackerSortTagName` / `writeTrackerSortTagName`. **Every assertion stays as it is** —
-unchanged assertions are what prove the key and its semantics did not move.
+Debounce and generation tests need `bloc_test`'s `wait:` and a page future the test
+controls (a `Completer`), so the status change can land while the next page is still out.
 
 ### test/repository/featured/featured_repository_test.dart (modify)
 - both existing countdown tests restubbed onto `LibraryRepository.fetchAllEntries`
@@ -835,9 +887,11 @@ unchanged assertions are what prove the key and its semantics did not move.
 - `'should return a successful snapshot with zeroes when the library read fails'` (3.4-AC33)
 - `'should count owned ids across every status'` (3.4-AC28)
 
+**3.4b's file.**
+
 ### test/features/featured/presentation/blocs/library_stats_cubit_test.dart (modify)
 The one `TrackerSavedGameEntity` at line 101 becomes a `NowPlayingGameEntity`. No other
-change; the assertions stand.
+change; the assertions stand. **3.4b's file.**
 
 ### test/widget/featured/library_stats_test.dart
 - `'shows the playing game title when a game is playing'` (3.4-AC35's second half —
@@ -845,4 +899,62 @@ change; the assertions stand.
 - `'shows the empty state card when nothing is playing'`
 
 Two tests, no dimension or colour assertions, no tap test — the tap destination is
-3.4-AC36's on-device manual check.
+3.4-AC36's on-device manual check. **3.4b's file.**
+
+**Not a test file any more:** `test/repository/tracker/tracker_sort_repository_test.dart`
+was in the pre-D17 plan as a MODIFY, to swap the mocked datasource type. With the rename
+withdrawn there is nothing to swap, so it is out of the allowlist and must not be edited
+(D17.1, 3.4-AC22). Leaving it untouched and green is itself the evidence the tracker key
+did not move.
+
+---
+
+## Approved feedback delta
+
+The human's Phase 3 review of this plan, recorded as **D17** in
+`orchestrator-state.md ## Human decisions`. All seven are folded into the skeletons above
+and into `tdd.md` and `task-brief.md` in place; this list is here so the Phase 3 diff
+stays readable. Where anything below conflicts with an older reading of the plan, this
+list wins.
+
+1. **D17.1 — no shared preferences datasource.** `AppPreferencesDatasource` is withdrawn
+   entirely. `TrackerPreferencesDatasource` is not renamed, moved, extended, edited or
+   deleted; a separate `LibraryPreferencesDatasource` is added at
+   `lib/features/library/data/datasources/library_preferences_datasource.dart`. Out of the
+   allowlist: `tracker_preferences_datasource.dart`, `tracker_sort_repository_impl.dart`
+   and `tracker_sort_repository_test.dart`. Two plan steps disappear with them.
+   **Changes 3.4-AC22** — the BA has already rewritten it.
+2. **D17.2 — `_buildNowPlayingCard` becomes a `StatelessWidget`.** Applied to the
+   `library_stats.dart` entry above. **3.4b's file and 3.4b's change**; not in 3.4a's
+   allowlist.
+3. **D17.3 — the parallel-call idiom is commented.** Two plain-English lines where
+   `pageCall`/`countsCall` (bloc) and `entriesCall`/`countsCall`
+   (`FeaturedRepositoryImpl`) are assigned before either is awaited.
+4. **D17.4 — `_pattern` moves out of the datasource** to
+   `lib/core/utils/postgrest_utils.dart` as a public `postgrestLikePattern(String term)`,
+   beside `igdb_query_builder.dart`. New allowlist entry; new plan step. **No dedicated
+   test file** — the escaping is asserted through the datasource test, which sees the
+   built URL and therefore the percent-encoding too, and `testing-conventions.md` has no
+   utility test layer to put one in. Reversible in one step if the human wants it.
+5. **D17.5 — the search debounce must not clear the list or flash a loader.** The loading
+   emit no longer sets `entries: const []`, and it now happens *after* the debounce rather
+   than before it, so a keystroke inside the window emits nothing at all. **Adds
+   3.4-AC42.**
+6. **D17.6 — `stream_transform` is declared and a named `debounce()` transformer replaces
+   the hand-rolled `Future.delayed`.** `pubspec.yaml` joins the allowlist for this one
+   line, as an explicit human-authorised exception to `execution.md`'s read-only rule.
+   `bloc_concurrency` stays — `restartable()` and `droppable()` have no equivalent in
+   `stream_transform`. New plan step.
+7. **D17.7 — a stale next-page response is discarded.** A private `int _queryGeneration`
+   on the bloc — deliberately **not** a `LibraryState` field, so equality and rebuilds are
+   unaffected — bumped by the query handler, captured by the next-page handler before its
+   await and re-checked after. On a mismatch the handler returns without emitting.
+   "Cancel" means discarding the response; the Supabase client exposes no request
+   cancellation and the observable behaviour is identical. **Adds 3.4-AC43.**
+8. **D17.8 — `hasReachedEnd` comes from `matchedCount`.** Both handlers now compare the
+   loaded count against `page.matchedCount`; `entries.length < pageSize` is gone from the
+   query handler and the next-page handler alike. **Reverses 3.4-AC7.**
+
+Step count after all seven: **20 non-generation steps, still at the ceiling** — two added
+(`postgrest_utils.dart`, `pubspec.yaml`), two removed (the tracker impl and its test).
+Nothing was trimmed to fit.
