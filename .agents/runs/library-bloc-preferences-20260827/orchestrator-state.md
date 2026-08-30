@@ -3,7 +3,7 @@ Feature: Item 3.4a — `LibraryBloc`, preferences, counts and search (split from
 Run ID: library-bloc-preferences-20260827
 Run folder: .agents/runs/library-bloc-preferences-20260827/
 Started: 2026-08-27
-Current phase: DEV
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 total) — captured 2026-08-27T18:45:00Z
 Test baseline: +394 -10 — captured 2026-08-27T18:47:00Z
@@ -11,7 +11,7 @@ Pre-existing test failures: test/repository/tracker/tracker_repository_test.dart
 Branch: feature/library-bloc-preferences
 Base branch: develop
 Base SHA: 618bed1
-Dev commit: NONE
+Dev commit: 7d87dcc
 Last updated: 2026-08-27T18:50:00Z
 
 ## Phase 0 notes
@@ -212,3 +212,13 @@ NONE
 `code-plan.md` found four real defects, three of which would have shipped; all seven
 resulting revisions are recorded as D17 and were routed BA → Tech Lead → Dev, because
 four of them moved or reversed a criterion.
+2026-08-28 Phase 4B — `7d87dcc` — Reviewed and approved by human. Verified
+independently rather than from `diff-summary.md`: no tracker file touched in either
+commit (the whole basis of D17.1), `pubspec.lock` exactly the predicted
+`transitive` → `direct main` one-liner, `_queryGeneration` present and used at
+`:61/:67/:166/:181`, `hasReachedEnd` deriving from `matchedCount` in both handlers.
+Analyzer 29 total / 0 errors / 2 warnings / 27 info — **identical to baseline despite
+41 files added**. Suite +435 -10, same ten pre-existing failures, +41 new tests.
+Both risky caveats resolved with no fallback: the broadcast double-subscribe works,
+and the loopback `HttpServer` harness gave the datasource real coverage first
+attempt — closing the inspection-only gap QA found in 3.3.
