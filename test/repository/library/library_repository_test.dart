@@ -6,7 +6,9 @@ import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart
 import 'package:gaming_library_assessment_flutter/features/library/data/datasources/library_remote_datasource.dart';
 import 'package:gaming_library_assessment_flutter/features/library/data/models/library_entry_model.dart';
 import 'package:gaming_library_assessment_flutter/features/library/data/repositories/library_repository_impl.dart';
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_counts_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_entry_entity.dart';
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_page_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/repositories/library_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
@@ -31,6 +33,17 @@ void main() {
   );
 
   setUp(() {
+    provideDummy<Result<LibraryPageEntity>>(
+      Success(LibraryPageEntity(entries: [row.toEntity()], matchedCount: 1)),
+    );
+    provideDummy<Result<LibraryCountsEntity>>(
+      Success(
+        LibraryCountsEntity(
+          byStatus: {for (final status in LibraryStatus.values) status: 0},
+          total: 0,
+        ),
+      ),
+    );
     provideDummy<Result<List<LibraryEntryEntity>>>(Success([row.toEntity()]));
     provideDummy<Result<LibraryEntryEntity>>(Success(row.toEntity()));
     provideDummy<Result<void>>(const Success(null));
@@ -54,7 +67,7 @@ void main() {
           limit: 20,
           offset: 0,
         ),
-      ).thenAnswer((_) async => [row]);
+      ).thenAnswer((_) async => ([row], 1));
 
       final result = await repository.fetchPage(
         sort: LibrarySort.recentlyAdded,
@@ -62,12 +75,31 @@ void main() {
         offset: 0,
       );
 
-      expect(result, isA<Success<List<LibraryEntryEntity>>>());
-      expect((result as Success<List<LibraryEntryEntity>>).value, [
+      expect(result, isA<Success<LibraryPageEntity>>());
+      expect((result as Success<LibraryPageEntity>).value.entries, [
         row.toEntity(),
       ]);
     },
   );
+
+  test('should carry the matched count through from the datasource', () async {
+    when(
+      datasource.fetchPage(
+        sort: LibrarySort.recentlyAdded,
+        limit: 20,
+        offset: 0,
+      ),
+    ).thenAnswer((_) async => ([row], 312));
+
+    final result = await repository.fetchPage(
+      sort: LibrarySort.recentlyAdded,
+      limit: 20,
+      offset: 0,
+    );
+
+    expect(result, isA<Success<LibraryPageEntity>>());
+    expect((result as Success<LibraryPageEntity>).value.matchedCount, 312);
+  });
 
   test(
     'should return an empty success when the page is past the last row',
@@ -78,7 +110,7 @@ void main() {
           limit: 20,
           offset: 1000,
         ),
-      ).thenAnswer((_) async => []);
+      ).thenAnswer((_) async => (<LibraryEntryModel>[], 0));
 
       final result = await repository.fetchPage(
         sort: LibrarySort.recentlyAdded,
@@ -86,8 +118,8 @@ void main() {
         offset: 1000,
       );
 
-      expect(result, isA<Success<List<LibraryEntryEntity>>>());
-      expect((result as Success<List<LibraryEntryEntity>>).value, isEmpty);
+      expect(result, isA<Success<LibraryPageEntity>>());
+      expect((result as Success<LibraryPageEntity>).value.entries, isEmpty);
     },
   );
 
@@ -109,7 +141,7 @@ void main() {
           limit: 20,
           offset: 0,
         ),
-      ).thenAnswer((_) async => [brokenRow]);
+      ).thenAnswer((_) async => ([brokenRow], 1));
 
       final result = await repository.fetchPage(
         sort: LibrarySort.recentlyAdded,
@@ -117,7 +149,7 @@ void main() {
         offset: 0,
       );
 
-      expect(result, isA<Failure<List<LibraryEntryEntity>>>());
+      expect(result, isA<Failure<LibraryPageEntity>>());
     },
   );
 
@@ -245,7 +277,7 @@ void main() {
       offset: 0,
     );
 
-    expect(result, isA<Failure<List<LibraryEntryEntity>>>());
+    expect(result, isA<Failure<LibraryPageEntity>>());
   });
 
   test(
@@ -258,4 +290,66 @@ void main() {
       expect(result, isA<Success<void>>());
     },
   );
+
+  test('should sum the six status counts into the library total', () async {
+    when(datasource.fetchCounts()).thenAnswer(
+      (_) async => {
+        LibraryStatus.playing: 5,
+        LibraryStatus.backlog: 3,
+        LibraryStatus.completed: 10,
+        LibraryStatus.onHold: 1,
+        LibraryStatus.wishlist: 2,
+        LibraryStatus.dropped: 0,
+      },
+    );
+
+    final result = await repository.fetchCounts();
+
+    expect(result, isA<Success<LibraryCountsEntity>>());
+    expect((result as Success<LibraryCountsEntity>).value.total, 21);
+  });
+
+  test('should return zero for a status with no rows', () async {
+    when(datasource.fetchCounts()).thenAnswer(
+      (_) async => {for (final status in LibraryStatus.values) status: 0},
+    );
+
+    final result = await repository.fetchCounts();
+
+    expect(result, isA<Success<LibraryCountsEntity>>());
+    expect(
+      (result as Success<LibraryCountsEntity>).value.byStatus[LibraryStatus
+          .wishlist],
+      0,
+    );
+    expect(result.value.total, 0);
+  });
+
+  test('should return a failure when the session is missing', () async {
+    when(datasource.fetchCounts()).thenThrow(AuthSessionMissingException());
+
+    final result = await repository.fetchCounts();
+
+    expect(result, isA<Failure<LibraryCountsEntity>>());
+    expect(
+      (result as Failure<LibraryCountsEntity>).error,
+      const ErrorType.notSignedIn(),
+    );
+  });
+
+  test('should return every entry ordered by the datasource for an unpaged '
+      'read', () async {
+    when(
+      datasource.fetchAllEntries(status: LibraryStatus.playing),
+    ).thenAnswer((_) async => [row]);
+
+    final result = await repository.fetchAllEntries(
+      status: LibraryStatus.playing,
+    );
+
+    expect(result, isA<Success<List<LibraryEntryEntity>>>());
+    expect((result as Success<List<LibraryEntryEntity>>).value, [
+      row.toEntity(),
+    ]);
+  });
 }

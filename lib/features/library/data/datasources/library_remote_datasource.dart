@@ -1,5 +1,6 @@
 import 'package:gaming_library_assessment_flutter/core/enums/library_sort.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart';
+import 'package:gaming_library_assessment_flutter/core/utils/postgrest_utils.dart';
 import 'package:gaming_library_assessment_flutter/features/library/const.dart';
 import 'package:gaming_library_assessment_flutter/features/library/data/models/library_entry_model.dart';
 import 'package:gaming_library_assessment_flutter/features/library/data/models/library_status_column.dart';
@@ -12,11 +13,12 @@ class LibraryRemoteDatasource {
 
   final SupabaseClient _client;
 
-  Future<List<LibraryEntryModel>> fetchPage({
+  Future<(List<LibraryEntryModel>, int)> fetchPage({
     LibraryStatus? status,
     required LibrarySort sort,
     required int limit,
     required int offset,
+    String? searchTerm,
   }) async {
     final userId = _currentUserId();
     final (column, isDescending) = _sortColumn(sort);
@@ -29,10 +31,61 @@ class LibraryRemoteDatasource {
     if (status != null) {
       query = query.eq(LibraryEntryConstants.status, status.columnValue);
     }
+    if (searchTerm != null) {
+      query = query.ilike(
+        LibraryEntryConstants.title,
+        postgrestLikePattern(searchTerm),
+      );
+    }
 
-    final rows = await query
+    final response = await query
         .order(column, ascending: !isDescending)
-        .range(offset, offset + limit - 1);
+        .range(offset, offset + limit - 1)
+        .count(CountOption.exact);
+
+    return (
+      response.data.map(LibraryEntryModel.fromJson).toList(),
+      response.count,
+    );
+  }
+
+  // Six head counts, run together. The total is their sum: status is NOT
+  // NULL with a six-value check constraint, so every row lands in exactly
+  // one.
+  Future<Map<LibraryStatus, int>> fetchCounts() async {
+    final userId = _currentUserId();
+
+    final counts = await Future.wait(
+      LibraryStatus.values.map(
+        (status) => _client
+            .from(LibraryEntryConstants.table)
+            .count()
+            .eq(LibraryEntryConstants.userId, userId)
+            .eq(LibraryEntryConstants.status, status.columnValue),
+      ),
+    );
+
+    return Map.fromIterables(LibraryStatus.values, counts);
+  }
+
+  Future<List<LibraryEntryModel>> fetchAllEntries({
+    LibraryStatus? status,
+  }) async {
+    final userId = _currentUserId();
+
+    var query = _client
+        .from(LibraryEntryConstants.table)
+        .select()
+        .eq(LibraryEntryConstants.userId, userId);
+
+    if (status != null) {
+      query = query.eq(LibraryEntryConstants.status, status.columnValue);
+    }
+
+    final rows = await query.order(
+      LibraryEntryConstants.updatedAt,
+      ascending: false,
+    );
 
     return rows.map(LibraryEntryModel.fromJson).toList();
   }

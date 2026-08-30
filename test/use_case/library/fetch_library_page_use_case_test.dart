@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_sort.dart';
-import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_entry_entity.dart';
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_page_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/repositories/library_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/use_cases/fetch_library_page_use_case.dart';
 import 'package:get_it/get_it.dart';
@@ -17,7 +17,9 @@ void main() {
   late FetchLibraryPageUseCase useCase;
 
   setUp(() {
-    provideDummy<Result<List<LibraryEntryEntity>>>(const Success([]));
+    provideDummy<Result<LibraryPageEntity>>(
+      const Success(LibraryPageEntity(entries: [], matchedCount: 0)),
+    );
     repository = MockLibraryRepository();
     GetIt.I.registerSingleton<LibraryRepository>(repository);
     useCase = FetchLibraryPageUseCase(repository);
@@ -35,7 +37,10 @@ void main() {
         limit: 20,
         offset: 0,
       ),
-    ).thenAnswer((_) async => const Success([]));
+    ).thenAnswer(
+      (_) async =>
+          const Success(LibraryPageEntity(entries: [], matchedCount: 0)),
+    );
 
     final result = await useCase(
       sort: LibrarySort.recentlyAdded,
@@ -43,7 +48,7 @@ void main() {
       offset: 0,
     );
 
-    expect(result, isA<Success<List<LibraryEntryEntity>>>());
+    expect(result, isA<Success<LibraryPageEntity>>());
     verify(
       repository.fetchPage(
         sort: LibrarySort.recentlyAdded,
@@ -68,10 +73,40 @@ void main() {
       offset: 0,
     );
 
-    expect(result, isA<Failure<List<LibraryEntryEntity>>>());
+    expect(result, isA<Failure<LibraryPageEntity>>());
     expect(
-      (result as Failure<List<LibraryEntryEntity>>).error,
+      (result as Failure<LibraryPageEntity>).error,
       const ErrorType.notSignedIn(),
+    );
+  });
+
+  test('should forward the search term to the repository', () async {
+    when(
+      repository.fetchPage(
+        sort: LibrarySort.recentlyAdded,
+        limit: 20,
+        offset: 0,
+        searchTerm: 'chrono',
+      ),
+    ).thenAnswer(
+      (_) async =>
+          const Success(LibraryPageEntity(entries: [], matchedCount: 0)),
+    );
+
+    await useCase(
+      sort: LibrarySort.recentlyAdded,
+      limit: 20,
+      offset: 0,
+      searchTerm: 'chrono',
+    );
+
+    verify(
+      repository.fetchPage(
+        sort: LibrarySort.recentlyAdded,
+        limit: 20,
+        offset: 0,
+        searchTerm: 'chrono',
+      ),
     );
   });
 }

@@ -26,6 +26,8 @@ class AssetConstants {
 class StorageConstants {
   static const firstUseKey = 'first_use';
   static const trackerSortTagKey = 'tracker_sort_tag';
+  static const libraryViewModeKey = 'library_view_mode';
+  static const librarySortKey = 'library_sort';
 }
 
 class SupabaseConstants {

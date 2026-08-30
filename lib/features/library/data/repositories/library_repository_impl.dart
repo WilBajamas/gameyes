@@ -3,7 +3,9 @@ import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_sort.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart';
 import 'package:gaming_library_assessment_flutter/features/library/data/datasources/library_remote_datasource.dart';
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_counts_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_entry_entity.dart';
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_page_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/repositories/library_repository.dart';
 import 'package:injectable/injectable.dart';
 
@@ -19,14 +21,30 @@ class LibraryRepositoryImpl
   // not after it: a row with an unreadable status must fail here rather than
   // throw at whoever called us.
   @override
-  Future<Result<List<LibraryEntryEntity>>> fetchPage({
+  Future<Result<LibraryPageEntity>> fetchPage({
     LibraryStatus? status,
     required LibrarySort sort,
     required int limit,
     required int offset,
+    String? searchTerm,
   }) => fetchData(
-    apiCall: _page(status: status, sort: sort, limit: limit, offset: offset),
+    apiCall: _page(
+      status: status,
+      sort: sort,
+      limit: limit,
+      offset: offset,
+      searchTerm: searchTerm,
+    ),
   );
+
+  @override
+  Future<Result<LibraryCountsEntity>> fetchCounts() =>
+      fetchData(apiCall: _counts());
+
+  @override
+  Future<Result<List<LibraryEntryEntity>>> fetchAllEntries({
+    LibraryStatus? status,
+  }) => fetchData(apiCall: _allEntries(status: status));
 
   @override
   Future<Result<LibraryEntryEntity>> add({
@@ -82,18 +100,38 @@ class LibraryRepositoryImpl
   Future<Result<void>> remove({required int igdbId}) =>
       fetchData(apiCall: _datasource.remove(igdbId: igdbId));
 
-  Future<List<LibraryEntryEntity>> _page({
+  Future<LibraryPageEntity> _page({
     LibraryStatus? status,
     required LibrarySort sort,
     required int limit,
     required int offset,
+    String? searchTerm,
   }) async {
-    final rows = await _datasource.fetchPage(
+    final (rows, matchedCount) = await _datasource.fetchPage(
       status: status,
       sort: sort,
       limit: limit,
       offset: offset,
+      searchTerm: searchTerm,
     );
+
+    return LibraryPageEntity(
+      entries: rows.map((row) => row.toEntity()).toList(),
+      matchedCount: matchedCount,
+    );
+  }
+
+  Future<LibraryCountsEntity> _counts() async {
+    final byStatus = await _datasource.fetchCounts();
+
+    return LibraryCountsEntity(
+      byStatus: byStatus,
+      total: byStatus.values.fold(0, (sum, count) => sum + count),
+    );
+  }
+
+  Future<List<LibraryEntryEntity>> _allEntries({LibraryStatus? status}) async {
+    final rows = await _datasource.fetchAllEntries(status: status);
 
     return rows.map((row) => row.toEntity()).toList();
   }
