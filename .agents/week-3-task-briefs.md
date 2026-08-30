@@ -67,15 +67,24 @@ decision, carried from week 2):
 **The tracker task tree.** Human decision 2026-08-26. `tracker_game_detail_screen.dart`,
 `task_detail_screen.dart`, `TaskCubit`, `GroupTask`, `SavedGameTask` and `TaskStep`
 all stay. Item 3.2 deletes their only real entry point, so they go **dormant** —
-reachable only from `library_stats.dart:319`. That is deliberate. Do not clean up the
+~~reachable only from `library_stats.dart:319`~~ **reachable from nowhere at all,
+updated 2026-08-27 by D14**. That is deliberate. Do not clean up the
 orphan, and do not delete the Isar `SavedGame` store to tidy the resulting two-store
 situation. A design convention for task detail, groups and group items is coming from
 the human; pick it up **when that lands, not before**. Full note in the handover's
 "Known non-blocking gaps".
 
-**Consequence:** the analyzer baseline stays **30 issues / 2 warnings** all week,
-because `_TaskReminder` lives in `task_detail_screen.dart` and that file survives.
-A run that reports 28 has broken something.
+**D14, 2026-08-27:** item 3.4 sends *every* now-playing tap to the Library tab, so
+the last `TrackerGameDetailRoute` push is gone. The rule that changed is "it must
+keep an entry point"; **"do not delete it" still stands.** The tree stays in the
+repo, compiling and passing its tests, until the design convention lands.
+
+**Consequence:** the deliberate `_TaskReminder` pair lives in
+`task_detail_screen.dart` and that file survives, so **2 warnings stays the
+invariant all week.** The *total* is not an invariant — it has moved three times
+(30 → 28 → 29) and moves again whenever an item adds or deletes files. Measure
+both on the untouched tree at Phase 0 of every item; a changed total on its own
+proves nothing.
 
 **Game Detail.** It is a rebuild with its own open question (the hero ramp hue) and
 its own spec. Not week 3. This means `horizontal_separator.dart` is **not** retired
@@ -231,7 +240,9 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
       **This is what finally unblocks item 3's on-device cross-account RLS check**,
       blocked since week 1 on nothing writing to `library_entries`.
 
-- [ ] **3.4 — `LibraryBloc`, preferences, and the Featured repair.**
+- [x] **3.4a — `LibraryBloc`, preferences, counts, search, datasource test.**
+      Split from the original item 3.4 at the Featured seam, D16 (2026-08-28);
+      3.4a lands first, and 3.4b depends on it.
       - Status filter, sort, view mode, pagination, search-within-status. Per §9,
         **search composes with the active chip rather than overriding it** — that is
         a state-shape decision, not a UI one, so it belongs here.
@@ -240,9 +251,14 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         equivalent, so Library is `Result<T>` + BLoC with explicit refetch and real
         pagination for the 312-game case. A port would be wrong.
       - View-mode and sort persistence (§9: a 300-game user who picks list must never
-        be handed the grid again). `TrackerPreferencesDatasource` +
-        `TrackerSortRepository` already do exactly this for the sort tag — rename and
-        extend rather than writing a second one.
+        be handed the grid again). A **separate** `LibraryPreferencesDatasource` is
+        added beside `TrackerPreferencesDatasource`, which stays untouched (D17.1) —
+        the earlier plan to rename and extend the tracker's is withdrawn.
+      - `GamesBloc`'s three pre-existing test failures are **not** in scope. Fixing
+        them needs restructuring (see `testing-conventions.md`), and moving the
+        baseline mid-week helps nobody.
+
+- [ ] **3.4b — the Featured repair.** Depends on 3.4a's counts and unpaged read.
       - **Featured repair lands here, and it is a real bug fix, not a refactor.**
         `featured_local_datasource.dart:46` filters `statusEqualTo('Playing')` and
         `getWishlistedGames()` filters `isWishlistedEqualTo(true)` — both against
@@ -253,9 +269,7 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         Repoint at `library_entries`. Same never-fired-branch shape as
         `GamesStatus.empty` — carry the lesson: *when a criterion says "renders X in
         state Y", check that anything ever produces state Y.*
-      - `GamesBloc`'s three pre-existing test failures are **not** in scope. Fixing
-        them needs restructuring (see `testing-conventions.md`), and moving the
-        baseline mid-week helps nobody.
+      - Total games and owned ids repoint at `library_entries` too (D15).
 
 **GATE.** Nothing shipped to a user yet, but every substrate Stage 4 needs is proven.
 Worth a human pause here — the schema decision in 3.3 is the expensive one to reverse.

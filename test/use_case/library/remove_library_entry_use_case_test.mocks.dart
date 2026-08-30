@@ -11,7 +11,11 @@ import 'package:gaming_library_assessment_flutter/core/enums/library_sort.dart'
     as _i7;
 import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart'
     as _i6;
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_counts_entity.dart'
+    as _i9;
 import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_entry_entity.dart'
+    as _i10;
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_page_entity.dart'
     as _i5;
 import 'package:gaming_library_assessment_flutter/features/library/domain/repositories/library_repository.dart'
     as _i2;
@@ -42,11 +46,12 @@ class MockLibraryRepository extends _i1.Mock implements _i2.LibraryRepository {
   }
 
   @override
-  _i3.Future<_i4.Result<List<_i5.LibraryEntryEntity>>> fetchPage({
+  _i3.Future<_i4.Result<_i5.LibraryPageEntity>> fetchPage({
     _i6.LibraryStatus? status,
     required _i7.LibrarySort? sort,
     required int? limit,
     required int? offset,
+    String? searchTerm,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#fetchPage, [], {
@@ -54,24 +59,54 @@ class MockLibraryRepository extends _i1.Mock implements _i2.LibraryRepository {
               #sort: sort,
               #limit: limit,
               #offset: offset,
+              #searchTerm: searchTerm,
             }),
+            returnValue: _i3.Future<_i4.Result<_i5.LibraryPageEntity>>.value(
+              _i8.dummyValue<_i4.Result<_i5.LibraryPageEntity>>(
+                this,
+                Invocation.method(#fetchPage, [], {
+                  #status: status,
+                  #sort: sort,
+                  #limit: limit,
+                  #offset: offset,
+                  #searchTerm: searchTerm,
+                }),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<_i5.LibraryPageEntity>>);
+
+  @override
+  _i3.Future<_i4.Result<_i9.LibraryCountsEntity>> fetchCounts() =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchCounts, []),
+            returnValue: _i3.Future<_i4.Result<_i9.LibraryCountsEntity>>.value(
+              _i8.dummyValue<_i4.Result<_i9.LibraryCountsEntity>>(
+                this,
+                Invocation.method(#fetchCounts, []),
+              ),
+            ),
+          )
+          as _i3.Future<_i4.Result<_i9.LibraryCountsEntity>>);
+
+  @override
+  _i3.Future<_i4.Result<List<_i10.LibraryEntryEntity>>> fetchAllEntries({
+    _i6.LibraryStatus? status,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchAllEntries, [], {#status: status}),
             returnValue:
-                _i3.Future<_i4.Result<List<_i5.LibraryEntryEntity>>>.value(
-                  _i8.dummyValue<_i4.Result<List<_i5.LibraryEntryEntity>>>(
+                _i3.Future<_i4.Result<List<_i10.LibraryEntryEntity>>>.value(
+                  _i8.dummyValue<_i4.Result<List<_i10.LibraryEntryEntity>>>(
                     this,
-                    Invocation.method(#fetchPage, [], {
-                      #status: status,
-                      #sort: sort,
-                      #limit: limit,
-                      #offset: offset,
-                    }),
+                    Invocation.method(#fetchAllEntries, [], {#status: status}),
                   ),
                 ),
           )
-          as _i3.Future<_i4.Result<List<_i5.LibraryEntryEntity>>>);
+          as _i3.Future<_i4.Result<List<_i10.LibraryEntryEntity>>>);
 
   @override
-  _i3.Future<_i4.Result<_i5.LibraryEntryEntity>> add({
+  _i3.Future<_i4.Result<_i10.LibraryEntryEntity>> add({
     required int? igdbId,
     required String? title,
     String? coverUrl,
@@ -96,8 +131,8 @@ class MockLibraryRepository extends _i1.Mock implements _i2.LibraryRepository {
               #playtimeHours: playtimeHours,
               #progressPercent: progressPercent,
             }),
-            returnValue: _i3.Future<_i4.Result<_i5.LibraryEntryEntity>>.value(
-              _i8.dummyValue<_i4.Result<_i5.LibraryEntryEntity>>(
+            returnValue: _i3.Future<_i4.Result<_i10.LibraryEntryEntity>>.value(
+              _i8.dummyValue<_i4.Result<_i10.LibraryEntryEntity>>(
                 this,
                 Invocation.method(#add, [], {
                   #igdbId: igdbId,
@@ -114,10 +149,10 @@ class MockLibraryRepository extends _i1.Mock implements _i2.LibraryRepository {
               ),
             ),
           )
-          as _i3.Future<_i4.Result<_i5.LibraryEntryEntity>>);
+          as _i3.Future<_i4.Result<_i10.LibraryEntryEntity>>);
 
   @override
-  _i3.Future<_i4.Result<_i5.LibraryEntryEntity>> update({
+  _i3.Future<_i4.Result<_i10.LibraryEntryEntity>> update({
     required int? igdbId,
     _i6.LibraryStatus? status,
     int? rating,
@@ -138,8 +173,8 @@ class MockLibraryRepository extends _i1.Mock implements _i2.LibraryRepository {
               #playtimeHours: playtimeHours,
               #progressPercent: progressPercent,
             }),
-            returnValue: _i3.Future<_i4.Result<_i5.LibraryEntryEntity>>.value(
-              _i8.dummyValue<_i4.Result<_i5.LibraryEntryEntity>>(
+            returnValue: _i3.Future<_i4.Result<_i10.LibraryEntryEntity>>.value(
+              _i8.dummyValue<_i4.Result<_i10.LibraryEntryEntity>>(
                 this,
                 Invocation.method(#update, [], {
                   #igdbId: igdbId,
@@ -154,7 +189,7 @@ class MockLibraryRepository extends _i1.Mock implements _i2.LibraryRepository {
               ),
             ),
           )
-          as _i3.Future<_i4.Result<_i5.LibraryEntryEntity>>);
+          as _i3.Future<_i4.Result<_i10.LibraryEntryEntity>>);
 
   @override
   _i3.Future<_i4.Result<void>> remove({required int? igdbId}) =>

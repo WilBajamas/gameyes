@@ -16,3 +16,8 @@ class LibraryEntryConstants {
   static const genre = 'genre';
   static const updatedAt = 'updated_at';
 }
+
+class LibraryConstants {
+  static const pageSize = 20;
+  static const searchDebounce = Duration(milliseconds: 300);
+}
