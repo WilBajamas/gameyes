@@ -3,7 +3,7 @@ Feature: Item 3.4a — `LibraryBloc`, preferences, counts and search (split from
 Run ID: library-bloc-preferences-20260827
 Run folder: .agents/runs/library-bloc-preferences-20260827/
 Started: 2026-08-27
-Current phase: BA
+Current phase: DEV
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 total) — captured 2026-08-27T18:45:00Z
 Test baseline: +394 -10 — captured 2026-08-27T18:47:00Z
@@ -208,4 +208,7 @@ D15 recorded above, 2026-08-27T19:30:00Z. Docs amended. BA re-spawned.
 NONE
 
 ## Code review outcomes
-NONE
+2026-08-28 Phase 3 gate — approved after one revision round. The human's review of
+`code-plan.md` found four real defects, three of which would have shipped; all seven
+resulting revisions are recorded as D17 and were routed BA → Tech Lead → Dev, because
+four of them moved or reversed a criterion.
