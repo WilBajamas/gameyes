@@ -141,6 +141,60 @@ and a user who added games only through the Library sees `Total Games 0` beside
 `Wishlist 3`, with no owned marks on Featured. The count capability this item must
 build already serves the first of the two directly.
 
+**D17 — seven Phase 3 revisions from the human's code-plan review.**
+The gate found four real defects, three of which would have shipped. Four of the
+seven move or reverse a criterion, so this routes **BA → Tech Lead**, not Tech Lead
+alone — the standing lesson is that a criterion left standing with no matching change
+is an automatic QA FAIL and a burned cycle.
+
+1. **Separate `LibraryPreferencesDatasource`; `TrackerPreferencesDatasource` is not
+   renamed and not touched.** Reverses the shared-`AppPreferencesDatasource` design.
+   **Changes 3.4-AC22**, whose whole premise is "the renamed preferences datasource".
+   The new shape is strictly safer: an untouched class cannot disturb the live
+   `tracker_sort_tag` key, which was AC22's stated failure case.
+2. **`_buildNowPlayingCard` becomes a `StatelessWidget`, not a helper method returning
+   a Widget.** A method cannot be `const` and rebuilds with its parent. **This is
+   3.4b's file** (`library_stats.dart`) — recorded here as binding on that run, not
+   pulled into 3.4a.
+3. **Comment the parallel-call idiom.** `final pageCall = ...` before `await` starts
+   both requests concurrently; awaiting each directly would serialise them. Correct as
+   written, but nothing says so. Plain English, no jargon.
+4. **`_pattern` moves out of the datasource** to `lib/core/utils/postgrest_utils.dart`
+   as a public `postgrestLikePattern(String term)`, beside `igdb_query_builder.dart`.
+   It encodes PostgREST `ilike` escaping, which is query-syntax knowledge rather than
+   Library knowledge, and other features will need it.
+5. **The search debounce must not clear the list or flash a loader.** Real defect: the
+   plan emits `loading` with `entries: []` **before** awaiting the debounce, so every
+   keystroke strobes the screen and the debounce saves network calls without saving the
+   UI. Wait first, then emit; and keep the previous results visible while a search is
+   in flight. **Adds a requirement** — 3.4-AC9 protects entries only during a
+   *next-page* append, never during a search.
+6. **Declare `stream_transform` and use a named `debounce()` event transformer**,
+   replacing the hand-rolled `Future.delayed`. `restartable()` takes no duration, so the
+   delay was riding implicitly on its cancellation — it works, but a later edit breaks
+   debouncing with no failing test. `stream_transform` is already in the lock file as a
+   transitive dependency of `bloc_concurrency`. **`bloc_concurrency` stays** — it
+   provides `restartable()`/`droppable()`, which `stream_transform` does not.
+7. **A stale next-page response must never append after the query changed.** Real
+   defect: the two handlers have separate transformers and cannot see each other, so
+   scrolling and then tapping a different status chip appends the *old* status's page 2
+   onto the *new* status's list. Visibly wrong games. The entry guard runs before the
+   await and cannot catch it.
+   Human's rule: a query change cancels the in-flight next-page. **Honest constraint:**
+   the Supabase client exposes no request cancellation, so "cancel" means *discard the
+   response*. Same visible behaviour. Mechanism: a private `int _queryGeneration` on the
+   bloc (not in `LibraryState`, so equality is unaffected), bumped by the query handler,
+   captured by the next-page handler before its await and re-checked after. Also fixes
+   out-of-order page responses, and is testable in a way that can actually fail.
+   **Adds a requirement** — 3.4-AC6 covers only duplicate appends from two next-page
+   requests.
+8. **`hasReachedEnd` comes from `matchedCount`, not from a short page.** The 40-item
+   case costs a wasted third request under the current rule. **Reverses 3.4-AC7**, whose
+   mechanism is literally "a page shorter than the requested limit". No new endpoint and
+   no extra call is needed: the paged query already returns `page.matchedCount`, because
+   PostgREST's count respects filters and ignores range — the same figure §8's
+   `Showing 12 out of 312` line needs.
+
 ## Escalation history
 2026-08-28T10:40:00Z Phase 2 — Tech Lead Agent — the plan needs 26 non-generation
 steps against the 20-step ceiling — Resolved: human took option A, the split at the
