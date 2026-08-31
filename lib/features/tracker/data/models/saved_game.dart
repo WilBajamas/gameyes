@@ -13,12 +13,7 @@ class SavedGamePlatform {
   String? abbreviation;
   String? logoUrl;
 
-  SavedGamePlatform({
-    this.id,
-    this.name,
-    this.abbreviation,
-    this.logoUrl,
-  });
+  SavedGamePlatform({this.id, this.name, this.abbreviation, this.logoUrl});
 }
 
 @collection
@@ -73,40 +68,45 @@ class SavedGame {
   });
 
   TrackerSavedGameEntity toEntity() => TrackerSavedGameEntity(
-        id: id,
-        name: name,
-        imageUrl: imageUrl,
-        gameId: gameId,
-        gameSlug: gameSlug,
-        dateSaved: dateSaved,
-        completed: completed,
-        platforms: platforms
-                ?.map(
-                  (p) => PlatformEntity(
-                    id: p.id ?? 0,
-                    name: p.name ?? '',
-                    abbreviation: p.abbreviation ?? '',
-                    platformLogo: p.logoUrl != null
-                        ? PlatformLogoEntity(url: p.logoUrl)
-                        : null,
-                  ),
-                )
-                .toList() ??
-            [],
-        availablePlatforms: availablePlatforms
-                ?.map(
-                  (p) => PlatformEntity(
-                    id: p.id ?? 0,
-                    name: p.name ?? '',
-                    abbreviation: p.abbreviation ?? '',
-                    platformLogo: p.logoUrl != null
-                        ? PlatformLogoEntity(url: p.logoUrl)
-                        : null,
-                  ),
-                )
-                .toList() ??
-            [],
-        dateModified: dateModified,
-        groupTasks: groupTasks.map((e) => e.toEntity()).toList(),
-      );
+    id: id,
+    name: name,
+    imageUrl: imageUrl,
+    gameId: gameId,
+    gameSlug: gameSlug,
+    dateSaved: dateSaved,
+    completed: completed,
+    platforms:
+        platforms
+            ?.map(
+              (p) => PlatformEntity(
+                id: p.id ?? 0,
+                name: p.name ?? '',
+                abbreviation: p.abbreviation ?? '',
+                platformLogo: p.logoUrl != null
+                    ? PlatformLogoEntity(url: p.logoUrl)
+                    : null,
+              ),
+            )
+            .toList() ??
+        [],
+    availablePlatforms:
+        availablePlatforms
+            ?.map(
+              (p) => PlatformEntity(
+                id: p.id ?? 0,
+                name: p.name ?? '',
+                abbreviation: p.abbreviation ?? '',
+                platformLogo: p.logoUrl != null
+                    ? PlatformLogoEntity(url: p.logoUrl)
+                    : null,
+              ),
+            )
+            .toList() ??
+        [],
+    dateModified: dateModified,
+    hoursLogged: hoursLogged,
+    averageCompletionHours: averageCompletionHours,
+    manualProgressPercentage: manualProgressPercentage,
+    groupTasks: groupTasks.map((e) => e.toEntity()).toList(),
+  );
 }

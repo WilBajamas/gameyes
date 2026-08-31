@@ -7,7 +7,7 @@ import 'package:gaming_library_assessment_flutter/features/featured/domain/repos
 import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_library_snapshot_use_case.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_state.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/domain/entities/now_playing_game_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FakeGetLibrarySnapshotUseCase extends GetLibrarySnapshotUseCase {
@@ -86,34 +86,37 @@ void main() {
 
       expect(cubit.state.status, LibraryStatsStatus.success);
       expect(
-          cubit.state.isChecklistDismissed, true); // dismissed since count >= 1
+        cubit.state.isChecklistDismissed,
+        true,
+      ); // dismissed since count >= 1
       expect(cubit.state.step1Completed, true);
       expect(cubit.state.step2Completed, false);
       expect(cubit.state.step3Completed, false);
       expect(cubit.state.checklistProgress, closeTo(1.0 / 3.0, 0.01));
     });
 
-    test('loadLibrarySnapshot success with 1 game playing, and wishlist',
-        () async {
-      final playingGame =
-          SavedGame(gameId: 1, name: 'Playing Game', status: 'Playing');
-      fakeUseCase.snapshot = LibrarySnapshotEntity(
-        totalGamesCount: 2,
-        nowPlayingGames: [playingGame],
-        thisWeekPlayHours: 5.5,
-        wishlistCount: 1,
-        ownedGameIds: {1, 2},
-      );
+    test(
+      'loadLibrarySnapshot success with 1 game playing, and wishlist',
+      () async {
+        final playingGame = NowPlayingGameEntity(title: 'Playing Game');
+        fakeUseCase.snapshot = LibrarySnapshotEntity(
+          totalGamesCount: 2,
+          nowPlayingGames: [playingGame],
+          thisWeekPlayHours: 5.5,
+          wishlistCount: 1,
+          ownedGameIds: {1, 2},
+        );
 
-      await cubit.loadLibrarySnapshot();
+        await cubit.loadLibrarySnapshot();
 
-      expect(cubit.state.status, LibraryStatsStatus.success);
-      expect(cubit.state.isChecklistDismissed, true);
-      expect(cubit.state.step1Completed, true);
-      expect(cubit.state.step2Completed, true);
-      expect(cubit.state.step3Completed, true);
-      expect(cubit.state.checklistProgress, 1.0);
-    });
+        expect(cubit.state.status, LibraryStatsStatus.success);
+        expect(cubit.state.isChecklistDismissed, true);
+        expect(cubit.state.step1Completed, true);
+        expect(cubit.state.step2Completed, true);
+        expect(cubit.state.step3Completed, true);
+        expect(cubit.state.checklistProgress, 1.0);
+      },
+    );
 
     test('loadLibrarySnapshot failure emits failed state', () async {
       fakeUseCase.error = const ErrorType.unknown();
@@ -125,4 +128,3 @@ void main() {
     });
   });
 }
-

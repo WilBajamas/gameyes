@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:gaming_library_assessment_flutter/config/route/auto_route_config.gr.dart';
-import 'package:gaming_library_assessment_flutter/core/res/const.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/extensions.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/domain/entities/now_playing_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart';
-import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 import 'package:gaming_library_assessment_flutter/generated/l10n.dart';
 import 'package:gaming_library_assessment_flutter/widgets/default_cached_network_image.dart';
 import 'package:gaming_library_assessment_flutter/widgets/empty_state_card.dart';
@@ -259,15 +257,26 @@ class LibraryStatsWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        _buildNowPlayingCard(context, playingGames),
+        _NowPlayingCard(
+          playingGames: playingGames,
+          onMarkNowPlaying: onMarkNowPlaying,
+        ),
       ],
     );
   }
+}
 
-  Widget _buildNowPlayingCard(
-    BuildContext context,
-    List<SavedGame> playingGames,
-  ) {
+class _NowPlayingCard extends StatelessWidget {
+  const _NowPlayingCard({
+    required this.playingGames,
+    required this.onMarkNowPlaying,
+  });
+
+  final List<NowPlayingGameEntity> playingGames;
+  final VoidCallback onMarkNowPlaying;
+
+  @override
+  Widget build(BuildContext context) {
     if (playingGames.isEmpty) {
       return EmptyStateCard(
         glyph: Icons.play_circle_outline_rounded,
@@ -284,24 +293,24 @@ class LibraryStatsWidget extends StatelessWidget {
     double? progressPercent;
     String? progressLabel;
 
-    if (topGame.manualProgressPercentage != null) {
-      progressPercent = topGame.manualProgressPercentage! / 100.0;
+    if (topGame.progressPercent != null) {
+      progressPercent = topGame.progressPercent! / 100.0;
       progressLabel = S.current.completed_percentage(
-        topGame.manualProgressPercentage!.toInt().toString(),
+        topGame.progressPercent!.toInt().toString(),
       );
-    } else if (topGame.hoursLogged != null &&
+    } else if (topGame.playtimeHours != null &&
         topGame.averageCompletionHours != null &&
         topGame.averageCompletionHours! > 0) {
       final calculated =
-          (topGame.hoursLogged! / topGame.averageCompletionHours!) * 100;
+          (topGame.playtimeHours! / topGame.averageCompletionHours!) * 100;
       progressPercent = (calculated > 100 ? 100 : calculated) / 100.0;
       progressLabel = S.current.logged_hours_of(
-        topGame.hoursLogged!.toStringAsFixed(1),
+        topGame.playtimeHours!.toStringAsFixed(1),
         topGame.averageCompletionHours!.toStringAsFixed(0),
       );
-    } else if (topGame.hoursLogged != null) {
+    } else if (topGame.playtimeHours != null) {
       progressLabel = S.current.played_hours(
-        topGame.hoursLogged!.toStringAsFixed(1),
+        topGame.playtimeHours!.toStringAsFixed(1),
       );
     }
 
@@ -309,16 +318,7 @@ class LibraryStatsWidget extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
-        onTap: () {
-          if (extraCount >= 1) {
-            AutoTabsRouter.of(context).setActiveIndex(1);
-          } else {
-            // Go to Tracker detail for this game
-            context.router.push(
-              TrackerGameDetailRoute(game: topGame.toEntity()),
-            );
-          }
-        },
+        onTap: () => AutoTabsRouter.of(context).setActiveIndex(1),
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -330,8 +330,8 @@ class LibraryStatsWidget extends StatelessWidget {
                 child: SizedBox(
                   width: 70,
                   height: 90,
-                  child: topGame.imageUrl != null
-                      ? DefaultCachedNetworkImage(imageUrl: topGame.imageUrl!)
+                  child: topGame.coverUrl != null
+                      ? DefaultCachedNetworkImage(imageUrl: topGame.coverUrl!)
                       : Container(
                           color: context.themeData.colorScheme.surfaceContainer,
                           child: const Icon(Icons.videogame_asset, size: 32),
@@ -344,7 +344,7 @@ class LibraryStatsWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      topGame.name ?? StringConstants.emptyStringPlaceholder,
+                      topGame.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

@@ -1,8 +1,8 @@
-import '../../../../features/tracker/data/models/saved_game.dart';
+import 'now_playing_game_entity.dart';
 
 class LibrarySnapshotEntity {
   final int totalGamesCount;
-  final List<SavedGame> nowPlayingGames;
+  final List<NowPlayingGameEntity> nowPlayingGames;
   final double thisWeekPlayHours;
   final int wishlistCount;
   final Set<int> ownedGameIds;

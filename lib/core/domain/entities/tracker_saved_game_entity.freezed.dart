@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TrackerSavedGameEntity {
 
- int get id; String? get name; String? get imageUrl; int? get gameId; String? get gameSlug; DateTime? get dateSaved; bool get completed; List<PlatformEntity>? get platforms; List<PlatformEntity>? get availablePlatforms; DateTime? get dateModified; List<TrackerGroupTaskEntity> get groupTasks;
+ int get id; String? get name; String? get imageUrl; int? get gameId; String? get gameSlug; DateTime? get dateSaved; bool get completed; List<PlatformEntity>? get platforms; List<PlatformEntity>? get availablePlatforms; DateTime? get dateModified; double? get hoursLogged; double? get averageCompletionHours; double? get manualProgressPercentage; List<TrackerGroupTaskEntity> get groupTasks;
 /// Create a copy of TrackerSavedGameEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $TrackerSavedGameEntityCopyWith<TrackerSavedGameEntity> get copyWith => _$Tracke
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TrackerSavedGameEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.gameId, gameId) || other.gameId == gameId)&&(identical(other.gameSlug, gameSlug) || other.gameSlug == gameSlug)&&(identical(other.dateSaved, dateSaved) || other.dateSaved == dateSaved)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other.platforms, platforms)&&const DeepCollectionEquality().equals(other.availablePlatforms, availablePlatforms)&&(identical(other.dateModified, dateModified) || other.dateModified == dateModified)&&const DeepCollectionEquality().equals(other.groupTasks, groupTasks));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TrackerSavedGameEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.gameId, gameId) || other.gameId == gameId)&&(identical(other.gameSlug, gameSlug) || other.gameSlug == gameSlug)&&(identical(other.dateSaved, dateSaved) || other.dateSaved == dateSaved)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other.platforms, platforms)&&const DeepCollectionEquality().equals(other.availablePlatforms, availablePlatforms)&&(identical(other.dateModified, dateModified) || other.dateModified == dateModified)&&(identical(other.hoursLogged, hoursLogged) || other.hoursLogged == hoursLogged)&&(identical(other.averageCompletionHours, averageCompletionHours) || other.averageCompletionHours == averageCompletionHours)&&(identical(other.manualProgressPercentage, manualProgressPercentage) || other.manualProgressPercentage == manualProgressPercentage)&&const DeepCollectionEquality().equals(other.groupTasks, groupTasks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,imageUrl,gameId,gameSlug,dateSaved,completed,const DeepCollectionEquality().hash(platforms),const DeepCollectionEquality().hash(availablePlatforms),dateModified,const DeepCollectionEquality().hash(groupTasks));
+int get hashCode => Object.hash(runtimeType,id,name,imageUrl,gameId,gameSlug,dateSaved,completed,const DeepCollectionEquality().hash(platforms),const DeepCollectionEquality().hash(availablePlatforms),dateModified,hoursLogged,averageCompletionHours,manualProgressPercentage,const DeepCollectionEquality().hash(groupTasks));
 
 @override
 String toString() {
-  return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, availablePlatforms: $availablePlatforms, dateModified: $dateModified, groupTasks: $groupTasks)';
+  return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, availablePlatforms: $availablePlatforms, dateModified: $dateModified, hoursLogged: $hoursLogged, averageCompletionHours: $averageCompletionHours, manualProgressPercentage: $manualProgressPercentage, groupTasks: $groupTasks)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $TrackerSavedGameEntityCopyWith<$Res>  {
   factory $TrackerSavedGameEntityCopyWith(TrackerSavedGameEntity value, $Res Function(TrackerSavedGameEntity) _then) = _$TrackerSavedGameEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String? name, String? imageUrl, int? gameId, String? gameSlug, DateTime? dateSaved, bool completed, List<PlatformEntity>? platforms, List<PlatformEntity>? availablePlatforms, DateTime? dateModified, List<TrackerGroupTaskEntity> groupTasks
+ int id, String? name, String? imageUrl, int? gameId, String? gameSlug, DateTime? dateSaved, bool completed, List<PlatformEntity>? platforms, List<PlatformEntity>? availablePlatforms, DateTime? dateModified, double? hoursLogged, double? averageCompletionHours, double? manualProgressPercentage, List<TrackerGroupTaskEntity> groupTasks
 });
 
 
@@ -62,7 +62,7 @@ class _$TrackerSavedGameEntityCopyWithImpl<$Res>
 
 /// Create a copy of TrackerSavedGameEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? imageUrl = freezed,Object? gameId = freezed,Object? gameSlug = freezed,Object? dateSaved = freezed,Object? completed = null,Object? platforms = freezed,Object? availablePlatforms = freezed,Object? dateModified = freezed,Object? groupTasks = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? imageUrl = freezed,Object? gameId = freezed,Object? gameSlug = freezed,Object? dateSaved = freezed,Object? completed = null,Object? platforms = freezed,Object? availablePlatforms = freezed,Object? dateModified = freezed,Object? hoursLogged = freezed,Object? averageCompletionHours = freezed,Object? manualProgressPercentage = freezed,Object? groupTasks = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,10 @@ as DateTime?,completed: null == completed ? _self.completed : completed // ignor
 as bool,platforms: freezed == platforms ? _self.platforms : platforms // ignore: cast_nullable_to_non_nullable
 as List<PlatformEntity>?,availablePlatforms: freezed == availablePlatforms ? _self.availablePlatforms : availablePlatforms // ignore: cast_nullable_to_non_nullable
 as List<PlatformEntity>?,dateModified: freezed == dateModified ? _self.dateModified : dateModified // ignore: cast_nullable_to_non_nullable
-as DateTime?,groupTasks: null == groupTasks ? _self.groupTasks : groupTasks // ignore: cast_nullable_to_non_nullable
+as DateTime?,hoursLogged: freezed == hoursLogged ? _self.hoursLogged : hoursLogged // ignore: cast_nullable_to_non_nullable
+as double?,averageCompletionHours: freezed == averageCompletionHours ? _self.averageCompletionHours : averageCompletionHours // ignore: cast_nullable_to_non_nullable
+as double?,manualProgressPercentage: freezed == manualProgressPercentage ? _self.manualProgressPercentage : manualProgressPercentage // ignore: cast_nullable_to_non_nullable
+as double?,groupTasks: null == groupTasks ? _self.groupTasks : groupTasks // ignore: cast_nullable_to_non_nullable
 as List<TrackerGroupTaskEntity>,
   ));
 }
@@ -157,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  String? imageUrl,  int? gameId,  String? gameSlug,  DateTime? dateSaved,  bool completed,  List<PlatformEntity>? platforms,  List<PlatformEntity>? availablePlatforms,  DateTime? dateModified,  List<TrackerGroupTaskEntity> groupTasks)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  String? imageUrl,  int? gameId,  String? gameSlug,  DateTime? dateSaved,  bool completed,  List<PlatformEntity>? platforms,  List<PlatformEntity>? availablePlatforms,  DateTime? dateModified,  double? hoursLogged,  double? averageCompletionHours,  double? manualProgressPercentage,  List<TrackerGroupTaskEntity> groupTasks)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TrackerSavedGameEntity() when $default != null:
-return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_that.dateSaved,_that.completed,_that.platforms,_that.availablePlatforms,_that.dateModified,_that.groupTasks);case _:
+return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_that.dateSaved,_that.completed,_that.platforms,_that.availablePlatforms,_that.dateModified,_that.hoursLogged,_that.averageCompletionHours,_that.manualProgressPercentage,_that.groupTasks);case _:
   return orElse();
 
 }
@@ -178,10 +181,10 @@ return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  String? imageUrl,  int? gameId,  String? gameSlug,  DateTime? dateSaved,  bool completed,  List<PlatformEntity>? platforms,  List<PlatformEntity>? availablePlatforms,  DateTime? dateModified,  List<TrackerGroupTaskEntity> groupTasks)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  String? imageUrl,  int? gameId,  String? gameSlug,  DateTime? dateSaved,  bool completed,  List<PlatformEntity>? platforms,  List<PlatformEntity>? availablePlatforms,  DateTime? dateModified,  double? hoursLogged,  double? averageCompletionHours,  double? manualProgressPercentage,  List<TrackerGroupTaskEntity> groupTasks)  $default,) {final _that = this;
 switch (_that) {
 case _TrackerSavedGameEntity():
-return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_that.dateSaved,_that.completed,_that.platforms,_that.availablePlatforms,_that.dateModified,_that.groupTasks);}
+return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_that.dateSaved,_that.completed,_that.platforms,_that.availablePlatforms,_that.dateModified,_that.hoursLogged,_that.averageCompletionHours,_that.manualProgressPercentage,_that.groupTasks);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -195,10 +198,10 @@ return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  String? imageUrl,  int? gameId,  String? gameSlug,  DateTime? dateSaved,  bool completed,  List<PlatformEntity>? platforms,  List<PlatformEntity>? availablePlatforms,  DateTime? dateModified,  List<TrackerGroupTaskEntity> groupTasks)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  String? imageUrl,  int? gameId,  String? gameSlug,  DateTime? dateSaved,  bool completed,  List<PlatformEntity>? platforms,  List<PlatformEntity>? availablePlatforms,  DateTime? dateModified,  double? hoursLogged,  double? averageCompletionHours,  double? manualProgressPercentage,  List<TrackerGroupTaskEntity> groupTasks)?  $default,) {final _that = this;
 switch (_that) {
 case _TrackerSavedGameEntity() when $default != null:
-return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_that.dateSaved,_that.completed,_that.platforms,_that.availablePlatforms,_that.dateModified,_that.groupTasks);case _:
+return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_that.dateSaved,_that.completed,_that.platforms,_that.availablePlatforms,_that.dateModified,_that.hoursLogged,_that.averageCompletionHours,_that.manualProgressPercentage,_that.groupTasks);case _:
   return null;
 
 }
@@ -210,7 +213,7 @@ return $default(_that.id,_that.name,_that.imageUrl,_that.gameId,_that.gameSlug,_
 
 
 class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
-  const _TrackerSavedGameEntity({required this.id, this.name, this.imageUrl, this.gameId, this.gameSlug, this.dateSaved, this.completed = false, final  List<PlatformEntity>? platforms, final  List<PlatformEntity>? availablePlatforms, this.dateModified, final  List<TrackerGroupTaskEntity> groupTasks = const []}): _platforms = platforms,_availablePlatforms = availablePlatforms,_groupTasks = groupTasks;
+  const _TrackerSavedGameEntity({required this.id, this.name, this.imageUrl, this.gameId, this.gameSlug, this.dateSaved, this.completed = false, final  List<PlatformEntity>? platforms, final  List<PlatformEntity>? availablePlatforms, this.dateModified, this.hoursLogged, this.averageCompletionHours, this.manualProgressPercentage, final  List<TrackerGroupTaskEntity> groupTasks = const []}): _platforms = platforms,_availablePlatforms = availablePlatforms,_groupTasks = groupTasks;
   
 
 @override final  int id;
@@ -239,6 +242,9 @@ class _TrackerSavedGameEntity implements TrackerSavedGameEntity {
 }
 
 @override final  DateTime? dateModified;
+@override final  double? hoursLogged;
+@override final  double? averageCompletionHours;
+@override final  double? manualProgressPercentage;
  final  List<TrackerGroupTaskEntity> _groupTasks;
 @override@JsonKey() List<TrackerGroupTaskEntity> get groupTasks {
   if (_groupTasks is EqualUnmodifiableListView) return _groupTasks;
@@ -257,16 +263,16 @@ _$TrackerSavedGameEntityCopyWith<_TrackerSavedGameEntity> get copyWith => __$Tra
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TrackerSavedGameEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.gameId, gameId) || other.gameId == gameId)&&(identical(other.gameSlug, gameSlug) || other.gameSlug == gameSlug)&&(identical(other.dateSaved, dateSaved) || other.dateSaved == dateSaved)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other._platforms, _platforms)&&const DeepCollectionEquality().equals(other._availablePlatforms, _availablePlatforms)&&(identical(other.dateModified, dateModified) || other.dateModified == dateModified)&&const DeepCollectionEquality().equals(other._groupTasks, _groupTasks));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TrackerSavedGameEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.gameId, gameId) || other.gameId == gameId)&&(identical(other.gameSlug, gameSlug) || other.gameSlug == gameSlug)&&(identical(other.dateSaved, dateSaved) || other.dateSaved == dateSaved)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other._platforms, _platforms)&&const DeepCollectionEquality().equals(other._availablePlatforms, _availablePlatforms)&&(identical(other.dateModified, dateModified) || other.dateModified == dateModified)&&(identical(other.hoursLogged, hoursLogged) || other.hoursLogged == hoursLogged)&&(identical(other.averageCompletionHours, averageCompletionHours) || other.averageCompletionHours == averageCompletionHours)&&(identical(other.manualProgressPercentage, manualProgressPercentage) || other.manualProgressPercentage == manualProgressPercentage)&&const DeepCollectionEquality().equals(other._groupTasks, _groupTasks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,imageUrl,gameId,gameSlug,dateSaved,completed,const DeepCollectionEquality().hash(_platforms),const DeepCollectionEquality().hash(_availablePlatforms),dateModified,const DeepCollectionEquality().hash(_groupTasks));
+int get hashCode => Object.hash(runtimeType,id,name,imageUrl,gameId,gameSlug,dateSaved,completed,const DeepCollectionEquality().hash(_platforms),const DeepCollectionEquality().hash(_availablePlatforms),dateModified,hoursLogged,averageCompletionHours,manualProgressPercentage,const DeepCollectionEquality().hash(_groupTasks));
 
 @override
 String toString() {
-  return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, availablePlatforms: $availablePlatforms, dateModified: $dateModified, groupTasks: $groupTasks)';
+  return 'TrackerSavedGameEntity(id: $id, name: $name, imageUrl: $imageUrl, gameId: $gameId, gameSlug: $gameSlug, dateSaved: $dateSaved, completed: $completed, platforms: $platforms, availablePlatforms: $availablePlatforms, dateModified: $dateModified, hoursLogged: $hoursLogged, averageCompletionHours: $averageCompletionHours, manualProgressPercentage: $manualProgressPercentage, groupTasks: $groupTasks)';
 }
 
 
@@ -277,7 +283,7 @@ abstract mixin class _$TrackerSavedGameEntityCopyWith<$Res> implements $TrackerS
   factory _$TrackerSavedGameEntityCopyWith(_TrackerSavedGameEntity value, $Res Function(_TrackerSavedGameEntity) _then) = __$TrackerSavedGameEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? name, String? imageUrl, int? gameId, String? gameSlug, DateTime? dateSaved, bool completed, List<PlatformEntity>? platforms, List<PlatformEntity>? availablePlatforms, DateTime? dateModified, List<TrackerGroupTaskEntity> groupTasks
+ int id, String? name, String? imageUrl, int? gameId, String? gameSlug, DateTime? dateSaved, bool completed, List<PlatformEntity>? platforms, List<PlatformEntity>? availablePlatforms, DateTime? dateModified, double? hoursLogged, double? averageCompletionHours, double? manualProgressPercentage, List<TrackerGroupTaskEntity> groupTasks
 });
 
 
@@ -294,7 +300,7 @@ class __$TrackerSavedGameEntityCopyWithImpl<$Res>
 
 /// Create a copy of TrackerSavedGameEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? imageUrl = freezed,Object? gameId = freezed,Object? gameSlug = freezed,Object? dateSaved = freezed,Object? completed = null,Object? platforms = freezed,Object? availablePlatforms = freezed,Object? dateModified = freezed,Object? groupTasks = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? imageUrl = freezed,Object? gameId = freezed,Object? gameSlug = freezed,Object? dateSaved = freezed,Object? completed = null,Object? platforms = freezed,Object? availablePlatforms = freezed,Object? dateModified = freezed,Object? hoursLogged = freezed,Object? averageCompletionHours = freezed,Object? manualProgressPercentage = freezed,Object? groupTasks = null,}) {
   return _then(_TrackerSavedGameEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -306,7 +312,10 @@ as DateTime?,completed: null == completed ? _self.completed : completed // ignor
 as bool,platforms: freezed == platforms ? _self._platforms : platforms // ignore: cast_nullable_to_non_nullable
 as List<PlatformEntity>?,availablePlatforms: freezed == availablePlatforms ? _self._availablePlatforms : availablePlatforms // ignore: cast_nullable_to_non_nullable
 as List<PlatformEntity>?,dateModified: freezed == dateModified ? _self.dateModified : dateModified // ignore: cast_nullable_to_non_nullable
-as DateTime?,groupTasks: null == groupTasks ? _self._groupTasks : groupTasks // ignore: cast_nullable_to_non_nullable
+as DateTime?,hoursLogged: freezed == hoursLogged ? _self.hoursLogged : hoursLogged // ignore: cast_nullable_to_non_nullable
+as double?,averageCompletionHours: freezed == averageCompletionHours ? _self.averageCompletionHours : averageCompletionHours // ignore: cast_nullable_to_non_nullable
+as double?,manualProgressPercentage: freezed == manualProgressPercentage ? _self.manualProgressPercentage : manualProgressPercentage // ignore: cast_nullable_to_non_nullable
+as double?,groupTasks: null == groupTasks ? _self._groupTasks : groupTasks // ignore: cast_nullable_to_non_nullable
 as List<TrackerGroupTaskEntity>,
   ));
 }

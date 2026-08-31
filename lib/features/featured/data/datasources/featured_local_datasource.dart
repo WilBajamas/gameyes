@@ -14,38 +14,10 @@ class FeaturedLocalDatasource {
   static const _genreIdsKey = 'featured_genre_ids';
   static const _skippedKey = 'featured_genre_skipped';
 
-  FeaturedLocalDatasource(
-    this._localStorage,
-    this._sharedPreferences,
-  );
+  FeaturedLocalDatasource(this._localStorage, this._sharedPreferences);
 
   Future<Isar> _getDb() async {
     return await _localStorage.dbInstance;
-  }
-
-  Future<int> countSavedGames() async {
-    final isar = await _getDb();
-    return isar.savedGames.count();
-  }
-
-  Future<Set<int>> getOwnedGameIds() async {
-    final isar = await _getDb();
-    final games = await isar.savedGames.where().findAll();
-    return games.map((g) => g.gameId).whereType<int>().toSet();
-  }
-
-  Future<List<SavedGame>> getWishlistedGames() async {
-    final isar = await _getDb();
-    return isar.savedGames.filter().isWishlistedEqualTo(true).findAll();
-  }
-
-  Future<List<SavedGame>> getNowPlayingGames() async {
-    final isar = await _getDb();
-    return isar.savedGames
-        .filter()
-        .statusEqualTo('Playing')
-        .sortByDateModifiedDesc()
-        .findAll();
   }
 
   Future<double> getThisWeekPlayHours() async {

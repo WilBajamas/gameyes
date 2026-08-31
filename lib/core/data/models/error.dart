@@ -7,6 +7,13 @@ part 'error.freezed.dart';
 @freezed
 sealed class ErrorType with _$ErrorType {
   const ErrorType._();
+
+  // Postgres tells these three apart by code; the app could not, so every
+  // one of them read as "something went wrong".
+  static const _uniqueViolation = '23505';
+  static const _checkViolation = '23514';
+  static const _notAllowedByPolicy = '42501';
+
   const factory ErrorType.responseError({
     String? message,
     String? error,
@@ -20,6 +27,11 @@ sealed class ErrorType with _$ErrorType {
   // The person closed the sign-in page without finishing. That is not a
   // network or provider problem, so it needs its own kind of error.
   const factory ErrorType.signInCancelled() = SignInCancelled;
+
+  const factory ErrorType.duplicateEntry() = DuplicateEntry;
+  const factory ErrorType.invalidValue() = InvalidValue;
+  const factory ErrorType.notAllowed() = NotAllowed;
+  const factory ErrorType.notSignedIn() = NotSignedIn;
 
   factory ErrorType.dioError({required DioException exception}) {
     final response = exception.response;
@@ -54,4 +66,16 @@ sealed class ErrorType with _$ErrorType {
       statusCode: exception.status,
     );
   }
+
+  factory ErrorType.postgrestError({required PostgrestException exception}) =>
+      switch (exception.code) {
+        _uniqueViolation => const ErrorType.duplicateEntry(),
+        _checkViolation => const ErrorType.invalidValue(),
+        _notAllowedByPolicy => const ErrorType.notAllowed(),
+        _ => ErrorType.responseError(
+          message: exception.message,
+          error: exception.code,
+          statusCode: int.tryParse(exception.code ?? ''),
+        ),
+      };
 }
