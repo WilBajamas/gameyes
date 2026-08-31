@@ -16,13 +16,20 @@ earlier state. Read these two first.**
 | `develop` | carries **all of stage 3** — 3.1, 3.2, 3.3, 3.4a and 3.4b. Nothing is left unmerged. |
 | Next | **Stage 4, item 4.1 — the grid shelf.** See `week-3-task-briefs.md`. |
 
-**Baselines on `develop` after 3.4b, verified 2026-08-30:** analyzer **0 errors, 2
-warnings, 30 info**; suite **+441 -10**. The ten failures are the usual set
-(`tracker_repository_test` 4, `game_detail_cubit_test` 3, `games_bloc_test` 3).
-**The 2 warnings are the invariant; the total is not** — it has now moved
-30 → 28 → 29 → 30, and the last move was simply 3.4b adding files. Verify both at
-Phase 0 regardless; a run that reports a different total has probably just added
-files, so check the warnings first and only then go looking.
+**Baselines on `develop` after 3.4b, verified 2026-08-30:** analyzer **32 issues
+total — 0 errors, 2 warnings, 30 info**; suite **+441 -10**. The ten failures are the
+usual set (`tracker_repository_test` 4, `game_detail_cubit_test` 3, `games_bloc_test`
+3).
+
+**Always quote the total and the components together, as above.** The two get
+confused: `flutter analyze` prints only "N issues found", QA reports the info count,
+and 30 is both this baseline's info count *and* a plausible-looking total. The
+totals seen this stage were 30 → 28 → 29 → **32**, and 3.4b moved it by adding files
+and lints inside its own new code, not by breaking anything.
+
+**The 2 warnings are the invariant; the total is not.** Verify both at Phase 0
+regardless. A run reporting a different total has usually just added files — check
+the warnings first, and only then go looking for a cause.
 
 **Branch naming changed 2026-08-30 (human ruling).** Every run gets its own
 `feature/<slug>` with a short, human-readable slug, **resume sessions included** —
