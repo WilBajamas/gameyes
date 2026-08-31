@@ -1,8 +1,8 @@
 # Handover — QuestLoggd
 
-Written 2026-07-29. **Last updated 2026-08-28: stage 3 is nearly done. Items 3.1,
-3.2 and 3.3 are MERGED to `develop` at `618bed1`. Item 3.4a is complete and
-QA-PASSed on `feature/library-bloc-preferences`, unmerged. Only 3.4b is left.**
+Written 2026-07-29. **Last updated 2026-08-30: STAGE 3 IS COMPLETE. Items 3.1, 3.2,
+3.3, 3.4a and 3.4b are all merged to `develop`. Stage 4 — the Library screen — is
+next, starting at item 4.1.**
 
 ## Read this first — the state of week 3
 
@@ -13,15 +13,24 @@ earlier state. Read these two first.**
 
 | | |
 |---|---|
-| `develop` | `618bed1` — carries 3.1, 3.2 and **3.3** (a `--no-ff` merge, so 3.3 has a real marker; 3.1 and 3.2 arrived by fast-forward and do not) |
-| `feature/library-bloc-preferences` | 17 commits ahead of `develop`; holds **3.4a**, QA PASS, 0 cycles, **unmerged** |
-| Next | **3.4b — the Featured repair.** Then stage 3 is done and stage 4 begins. |
+| `develop` | carries **all of stage 3** — 3.1, 3.2, 3.3, 3.4a and 3.4b. Nothing is left unmerged. |
+| Next | **Stage 4, item 4.1 — the grid shelf.** See `week-3-task-briefs.md`. |
 
-**Baselines on the 3.4a branch, verified 2026-08-28:** analyzer **29 issues, 0
-errors, 2 warnings, 27 info**; suite **+435 -10**. On `develop` the suite is
-**+394 -10** with the same analyzer figures. The ten failures are the usual set.
-**The 2 warnings are the invariant; the total is not** — it has moved 30 → 28 → 29
-this week alone.
+**Baselines on `develop` after 3.4b, verified 2026-08-30:** analyzer **0 errors, 2
+warnings, 30 info**; suite **+441 -10**. The ten failures are the usual set
+(`tracker_repository_test` 4, `game_detail_cubit_test` 3, `games_bloc_test` 3).
+**The 2 warnings are the invariant; the total is not** — it has now moved
+30 → 28 → 29 → 30, and the last move was simply 3.4b adding files. Verify both at
+Phase 0 regardless; a run that reports a different total has probably just added
+files, so check the warnings first and only then go looking.
+
+**Branch naming changed 2026-08-30 (human ruling).** Every run gets its own
+`feature/<slug>` with a short, human-readable slug, **resume sessions included** —
+the old exception that let a resume run directly on the harness's `claude/...`
+branch is gone, because it is what produced `claude/questloggd-3-4b-featured-2m3o71`.
+Resumes now branch off the session branch's HEAD. Recorded in both
+`.claude/pipeline/rules/git.md` and `.claude/skills/orchestrate/SKILL.md` so the two
+cannot drift. Item 3.4b predates the ruling and merged from where it was.
 
 ### Nine human decisions were taken after D8 — D9 through D17
 
@@ -38,8 +47,8 @@ change standing rules:
   "the truth" changes the read path, not the cost. The product brief §8 already
   rules offline out of scope, so **v1 has no offline writes at all**. The human's
   stated direction is to move to local-truth in a later phase.
-- **D14 — the tracker task tree is now reachable from NOWHERE**, not from one place.
-  Item 3.4b removes the last `TrackerGameDetailRoute` push. Two standing rules
+- **D14 — the tracker task tree is reachable from NOWHERE.** Item 3.4b **did this on
+  2026-08-30**; it is done, not pending. The last `TrackerGameDetailRoute` push is gone. Two standing rules
   required it to keep an entry point; the human overrode them deliberately. **"Do
   not delete it" still stands** — the tree stays compiling and passing its tests
   until the design convention lands. Unreachable is not unwanted.
@@ -47,6 +56,41 @@ change standing rules:
   3.4b (the Featured repair) is a separate run. `tech-ac.md` in that run folder is
   **not** re-cut: it stays whole at 43 criteria, and each half scopes to its own
   range. **3.4b's range is AC26–AC36.**
+
+### What 3.4b shipped, and the one check it left open
+
+Impl `d172b58`, QA PASS pending manual checks, 0 cycles. Featured's now-playing shelf,
+wishlist stat, total games and owned ids all read `library_entries` now; four Isar
+filters that **no code had ever written to** are gone, along with the dead
+`featured_local_datasource` methods behind them.
+
+Two things worth carrying forward:
+
+- **`NowPlayingGameEntity` carries no int identifier of any kind.** That is how
+  3.4-AC31 is satisfied — structurally, not by discipline. There is no id available to
+  misuse as an Isar key, so the collision D14 was decided to avoid cannot be
+  reintroduced by a later seam that merely satisfies the type. It also cleared 3.3's
+  `LibrarySnapshotEntity` layering violation.
+- **3.4-AC44 was added beyond the AC26–AC36 range**, from a gap 3.4a's QA found and
+  chose not to fail for: reverting *only* the next-page `hasReachedEnd` to the withdrawn
+  short-page rule left the entire bloc suite green. Dev **and** QA each verified the new
+  test dies under exactly that mutation, both on a `cp -a` copy with the working tree
+  untouched. That is the falsifiability method to keep.
+
+**OPEN MANUAL CHECK — one, and it is the only thing between 3.4b and a plain PASS.**
+`3.4b-MC-1` in `manual-check-backlog.md`: tap the now-playing card with **one** playing
+game, then with **several** — expect the **Library** tab both times. It supersedes
+`3.2-MC-6`, which was blocked since item 3.2 and is now performable for the first time.
+Both halves are a first run; the two branches used to do different things, so checking
+one proves nothing about the other. **Needs at least two `playing` rows seeded first.**
+
+**One non-gating coverage gap QA flagged and did not fail for:** nothing asserts
+`wishlistCount` comes from `counts.byStatus[wishlist]` on the *success* path — only the
+degraded path pins it to 0. The stat's source is proven repointed either way. Fold it
+into a later run the way 3.4b folded in 3.4a's gap.
+
+**Item 3's cross-account RLS check is finally performable** — blocked since week 1 on
+nothing writing to `library_entries`. Featured now reads it end to end.
 
 ### Five things are deferred out of stage 3 and have no item yet
 

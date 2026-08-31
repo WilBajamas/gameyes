@@ -545,12 +545,30 @@ file, they need no screen that does not exist yet.
 - **3.2-MC-5** `[3.2-AC35]` — Open Browse — expect the app-bar title to read "Browse"
   with the existing subtitle "Search for your favourite games here" unchanged beneath
   it.
-- **3.2-MC-6** `[3.2-AC6]` — **Cannot be performed yet, and is not a normal backlog
-  entry.** `library_stats.dart:314` sits in the `playingGames.isNotEmpty` branch,
-  which has never rendered because Featured's `statusEqualTo('Playing')` filter has no
-  writers. Nothing manual can confirm it today. **Whoever lands item 3.4 must confirm
-  that card opens Library and not Browse** — 3.4 is what makes the branch fire for the
-  first time in the app's history.
+- **3.2-MC-6** `[3.2-AC6]` — **NOW PERFORMABLE as of item 3.4b (2026-08-30).** It was
+  blocked because `library_stats.dart:314` sits in the `playingGames.isNotEmpty` branch,
+  which had never rendered — Featured's `statusEqualTo('Playing')` filter has no writers.
+  3.4b repointed that source at `library_entries`, so the branch can fire for the first
+  time in the app's history. Perform it as **3.4b-MC-1** below, which supersedes this
+  entry; do not run both.
+
+---
+
+## Week 3 Stage 3 — item 3.4b (Featured repair)
+
+Landed 2026-08-30, impl `d172b58`. One check, and it is the only thing between item 3.4b
+and a plain QA PASS. **Requires at least two games at status `playing` in
+`library_entries` for the signed-in user** — add them through the Library before sitting
+down, or the interesting half cannot be run.
+
+- **3.4b-MC-1** `[3.4-AC36]` — Supersedes `3.2-MC-6`. With **exactly one** game at status
+  `playing`, open Featured and tap the now-playing card — expect the **Library** tab
+  (index 1). Not Browse, and **not** the tracker game-detail screen: that push was removed
+  by D14, and the single-game branch is the one that used to make it. Then repeat with
+  **several** playing games (the card reads "+N more playing") — expect the same Library
+  tab. **Index 1 has never executed in either branch**, so both halves are a first run,
+  and the two branches used to do different things — checking only one proves nothing
+  about the other.
 
 ---
 

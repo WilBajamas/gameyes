@@ -258,7 +258,7 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         them needs restructuring (see `testing-conventions.md`), and moving the
         baseline mid-week helps nobody.
 
-- [ ] **3.4b — the Featured repair.** Depends on 3.4a's counts and unpaged read.
+- [x] **3.4b — the Featured repair.** Depends on 3.4a's counts and unpaged read.
       - **Featured repair lands here, and it is a real bug fix, not a refactor.**
         `featured_local_datasource.dart:46` filters `statusEqualTo('Playing')` and
         `getWishlistedGames()` filters `isWishlistedEqualTo(true)` — both against
@@ -270,6 +270,13 @@ composes it instead of improvising. Same shape as week 2's primitives → compos
         `GamesStatus.empty` — carry the lesson: *when a criterion says "renders X in
         state Y", check that anything ever produces state Y.*
       - Total games and owned ids repoint at `library_entries` too (D15).
+      - **Shipped 2026-08-30**, impl `d172b58`, QA PASS pending manual checks, 0 cycles.
+        `NowPlayingGameEntity` was added carrying **no int identifier of any kind**, so
+        3.4-AC31 is satisfied structurally rather than by discipline — there is no id to
+        misuse as an Isar key. That also cleared 3.3's `LibrarySnapshotEntity` layering
+        violation. One criterion was added beyond AC26–AC36: **3.4-AC44**, the append-side
+        end-of-results guard, folded in from a gap 3.4a's QA found and did not fail for.
+        Both Dev and QA verified it dies under its own mutation, on a copied tree.
 
 **GATE.** Nothing shipped to a user yet, but every substrate Stage 4 needs is proven.
 Worth a human pause here — the schema decision in 3.3 is the expensive one to reverse.
