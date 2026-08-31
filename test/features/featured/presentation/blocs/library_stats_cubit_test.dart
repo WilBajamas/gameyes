@@ -7,7 +7,7 @@ import 'package:gaming_library_assessment_flutter/features/featured/domain/repos
 import 'package:gaming_library_assessment_flutter/features/featured/domain/use_cases/get_library_snapshot_use_case.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_cubit.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/presentation/blocs/library_stats_state.dart';
-import 'package:gaming_library_assessment_flutter/core/domain/entities/tracker_saved_game_entity.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/domain/entities/now_playing_game_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FakeGetLibrarySnapshotUseCase extends GetLibrarySnapshotUseCase {
@@ -98,11 +98,7 @@ void main() {
     test(
       'loadLibrarySnapshot success with 1 game playing, and wishlist',
       () async {
-        final playingGame = TrackerSavedGameEntity(
-          id: 1,
-          gameId: 1,
-          name: 'Playing Game',
-        );
+        final playingGame = NowPlayingGameEntity(title: 'Playing Game');
         fakeUseCase.snapshot = LibrarySnapshotEntity(
           totalGamesCount: 2,
           nowPlayingGames: [playingGame],

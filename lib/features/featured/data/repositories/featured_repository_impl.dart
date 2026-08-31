@@ -3,10 +3,14 @@ import 'package:gaming_library_assessment_flutter/core/data/datasource/base_repo
 import 'package:gaming_library_assessment_flutter/core/data/models/error.dart';
 import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/domain/entities/game_entity.dart';
+import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart';
 import 'package:gaming_library_assessment_flutter/core/utils/igdb_query_builder.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart';
+import 'package:gaming_library_assessment_flutter/features/featured/domain/entities/now_playing_game_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart';
 import 'package:gaming_library_assessment_flutter/features/featured/services/featured_api_service.dart';
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_entry_entity.dart';
+import 'package:gaming_library_assessment_flutter/features/library/domain/repositories/library_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: FeaturedRepository)
@@ -15,8 +19,13 @@ class FeaturedRepositoryImpl
     implements FeaturedRepository {
   final FeaturedLocalDatasource _localDatasource;
   final FeaturedApiService _featuredApiService;
+  final LibraryRepository _libraryRepository;
 
-  FeaturedRepositoryImpl(this._localDatasource, this._featuredApiService);
+  FeaturedRepositoryImpl(
+    this._localDatasource,
+    this._featuredApiService,
+    this._libraryRepository,
+  );
 
   static const _gameFields = [
     'name',
@@ -33,18 +42,32 @@ class FeaturedRepositoryImpl
   @override
   Future<Result<LibrarySnapshotEntity>> getLibrarySnapshot() async {
     try {
-      final totalCount = await _localDatasource.countSavedGames();
-      final nowPlaying = await _localDatasource.getNowPlayingGames();
+      // Both reads are started before either is awaited so they run side by
+      // side; awaiting the entries first would leave the counts queued.
+      final entriesCall = _libraryRepository.fetchAllEntries();
+      final countsCall = _libraryRepository.fetchCounts();
       final playHours = await _localDatasource.getThisWeekPlayHours();
-      final wishlisted = await _localDatasource.getWishlistedGames();
-      final ownedIds = await _localDatasource.getOwnedGameIds();
+
+      // A library read that fails or is signed out shows the zeroes these
+      // tiles have always shown; it does not fail the whole screen.
+      final entries = switch (await entriesCall) {
+        Success(value: final value) => value,
+        Failure() => const <LibraryEntryEntity>[],
+      };
+      final counts = switch (await countsCall) {
+        Success(value: final value) => value,
+        Failure() => null,
+      };
 
       final snapshot = LibrarySnapshotEntity(
-        totalGamesCount: totalCount,
-        nowPlayingGames: nowPlaying.map((game) => game.toEntity()).toList(),
+        totalGamesCount: counts?.total ?? 0,
+        nowPlayingGames: entries
+            .where((entry) => entry.status == LibraryStatus.playing)
+            .map(_nowPlaying)
+            .toList(),
         thisWeekPlayHours: playHours,
-        wishlistCount: wishlisted.length,
-        ownedGameIds: ownedIds,
+        wishlistCount: counts?.byStatus[LibraryStatus.wishlist] ?? 0,
+        ownedGameIds: entries.map((entry) => entry.igdbId).toSet(),
       );
 
       return Success(snapshot);
@@ -56,16 +79,31 @@ class FeaturedRepositoryImpl
     }
   }
 
+  NowPlayingGameEntity _nowPlaying(LibraryEntryEntity entry) =>
+      NowPlayingGameEntity(
+        title: entry.title,
+        coverUrl: entry.coverUrl,
+        progressPercent: entry.progressPercent,
+        playtimeHours: entry.playtimeHours,
+      );
+
+  Future<Set<int>> _wishlistIds() async {
+    final result = await _libraryRepository.fetchAllEntries(
+      status: LibraryStatus.wishlist,
+    );
+
+    return switch (result) {
+      Success(value: final entries) =>
+        entries.map((entry) => entry.igdbId).toSet(),
+      Failure() => const <int>{},
+    };
+  }
+
   @override
   Future<Result<CountdownGameEntity>> getCountdownGame() async {
     try {
       final nowSeconds = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      final wishlisted = await _localDatasource.getWishlistedGames();
-      final wishlistIds = wishlisted
-          .map((g) => g.gameId)
-          .where((id) => id != null)
-          .cast<int>()
-          .toSet();
+      final wishlistIds = await _wishlistIds();
 
       if (wishlistIds.isNotEmpty) {
         final idsString = wishlistIds.join(',');
@@ -128,12 +166,7 @@ class FeaturedRepositoryImpl
       final todayStart = DateTime(now.year, now.month, now.day);
       final startSeconds = todayStart.millisecondsSinceEpoch ~/ 1000;
 
-      final wishlisted = await _localDatasource.getWishlistedGames();
-      final wishlistIds = wishlisted
-          .map((g) => g.gameId)
-          .where((id) => id != null)
-          .cast<int>()
-          .toSet();
+      final wishlistIds = await _wishlistIds();
 
       Future<List<GameEntity>> queryWindow(int days) async {
         final endSeconds =

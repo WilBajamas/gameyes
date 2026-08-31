@@ -256,6 +256,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1040.LibraryRepository>(
       () => _i120.LibraryRepositoryImpl(gh<_i591.LibraryRemoteDatasource>()),
     );
+    gh.factory<_i985.FeaturedRepository>(
+      () => _i840.FeaturedRepositoryImpl(
+        gh<_i554.FeaturedLocalDatasource>(),
+        gh<_i524.FeaturedApiService>(),
+        gh<_i1040.LibraryRepository>(),
+      ),
+    );
     gh.factoryParam<_i669.FilterCubit, _i113.FilterState, dynamic>(
       (initialState, _) => _i669.FilterCubit(initialState: initialState),
     );
@@ -293,12 +300,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i366.GameDetailRepositoryImpl(
         gh<_i750.GameDetailRemoteDatasource>(),
         gh<_i944.GameLocalDatasource>(),
-      ),
-    );
-    gh.factory<_i985.FeaturedRepository>(
-      () => _i840.FeaturedRepositoryImpl(
-        gh<_i554.FeaturedLocalDatasource>(),
-        gh<_i524.FeaturedApiService>(),
       ),
     );
     gh.factory<_i781.GetCountdownGameUseCase>(

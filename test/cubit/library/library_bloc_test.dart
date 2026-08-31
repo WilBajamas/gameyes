@@ -7,6 +7,7 @@ import 'package:gaming_library_assessment_flutter/core/data/models/result.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_sort.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart';
 import 'package:gaming_library_assessment_flutter/core/enums/library_view_mode.dart';
+import 'package:gaming_library_assessment_flutter/features/library/const.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_counts_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_entry_entity.dart';
 import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_page_entity.dart';
@@ -509,6 +510,39 @@ void main() {
     build: () => bloc,
     act: (bloc) => bloc.add(const LibraryStarted()),
     verify: (bloc) => expect(bloc.state.hasReachedEnd, isFalse),
+  );
+
+  blocTest<LibraryBloc, LibraryState>(
+    'sets the end-of-results flag when a full appended page reaches the '
+    'matched count',
+    seed: () => LibraryState(
+      status: LibraryLoadStatus.success,
+      entries: _pageOf(LibraryConstants.pageSize),
+      matchedCount: LibraryConstants.pageSize * 2,
+      counts: _counts,
+    ),
+    setUp: () {
+      when(
+        fetchLibraryPageUseCase.call(
+          sort: LibrarySort.recentlyAdded,
+          limit: anyNamed('limit'),
+          offset: LibraryConstants.pageSize,
+        ),
+      ).thenAnswer(
+        (_) async => Success(
+          LibraryPageEntity(
+            entries: _pageOf(
+              LibraryConstants.pageSize,
+              startAt: LibraryConstants.pageSize,
+            ),
+            matchedCount: LibraryConstants.pageSize * 2,
+          ),
+        ),
+      );
+    },
+    build: () => bloc,
+    act: (bloc) => bloc.add(const LibraryNextPageRequested()),
+    verify: (bloc) => expect(bloc.state.hasReachedEnd, isTrue),
   );
 
   blocTest<LibraryBloc, LibraryState>(

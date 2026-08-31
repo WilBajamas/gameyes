@@ -7,15 +7,30 @@ import 'dart:async' as _i3;
 
 import 'package:gaming_library_assessment_flutter/core/data/models/game.dart'
     as _i7;
+import 'package:gaming_library_assessment_flutter/core/data/models/result.dart'
+    as _i9;
+import 'package:gaming_library_assessment_flutter/core/enums/library_sort.dart'
+    as _i12;
+import 'package:gaming_library_assessment_flutter/core/enums/library_status.dart'
+    as _i11;
 import 'package:gaming_library_assessment_flutter/features/featured/data/datasources/featured_local_datasource.dart'
     as _i2;
 import 'package:gaming_library_assessment_flutter/features/featured/domain/repositories/featured_repository.dart'
-    as _i5;
+    as _i4;
 import 'package:gaming_library_assessment_flutter/features/featured/services/featured_api_service.dart'
     as _i6;
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_counts_entity.dart'
+    as _i14;
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_entry_entity.dart'
+    as _i15;
+import 'package:gaming_library_assessment_flutter/features/library/domain/entities/library_page_entity.dart'
+    as _i10;
+import 'package:gaming_library_assessment_flutter/features/library/domain/repositories/library_repository.dart'
+    as _i8;
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart'
-    as _i4;
+    as _i5;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -42,42 +57,6 @@ class MockFeaturedLocalDatasource extends _i1.Mock
   }
 
   @override
-  _i3.Future<int> countSavedGames() =>
-      (super.noSuchMethod(
-            Invocation.method(#countSavedGames, []),
-            returnValue: _i3.Future<int>.value(0),
-          )
-          as _i3.Future<int>);
-
-  @override
-  _i3.Future<Set<int>> getOwnedGameIds() =>
-      (super.noSuchMethod(
-            Invocation.method(#getOwnedGameIds, []),
-            returnValue: _i3.Future<Set<int>>.value(<int>{}),
-          )
-          as _i3.Future<Set<int>>);
-
-  @override
-  _i3.Future<List<_i4.SavedGame>> getWishlistedGames() =>
-      (super.noSuchMethod(
-            Invocation.method(#getWishlistedGames, []),
-            returnValue: _i3.Future<List<_i4.SavedGame>>.value(
-              <_i4.SavedGame>[],
-            ),
-          )
-          as _i3.Future<List<_i4.SavedGame>>);
-
-  @override
-  _i3.Future<List<_i4.SavedGame>> getNowPlayingGames() =>
-      (super.noSuchMethod(
-            Invocation.method(#getNowPlayingGames, []),
-            returnValue: _i3.Future<List<_i4.SavedGame>>.value(
-              <_i4.SavedGame>[],
-            ),
-          )
-          as _i3.Future<List<_i4.SavedGame>>);
-
-  @override
   _i3.Future<double> getThisWeekPlayHours() =>
       (super.noSuchMethod(
             Invocation.method(#getThisWeekPlayHours, []),
@@ -95,22 +74,22 @@ class MockFeaturedLocalDatasource extends _i1.Mock
           as _i3.Future<void>);
 
   @override
-  _i3.Future<_i5.GenrePreferencesEntity?> getSavedGenrePreferences() =>
+  _i3.Future<_i4.GenrePreferencesEntity?> getSavedGenrePreferences() =>
       (super.noSuchMethod(
             Invocation.method(#getSavedGenrePreferences, []),
-            returnValue: _i3.Future<_i5.GenrePreferencesEntity?>.value(),
+            returnValue: _i3.Future<_i4.GenrePreferencesEntity?>.value(),
           )
-          as _i3.Future<_i5.GenrePreferencesEntity?>);
+          as _i3.Future<_i4.GenrePreferencesEntity?>);
 
   @override
-  _i3.Future<List<_i4.SavedGame?>> getSavedGames() =>
+  _i3.Future<List<_i5.SavedGame?>> getSavedGames() =>
       (super.noSuchMethod(
             Invocation.method(#getSavedGames, []),
-            returnValue: _i3.Future<List<_i4.SavedGame?>>.value(
-              <_i4.SavedGame?>[],
+            returnValue: _i3.Future<List<_i5.SavedGame?>>.value(
+              <_i5.SavedGame?>[],
             ),
           )
-          as _i3.Future<List<_i4.SavedGame?>>);
+          as _i3.Future<List<_i5.SavedGame?>>);
 }
 
 /// A class which mocks [FeaturedApiService].
@@ -129,4 +108,172 @@ class MockFeaturedApiService extends _i1.Mock
             returnValue: _i3.Future<List<_i7.Game>>.value(<_i7.Game>[]),
           )
           as _i3.Future<List<_i7.Game>>);
+}
+
+/// A class which mocks [LibraryRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLibraryRepository extends _i1.Mock implements _i8.LibraryRepository {
+  MockLibraryRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<_i9.Result<_i10.LibraryPageEntity>> fetchPage({
+    _i11.LibraryStatus? status,
+    required _i12.LibrarySort? sort,
+    required int? limit,
+    required int? offset,
+    String? searchTerm,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchPage, [], {
+              #status: status,
+              #sort: sort,
+              #limit: limit,
+              #offset: offset,
+              #searchTerm: searchTerm,
+            }),
+            returnValue: _i3.Future<_i9.Result<_i10.LibraryPageEntity>>.value(
+              _i13.dummyValue<_i9.Result<_i10.LibraryPageEntity>>(
+                this,
+                Invocation.method(#fetchPage, [], {
+                  #status: status,
+                  #sort: sort,
+                  #limit: limit,
+                  #offset: offset,
+                  #searchTerm: searchTerm,
+                }),
+              ),
+            ),
+          )
+          as _i3.Future<_i9.Result<_i10.LibraryPageEntity>>);
+
+  @override
+  _i3.Future<_i9.Result<_i14.LibraryCountsEntity>> fetchCounts() =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchCounts, []),
+            returnValue: _i3.Future<_i9.Result<_i14.LibraryCountsEntity>>.value(
+              _i13.dummyValue<_i9.Result<_i14.LibraryCountsEntity>>(
+                this,
+                Invocation.method(#fetchCounts, []),
+              ),
+            ),
+          )
+          as _i3.Future<_i9.Result<_i14.LibraryCountsEntity>>);
+
+  @override
+  _i3.Future<_i9.Result<List<_i15.LibraryEntryEntity>>> fetchAllEntries({
+    _i11.LibraryStatus? status,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchAllEntries, [], {#status: status}),
+            returnValue:
+                _i3.Future<_i9.Result<List<_i15.LibraryEntryEntity>>>.value(
+                  _i13.dummyValue<_i9.Result<List<_i15.LibraryEntryEntity>>>(
+                    this,
+                    Invocation.method(#fetchAllEntries, [], {#status: status}),
+                  ),
+                ),
+          )
+          as _i3.Future<_i9.Result<List<_i15.LibraryEntryEntity>>>);
+
+  @override
+  _i3.Future<_i9.Result<_i15.LibraryEntryEntity>> add({
+    required int? igdbId,
+    required String? title,
+    String? coverUrl,
+    DateTime? releaseDate,
+    required _i11.LibraryStatus? status,
+    int? rating,
+    String? platform,
+    String? genre,
+    double? playtimeHours,
+    double? progressPercent,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#add, [], {
+              #igdbId: igdbId,
+              #title: title,
+              #coverUrl: coverUrl,
+              #releaseDate: releaseDate,
+              #status: status,
+              #rating: rating,
+              #platform: platform,
+              #genre: genre,
+              #playtimeHours: playtimeHours,
+              #progressPercent: progressPercent,
+            }),
+            returnValue: _i3.Future<_i9.Result<_i15.LibraryEntryEntity>>.value(
+              _i13.dummyValue<_i9.Result<_i15.LibraryEntryEntity>>(
+                this,
+                Invocation.method(#add, [], {
+                  #igdbId: igdbId,
+                  #title: title,
+                  #coverUrl: coverUrl,
+                  #releaseDate: releaseDate,
+                  #status: status,
+                  #rating: rating,
+                  #platform: platform,
+                  #genre: genre,
+                  #playtimeHours: playtimeHours,
+                  #progressPercent: progressPercent,
+                }),
+              ),
+            ),
+          )
+          as _i3.Future<_i9.Result<_i15.LibraryEntryEntity>>);
+
+  @override
+  _i3.Future<_i9.Result<_i15.LibraryEntryEntity>> update({
+    required int? igdbId,
+    _i11.LibraryStatus? status,
+    int? rating,
+    bool? clearRating,
+    String? platform,
+    String? genre,
+    double? playtimeHours,
+    double? progressPercent,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#update, [], {
+              #igdbId: igdbId,
+              #status: status,
+              #rating: rating,
+              #clearRating: clearRating,
+              #platform: platform,
+              #genre: genre,
+              #playtimeHours: playtimeHours,
+              #progressPercent: progressPercent,
+            }),
+            returnValue: _i3.Future<_i9.Result<_i15.LibraryEntryEntity>>.value(
+              _i13.dummyValue<_i9.Result<_i15.LibraryEntryEntity>>(
+                this,
+                Invocation.method(#update, [], {
+                  #igdbId: igdbId,
+                  #status: status,
+                  #rating: rating,
+                  #clearRating: clearRating,
+                  #platform: platform,
+                  #genre: genre,
+                  #playtimeHours: playtimeHours,
+                  #progressPercent: progressPercent,
+                }),
+              ),
+            ),
+          )
+          as _i3.Future<_i9.Result<_i15.LibraryEntryEntity>>);
+
+  @override
+  _i3.Future<_i9.Result<void>> remove({required int? igdbId}) =>
+      (super.noSuchMethod(
+            Invocation.method(#remove, [], {#igdbId: igdbId}),
+            returnValue: _i3.Future<_i9.Result<void>>.value(
+              _i13.dummyValue<_i9.Result<void>>(
+                this,
+                Invocation.method(#remove, [], {#igdbId: igdbId}),
+              ),
+            ),
+          )
+          as _i3.Future<_i9.Result<void>>);
 }
