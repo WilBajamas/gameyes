@@ -2,7 +2,7 @@
 Source: `.agents/runs/featured-repair-20260830/task-brief.md` (item 3.4b — the Featured repair)
 Date: 2026-08-31
 Branch: claude/questloggd-3-4b-featured-2m3o71
-Commit: PENDING — filled in after commit below
+Commit: d172b584c724e848f12375a4cbfff0c5fa93aff4
 
 ## Files created
 lib/features/featured/domain/entities/now_playing_game_entity.dart — freezed `NowPlayingGameEntity`: title, coverUrl, progressPercent, playtimeHours, averageCompletionHours; no int identifier of any kind (3.4-AC31)
