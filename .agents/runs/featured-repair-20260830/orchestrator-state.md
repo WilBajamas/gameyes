@@ -3,7 +3,7 @@ Feature: Week 3 Stage 3 item 3.4b — the Featured repair
 Run ID: featured-repair-20260830
 Run folder: .agents/runs/featured-repair-20260830/
 Started: 2026-08-30
-Current phase: BA
+Current phase: HUMAN_GATE
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 issues) — captured 2026-08-30
 Test baseline: +435 -10 — captured 2026-08-30
@@ -12,7 +12,7 @@ Branch: claude/questloggd-3-4b-featured-2m3o71
 Base branch: claude/questloggd-3-4b-featured-2m3o71
 Base SHA: f167a17
 Dev commit: NONE
-Last updated: 2026-08-30
+Last updated: 2026-08-30 (Phase 2 Tech Lead complete — tdd.md, task-brief.md, code-plan.md written; open questions none; at Phase 3 design gate)
 
 ## Run notes
 
@@ -74,3 +74,13 @@ NONE
 
 ## Code review outcomes
 NONE
+
+## Interruption record
+
+2026-08-30 — The container restarted during Phase 2 and the Tech Lead subagent
+terminated on an API session limit (HTTP 429) rather than on its own completion. Its
+three artifacts were verified complete on disk afterwards rather than assumed: all
+section headings present, `tdd.md ## Open questions` empty, `code-plan.md` non-empty
+and ending mid-nothing. Phase 2's gate checks were then run against the files, not
+against the subagent's report, which never arrived. Flutter 3.41.4 survived the
+restart at `/opt/flutter` with `/etc/profile.d/flutter.sh` intact.
