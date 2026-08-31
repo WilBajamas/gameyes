@@ -6,11 +6,17 @@ Phase 4B review.
 - A run starts only from a clean tree (`git status --short` empty). Never stash,
   discard, or commit anything the human left uncommitted — just stop.
 - One `feature/<slug>` branch per run, created at Phase 0. Record branch and base SHA.
-  **Exception, and it is the common case now:** a *resume* session runs the pipeline
-  directly on the harness-designated session branch (`claude/...`) and creates no
-  nested branch. Several runs' artifacts may coexist on it; only one run's Dev/QA
-  phases are ever active at once. That branch merges into `develop` directly, not via
-  a PR, once the human says so.
+  The slug is short, human-readable and says what the run does (`feature/featured-repair`),
+  never a generated identifier.
+  **Never work on a `claude/`-prefixed branch** (human ruling, 2026-08-30). The harness
+  designates one per session; a run does not adopt it. On a *resume* session, create the
+  run's own `feature/<slug>` from the session branch's HEAD at Phase 0 and work there.
+  Several runs' artifacts may coexist on a branch; only one run's Dev/QA phases are ever
+  active at once. The branch merges into `develop` directly, not via a PR, once the
+  human says so.
+  **One branch predates this ruling:** item 3.4b's approved, QA-passed work sits on
+  `claude/questloggd-3-4b-featured-2m3o71` and merges into `develop` from there. It is
+  not renamed or re-pushed; the rule binds from the next run onward.
 - Never merge, rebase, cherry-pick, reset, amend, force-update, open a PR, or
   trigger CI. Not once, not with any flag.
 - The Dev Agent commits its own work at the end of its pass, before any human

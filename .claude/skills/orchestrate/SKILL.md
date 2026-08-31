@@ -26,10 +26,11 @@ an existing `tech-ac.md`.
 **New run** — before spawning anything:
 1. Read `.claude/pipeline/rules/git.md`. Require `git status --short` empty;
    otherwise stop without changing anything.
-2. Record branch and HEAD SHA. On a fresh run create `feature/<slug>` (stop and ask
-   if that branch already exists — never force-create over it); **on a resume session
-   stay on the harness-designated `claude/...` branch and create no nested branch**,
-   which is now the common case. Create
+2. Record branch and HEAD SHA. Create `feature/<slug>` (stop and ask
+   if that branch already exists — never force-create over it), on a resume session
+   too: **never work on the harness-designated `claude/...` branch**, branch off its
+   HEAD instead (human ruling, 2026-08-30). The slug is short, human-readable and says
+   what the run does. Create
    `.agents/runs/<run-id>/` (stop and ask if non-empty).
 3. Read `.claude/pipeline/templates/orchestrator.md` and write initial
    `orchestrator-state.md`.
