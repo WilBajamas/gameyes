@@ -3,7 +3,7 @@ Feature: Week 3 Stage 3 item 3.4b — the Featured repair
 Run ID: featured-repair-20260830
 Run folder: .agents/runs/featured-repair-20260830/
 Started: 2026-08-30
-Current phase: CODE_REVIEW
+Current phase: QA
 QA cycles used: 0
 Analyzer baseline: 0 errors, 2 warnings, 27 info (29 issues) — captured 2026-08-30
 Test baseline: +435 -10 — captured 2026-08-30
@@ -12,7 +12,7 @@ Branch: claude/questloggd-3-4b-featured-2m3o71
 Base branch: claude/questloggd-3-4b-featured-2m3o71
 Base SHA: f167a17
 Dev commit: d172b584c724e848f12375a4cbfff0c5fa93aff4
-Last updated: 2026-08-30 (Phase 4 Dev complete and committed at d172b58; pushed; at Phase 4B code-review gate)
+Last updated: 2026-08-30 (Phase 4B code review APPROVED by human; QA spawned)
 
 ## Run notes
 
@@ -70,10 +70,10 @@ it breaks 3.3-AC26, because `clearRating` must write an explicit null. Do not fi
 NONE
 
 ## Deviation approvals
-NONE
+2026-08-30 `library_stats.dart` takes a direct import of `now_playing_game_entity.dart`, because `featured_repository.dart`'s export re-exports `library_snapshot_entity.dart`'s own public API but not the entity it merely imports — Approved by human
 
 ## Code review outcomes
-NONE
+2026-08-30 d172b584c724e848f12375a4cbfff0c5fa93aff4 — Reviewed and approved by human
 
 ## Interruption record
 
