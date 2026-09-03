@@ -17,8 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-flutter
-        with:
-          generate: all
 
       - name: Check generated code is committed
         run: |

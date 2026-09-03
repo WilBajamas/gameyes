@@ -2,9 +2,6 @@ name: Set up Flutter
 description: Installs Java and Flutter, restores packages, and generates the envied config.
 
 inputs:
-  generate:
-    description: 'What build_runner should produce: "config" for the envied file only, "all" for everything.'
-    default: config
   require-secrets:
     description: Fail when a required value below is empty. Release builds set this to true.
     default: "false"
@@ -69,8 +66,8 @@ runs:
         done
         [[ -n "$SENTRY_DSN" ]] || unset SENTRY_DSN
 
-        if [[ "${{ inputs.generate }}" == "all" ]]; then
-          dart run build_runner build --delete-conflicting-outputs
-        else
-          dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
-        fi
+        # Always a full build, never --build-filter. On a cold cache the filter
+        # prunes every generated file outside it -- including the committed
+        # Isar schemas and freezed classes -- and then only writes the one file
+        # it was pointed at, so the build fails on missing symbols.
+        dart run build_runner build --delete-conflicting-outputs
