@@ -1,0 +1,46 @@
+name: Set up Flutter
+description: Installs Java and Flutter, restores packages, and writes the envied config files.
+
+inputs:
+  api-key:
+    description: RAWG API key.
+    default: placeholder
+  sentry-dsn:
+    description: Sentry DSN. Empty disables reporting.
+    default: ""
+  supabase-url:
+    description: Supabase project URL.
+    default: https://placeholder.supabase.co
+  supabase-anon-key:
+    description: Supabase anon key.
+    default: placeholder
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: "17"
+
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version-file: .fvmrc
+        channel: stable
+        cache: true
+
+    - run: flutter pub get
+      shell: bash
+
+    # secret.env, dev.env and prod.env are git-ignored, so every runner has to
+    # write its own before build_runner can generate config_envied.g.dart.
+    - name: Write envied config
+      shell: bash
+      env:
+        API_KEY: ${{ inputs.api-key }}
+        SENTRY_DSN: ${{ inputs.sentry-dsn }}
+        SUPABASE_URL: ${{ inputs.supabase-url }}
+        SUPABASE_ANON_KEY: ${{ inputs.supabase-anon-key }}
+      run: |
+        printf 'API_KEY=%s\nSENTRY_DSN=%s\n' "$API_KEY" "$SENTRY_DSN" > secret.env
+        printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' "$SUPABASE_URL" "$SUPABASE_ANON_KEY" | tee dev.env > prod.env

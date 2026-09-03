@@ -1,0 +1,92 @@
+name: Production Release
+
+# Run from the Actions tab against develop. The version comes from pubspec.yaml,
+# so bump it and merge that first; the build number is the Actions run number.
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: Notes shown to testers in Firebase
+        required: false
+        type: string
+      include_ios:
+        description: Also build and upload to TestFlight (see the iOS prerequisites)
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  android:
+    name: Google Play and Firebase
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: ./.github/actions/setup-flutter
+        with:
+          api-key: ${{ secrets.API_KEY }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          supabase-url: ${{ secrets.SUPABASE_URL }}
+          supabase-anon-key: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      - run: flutter test
+
+      - uses: ./.github/actions/android-signing
+        with:
+          keystore-base64: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+          store-password: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          key-password: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          key-alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+
+      - run: dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Build and upload
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
+          FIREBASE_APP_ID: ${{ vars.FIREBASE_APP_ID }}
+          FIREBASE_TESTER_GROUPS: ${{ vars.FIREBASE_TESTER_GROUPS }}
+          FIREBASE_SERVICE_ACCOUNT_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 }}
+          PLAY_SERVICE_ACCOUNT_BASE64: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON_BASE64 }}
+        run: bundle exec fastlane android production
+
+  ios:
+    name: App Store Connect
+    if: inputs.include_ios
+    runs-on: macos-latest
+    environment: prod
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: ./.github/actions/setup-flutter
+        with:
+          api-key: ${{ secrets.API_KEY }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          supabase-url: ${{ secrets.SUPABASE_URL }}
+          supabase-anon-key: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      - run: dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Build and upload
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          IOS_SIGNING_CERTIFICATE_BASE64: ${{ secrets.IOS_SIGNING_CERTIFICATE_BASE64 }}
+          IOS_SIGNING_CERTIFICATE_PASSWORD: ${{ secrets.IOS_SIGNING_CERTIFICATE_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+        run: bundle exec fastlane ios production

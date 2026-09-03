@@ -1,74 +1,67 @@
+require "base64"
+require "tmpdir"
+
 default_platform(:android)
 
-REPOSITORY_ROOT = File.expand_path("..", __dir__)
-DEV_APK = File.join(REPOSITORY_ROOT, "build/app/outputs/flutter-apk/app-dev-release.apk")
-PROD_AAB = File.join(REPOSITORY_ROOT, "build/app/outputs/bundle/prodRelease/app-prod-release.aab")
+ROOT = File.expand_path("..", __dir__)
+DEV_APK = "#{ROOT}/build/app/outputs/flutter-apk/app-dev-release.apk"
+PROD_AAB = "#{ROOT}/build/app/outputs/bundle/prodRelease/app-prod-release.aab"
 
-def require_environment!(*names)
-  missing = names.select { |name| ENV[name].to_s.strip.empty? }
-  return if missing.empty?
+# GitHub sets an undefined variable to an empty string rather than leaving it
+# unset, so blank has to fail the same way missing does.
+def env!(name)
+  value = ENV[name].to_s.strip
+  UI.user_error!("Missing required environment value: #{name}") if value.empty?
+  value
+end
 
-  UI.user_error!("Missing required environment values: #{missing.join(', ')}")
+# Service account keys arrive base64-encoded in a secret. Write them to a file
+# under the runner's temp dir, which is wiped when the job ends.
+def credentials_file(name, filename)
+  path = File.join(ENV.fetch("RUNNER_TEMP", Dir.tmpdir), filename)
+  File.write(path, Base64.decode64(env!(name)))
+  path
 end
 
 def release_notes
   notes = ENV["RELEASE_NOTES"].to_s.strip
-  return notes unless notes.empty?
-
-  "QuestLoggd build #{ENV.fetch('BUILD_NUMBER')}"
+  notes.empty? ? "QuestLoggd build #{env!('BUILD_NUMBER')}" : notes
 end
 
-def build_flutter_artifact(type:, flavor:, target:)
-  require_environment!("BUILD_NUMBER")
-  build_number = ENV.fetch("BUILD_NUMBER")
-  UI.user_error!("BUILD_NUMBER must be a positive integer") unless build_number.match?(/\A[1-9]\d*\z/)
-
-  Dir.chdir(REPOSITORY_ROOT) do
-    sh(
-      "flutter",
-      "build",
-      type,
-      "--release",
-      "--flavor",
-      flavor,
-      "--target",
-      target,
-      "--build-number",
-      build_number
-    )
+def flutter_build(type, flavor:, target:)
+  Dir.chdir(ROOT) do
+    sh "flutter", "build", type,
+       "--release",
+       "--flavor", flavor,
+       "--target", target,
+       "--build-number", env!("BUILD_NUMBER")
   end
+end
+
+def distribute_to_firebase(path, type)
+  firebase_app_distribution(
+    app: env!("FIREBASE_APP_ID"),
+    service_credentials_file: credentials_file("FIREBASE_SERVICE_ACCOUNT_BASE64", "firebase.json"),
+    android_artifact_path: path,
+    android_artifact_type: type,
+    groups: env!("FIREBASE_TESTER_GROUPS"),
+    release_notes: release_notes
+  )
 end
 
 platform :android do
-  desc "Build and distribute the dev APK through Firebase App Distribution"
-  lane :dev do
-    require_environment!(
-      "FIREBASE_APP_ID",
-      "FIREBASE_SERVICE_ACCOUNT_PATH",
-      "FIREBASE_TESTER_GROUPS"
-    )
-
-    build_flutter_artifact(type: "apk", flavor: "dev", target: "lib/main.dart")
-
-    firebase_app_distribution(
-      app: ENV.fetch("FIREBASE_APP_ID"),
-      service_credentials_file: ENV.fetch("FIREBASE_SERVICE_ACCOUNT_PATH"),
-      android_artifact_type: "APK",
-      android_artifact_path: DEV_APK,
-      groups: ENV.fetch("FIREBASE_TESTER_GROUPS"),
-      release_notes: release_notes
-    )
+  desc "Staging: dev APK to Firebase App Distribution"
+  lane :staging do
+    flutter_build("apk", flavor: "dev", target: "lib/main.dart")
+    distribute_to_firebase(DEV_APK, "APK")
   end
 
-  desc "Build and upload the prod AAB to Google Play internal testing"
-  lane :prod do
-    require_environment!("PLAY_SERVICE_ACCOUNT_PATH")
-
-    build_flutter_artifact(type: "appbundle", flavor: "prod", target: "lib/main_prod.dart")
+  desc "Production: prod AAB to Play internal testing and Firebase"
+  lane :production do
+    flutter_build("appbundle", flavor: "prod", target: "lib/main_prod.dart")
 
     upload_to_play_store(
-      package_name: "com.questloggd.app",
-      json_key: ENV.fetch("PLAY_SERVICE_ACCOUNT_PATH"),
+      json_key: credentials_file("PLAY_SERVICE_ACCOUNT_BASE64", "play.json"),
       aab: PROD_AAB,
       track: "internal",
       release_status: "completed",
@@ -76,6 +69,41 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
       skip_upload_changelogs: true
+    )
+
+    distribute_to_firebase(PROD_AAB, "AAB")
+  end
+end
+
+platform :ios do
+  # Not usable yet. The project still has the placeholder bundle identifier
+  # com.example.gamingLibraryAssessmentFlutter and only the default Runner
+  # scheme, so there is no prod scheme to build and nothing to sign against.
+  desc "Production: prod IPA to TestFlight"
+  lane :production do
+    setup_ci if ENV["CI"]
+
+    import_certificate(
+      certificate_path: credentials_file("IOS_SIGNING_CERTIFICATE_BASE64", "certificate.p12"),
+      certificate_password: env!("IOS_SIGNING_CERTIFICATE_PASSWORD"),
+      keychain_name: "fastlane_tmp_keychain",
+      keychain_password: ""
+    )
+    install_provisioning_profile(
+      path: credentials_file("IOS_PROVISIONING_PROFILE_BASE64", "profile.mobileprovision")
+    )
+
+    flutter_build("ipa", flavor: "prod", target: "lib/main_prod.dart")
+
+    upload_to_testflight(
+      api_key: app_store_connect_api_key(
+        key_id: env!("ASC_KEY_ID"),
+        issuer_id: env!("ASC_ISSUER_ID"),
+        key_content: env!("ASC_KEY_BASE64"),
+        is_key_content_base64: true
+      ),
+      ipa: Dir["#{ROOT}/build/ios/ipa/*.ipa"].first,
+      skip_waiting_for_build_processing: true
     )
   end
 end

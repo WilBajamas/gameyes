@@ -1,0 +1,39 @@
+name: Write Android signing key
+description: Decodes the upload keystore and writes android/key.properties for the release build type.
+
+inputs:
+  keystore-base64:
+    description: Base64 of the .jks keystore.
+    required: true
+  store-password:
+    description: Keystore password.
+    required: true
+  key-password:
+    description: Key password.
+    required: true
+  key-alias:
+    description: Key alias.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        KEYSTORE_BASE64: ${{ inputs.keystore-base64 }}
+        STORE_PASSWORD: ${{ inputs.store-password }}
+        KEY_PASSWORD: ${{ inputs.key-password }}
+        KEY_ALIAS: ${{ inputs.key-alias }}
+      run: |
+        set -euo pipefail
+        for name in KEYSTORE_BASE64 STORE_PASSWORD KEY_PASSWORD KEY_ALIAS; do
+          if [[ -z "${!name}" ]]; then
+            echo "::error::$name is empty. Check the secrets on this GitHub Environment."
+            exit 1
+          fi
+        done
+
+        keystore="$RUNNER_TEMP/upload-keystore.jks"
+        printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$keystore"
+        printf 'storeFile=%s\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=%s\n' \
+          "$keystore" "$STORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties

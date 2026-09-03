@@ -1,136 +1,57 @@
 name: CI
 
 on:
-  push:
-    branches: [develop]
   pull_request:
+    branches: [develop]
+  push:
     branches: [develop]
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   verify:
-    name: Verify Flutter code
+    name: Analyze and test
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-flutter
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version-file: .fvmrc
-          channel: stable
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Create placeholder app configuration
-        shell: bash
-        run: |
-          printf 'API_KEY=ci\nSENTRY_DSN=\nSUPABASE_URL=https://example.supabase.co\nSUPABASE_ANON_KEY=ci\n' > secret.env
-          cp secret.env dev.env
-          cp secret.env prod.env
-
-      - name: Check generated code
+      - name: Check generated code is committed
         run: |
           dart run build_runner build --delete-conflicting-outputs
-          git diff --exit-code -- ':(glob)lib/**/*.g.dart' ':(glob)lib/**/*.freezed.dart' ':(glob)lib/**/*.gr.dart' ':(glob)lib/**/*.config.dart' ':(glob)test/**/*.mocks.dart'
-          if git ls-files --others --exclude-standard -- lib test | grep -E '(\.g|\.freezed|\.gr|\.config|\.mocks)\.dart$'; then
-            echo "Generated files are missing from version control."
-            exit 1
-          fi
+          git add -A lib test
+          git diff --cached --exit-code -- lib test
 
-      - name: Check formatting
-        run: dart format --output=none --set-exit-if-changed lib test
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
 
-      - name: Analyze
-        run: flutter analyze --no-fatal-infos
-
-      - name: Run unit and widget tests
-        run: flutter test
-
-  build-android:
-    name: Android compile (${{ matrix.flavor }})
+  build:
+    name: Build ${{ matrix.name }}
     needs: verify
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - flavor: dev
-            mode: debug
-            target: lib/main.dart
-          - flavor: prod
-            mode: release
-            target: lib/main_prod.dart
+          - name: Android dev
+            os: ubuntu-latest
+            command: flutter build apk --release --flavor dev --target lib/main.dart
+          - name: Android prod
+            os: ubuntu-latest
+            command: flutter build appbundle --release --flavor prod --target lib/main_prod.dart
+          - name: iOS
+            os: macos-latest
+            command: flutter build ios --release --no-codesign --target lib/main.dart
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-flutter
 
-      - name: Set up Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
+      - run: dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version-file: .fvmrc
-          channel: stable
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Create placeholder app configuration
-        shell: bash
-        run: |
-          printf 'API_KEY=ci\nSENTRY_DSN=\nSUPABASE_URL=https://example.supabase.co\nSUPABASE_ANON_KEY=ci\n' > secret.env
-          cp secret.env "${{ matrix.flavor }}.env"
-          dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
-
-      - name: Create temporary release signing key
-        if: matrix.mode == 'release'
-        shell: bash
-        run: |
-          keytool -genkeypair -v -keystore "$RUNNER_TEMP/ci-upload.jks" -storepass changeit -keypass changeit -alias ci-upload -keyalg RSA -keysize 2048 -validity 1 -dname "CN=CI, OU=CI, O=CI, L=CI, ST=CI, C=US"
-          printf 'storePassword=changeit\nkeyPassword=changeit\nkeyAlias=ci-upload\nstoreFile=%s\n' "$RUNNER_TEMP/ci-upload.jks" > android/key.properties
-
-      - name: Compile Android APK
-        run: flutter build apk --${{ matrix.mode }} --flavor "${{ matrix.flavor }}" --target "${{ matrix.target }}"
-
-  build-ios:
-    name: iOS compile
-    needs: verify
-    runs-on: macos-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version-file: .fvmrc
-          channel: stable
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Create placeholder app configuration
-        shell: bash
-        run: |
-          printf 'API_KEY=ci\nSENTRY_DSN=\nSUPABASE_URL=https://example.supabase.co\nSUPABASE_ANON_KEY=ci\n' > secret.env
-          cp secret.env dev.env
-          dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
-
-      - name: Compile iOS without signing
-        run: flutter build ios --debug --no-codesign --target lib/main.dart
+      # No signing key on CI, so the release build type falls back to the debug
+      # certificate. These artifacts are throwaway compile checks, not shippable.
+      - run: ${{ matrix.command }}
