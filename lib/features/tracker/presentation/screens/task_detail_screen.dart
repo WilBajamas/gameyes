@@ -189,9 +189,14 @@ class _TaskDescriptionState extends State<_TaskDescription> {
 }
 
 //* Reminder
+// Deliberately kept while the reminder feature is parked -- its call site is
+// commented out above rather than deleted. Do not remove this class; see
+// .agents/handover.md. The two ignores below keep it from failing analysis.
+// ignore: unused_element
 class _TaskReminder extends StatelessWidget {
   final TrackerTaskEntity? task;
 
+  // ignore: unused_element_parameter
   const _TaskReminder({this.task});
 
   @override

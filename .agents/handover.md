@@ -229,9 +229,16 @@ line-ending fix, `coverage/` untracked, 14 dead `const.dart` members removed (it
 `37f82ee`).
 
 **The one thing from those runs that still binds:** `task_detail_screen.dart`'s unused
-`_TaskReminder` class **is** the entire 2-warning analyzer baseline. The human chose to
-leave it rather than let an unused-code scan delete it — it is deliberate, not missed,
-so do not "fix" it and do not read the 2 warnings as drift.
+`_TaskReminder` class is deliberate. The human chose to leave it rather than let an
+unused-code scan delete it, so do not delete it and do not treat it as drift.
+
+**Superseded 2026-09-03 — the analyzer baseline is now 0 warnings, not 2.** CI runs
+`flutter analyze --no-fatal-infos`, which exempts infos but *not* warnings, so the two
+`_TaskReminder` warnings failed the build. The class stays exactly where it is; the two
+lints are now silenced at the source with `// ignore: unused_element` and
+`// ignore: unused_element_parameter`, each next to the line it covers. Expect **0
+warnings** from here on and investigate any warning at all — a stronger signal than
+remembering that 2 was allowed. Infos are still not an invariant.
 
 **One open item, carried from item 3:** the on-device cross-account RLS
 check. Schema, RLS policies and the account-picker sign-in fix are all done

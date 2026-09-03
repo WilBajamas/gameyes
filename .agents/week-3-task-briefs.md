@@ -81,7 +81,10 @@ repo, compiling and passing its tests, until the design convention lands.
 
 **Consequence:** the deliberate `_TaskReminder` pair lives in
 `task_detail_screen.dart` and that file survives, so **2 warnings stays the
-invariant all week.** The *total* is not an invariant — it has moved three times
+invariant all week.** (Superseded 2026-09-03: the pair is now silenced with
+`// ignore:` comments so CI's `flutter analyze` can pass, making the baseline
+**0 warnings**. The class itself is untouched. See `.agents/handover.md`.)
+The *total* is not an invariant — it has moved three times
 (30 → 28 → 29) and moves again whenever an item adds or deletes files. Measure
 both on the untouched tree at Phase 0 of every item; a changed total on its own
 proves nothing.
