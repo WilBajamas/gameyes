@@ -56,7 +56,9 @@ runs:
         # An empty variable still counts as "set" to envied, which would bake
         # an empty string into the app. Unset it instead so the placeholder
         # default is used, or stop outright on a release build.
-        for name in API_KEY SUPABASE_URL SUPABASE_ANON_KEY; do
+        # API_KEY is deliberately not required: RAWG is being retired and
+        # nothing reads Env.apiKey any more.
+        for name in SUPABASE_URL SUPABASE_ANON_KEY; do
           if [[ -z "${!name}" ]]; then
             if [[ "$REQUIRE_SECRETS" == "true" ]]; then
               echo "::error::$name is empty. Check the secrets on this GitHub Environment."
