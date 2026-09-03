@@ -107,6 +107,13 @@
       "problemMatcher": []
     },
     {
+      "label": "build: prod (Play Store AAB)",
+      "detail": "Signed production App Bundle for Google Play internal testing",
+      "type": "shell",
+      "command": "fvm flutter build appbundle --release --flavor prod -t lib/main_prod.dart",
+      "problemMatcher": []
+    },
+    {
       "label": "check (analyze + test)",
       "detail": "What to run before committing",
       "dependsOrder": "sequence",

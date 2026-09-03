@@ -1,0 +1,81 @@
+default_platform(:android)
+
+REPOSITORY_ROOT = File.expand_path("..", __dir__)
+DEV_APK = File.join(REPOSITORY_ROOT, "build/app/outputs/flutter-apk/app-dev-release.apk")
+PROD_AAB = File.join(REPOSITORY_ROOT, "build/app/outputs/bundle/prodRelease/app-prod-release.aab")
+
+def require_environment!(*names)
+  missing = names.select { |name| ENV[name].to_s.strip.empty? }
+  return if missing.empty?
+
+  UI.user_error!("Missing required environment values: #{missing.join(', ')}")
+end
+
+def release_notes
+  notes = ENV["RELEASE_NOTES"].to_s.strip
+  return notes unless notes.empty?
+
+  "QuestLoggd build #{ENV.fetch('BUILD_NUMBER')}"
+end
+
+def build_flutter_artifact(type:, flavor:, target:)
+  require_environment!("BUILD_NUMBER")
+  build_number = ENV.fetch("BUILD_NUMBER")
+  UI.user_error!("BUILD_NUMBER must be a positive integer") unless build_number.match?(/\A[1-9]\d*\z/)
+
+  Dir.chdir(REPOSITORY_ROOT) do
+    sh(
+      "flutter",
+      "build",
+      type,
+      "--release",
+      "--flavor",
+      flavor,
+      "--target",
+      target,
+      "--build-number",
+      build_number
+    )
+  end
+end
+
+platform :android do
+  desc "Build and distribute the dev APK through Firebase App Distribution"
+  lane :dev do
+    require_environment!(
+      "FIREBASE_APP_ID",
+      "FIREBASE_SERVICE_ACCOUNT_PATH",
+      "FIREBASE_TESTER_GROUPS"
+    )
+
+    build_flutter_artifact(type: "apk", flavor: "dev", target: "lib/main.dart")
+
+    firebase_app_distribution(
+      app: ENV.fetch("FIREBASE_APP_ID"),
+      service_credentials_file: ENV.fetch("FIREBASE_SERVICE_ACCOUNT_PATH"),
+      android_artifact_type: "APK",
+      android_artifact_path: DEV_APK,
+      groups: ENV.fetch("FIREBASE_TESTER_GROUPS"),
+      release_notes: release_notes
+    )
+  end
+
+  desc "Build and upload the prod AAB to Google Play internal testing"
+  lane :prod do
+    require_environment!("PLAY_SERVICE_ACCOUNT_PATH")
+
+    build_flutter_artifact(type: "appbundle", flavor: "prod", target: "lib/main_prod.dart")
+
+    upload_to_play_store(
+      package_name: "com.questloggd.app",
+      json_key: ENV.fetch("PLAY_SERVICE_ACCOUNT_PATH"),
+      aab: PROD_AAB,
+      track: "internal",
+      release_status: "completed",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true
+    )
+  end
+end
