@@ -1,19 +1,25 @@
 name: Set up Flutter
-description: Installs Java and Flutter, restores packages, and writes the envied config files.
+description: Installs Java and Flutter, restores packages, and generates the envied config.
 
 inputs:
+  generate:
+    description: 'What build_runner should produce: "config" for the envied file only, "all" for everything.'
+    default: config
+  require-secrets:
+    description: Fail when a required value below is empty. Release builds set this to true.
+    default: "false"
   api-key:
     description: RAWG API key.
-    default: placeholder
+    default: ""
   sentry-dsn:
-    description: Sentry DSN. Empty disables reporting.
+    description: Sentry DSN. Always optional; empty means crash reporting is off.
     default: ""
   supabase-url:
     description: Supabase project URL.
-    default: https://placeholder.supabase.co
+    default: ""
   supabase-anon-key:
     description: Supabase anon key.
-    default: placeholder
+    default: ""
 
 runs:
   using: composite
@@ -32,15 +38,37 @@ runs:
     - run: flutter pub get
       shell: bash
 
-    # secret.env, dev.env and prod.env are git-ignored, so every runner has to
-    # write its own before build_runner can generate config_envied.g.dart.
-    - name: Write envied config
+    # envied reads each value from the .env file first, then from a real
+    # environment variable, then from the defaultValue in config_envied.dart.
+    # Nothing writes the .env files here, so the values below come straight
+    # from this step's environment and never touch the disk.
+    - name: Generate envied config
       shell: bash
       env:
+        REQUIRE_SECRETS: ${{ inputs.require-secrets }}
         API_KEY: ${{ inputs.api-key }}
         SENTRY_DSN: ${{ inputs.sentry-dsn }}
         SUPABASE_URL: ${{ inputs.supabase-url }}
         SUPABASE_ANON_KEY: ${{ inputs.supabase-anon-key }}
       run: |
-        printf 'API_KEY=%s\nSENTRY_DSN=%s\n' "$API_KEY" "$SENTRY_DSN" > secret.env
-        printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' "$SUPABASE_URL" "$SUPABASE_ANON_KEY" | tee dev.env > prod.env
+        set -euo pipefail
+
+        # An empty variable still counts as "set" to envied, which would bake
+        # an empty string into the app. Unset it instead so the placeholder
+        # default is used, or stop outright on a release build.
+        for name in API_KEY SUPABASE_URL SUPABASE_ANON_KEY; do
+          if [[ -z "${!name}" ]]; then
+            if [[ "$REQUIRE_SECRETS" == "true" ]]; then
+              echo "::error::$name is empty. Check the secrets on this GitHub Environment."
+              exit 1
+            fi
+            unset "$name"
+          fi
+        done
+        [[ -n "$SENTRY_DSN" ]] || unset SENTRY_DSN
+
+        if [[ "${{ inputs.generate }}" == "all" ]]; then
+          dart run build_runner build --delete-conflicting-outputs
+        else
+          dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
+        fi

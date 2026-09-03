@@ -20,6 +20,7 @@ end
 def credentials_file(name, filename)
   path = File.join(ENV.fetch("RUNNER_TEMP", Dir.tmpdir), filename)
   File.write(path, Base64.decode64(env!(name)))
+  File.chmod(0o600, path)
   path
 end
 

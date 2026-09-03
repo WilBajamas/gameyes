@@ -21,6 +21,7 @@ jobs:
 
       - uses: ./.github/actions/setup-flutter
         with:
+          require-secrets: "true"
           api-key: ${{ secrets.API_KEY }}
           sentry-dsn: ${{ secrets.SENTRY_DSN }}
           supabase-url: ${{ secrets.SUPABASE_URL }}
@@ -34,8 +35,6 @@ jobs:
           store-password: ${{ secrets.ANDROID_STORE_PASSWORD }}
           key-password: ${{ secrets.ANDROID_KEY_PASSWORD }}
           key-alias: ${{ secrets.ANDROID_KEY_ALIAS }}
-
-      - run: dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
 
       - uses: ruby/setup-ruby@v1
         with:

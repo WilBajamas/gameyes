@@ -17,10 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-flutter
+        with:
+          generate: all
 
       - name: Check generated code is committed
         run: |
-          dart run build_runner build --delete-conflicting-outputs
           git add -A lib test
           git diff --cached --exit-code -- lib test
 
@@ -28,30 +29,23 @@ jobs:
       - run: flutter analyze --no-fatal-infos
       - run: flutter test
 
-  build:
-    name: Build ${{ matrix.name }}
+  # Both compile jobs only prove the code builds. flutter analyze already
+  # covers main_prod.dart, and the release workflows do the real signed
+  # release builds, so one Android flavour in debug is enough here.
+  android:
+    name: Compiles on Android
     needs: verify
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Android dev
-            os: ubuntu-latest
-            command: flutter build apk --release --flavor dev --target lib/main.dart
-          - name: Android prod
-            os: ubuntu-latest
-            command: flutter build appbundle --release --flavor prod --target lib/main_prod.dart
-          - name: iOS
-            os: macos-latest
-            command: flutter build ios --release --no-codesign --target lib/main.dart
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-flutter
+      - run: flutter build apk --debug --flavor dev --target lib/main.dart
 
-      - run: dart run build_runner build --delete-conflicting-outputs --build-filter=lib/config/config_envied.g.dart
-
-      # No signing key on CI, so the release build type falls back to the debug
-      # certificate. These artifacts are throwaway compile checks, not shippable.
-      - run: ${{ matrix.command }}
+  ios:
+    name: Compiles on iOS
+    needs: verify
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-flutter
+      - run: flutter build ios --debug --no-codesign --target lib/main.dart
