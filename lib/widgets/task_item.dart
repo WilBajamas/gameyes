@@ -34,9 +34,8 @@ class TaskItem extends StatelessWidget {
       customBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      onTap: () => context.router.push(
-        TaskDetailRoute(taskId: task.id, task: task),
-      ),
+      onTap: () =>
+          context.router.push(TaskDetailRoute(taskId: task.id, task: task)),
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -54,8 +53,9 @@ class TaskItem extends StatelessWidget {
               if (showGroupTask && groupTaskTitle != null)
                 Text(
                   groupTaskTitle!,
-                  style: context.themeData.textTheme.labelSmall!
-                      .copyWith(color: Colors.grey),
+                  style: context.themeData.textTheme.labelSmall!.copyWith(
+                    color: Colors.grey,
+                  ),
                 ),
             ],
           ),
@@ -66,9 +66,7 @@ class TaskItem extends StatelessWidget {
 }
 
 class _TaskContent extends StatelessWidget {
-  const _TaskContent({
-    required this.task,
-  });
+  const _TaskContent({required this.task});
 
   final TrackerTaskEntity task;
 
@@ -82,9 +80,7 @@ class _TaskContent extends StatelessWidget {
             style: context.themeData.textTheme.bodyLarge,
           ),
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         Transform.scale(
           scale: 1.15,
           child: Checkbox(
@@ -99,9 +95,7 @@ class _TaskContent extends StatelessWidget {
 }
 
 class _StepsRow extends StatelessWidget {
-  const _StepsRow({
-    required this.step,
-  });
+  const _StepsRow({required this.step});
 
   final (String, String) step;
 
@@ -119,18 +113,14 @@ class _StepsRow extends StatelessWidget {
           child: Center(
             child: Text(
               number,
-              style: context.themeData.textTheme.bodySmall!
-                  .copyWith(color: kColorScheme.surface),
+              style: context.themeData.textTheme.bodySmall!.copyWith(
+                color: kColorScheme.surface,
+              ),
             ),
           ),
         ),
-        const SizedBox(
-          width: 8,
-        ),
-        Text(
-          title,
-          style: context.themeData.textTheme.bodySmall,
-        ),
+        const SizedBox(width: 8),
+        Text(title, style: context.themeData.textTheme.bodySmall),
       ],
     );
   }

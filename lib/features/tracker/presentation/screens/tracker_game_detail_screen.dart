@@ -38,9 +38,7 @@ class TrackerGameDetailScreen extends StatelessWidget {
                   actions: [
                     IconButton(
                       onPressed: () {},
-                      icon: const Icon(
-                        Icons.details_outlined,
-                      ),
+                      icon: const Icon(Icons.details_outlined),
                     ),
                   ],
                   pinned: true,
@@ -53,21 +51,14 @@ class TrackerGameDetailScreen extends StatelessWidget {
                     unselectedLabelColor: Colors.grey,
                     indicatorColor: Colors.white,
                     tabs: <Widget>[
-                      Tab(
-                        text: S.current.details,
-                      ),
-                      Tab(
-                        text: S.current.tasks,
-                      ),
+                      Tab(text: S.current.details),
+                      Tab(text: S.current.tasks),
                     ],
                   ),
                 ),
               ],
               body: const TabBarView(
-                children: [
-                  TrackerGameDetailSection(),
-                  TrackerTasksSection(),
-                ],
+                children: [TrackerGameDetailSection(), TrackerTasksSection()],
               ),
             ),
           ),
@@ -119,11 +110,11 @@ class _HeaderBackground extends StatelessWidget {
                         Text(
                           state.game!.dateSaved
                               .getFormattedStringFromDateTimeSlash()!,
-                          style:
-                              context.themeData.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                          style: context.themeData.textTheme.bodyMedium!
+                              .copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                         ),
                         const SizedBox(height: 8),
                         InkWell(
@@ -145,18 +136,14 @@ class _HeaderBackground extends StatelessWidget {
                           maxLines: 1,
                           maxFontSize: 20,
                           style: context.themeData.textTheme.displaySmall!
-                              .copyWith(
-                            color: Colors.white,
-                          ),
+                              .copyWith(color: Colors.white),
                         ),
                         Text(
                           context
                               .read<TrackerDetailCubit>()
                               .getTasksCompletion(),
                           style: context.themeData.textTheme.displayLarge!
-                              .copyWith(
-                            color: Colors.white,
-                          ),
+                              .copyWith(color: Colors.white),
                         ),
                       ],
                     ),

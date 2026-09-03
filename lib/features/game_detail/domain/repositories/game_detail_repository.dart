@@ -3,9 +3,7 @@ import 'package:gaming_library_assessment_flutter/core/domain/entities/game_deta
 import 'package:gaming_library_assessment_flutter/features/tracker/data/models/saved_game.dart';
 
 abstract interface class GameDetailRepository {
-  Future<Result<GameDetailEntity>> fetchGameDetail({
-    required int id,
-  });
+  Future<Result<GameDetailEntity>> fetchGameDetail({required int id});
 
   Future<void> saveGame({required SavedGame game});
 

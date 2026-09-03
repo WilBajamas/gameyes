@@ -13,11 +13,11 @@ class TaskCubit extends Cubit<TaskState> {
   final TrackerDetailRepository _trackerDetailRepository;
   StreamSubscription? taskStreamSubscription;
 
-  TaskCubit(
-      {@factoryParam required TrackerTaskEntity? task,
-      required TrackerDetailRepository trackerDetailRepository,})
-      : _trackerDetailRepository = trackerDetailRepository,
-        super(const TaskState()) {
+  TaskCubit({
+    @factoryParam required TrackerTaskEntity? task,
+    required TrackerDetailRepository trackerDetailRepository,
+  }) : _trackerDetailRepository = trackerDetailRepository,
+       super(const TaskState()) {
     if (task case final task?) {
       setTask(task: task);
       listenToTask(taskId: task.id);
@@ -59,22 +59,18 @@ class TaskCubit extends Cubit<TaskState> {
     required String description,
     required int stepNumber,
     String? image,
-  }) =>
-      _trackerDetailRepository.editStep(
-        taskId: taskId,
-        stepId: stepId,
-        title: title,
-        description: description,
-        stepNumber: stepNumber,
-        image: image,
-      );
+  }) => _trackerDetailRepository.editStep(
+    taskId: taskId,
+    stepId: stepId,
+    title: title,
+    description: description,
+    stepNumber: stepNumber,
+    image: image,
+  );
 
   void removeStep({required TrackerTaskStepEntity step}) async {
     await _trackerDetailRepository
-        .removeStep(
-          taskId: state.task!.id,
-          step: step,
-        )
+        .removeStep(taskId: state.task!.id, step: step)
         .then(
           (removed) => removed
               ? emit(TaskState.removeStepSuccess(task: state.task!))

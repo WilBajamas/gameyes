@@ -45,8 +45,9 @@ void main() {
     expect(find.text('Date Added'), findsOneWidget);
   });
 
-  testWidgets('the chip matching initialSelection renders as selected',
-      (tester) async {
+  testWidgets('the chip matching initialSelection renders as selected', (
+    tester,
+  ) async {
     final handle = tester.ensureSemantics();
 
     await tester.pumpWidget(
@@ -73,8 +74,9 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('the first chip is selected when initialSelection is omitted',
-      (tester) async {
+  testWidgets('the first chip is selected when initialSelection is omitted', (
+    tester,
+  ) async {
     final handle = tester.ensureSemantics();
 
     await tester.pumpWidget(buildSubject());
@@ -91,9 +93,7 @@ void main() {
     final handle = tester.ensureSemantics();
     SavedGameFilterTag? tapped;
 
-    await tester.pumpWidget(
-      buildSubject(selected: (tag) => tapped = tag),
-    );
+    await tester.pumpWidget(buildSubject(selected: (tag) => tapped = tag));
 
     await tester.tap(find.text('Date Added'));
     await tester.pumpAndSettle();

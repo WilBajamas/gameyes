@@ -27,8 +27,9 @@ void main() {
     authStateController = StreamController<AuthState>.broadcast();
     GetIt.I.registerSingleton(authDatasource);
     when(authDatasource.currentSession).thenReturn(null);
-    when(authDatasource.authStateChanges)
-        .thenAnswer((_) => authStateController.stream);
+    when(
+      authDatasource.authStateChanges,
+    ).thenAnswer((_) => authStateController.stream);
     repository = AuthRepositoryImpl(authDatasource);
   });
 
@@ -38,15 +39,17 @@ void main() {
     reset(authDatasource);
   });
 
-  test('should ask Supabase for Discord when signing in with Discord',
-      () async {
-    when(authDatasource.signInWithOAuth(any)).thenAnswer((_) async => true);
+  test(
+    'should ask Supabase for Discord when signing in with Discord',
+    () async {
+      when(authDatasource.signInWithOAuth(any)).thenAnswer((_) async => true);
 
-    final result = await repository.signIn(SignInProvider.discord);
+      final result = await repository.signIn(SignInProvider.discord);
 
-    verify(authDatasource.signInWithOAuth(OAuthProvider.discord));
-    expect(result, isA<Success<void>>());
-  });
+      verify(authDatasource.signInWithOAuth(OAuthProvider.discord));
+      expect(result, isA<Success<void>>());
+    },
+  );
 
   test('should ask Supabase for Google when signing in with Google', () async {
     when(authDatasource.signInWithOAuth(any)).thenAnswer((_) async => true);
@@ -58,45 +61,50 @@ void main() {
   });
 
   // ignore: lines_longer_than_80_chars
-  test('should return Failure with a typed error when sign-in throws AuthException',
-      () async {
-    when(authDatasource.signInWithOAuth(any)).thenThrow(mockAuthException);
+  test(
+    'should return Failure with a typed error when sign-in throws AuthException',
+    () async {
+      when(authDatasource.signInWithOAuth(any)).thenThrow(mockAuthException);
 
-    final result = await repository.signIn(SignInProvider.discord);
+      final result = await repository.signIn(SignInProvider.discord);
 
-    expect(result, isA<Failure<void>>());
-    expect(
-      (result as Failure<void>).error,
-      const ErrorType.responseError(
-        message: 'test auth error message',
-        error: 'invalid_grant',
-        statusCode: 401,
-      ),
-    );
-  });
+      expect(result, isA<Failure<void>>());
+      expect(
+        (result as Failure<void>).error,
+        const ErrorType.responseError(
+          message: 'test auth error message',
+          error: 'invalid_grant',
+          statusCode: 401,
+        ),
+      );
+    },
+  );
 
   // ignore: lines_longer_than_80_chars
-  test('should return Failure with a typed error when sign-out throws AuthException',
-      () async {
-    when(authDatasource.signOut()).thenThrow(mockAuthException);
+  test(
+    'should return Failure with a typed error when sign-out throws AuthException',
+    () async {
+      when(authDatasource.signOut()).thenThrow(mockAuthException);
 
-    final result = await repository.signOut();
+      final result = await repository.signOut();
 
-    expect(result, isA<Failure<void>>());
-    expect(
-      (result as Failure<void>).error,
-      const ErrorType.responseError(
-        message: 'test auth error message',
-        error: 'invalid_grant',
-        statusCode: 401,
-      ),
-    );
-  });
+      expect(result, isA<Failure<void>>());
+      expect(
+        (result as Failure<void>).error,
+        const ErrorType.responseError(
+          message: 'test auth error message',
+          error: 'invalid_grant',
+          statusCode: 401,
+        ),
+      );
+    },
+  );
 
   test('should return Failure with unknown error when a plain exception is '
       'thrown', () async {
-    when(authDatasource.signInWithOAuth(any))
-        .thenThrow(Exception('something else went wrong'));
+    when(
+      authDatasource.signInWithOAuth(any),
+    ).thenThrow(Exception('something else went wrong'));
 
     final result = await repository.signIn(SignInProvider.discord);
 
@@ -126,10 +134,7 @@ void main() {
     await _settle();
 
     expect(result, isA<Failure<void>>());
-    expect(
-      (result as Failure<void>).error,
-      const ErrorType.signInCancelled(),
-    );
+    expect((result as Failure<void>).error, const ErrorType.signInCancelled());
     expect(emitted, [mockDiscordSignedInStatus]);
     await subscription.cancel();
   });
@@ -189,47 +194,53 @@ void main() {
     await subscription.cancel();
   });
 
-  test('should give both listeners the status when two listen at once',
-      () async {
-    when(authDatasource.currentSession).thenReturn(mockDiscordSession);
+  test(
+    'should give both listeners the status when two listen at once',
+    () async {
+      when(authDatasource.currentSession).thenReturn(mockDiscordSession);
 
-    final first = <AuthStatusEntity>[];
-    final second = <AuthStatusEntity>[];
-    final firstSubscription = repository.authStatusChanges.listen(first.add);
-    final secondSubscription = repository.authStatusChanges.listen(second.add);
-    await _settle();
+      final first = <AuthStatusEntity>[];
+      final second = <AuthStatusEntity>[];
+      final firstSubscription = repository.authStatusChanges.listen(first.add);
+      final secondSubscription = repository.authStatusChanges.listen(
+        second.add,
+      );
+      await _settle();
 
-    authStateController.add(mockSignedOutAuthState);
-    await _settle();
+      authStateController.add(mockSignedOutAuthState);
+      await _settle();
 
-    expect(first, [mockDiscordSignedInStatus, mockSignedOutStatus]);
-    expect(second, [mockDiscordSignedInStatus, mockSignedOutStatus]);
-    await firstSubscription.cancel();
-    await secondSubscription.cancel();
-  });
+      expect(first, [mockDiscordSignedInStatus, mockSignedOutStatus]);
+      expect(second, [mockDiscordSignedInStatus, mockSignedOutStatus]);
+      await firstSubscription.cancel();
+      await secondSubscription.cancel();
+    },
+  );
 
-  test('should report signed out when restoring the saved session fails',
-      () async {
-    final emitted = <AuthStatusEntity>[];
-    Object? streamError;
-    final subscription = repository.authStatusChanges.listen(
-      emitted.add,
-      onError: (Object error) => streamError = error,
-    );
-    await _settle();
+  test(
+    'should report signed out when restoring the saved session fails',
+    () async {
+      final emitted = <AuthStatusEntity>[];
+      Object? streamError;
+      final subscription = repository.authStatusChanges.listen(
+        emitted.add,
+        onError: (Object error) => streamError = error,
+      );
+      await _settle();
 
-    authStateController.addError(
-      const AuthException(
-        'Invalid Refresh Token',
-        code: 'refresh_token_not_found',
-      ),
-    );
-    await _settle();
+      authStateController.addError(
+        const AuthException(
+          'Invalid Refresh Token',
+          code: 'refresh_token_not_found',
+        ),
+      );
+      await _settle();
 
-    expect(streamError, isNull);
-    expect(emitted, [mockSignedOutStatus, mockSignedOutStatus]);
-    await subscription.cancel();
-  });
+      expect(streamError, isNull);
+      expect(emitted, [mockSignedOutStatus, mockSignedOutStatus]);
+      await subscription.cancel();
+    },
+  );
 }
 
 // Lets every queued stream event be delivered before the test looks at what

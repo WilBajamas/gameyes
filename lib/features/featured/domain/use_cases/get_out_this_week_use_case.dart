@@ -11,6 +11,5 @@ class GetOutThisWeekUseCase {
 
   Future<Result<List<GameEntity>>> call({
     required bool forceExtendWindow,
-  }) async =>
-      _repository.getOutThisWeekGames(forceExtendWindow);
+  }) async => _repository.getOutThisWeekGames(forceExtendWindow);
 }

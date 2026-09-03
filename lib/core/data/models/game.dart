@@ -31,15 +31,15 @@ sealed class Game with _$Game {
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 
   GameEntity toEntity() => GameEntity(
-        id: id ?? 0,
-        name: name ?? '',
-        cover: cover?.toEntity() ?? const GameCoverEntity(),
-        gameModes: gameModes?.map((e) => e.toEntity()).toList(),
-        gameKeywords: keywords?.map((e) => e.toEntity()).toList(),
-        platforms: platforms?.map((e) => e.toEntity()).toList(),
-        releaseDates: releaseDates?.map((e) => e.toEntity()).toList(),
-        criticScore: criticScore,
-        hypes: hypes,
-        genreIds: genres,
-      );
+    id: id ?? 0,
+    name: name ?? '',
+    cover: cover?.toEntity() ?? const GameCoverEntity(),
+    gameModes: gameModes?.map((e) => e.toEntity()).toList(),
+    gameKeywords: keywords?.map((e) => e.toEntity()).toList(),
+    platforms: platforms?.map((e) => e.toEntity()).toList(),
+    releaseDates: releaseDates?.map((e) => e.toEntity()).toList(),
+    criticScore: criticScore,
+    hypes: hypes,
+    genreIds: genres,
+  );
 }

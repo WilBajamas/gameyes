@@ -65,12 +65,11 @@ class DefaultSliverAppBar extends StatelessWidget {
               maxFontSize: _titleMaxFontSize,
               textScaleFactor: textScale,
               overflow: TextOverflow.ellipsis,
-              style: context.themeData.textTheme.displayLarge!
-                  .copyWith(fontWeight: FontWeight.w900),
+              style: context.themeData.textTheme.displayLarge!.copyWith(
+                fontWeight: FontWeight.w900,
+              ),
             ),
-            const SizedBox(
-              height: 4,
-            ),
+            const SizedBox(height: 4),
             if (subtitle case final subtitle?)
               AutoSizeText(
                 subtitle,
@@ -79,8 +78,9 @@ class DefaultSliverAppBar extends StatelessWidget {
                 maxFontSize: _subtitleMaxFontSize,
                 textScaleFactor: textScale,
                 overflow: TextOverflow.ellipsis,
-                style: context.themeData.textTheme.bodySmall!
-                    .copyWith(color: ColorPalette.textGrey),
+                style: context.themeData.textTheme.bodySmall!.copyWith(
+                  color: ColorPalette.textGrey,
+                ),
               ),
           ],
         ),

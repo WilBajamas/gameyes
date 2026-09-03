@@ -11,9 +11,7 @@ class GameDetailRemoteDatasource {
 
   GameDetailRemoteDatasource(this._gameDetailApiService);
 
-  Future<GameDetailModel> fetchGameDetail({
-    required int id,
-  }) async {
+  Future<GameDetailModel> fetchGameDetail({required int id}) async {
     final query = IGDBQueryBuilder()
         .fields(IGDBConfig.standardGameFields)
         .where('id = $id')

@@ -22,15 +22,12 @@ class IsarLocalStorageService implements ILocalStorage {
       final dir = await getApplicationDocumentsDirectory();
 
       //* Set schemas here
-      return await Isar.open(
-        [
-          SavedGameSchema,
-          GroupTaskSchema,
-          SavedGameTaskSchema,
-          PlaySessionLogSchema,
-        ],
-        directory: dir.path,
-      );
+      return await Isar.open([
+        SavedGameSchema,
+        GroupTaskSchema,
+        SavedGameTaskSchema,
+        PlaySessionLogSchema,
+      ], directory: dir.path);
     }
 
     return Future.value(Isar.getInstance());

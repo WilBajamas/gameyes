@@ -50,9 +50,10 @@ void main() {
       final result = await useCase();
 
       expect(result, isA<Failure<LibrarySnapshotEntity>>());
-      expect((result as Failure<LibrarySnapshotEntity>).error,
-          const ErrorType.unknown());
+      expect(
+        (result as Failure<LibrarySnapshotEntity>).error,
+        const ErrorType.unknown(),
+      );
     });
   });
 }
-

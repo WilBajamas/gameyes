@@ -9,15 +9,11 @@ part 'platform_logo.g.dart';
 sealed class PlatformLogo with _$PlatformLogo {
   const PlatformLogo._();
 
-  const factory PlatformLogo({
-    String? url,
-  }) = _PlatformLogo;
+  const factory PlatformLogo({String? url}) = _PlatformLogo;
 
   factory PlatformLogo.fromJson(Map<String, dynamic> json) =>
       _$PlatformLogoFromJson(json);
 
-  PlatformLogoEntity toEntity() => PlatformLogoEntity(
-        url: url.toAbsoluteImageUrl(),
-      );
+  PlatformLogoEntity toEntity() =>
+      PlatformLogoEntity(url: url.toAbsoluteImageUrl());
 }
-

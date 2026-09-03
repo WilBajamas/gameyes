@@ -59,8 +59,11 @@ extension DateTimeExtension on DateTime {
   }
 
   String getFormattedDateYearsRange({int years = 0, bool after = false}) {
-    final dateYearsAgo =
-        DateTime(after ? year + years : year - years, month, day);
+    final dateYearsAgo = DateTime(
+      after ? year + years : year - years,
+      month,
+      day,
+    );
     final formattedDate = DateFormat('yyyy-MM-dd').format(dateYearsAgo);
     return formattedDate;
   }

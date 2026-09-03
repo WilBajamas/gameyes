@@ -21,17 +21,17 @@ final class FlavorConfig {
   static void initialise(Flavor flavor) {
     _instance = switch (flavor) {
       Flavor.dev => FlavorConfig._(
-          flavor: flavor,
-          supabaseUrl: EnvDev.supabaseUrl,
-          supabaseAnonKey: EnvDev.supabaseAnonKey,
-          authRedirectUrl: SupabaseConstants.devAuthRedirectUrl,
-        ),
+        flavor: flavor,
+        supabaseUrl: EnvDev.supabaseUrl,
+        supabaseAnonKey: EnvDev.supabaseAnonKey,
+        authRedirectUrl: SupabaseConstants.devAuthRedirectUrl,
+      ),
       Flavor.prod => FlavorConfig._(
-          flavor: flavor,
-          supabaseUrl: EnvProd.supabaseUrl,
-          supabaseAnonKey: EnvProd.supabaseAnonKey,
-          authRedirectUrl: SupabaseConstants.prodAuthRedirectUrl,
-        ),
+        flavor: flavor,
+        supabaseUrl: EnvProd.supabaseUrl,
+        supabaseAnonKey: EnvProd.supabaseAnonKey,
+        authRedirectUrl: SupabaseConstants.prodAuthRedirectUrl,
+      ),
     };
   }
 

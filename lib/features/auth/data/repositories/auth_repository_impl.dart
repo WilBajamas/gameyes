@@ -64,15 +64,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   OAuthProvider _toSupabase(SignInProvider provider) => switch (provider) {
-        SignInProvider.discord => OAuthProvider.discord,
-        SignInProvider.google => OAuthProvider.google,
-      };
+    SignInProvider.discord => OAuthProvider.discord,
+    SignInProvider.google => OAuthProvider.google,
+  };
 
   ErrorType _fromAuthException(AuthException e) => ErrorType.responseError(
-        message: e.message,
-        error: e.code,
-        statusCode: int.tryParse(e.statusCode ?? ''),
-      );
+    message: e.message,
+    error: e.code,
+    statusCode: int.tryParse(e.statusCode ?? ''),
+  );
 
   AuthStatusEntity _statusFromSession(Session? session) => session == null
       ? const AuthStatusEntity.signedOut()
@@ -91,7 +91,8 @@ class AuthRepositoryImpl implements AuthRepository {
         /// [AuthChangeEvent.userDeleted] is deprecated in supabase package
         // ignore: deprecated_member_use
         AuthChangeEvent.userDeleted ||
-        AuthChangeEvent.mfaChallengeVerified =>
-          _statusFromSession(state.session),
+        AuthChangeEvent.mfaChallengeVerified => _statusFromSession(
+          state.session,
+        ),
       };
 }

@@ -11,9 +11,7 @@ void main() {
     'image has not resolved',
     (tester) async {
       await tester.pumpWidget(
-        wrap(
-          const DefaultCachedNetworkImage(imageUrl: 'https://x.test/a.png'),
-        ),
+        wrap(const DefaultCachedNetworkImage(imageUrl: 'https://x.test/a.png')),
       );
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -34,9 +32,7 @@ void main() {
     expect(cachedImage.errorWidget, isNotNull);
   });
 
-  testWidgets('leaves imageBuilder null when none is supplied', (
-    tester,
-  ) async {
+  testWidgets('leaves imageBuilder null when none is supplied', (tester) async {
     await tester.pumpWidget(
       wrap(const DefaultCachedNetworkImage(imageUrl: 'https://x.test/a.png')),
     );

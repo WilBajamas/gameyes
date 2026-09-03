@@ -4,7 +4,7 @@ Developer get mockDeveloper =>
     const Developer(id: 7, name: 'test mock developer name');
 
 List<Developer> get mockListDeveloper => [
-      mockDeveloper,
-      mockDeveloper,
-      mockDeveloper,
-    ];
+  mockDeveloper,
+  mockDeveloper,
+  mockDeveloper,
+];

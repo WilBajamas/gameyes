@@ -4,7 +4,5 @@ part 'game_keyword_entity.freezed.dart';
 
 @freezed
 sealed class GameKeywordEntity with _$GameKeywordEntity {
-  const factory GameKeywordEntity({
-    required String name,
-  }) = _GameKeywordEntity;
+  const factory GameKeywordEntity({required String name}) = _GameKeywordEntity;
 }

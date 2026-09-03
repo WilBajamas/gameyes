@@ -20,9 +20,9 @@ sealed class GamesModel with _$GamesModel {
       _$GamesModelFromJson(json);
 
   GameListEntity toEntity() => GameListEntity(
-        totalCount: count,
-        currentPage: currentPage,
-        nextUrl: next,
-        items: results?.map((e) => e.toEntity()).toList() ?? [],
-      );
+    totalCount: count,
+    currentPage: currentPage,
+    nextUrl: next,
+    items: results?.map((e) => e.toEntity()).toList() ?? [],
+  );
 }

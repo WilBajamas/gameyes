@@ -9,8 +9,6 @@ class GetCriticsChoiceUseCase {
 
   GetCriticsChoiceUseCase(this._repository);
 
-  Future<Result<List<GameEntity>>> call(
-    List<int> genrePreferences,
-  ) async =>
+  Future<Result<List<GameEntity>>> call(List<int> genrePreferences) async =>
       _repository.getCriticsChoiceGames(genrePreferences);
 }

@@ -21,24 +21,18 @@ class PlatformRowList extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemCount: _itemCountAndRemaining.$1,
       physics: const NeverScrollableScrollPhysics(),
-      separatorBuilder: (_, index) => const SizedBox(
-        width: 2,
-      ),
+      separatorBuilder: (_, index) => const SizedBox(width: 2),
       itemBuilder: (context, index) {
         final remainingItemsCount = platforms.length - showMax;
 
         return index == showMax && remainingItemsCount > 0
             ? Text(
                 '+${_itemCountAndRemaining.$2}',
-                style: const TextStyle(
-                  fontSize: 12,
-                ),
+                style: const TextStyle(fontSize: 12),
               )
             : platforms[index].platformLogo?.url != null
-                ? Image.network(
-                    platforms[index].platformLogo!.url!,
-                  )
-                : const SizedBox.shrink();
+            ? Image.network(platforms[index].platformLogo!.url!)
+            : const SizedBox.shrink();
       },
     );
   }

@@ -13,8 +13,8 @@ class GameDetailCubit extends Cubit<GameDetailState> {
   GameDetailCubit({
     @factoryParam required int id,
     required GameDetailRepository gameDetailRepository,
-  })  : _gameDetailRepository = gameDetailRepository,
-        super(const GameDetailState()) {
+  }) : _gameDetailRepository = gameDetailRepository,
+       super(const GameDetailState()) {
     fetchGameDetail(id: id);
   }
 
@@ -28,10 +28,7 @@ class GameDetailCubit extends Cubit<GameDetailState> {
     switch (result) {
       case Success(value: final gameEntity):
         emit(
-          state.copyWith(
-            status: GameDetailStatus.success,
-            game: gameEntity,
-          ),
+          state.copyWith(status: GameDetailStatus.success, game: gameEntity),
         );
 
         getSavedGame(gameId: gameEntity.id);
@@ -40,11 +37,8 @@ class GameDetailCubit extends Cubit<GameDetailState> {
     }
   }
 
-  void get expandContent => emit(
-        state.copyWith(
-          contentExpanded: !state.contentExpanded,
-        ),
-      );
+  void get expandContent =>
+      emit(state.copyWith(contentExpanded: !state.contentExpanded));
 
   Future<void> getSavedGame({required int gameId}) async {
     final saved = await _gameDetailRepository.getSavedGame(id: gameId);
@@ -70,12 +64,14 @@ class GameDetailCubit extends Cubit<GameDetailState> {
       ..imageUrl = state.game?.imageUrl
       ..dateSaved = DateTime.now()
       ..availablePlatforms = state.game?.platforms
-          ?.map((p) => SavedGamePlatform(
-                id: p.id,
-                name: p.name,
-                abbreviation: p.abbreviation,
-                logoUrl: p.platformLogo?.url,
-              ))
+          ?.map(
+            (p) => SavedGamePlatform(
+              id: p.id,
+              name: p.name,
+              abbreviation: p.abbreviation,
+              logoUrl: p.platformLogo?.url,
+            ),
+          )
           .toList();
 
     _gameDetailRepository

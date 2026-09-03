@@ -19,11 +19,7 @@ enum GameGenre implements EnumSelection {
   final String slug;
   final String name;
 
-  const GameGenre({
-    required this.id,
-    required this.slug,
-    required this.name,
-  });
+  const GameGenre({required this.id, required this.slug, required this.name});
 
   @override
   String get valueName => name;

@@ -22,10 +22,7 @@ class DefaultAlertDialog extends StatelessWidget {
     return AlertDialog(
       title: Text(title),
       content: description != null
-          ? Text(
-              description!,
-              style: context.themeData.textTheme.bodySmall,
-            )
+          ? Text(description!, style: context.themeData.textTheme.bodySmall)
           : null,
       actions: [
         TextButton(
@@ -36,9 +33,7 @@ class DefaultAlertDialog extends StatelessWidget {
           },
         ),
         TextButton(
-          child: Text(
-            S.current.cancel,
-          ),
+          child: Text(S.current.cancel),
           onPressed: () {
             if (onNegativePressed case final pressed?) pressed();
             Navigator.pop(context);

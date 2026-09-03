@@ -25,27 +25,32 @@ void main() {
     reset(authRepository);
   });
 
-  test('should hand back the repository stream untouched when called',
-      () async {
-    final source = Stream<AuthStatusEntity>.fromIterable([
-      mockSignedOutStatus,
-      mockDiscordSignedInStatus,
-    ]);
-    when(authRepository.authStatusChanges).thenAnswer((_) => source);
+  test(
+    'should hand back the repository stream untouched when called',
+    () async {
+      final source = Stream<AuthStatusEntity>.fromIterable([
+        mockSignedOutStatus,
+        mockDiscordSignedInStatus,
+      ]);
+      when(authRepository.authStatusChanges).thenAnswer((_) => source);
 
-    final emitted = await observeAuthStatusUseCase().toList();
+      final emitted = await observeAuthStatusUseCase().toList();
 
-    verify(authRepository.authStatusChanges);
-    expect(emitted, [mockSignedOutStatus, mockDiscordSignedInStatus]);
-  });
+      verify(authRepository.authStatusChanges);
+      expect(emitted, [mockSignedOutStatus, mockDiscordSignedInStatus]);
+    },
+  );
 
-  test('should emit nothing extra when the repository stream is empty',
-      () async {
-    when(authRepository.authStatusChanges)
-        .thenAnswer((_) => const Stream<AuthStatusEntity>.empty());
+  test(
+    'should emit nothing extra when the repository stream is empty',
+    () async {
+      when(
+        authRepository.authStatusChanges,
+      ).thenAnswer((_) => const Stream<AuthStatusEntity>.empty());
 
-    final emitted = await observeAuthStatusUseCase().toList();
+      final emitted = await observeAuthStatusUseCase().toList();
 
-    expect(emitted, isEmpty);
-  });
+      expect(emitted, isEmpty);
+    },
+  );
 }

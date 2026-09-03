@@ -22,7 +22,8 @@ class FakeGetGenrePreferencesUseCase extends GetGenrePreferencesUseCase {
   Future<Result<GenrePreferencesEntity>> call() async {
     if (error != null) return Failure(error!);
     return Success(
-        prefs ?? GenrePreferencesEntity(genreIds: [], isSkipped: false));
+      prefs ?? GenrePreferencesEntity(genreIds: [], isSkipped: false),
+    );
   }
 }
 
@@ -49,8 +50,10 @@ class FakeSaveGenrePreferencesUseCase extends SaveGenrePreferencesUseCase {
   FakeSaveGenrePreferencesUseCase() : super(FakeFeaturedRepository());
 
   @override
-  Future<Result<void>> call(List<int> genreIds,
-      {required bool isSkipped}) async {
+  Future<Result<void>> call(
+    List<int> genreIds, {
+    required bool isSkipped,
+  }) async {
     lastGenreIds = genreIds;
     lastIsSkipped = isSkipped;
     if (error != null) return Failure(error!);

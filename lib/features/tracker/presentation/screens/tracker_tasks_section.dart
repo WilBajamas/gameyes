@@ -19,7 +19,7 @@ class TrackerTasksSection extends StatelessWidget {
       builder: (dialogContext) => AddContentDialog(
         dialogTitleAndSnackBarTitle: (
           S.current.add_group_task,
-          S.current.group_task_created
+          S.current.group_task_created,
         ),
         onCreatedClicked: (title, description) => context
             .read<TrackerDetailCubit>()
@@ -47,11 +47,7 @@ class TrackerTasksSection extends StatelessWidget {
                     style: context.themeData.textTheme.bodySmall,
                   ),
                 ),
-              ...groups.map(
-                (group) => GroupTaskItem(
-                  groupTask: group,
-                ),
-              ),
+              ...groups.map((group) => GroupTaskItem(groupTask: group)),
               if (groups.isEmpty || groups.length < 10)
                 Padding(
                   padding: const EdgeInsets.only(top: 12, bottom: 14),
@@ -83,13 +79,8 @@ class _GroupTaskLimitWarning extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.warning,
-            color: kColorScheme.primary,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
+          Icon(Icons.warning, color: kColorScheme.primary),
+          const SizedBox(width: 20),
           Expanded(
             child: Text(
               S.current.only_10_group_tasks_allowed,

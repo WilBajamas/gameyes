@@ -11,10 +11,7 @@ void main() {
   });
 
   test('initial state is empty FilterInitial', () {
-    expect(
-      filterCubit.state,
-      const FilterState(),
-    );
+    expect(filterCubit.state, const FilterState());
     expect(filterCubit.state.ordering, GameOrdering.released);
     expect(filterCubit.state.platforms, []);
   });

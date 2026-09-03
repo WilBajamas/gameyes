@@ -20,8 +20,9 @@ class MetacriticIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color borderColor =
-        score != null ? _criticColor() : context.themeData.colorScheme.primary;
+    final Color borderColor = score != null
+        ? _criticColor()
+        : context.themeData.colorScheme.primary;
 
     return Container(
       decoration: BoxDecoration(

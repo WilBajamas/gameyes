@@ -23,9 +23,7 @@ class GroupTaskItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _TitleAndCheckbox(
-              groupTask: groupTask,
-            ),
+            _TitleAndCheckbox(groupTask: groupTask),
             const SizedBox(height: 4),
             Text(
               groupTask.description ?? '-',
@@ -78,9 +76,9 @@ class _TitleAndCheckbox extends StatelessWidget {
     }
 
     if (selection == S.current.remove) {
-      context
-          .read<TrackerDetailCubit>()
-          .removeGroupTask(groupTaskId: groupTask.id);
+      context.read<TrackerDetailCubit>().removeGroupTask(
+        groupTaskId: groupTask.id,
+      );
     }
   }
 
@@ -94,21 +92,14 @@ class _TitleAndCheckbox extends StatelessWidget {
             style: context.themeData.textTheme.titleMedium,
           ),
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         Text(
           _getTaskCompletion(),
           style: context.themeData.textTheme.titleMedium,
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         DefaultPopUpButton(
-          items: [
-            S.current.add_task,
-            S.current.remove,
-          ],
+          items: [S.current.add_task, S.current.remove],
           onItemClicked: (String selection) =>
               _onPopUpItemClicked(context, selection),
         ),

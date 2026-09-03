@@ -34,8 +34,9 @@ void main() {
   });
 
   test('returns the default when the repository returns the default', () {
-    when(repository.getSortTag())
-        .thenReturn(SavedGameFilterTag.recentlyChanged);
+    when(
+      repository.getSortTag(),
+    ).thenReturn(SavedGameFilterTag.recentlyChanged);
 
     expect(getTrackerSortUseCase(), SavedGameFilterTag.recentlyChanged);
     verify(repository.getSortTag()).called(1);

@@ -23,9 +23,7 @@ class TrackerGameDetailSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: BlocBuilder<TrackerDetailCubit, TrackerDetailState>(
             builder: (context, state) {
-              return _PlatformSelector(
-                game: state.game!,
-              );
+              return _PlatformSelector(game: state.game!);
             },
           ),
         ),
@@ -64,27 +62,45 @@ class _PlatformSelector extends StatelessWidget {
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.topLeft,
-              child: BlocSelector<TrackerDetailCubit, TrackerDetailState,
-                  TrackerSavedGameEntity?>(
-                selector: (state) => state.game,
-                builder: (context, state) {
-                  return Wrap(
-                    spacing: 8,
-                    children: (state?.availablePlatforms ?? []).map(
-                      (platform) {
-                        final selected =
-                            state?.platforms?.any((p) => p.id == platform.id) ??
-                                false;
-                        return ChoiceChip(
-                          label: platform.platformLogo?.url != null
-                              ? Image.network(
-                                  platform.platformLogo!.url!,
-                                  height: 20,
-                                  color: selected
-                                      ? kColorScheme.surface
-                                      : kColorScheme.onSurface,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Text(
+              child:
+                  BlocSelector<
+                    TrackerDetailCubit,
+                    TrackerDetailState,
+                    TrackerSavedGameEntity?
+                  >(
+                    selector: (state) => state.game,
+                    builder: (context, state) {
+                      return Wrap(
+                        spacing: 8,
+                        children: (state?.availablePlatforms ?? []).map((
+                          platform,
+                        ) {
+                          final selected =
+                              state?.platforms?.any(
+                                (p) => p.id == platform.id,
+                              ) ??
+                              false;
+                          return ChoiceChip(
+                            label: platform.platformLogo?.url != null
+                                ? Image.network(
+                                    platform.platformLogo!.url!,
+                                    height: 20,
+                                    color: selected
+                                        ? kColorScheme.surface
+                                        : kColorScheme.onSurface,
+                                    errorBuilder:
+                                        (context, error, stackTrace) => Text(
+                                          platform.abbreviation.isNotEmpty
+                                              ? platform.abbreviation
+                                              : platform.name,
+                                          style: TextStyle(
+                                            color: selected
+                                                ? kColorScheme.surface
+                                                : kColorScheme.onSurface,
+                                          ),
+                                        ),
+                                  )
+                                : Text(
                                     platform.abbreviation.isNotEmpty
                                         ? platform.abbreviation
                                         : platform.name,
@@ -94,29 +110,17 @@ class _PlatformSelector extends StatelessWidget {
                                           : kColorScheme.onSurface,
                                     ),
                                   ),
-                                )
-                              : Text(
-                                  platform.abbreviation.isNotEmpty
-                                      ? platform.abbreviation
-                                      : platform.name,
-                                  style: TextStyle(
-                                    color: selected
-                                        ? kColorScheme.surface
-                                        : kColorScheme.onSurface,
-                                  ),
-                                ),
-                          side: const BorderSide(color: Colors.transparent),
-                          selected: selected,
-                          showCheckmark: false,
-                          onSelected: (selected) => context
-                              .read<TrackerDetailCubit>()
-                              .setPlatform(platform: platform),
-                        );
-                      },
-                    ).toList(),
-                  );
-                },
-              ),
+                            side: const BorderSide(color: Colors.transparent),
+                            selected: selected,
+                            showCheckmark: false,
+                            onSelected: (selected) => context
+                                .read<TrackerDetailCubit>()
+                                .setPlatform(platform: platform),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
             ),
           ],
         ),
@@ -156,10 +160,7 @@ class _TasksPinned extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-                      child: TaskItem(
-                        task: tasks[index],
-                        showGroupTask: true,
-                      ),
+                      child: TaskItem(task: tasks[index], showGroupTask: true),
                     );
                   },
                 ),

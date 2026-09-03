@@ -35,18 +35,9 @@ class GameDetailTopContentShimmer extends StatelessWidget {
             // ** Metacritic score //
             Row(
               children: [
-                const MetacriticIndicator(
-                  score: 10,
-                  size: 60,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Text(
-                    S.current.metacritic_score,
-                  ),
-                ),
+                const MetacriticIndicator(score: 10, size: 60),
+                const SizedBox(width: 10),
+                Expanded(child: Text(S.current.metacritic_score)),
               ],
             ),
           ],

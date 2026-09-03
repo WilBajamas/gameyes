@@ -5,7 +5,7 @@ enum GameOrdering {
   created,
   updated,
   rating,
-  metacritic;
+  metacritic,
 
   // const GameOrdering({});
 }

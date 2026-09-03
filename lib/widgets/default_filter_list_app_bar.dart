@@ -61,8 +61,9 @@ class _DefaultFilterListAppBarState<T>
           splashFactory: NoSplash.splashFactory,
           isScrollable: true,
           dividerColor: Colors.transparent,
-          overlayColor: WidgetStateProperty.resolveWith<Color?>(
-              (Set<WidgetState> states) {
+          overlayColor: WidgetStateProperty.resolveWith<Color?>((
+            Set<WidgetState> states,
+          ) {
             return states.contains(WidgetState.focused)
                 ? null
                 : Colors.transparent;
@@ -85,10 +86,7 @@ class _SelectionChip<T> extends StatelessWidget {
   final (T, String, IconData?) filter;
   final bool isSelected;
 
-  const _SelectionChip({
-    required this.filter,
-    required this.isSelected,
-  });
+  const _SelectionChip({required this.filter, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -121,11 +119,7 @@ class _SelectionChip<T> extends StatelessWidget {
             ),
             if (filter.$3 != null) const SizedBox(width: 8),
             if (filter.$3 != null)
-              Icon(
-                filter.$3,
-                size: 14,
-                color: selectedColor,
-              ),
+              Icon(filter.$3, size: 14, color: selectedColor),
           ],
         ),
       ),

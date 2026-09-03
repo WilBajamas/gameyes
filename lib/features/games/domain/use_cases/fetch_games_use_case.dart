@@ -28,10 +28,10 @@ class FetchGamesUseCase {
 
     final dateRangeQuery =
         (dateFromString.isNotEmpty && dateToString.isNotEmpty)
-            ? '$dateFromString,$dateToString'
-            : dateFromString.isNotEmpty
-                ? dateFromString
-                : dateToString;
+        ? '$dateFromString,$dateToString'
+        : dateFromString.isNotEmpty
+        ? dateFromString
+        : dateToString;
 
     final gameOrderingQuery = ascending ? ordering?.name : '-${ordering?.name}';
 

@@ -5,10 +5,7 @@ part 'genre.g.dart';
 
 @freezed
 sealed class Genre with _$Genre {
-  const factory Genre({
-    int? id,
-    String? name,
-  }) = _Genre;
+  const factory Genre({int? id, String? name}) = _Genre;
 
   factory Genre.fromJson(Map<String, dynamic> json) => _$GenreFromJson(json);
 }

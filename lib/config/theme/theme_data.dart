@@ -9,9 +9,7 @@ final kColorScheme = ColorScheme.fromSeed(
 
 ThemeData buildTheme() {
   //** Base theme*/
-  final baseTheme = ThemeData().copyWith(
-    colorScheme: kColorScheme,
-  );
+  final baseTheme = ThemeData().copyWith(colorScheme: kColorScheme);
 
   final textTheme = GoogleFonts.openSansTextTheme(baseTheme.textTheme).copyWith(
     titleLarge: GoogleFonts.chakraPetch(
@@ -69,33 +67,23 @@ ThemeData buildTheme() {
 
   final filledButtonTheme = FilledButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: WidgetStateProperty.all<Color>(
-        kColorScheme.primary,
-      ),
-      foregroundColor: WidgetStateProperty.all<Color>(
-        kColorScheme.surface,
-      ),
+      backgroundColor: WidgetStateProperty.all<Color>(kColorScheme.primary),
+      foregroundColor: WidgetStateProperty.all<Color>(kColorScheme.surface),
       textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
 
   final elevatedButtonTheme = ElevatedButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: WidgetStateProperty.all<Color>(
-        kColorScheme.primary,
-      ),
-      foregroundColor: WidgetStateProperty.all<Color>(
-        kColorScheme.surface,
-      ),
+      backgroundColor: WidgetStateProperty.all<Color>(kColorScheme.primary),
+      foregroundColor: WidgetStateProperty.all<Color>(kColorScheme.surface),
       textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
   final outlinedButtonTheme = OutlinedButtonThemeData(
     style: const ButtonStyle().copyWith(
       textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
-      side: WidgetStateProperty.all(
-        BorderSide(color: kColorScheme.primary),
-      ),
+      side: WidgetStateProperty.all(BorderSide(color: kColorScheme.primary)),
     ),
   );
 
@@ -108,15 +96,11 @@ ThemeData buildTheme() {
     surfaceTintColor: Colors.white,
   );
 
-  const iconTheme = IconThemeData(
-    color: Colors.white,
-  );
+  const iconTheme = IconThemeData(color: Colors.white);
 
   final iconButtonTheme = IconButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: WidgetStateProperty.all<Color>(
-        Colors.white,
-      ),
+      foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
     ),
   );
 

@@ -19,11 +19,11 @@ class TaskStep {
   String? image;
 
   TrackerTaskStepEntity toEntity() => TrackerTaskStepEntity(
-        id: id,
-        taskId: taskId,
-        number: number,
-        title: title,
-        description: description,
-        image: image,
-      );
+    id: id,
+    taskId: taskId,
+    number: number,
+    title: title,
+    description: description,
+    image: image,
+  );
 }

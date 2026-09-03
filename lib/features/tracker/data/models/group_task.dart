@@ -23,10 +23,10 @@ class GroupTask {
   final savedGame = IsarLink<SavedGame>();
 
   TrackerGroupTaskEntity toEntity() => TrackerGroupTaskEntity(
-        id: id,
-        gameId: gameId,
-        title: title,
-        description: description,
-        tasks: tasks.map((e) => e.toEntity()).toList(),
-      );
+    id: id,
+    gameId: gameId,
+    title: title,
+    description: description,
+    tasks: tasks.map((e) => e.toEntity()).toList(),
+  );
 }

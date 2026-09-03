@@ -18,4 +18,3 @@ sealed class LibraryStatsState with _$LibraryStatsState {
     @Default(0.0) double checklistProgress,
   }) = _LibraryStatsState;
 }
-

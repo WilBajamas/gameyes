@@ -8,17 +8,14 @@ part 'release_date.g.dart';
 sealed class ReleaseDate with _$ReleaseDate {
   const ReleaseDate._();
 
-  const factory ReleaseDate({
-    int? date,
-    String? human,
-    int? category,
-  }) = _ReleaseDate;
+  const factory ReleaseDate({int? date, String? human, int? category}) =
+      _ReleaseDate;
 
   factory ReleaseDate.fromJson(Map<String, dynamic> json) =>
       _$ReleaseDateFromJson(json);
 
   ReleaseDateEntity toEntity() => ReleaseDateEntity(
-        date: DateTime.fromMillisecondsSinceEpoch((date ?? 0) * 1000),
-        human: human ?? '',
-      );
+    date: DateTime.fromMillisecondsSinceEpoch((date ?? 0) * 1000),
+    human: human ?? '',
+  );
 }

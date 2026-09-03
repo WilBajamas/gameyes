@@ -8,14 +8,10 @@ part 'game_keyword.g.dart';
 sealed class GameKeyword with _$GameKeyword {
   const GameKeyword._();
 
-  const factory GameKeyword({
-    String? name,
-  }) = _GameKeyword;
+  const factory GameKeyword({String? name}) = _GameKeyword;
 
   factory GameKeyword.fromJson(Map<String, dynamic> json) =>
       _$GameKeywordFromJson(json);
 
-  GameKeywordEntity toEntity() => GameKeywordEntity(
-        name: name ?? '',
-      );
+  GameKeywordEntity toEntity() => GameKeywordEntity(name: name ?? '');
 }

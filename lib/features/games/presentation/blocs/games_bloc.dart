@@ -47,32 +47,24 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       genres: event.genres ?? state.filterState.genres,
     );
 
-    emit(
-      state.copyWith(
-        status: GamesStatus.loading,
-        filterState: filter,
-      ),
-    );
+    emit(state.copyWith(status: GamesStatus.loading, filterState: filter));
 
-    final result = await _fetchGames(
-      1,
-      filter,
-    );
+    final result = await _fetchGames(1, filter);
 
     final newState = switch (result) {
       Success(value: final response) => state.copyWith(
-          status: response.items.isEmpty
-              ? GamesStatus.empty
-              : GamesStatus.success,
-          response: response,
-          games: response.items,
-          currentPage: 1,
-          filterState: filter,
-        ),
+        status: response.items.isEmpty
+            ? GamesStatus.empty
+            : GamesStatus.success,
+        response: response,
+        games: response.items,
+        currentPage: 1,
+        filterState: filter,
+      ),
       Failure(error: final error) => state.copyWith(
-          status: GamesStatus.failed,
-          error: error,
-        ),
+        status: GamesStatus.failed,
+        error: error,
+      ),
     };
 
     emit(newState);
@@ -84,29 +76,24 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
   ) async {
     const filter = FilterState();
 
-    emit(
-      state.copyWith(
-        status: GamesStatus.loading,
-        filterState: filter,
-      ),
-    );
+    emit(state.copyWith(status: GamesStatus.loading, filterState: filter));
 
     final result = await _fetchGames(1, filter);
 
     final newState = switch (result) {
       Success(value: final response) => state.copyWith(
-          status: response.items.isEmpty
-              ? GamesStatus.empty
-              : GamesStatus.success,
-          response: response,
-          games: response.items,
-          currentPage: 1,
-          filterState: filter,
-        ),
+        status: response.items.isEmpty
+            ? GamesStatus.empty
+            : GamesStatus.success,
+        response: response,
+        games: response.items,
+        currentPage: 1,
+        filterState: filter,
+      ),
       Failure(error: final error) => state.copyWith(
-          status: GamesStatus.failed,
-          error: error,
-        ),
+        status: GamesStatus.failed,
+        error: error,
+      ),
     };
 
     emit(newState);
@@ -122,31 +109,25 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
 
     emit(state.copyWith(nextPageStatus: GamesNextPageStatus.loading));
 
-    final result = await _fetchGames(
-      state.currentPage + 1,
-      state.filterState,
-    );
+    final result = await _fetchGames(state.currentPage + 1, state.filterState);
 
     final newState = switch (result) {
       Success(value: final response) => state.copyWith(
-          nextPageStatus: GamesNextPageStatus.initial,
-          response: response,
-          currentPage: state.currentPage + 1,
-          games: List.of(state.games)..addAll(response.items),
-        ),
+        nextPageStatus: GamesNextPageStatus.initial,
+        response: response,
+        currentPage: state.currentPage + 1,
+        games: List.of(state.games)..addAll(response.items),
+      ),
       Failure(error: final error) => state.copyWith(
-          nextPageError: error,
-          nextPageStatus: GamesNextPageStatus.failed,
-        ),
+        nextPageError: error,
+        nextPageStatus: GamesNextPageStatus.failed,
+      ),
     };
 
     emit(newState);
   }
 
-  Future<Result<GameListEntity>> _fetchGames(
-    int page,
-    FilterState filter,
-  ) =>
+  Future<Result<GameListEntity>> _fetchGames(int page, FilterState filter) =>
       _fetchGamesUseCase(
         page: page,
         searchTerm: filter.searchTerm,

@@ -11,6 +11,5 @@ class SaveGenrePreferencesUseCase {
   Future<Result<void>> call(
     List<int> genreIds, {
     required bool isSkipped,
-  }) async =>
-      _repository.saveGenrePreferences(genreIds, isSkipped);
+  }) async => _repository.saveGenrePreferences(genreIds, isSkipped);
 }

@@ -35,10 +35,7 @@ void main() {
   });
 
   test('initial state is empty GamesState', () {
-    expect(
-      gamesBloc.state.status,
-      GamesStatus.loading,
-    );
+    expect(gamesBloc.state.status, GamesStatus.loading);
   });
 
   blocTest(

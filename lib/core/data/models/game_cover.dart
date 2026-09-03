@@ -7,9 +7,7 @@ part 'game_cover.g.dart';
 
 @freezed
 sealed class GameCover with _$GameCover {
-  const factory GameCover({
-    @JsonKey(name: 'url') String? url,
-  }) = _GameCover;
+  const factory GameCover({@JsonKey(name: 'url') String? url}) = _GameCover;
 
   const GameCover._();
 
@@ -18,4 +16,3 @@ sealed class GameCover with _$GameCover {
 
   GameCoverEntity toEntity() => GameCoverEntity(url: url.toAbsoluteImageUrl());
 }
-

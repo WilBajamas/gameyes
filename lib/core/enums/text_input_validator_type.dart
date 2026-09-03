@@ -1,5 +1,1 @@
-enum TextInputValidatorType {
-  nonEmpty,
-  email,
-  lessCharacters,
-}
+enum TextInputValidatorType { nonEmpty, email, lessCharacters }

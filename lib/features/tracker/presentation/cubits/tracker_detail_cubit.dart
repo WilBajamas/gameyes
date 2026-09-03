@@ -18,8 +18,8 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
   TrackerDetailCubit({
     @factoryParam required TrackerSavedGameEntity game,
     required TrackerDetailRepository trackerDetailRepository,
-  })  : _trackerDetailRepository = trackerDetailRepository,
-        super(const TrackerDetailState()) {
+  }) : _trackerDetailRepository = trackerDetailRepository,
+       super(const TrackerDetailState()) {
     setSavedGame(game: game);
     listenToSavedGame(savedGameId: game.id);
   }
@@ -35,8 +35,10 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
         .where((t) => t.completed == true)
         .length;
 
-    final totalTasks =
-        state.game!.groupTasks.fold(0, (acc, gt) => acc + gt.tasks.length);
+    final totalTasks = state.game!.groupTasks.fold(
+      0,
+      (acc, gt) => acc + gt.tasks.length,
+    );
 
     return totalTasks == 0 ? '-/-' : '$completedTasks/$totalTasks';
   }
@@ -74,9 +76,7 @@ class TrackerDetailCubit extends Cubit<TrackerDetailState> {
     savedGameStreamSubscription?.cancel();
     final stream = _trackerDetailRepository
         .savedGameDetailStream(savedGameId: savedGameId)
-        .listen(
-          (savedGame) => emit(TrackerDetailState(game: savedGame)),
-        );
+        .listen((savedGame) => emit(TrackerDetailState(game: savedGame)));
 
     savedGameStreamSubscription = stream;
   }

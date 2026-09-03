@@ -16,9 +16,7 @@ void main() {
         ),
         child: Scaffold(
           body: CustomScrollView(
-            slivers: [
-              DefaultSliverAppBar(title: 'Browse', subtitle: subtitle),
-            ],
+            slivers: [DefaultSliverAppBar(title: 'Browse', subtitle: subtitle)],
           ),
         ),
       ),

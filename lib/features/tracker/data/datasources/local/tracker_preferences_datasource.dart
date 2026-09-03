@@ -18,10 +18,7 @@ class TrackerPreferencesDatasource {
 
   Future<void> writeSortTagName(String name) async {
     try {
-      await _preferences.setString(
-        StorageConstants.trackerSortTagKey,
-        name,
-      );
+      await _preferences.setString(StorageConstants.trackerSortTagKey, name);
     } catch (_) {
       // Persistence is best-effort; a failed write must not surface an error.
     }

@@ -5,25 +5,15 @@ class GameDetailSectionPoint extends StatelessWidget {
   final String title;
   final String? value;
 
-  const GameDetailSectionPoint({
-    super.key,
-    required this.title,
-    this.value,
-  });
+  const GameDetailSectionPoint({super.key, required this.title, this.value});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: context.themeData.textTheme.bodyMedium!,
-        ),
-        Text(
-          value ?? '-',
-          style: context.themeData.textTheme.bodyLarge,
-        ),
+        Text(title, style: context.themeData.textTheme.bodyMedium!),
+        Text(value ?? '-', style: context.themeData.textTheme.bodyLarge),
       ],
     );
   }

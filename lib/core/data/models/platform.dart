@@ -20,9 +20,9 @@ sealed class Platform with _$Platform {
       _$PlatformFromJson(json);
 
   PlatformEntity toEntity() => PlatformEntity(
-        id: id ?? 0,
-        name: name ?? '',
-        abbreviation: abbreviation ?? '',
-        platformLogo: platformLogo?.toEntity(),
-      );
+    id: id ?? 0,
+    name: name ?? '',
+    abbreviation: abbreviation ?? '',
+    platformLogo: platformLogo?.toEntity(),
+  );
 }

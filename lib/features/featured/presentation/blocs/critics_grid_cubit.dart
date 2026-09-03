@@ -28,8 +28,9 @@ class CriticsGridCubit extends Cubit<CriticsGridState> {
 
     switch (prefsResult) {
       case Success(value: final genrePreferencesEntity):
-        final gamesResult =
-            await _getCriticsChoiceUseCase(genrePreferencesEntity.genreIds);
+        final gamesResult = await _getCriticsChoiceUseCase(
+          genrePreferencesEntity.genreIds,
+        );
 
         switch (gamesResult) {
           case Success(value: final games):
@@ -96,10 +97,7 @@ class CriticsGridCubit extends Cubit<CriticsGridState> {
   }
 
   Future<void> skipGenrePreferences() async {
-    final saveResult = await _saveGenrePreferencesUseCase(
-      [],
-      isSkipped: true,
-    );
+    final saveResult = await _saveGenrePreferencesUseCase([], isSkipped: true);
 
     switch (saveResult) {
       case Success(value: _):

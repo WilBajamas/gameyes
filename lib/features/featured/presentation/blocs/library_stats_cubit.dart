@@ -12,13 +12,10 @@ class LibraryStatsCubit extends Cubit<LibraryStatsState> {
   final GetLibrarySnapshotUseCase _getLibrarySnapshotUseCase;
   final SharedPreferences _sharedPreferences;
 
-  static const String _checklistDismissedKey =
-      'featured_checklist_dismissed';
+  static const String _checklistDismissedKey = 'featured_checklist_dismissed';
 
-  LibraryStatsCubit(
-    this._getLibrarySnapshotUseCase,
-    this._sharedPreferences,
-  ) : super(const LibraryStatsState()) {
+  LibraryStatsCubit(this._getLibrarySnapshotUseCase, this._sharedPreferences)
+    : super(const LibraryStatsState()) {
     final dismissed =
         _sharedPreferences.getBool(_checklistDismissedKey) ?? false;
     emit(state.copyWith(isChecklistDismissed: dismissed));

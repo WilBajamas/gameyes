@@ -36,8 +36,9 @@ void main() {
   });
 
   test('should pass the failure through when the repository fails', () async {
-    when(authRepository.signOut())
-        .thenAnswer((_) async => Failure(mockResponseError));
+    when(
+      authRepository.signOut(),
+    ).thenAnswer((_) async => Failure(mockResponseError));
 
     final result = await signOutUseCase();
 

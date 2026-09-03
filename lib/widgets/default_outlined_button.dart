@@ -20,13 +20,7 @@ class DefaultOutlinedButton extends StatelessWidget {
         onPressed: onPressed,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(text),
-            const SizedBox(
-              width: 12,
-            ),
-            Icon(icon),
-          ],
+          children: [Text(text), const SizedBox(width: 12), Icon(icon)],
         ),
       ),
     );

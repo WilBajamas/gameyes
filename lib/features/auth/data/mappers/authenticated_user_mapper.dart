@@ -10,9 +10,7 @@ extension AuthenticatedUserMapper on User {
       email: email,
       displayName: (details['full_name'] ?? details['name']) as String?,
       avatarUrl: details['avatar_url'] as String?,
-      provider: SignInProvider.fromName(
-        appMetadata['provider'] as String?,
-      ),
+      provider: SignInProvider.fromName(appMetadata['provider'] as String?),
     );
   }
 }

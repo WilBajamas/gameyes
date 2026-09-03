@@ -70,9 +70,7 @@ class _AddContentDialogState extends State<AddContentDialog> {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 LabeledTextField(
                   controller: _titleTextController,
                   label: S.current.title,
@@ -81,9 +79,7 @@ class _AddContentDialogState extends State<AddContentDialog> {
                   maxLength: 30,
                   placeholder: S.current.keep_it_short,
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 LabeledTextField(
                   controller: _descriptionTextController,
                   label: S.current.description,
@@ -95,22 +91,16 @@ class _AddContentDialogState extends State<AddContentDialog> {
                   enforceMaxLength: true,
                   placeholder: S.current.a_brief_description,
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
-                DefaultFilledButtonFullWidth(
-                  S.current.save,
-                  height: 40,
-                  () {
-                    if (_formKey.currentState!.validate()) {
-                      widget.onCreatedClicked(
-                        _titleTextController.text,
-                        _descriptionTextController.text,
-                      );
-                      context.router.pop();
-                    }
-                  },
-                ),
+                const SizedBox(height: 12),
+                DefaultFilledButtonFullWidth(S.current.save, height: 40, () {
+                  if (_formKey.currentState!.validate()) {
+                    widget.onCreatedClicked(
+                      _titleTextController.text,
+                      _descriptionTextController.text,
+                    );
+                    context.router.pop();
+                  }
+                }),
               ],
             ),
           ),

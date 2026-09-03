@@ -40,9 +40,9 @@ class _FilterlistAppBarState<T> extends State<FilterlistAppBar<T>> {
   @override
   Widget build(BuildContext context) {
     bool isItemSelected(int index) => switch ((index, _selectedTag)) {
-          (0, null) => true,
-          (_, _) => widget.filterList[index].$1 == _selectedTag,
-        };
+      (0, null) => true,
+      (_, _) => widget.filterList[index].$1 == _selectedTag,
+    };
 
     return SliverAppBar(
       backgroundColor: context.themeData.scaffoldBackgroundColor,
@@ -109,12 +109,7 @@ class _SelectionChip<T> extends StatelessWidget {
             ),
           ),
           if (icon != null) const SizedBox(width: 8),
-          if (icon != null)
-            Icon(
-              icon,
-              size: 14,
-              color: selectedColor,
-            ),
+          if (icon != null) Icon(icon, size: 14, color: selectedColor),
         ],
       ),
       selected: isSelected,

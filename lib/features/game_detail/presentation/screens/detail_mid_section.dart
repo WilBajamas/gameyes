@@ -28,9 +28,9 @@ class DetailMidSection extends StatelessWidget {
             return Center(
               child: ErrorRetryWidget(
                 onRetryClicked: () => gameId != null
-                    ? context
-                        .read<GameDetailCubit>()
-                        .fetchGameDetail(id: gameId!)
+                    ? context.read<GameDetailCubit>().fetchGameDetail(
+                        id: gameId!,
+                      )
                     : null,
               ),
             );

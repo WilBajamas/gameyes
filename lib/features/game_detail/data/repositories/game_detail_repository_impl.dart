@@ -21,9 +21,7 @@ class GameDetailRepositoryImpl
   );
 
   @override
-  Future<Result<GameDetailEntity>> fetchGameDetail({
-    required int id,
-  }) async {
+  Future<Result<GameDetailEntity>> fetchGameDetail({required int id}) async {
     final result = await fetchData<GameDetailModel>(
       apiCall: _gameDetailRemoteDatasource.fetchGameDetail(id: id),
     );

@@ -8,16 +8,10 @@ part 'game_mode.g.dart';
 sealed class GameMode with _$GameMode {
   const GameMode._();
 
-  const factory GameMode({
-    int? id,
-    String? name,
-  }) = _GameMode;
+  const factory GameMode({int? id, String? name}) = _GameMode;
 
   factory GameMode.fromJson(Map<String, dynamic> json) =>
       _$GameModeFromJson(json);
 
-  GameModeEntity toEntity() => GameModeEntity(
-        id: id ?? 0,
-        name: name ?? '',
-      );
+  GameModeEntity toEntity() => GameModeEntity(id: id ?? 0, name: name ?? '');
 }

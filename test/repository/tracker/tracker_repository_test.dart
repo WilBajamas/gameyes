@@ -31,16 +31,18 @@ void main() {
   });
 
   test('getSavedGames returns a list of SavedGame', () async {
-    when(gamesLocalDataSource.getSavedGames())
-        .thenAnswer((_) => Future.value(mockSavedGameList));
+    when(
+      gamesLocalDataSource.getSavedGames(),
+    ).thenAnswer((_) => Future.value(mockSavedGameList));
 
     final savedGames = await trackerRepository.getSavedGames();
     expect(savedGames, equals(mockSavedGameList));
   });
 
   test('getSavedGames returns an empty list', () async {
-    when(gamesLocalDataSource.getSavedGames())
-        .thenAnswer((_) => Future.value([]));
+    when(
+      gamesLocalDataSource.getSavedGames(),
+    ).thenAnswer((_) => Future.value([]));
 
     final savedGames = await trackerRepository.getSavedGames();
 

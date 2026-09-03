@@ -9,7 +9,7 @@ import 'filter_state.dart';
 @injectable
 class FilterCubit extends Cubit<FilterState> {
   FilterCubit({@factoryParam required FilterState initialState})
-      : super(const FilterState()) {
+    : super(const FilterState()) {
     emit(initialState);
   }
 

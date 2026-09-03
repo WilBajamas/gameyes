@@ -27,8 +27,9 @@ void main() {
   });
 
   test('forwards the tag to the repository', () async {
-    when(repository.saveSortTag(SavedGameFilterTag.name))
-        .thenAnswer((_) async {});
+    when(
+      repository.saveSortTag(SavedGameFilterTag.name),
+    ).thenAnswer((_) async {});
 
     await saveTrackerSortUseCase(SavedGameFilterTag.name);
 

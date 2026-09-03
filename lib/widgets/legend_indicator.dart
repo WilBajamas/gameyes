@@ -29,13 +29,8 @@ class LegendIndicator extends StatelessWidget {
             color: color,
           ),
         ),
-        const SizedBox(
-          width: 4,
-        ),
-        Text(
-          text,
-          style: context.themeData.textTheme.bodySmall,
-        ),
+        const SizedBox(width: 4),
+        Text(text, style: context.themeData.textTheme.bodySmall),
       ],
     );
   }

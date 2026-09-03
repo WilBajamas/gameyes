@@ -27,8 +27,7 @@ class GameLocalDatasource {
   Stream<List<SavedGame>> listenToSavedGames(
     SavedGameFilterTag tag,
     String? searchTerm,
-  ) =>
-      _gameLocalStorage.listenToSavedGames(tag, searchTerm);
+  ) => _gameLocalStorage.listenToSavedGames(tag, searchTerm);
 
   Stream<List<SavedGame>> listenToSearchSavedGames(String term) =>
       _gameLocalStorage.listenToSearchSavedGames(term);
@@ -78,30 +77,24 @@ class GameLocalDatasource {
   Future<void> removeGroupTask({
     required int savedGameId,
     required int groupTaskId,
-  }) =>
-      _gameLocalStorage.removeGroupTask(savedGameId, groupTaskId);
+  }) => _gameLocalStorage.removeGroupTask(savedGameId, groupTaskId);
 
   Future<void> createTaskInGroup({
     required int groupTaskId,
     required int savedGameId,
-  }) async =>
-      await _gameLocalStorage.createTaskInGroup(
-        groupTaskId,
-        savedGameId,
-        SavedGameTask()..title = 'New Task',
-      );
+  }) async => await _gameLocalStorage.createTaskInGroup(
+    groupTaskId,
+    savedGameId,
+    SavedGameTask()..title = 'New Task',
+  );
 
-  Future<void> addStep({
-    required int taskId,
-    required TaskStep step,
-  }) async =>
+  Future<void> addStep({required int taskId, required TaskStep step}) async =>
       _gameLocalStorage.addStep(taskId, step);
 
   Future<bool> removeStep({
     required int taskId,
     required TaskStep step,
-  }) async =>
-      _gameLocalStorage.removeStep(taskId, step);
+  }) async => _gameLocalStorage.removeStep(taskId, step);
 
   Future<void> editStep({
     required int taskId,
@@ -122,6 +115,5 @@ class GameLocalDatasource {
   Future<void> changeCurrentStep({
     required int taskId,
     required int stepIndex,
-  }) =>
-      _gameLocalStorage.changeCurrentStep(taskId, stepIndex);
+  }) => _gameLocalStorage.changeCurrentStep(taskId, stepIndex);
 }

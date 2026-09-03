@@ -14,9 +14,5 @@ class PlaySessionLog {
   @Index()
   DateTime? timestamp;
 
-  PlaySessionLog({
-    this.gameId,
-    this.hoursPlayed,
-    this.timestamp,
-  });
+  PlaySessionLog({this.gameId, this.hoursPlayed, this.timestamp});
 }

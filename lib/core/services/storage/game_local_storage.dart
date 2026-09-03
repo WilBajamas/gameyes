@@ -72,8 +72,10 @@ class GameLocalStorageService extends IsarLocalStorageService {
 
   Future<SavedGame?> getGameById(int gameId) async {
     final isar = await dbInstance;
-    final existingGame =
-        await isar.savedGames.filter().gameIdEqualTo(gameId).findFirst();
+    final existingGame = await isar.savedGames
+        .filter()
+        .gameIdEqualTo(gameId)
+        .findFirst();
 
     return existingGame;
   }
@@ -98,26 +100,22 @@ class GameLocalStorageService extends IsarLocalStorageService {
     return await isar.writeTxn(() async => isar.savedGameTasks.get(id));
   }
 
-  Future<void> addPlatform(
-    PlatformEntity platform,
-    SavedGame game,
-  ) async {
+  Future<void> addPlatform(PlatformEntity platform, SavedGame game) async {
     final List<SavedGamePlatform> platforms = game.platforms ?? [];
 
-    platforms.add(SavedGamePlatform(
-      id: platform.id,
-      name: platform.name,
-      abbreviation: platform.abbreviation,
-      logoUrl: platform.platformLogo?.url,
-    ));
+    platforms.add(
+      SavedGamePlatform(
+        id: platform.id,
+        name: platform.name,
+        abbreviation: platform.abbreviation,
+        logoUrl: platform.platformLogo?.url,
+      ),
+    );
     game.platforms = platforms;
     await insertGame(game);
   }
 
-  Future<void> removePlatform(
-    PlatformEntity platform,
-    SavedGame game,
-  ) async {
+  Future<void> removePlatform(PlatformEntity platform, SavedGame game) async {
     game.platforms?.removeWhere((p) => p.id == platform.id);
     await insertGame(game);
   }
@@ -181,10 +179,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
     await insertGame(savedGame!);
   }
 
-  Future<bool> removeStep(
-    int taskId,
-    TaskStep stepToRemove,
-  ) async {
+  Future<bool> removeStep(int taskId, TaskStep stepToRemove) async {
     try {
       final task = await getTask(taskId);
       final savedGameId = task!.groupTask.value!.savedGame.value!.id;
@@ -208,11 +203,7 @@ class GameLocalStorageService extends IsarLocalStorageService {
     return task!.steps!.firstWhere((s) => s.id == stepId);
   }
 
-  Future<void> editStep(
-    int taskId,
-    String stepId,
-    TaskStep stepToEdit,
-  ) async {
+  Future<void> editStep(int taskId, String stepId, TaskStep stepToEdit) async {
     final task = await getTask(taskId);
     final savedGameId = task!.groupTask.value!.savedGame.value!.id;
 

@@ -31,15 +31,15 @@ class TaskDetailScreen extends StatelessWidget {
         builder: (dialogContext) => AddContentDialog(
           dialogTitleAndSnackBarTitle: (
             S.current.add_step,
-            S.current.step_added
+            S.current.step_added,
           ),
           onCreatedClicked: (title, description) =>
               context.read<TaskCubit>().addStep(
-                    taskId: id,
-                    title: title,
-                    description: description,
-                    stepNumber: stepNumber ?? 1,
-                  ),
+                taskId: id,
+                title: title,
+                description: description,
+                stepNumber: stepNumber ?? 1,
+              ),
         ),
       );
     }
@@ -50,10 +50,7 @@ class TaskDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.bookmark),
-          ),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.bookmark)),
         ],
       ),
       body: SafeArea(
@@ -61,50 +58,46 @@ class TaskDetailScreen extends StatelessWidget {
         child: BlocProvider(
           create: (context) => getIt<TaskCubit>(),
           child: SingleChildScrollView(
-
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          child: BlocConsumer<TaskCubit, TaskState>(
-            listener: (context, state) {
-              if (state is RemoveStepFailed || state is RemoveStepSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  DefaultSnackbar(
-                    text: state is RemoveStepSuccess
-                        ? S.current.removed_step
-                        : S.current.remove_step_failed,
-                  ),
-                );
-              }
-            },
-            buildWhen: (previous, current) => previous.task != current.task,
-            builder: (context, state) {
-              final task = state.task!;
-
-              return Column(
-                children: [
-                  _TaskTitle(task: task),
-                  const SizedBox(height: 8),
-                  _TaskDescription(task: task),
-                  // const SizedBox(height: 16),
-                  // _TaskReminder(task: task),
-                  const SizedBox(height: 20),
-                  if (task.steps.isNotEmpty)
-                    _TaskSteps(
-                      task: task,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            child: BlocConsumer<TaskCubit, TaskState>(
+              listener: (context, state) {
+                if (state is RemoveStepFailed || state is RemoveStepSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    DefaultSnackbar(
+                      text: state is RemoveStepSuccess
+                          ? S.current.removed_step
+                          : S.current.remove_step_failed,
                     ),
-                  const SizedBox(height: 20),
-                  DefaultOutlinedButton(
-                    onPressed: () =>
-                        _showAddStepDialog(task.steps.length, context),
-                    text: S.current.add_step,
-                    icon: Icons.add,
-                  ),
-                ],
-              );
-            },
+                  );
+                }
+              },
+              buildWhen: (previous, current) => previous.task != current.task,
+              builder: (context, state) {
+                final task = state.task!;
+
+                return Column(
+                  children: [
+                    _TaskTitle(task: task),
+                    const SizedBox(height: 8),
+                    _TaskDescription(task: task),
+                    // const SizedBox(height: 16),
+                    // _TaskReminder(task: task),
+                    const SizedBox(height: 20),
+                    if (task.steps.isNotEmpty) _TaskSteps(task: task),
+                    const SizedBox(height: 20),
+                    DefaultOutlinedButton(
+                      onPressed: () =>
+                          _showAddStepDialog(task.steps.length, context),
+                      text: S.current.add_step,
+                      icon: Icons.add,
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }
@@ -138,9 +131,7 @@ class _TaskTitleState extends State<_TaskTitle> {
                   enforceMaxLength: true,
                 ),
         ),
-        const SizedBox(
-          width: 8,
-        ),
+        const SizedBox(width: 8),
         IconButton(
           onPressed: () => setState(() => _isEditing = !_isEditing),
           icon: Icon(
@@ -241,10 +232,7 @@ class _TaskReminder extends StatelessWidget {
                     style: context.themeData.textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    'Daily',
-                    style: context.themeData.textTheme.bodySmall,
-                  ),
+                  Text('Daily', style: context.themeData.textTheme.bodySmall),
                 ],
               ),
             ),
@@ -267,9 +255,7 @@ class _TaskSteps extends StatelessWidget {
 
     return Stepper(
       key: Key(steps.length.toString()),
-      connectorColor: WidgetStateProperty.all<Color>(
-        kColorScheme.primary,
-      ),
+      connectorColor: WidgetStateProperty.all<Color>(kColorScheme.primary),
       currentStep: task.currentStepIndex,
       controlsBuilder: (context, controller) {
         return Container();
@@ -313,15 +299,14 @@ class _StepTitle extends StatelessWidget {
     TrackerTaskStepEntity step,
     VoidCallback positiveCallback,
     BuildContext context,
-  ) =>
-      showDialog(
-        context: context,
-        builder: (context) => DefaultAlertDialog(
-          title: '${S.current.remove_step}?',
-          description: S.current.remove_step_desc(step.title!),
-          onPositivePressed: positiveCallback,
-        ),
-      );
+  ) => showDialog(
+    context: context,
+    builder: (context) => DefaultAlertDialog(
+      title: '${S.current.remove_step}?',
+      description: S.current.remove_step_desc(step.title!),
+      onPositivePressed: positiveCallback,
+    ),
+  );
 
   void _showEditStepDialog(TrackerTaskStepEntity step, BuildContext context) =>
       showDialog(
@@ -329,17 +314,17 @@ class _StepTitle extends StatelessWidget {
         builder: (context) => AddContentDialog(
           dialogTitleAndSnackBarTitle: (
             S.current.add_step,
-            S.current.step_added
+            S.current.step_added,
           ),
           titleDescription: (step.title, step.description),
           onCreatedClicked: (title, description) =>
               context.read<TaskCubit>().editStep(
-                    taskId: taskId,
-                    stepId: step.id,
-                    title: title,
-                    description: description,
-                    stepNumber: step.number!,
-                  ),
+                taskId: taskId,
+                stepId: step.id,
+                title: title,
+                description: description,
+                stepNumber: step.number!,
+              ),
         ),
       );
 
@@ -354,10 +339,7 @@ class _StepTitle extends StatelessWidget {
           ),
         ),
         DefaultPopUpButton(
-          items: [
-            S.current.edit,
-            S.current.remove,
-          ],
+          items: [S.current.edit, S.current.remove],
           onItemClicked: (String selection) =>
               _handleOptions(selection, step, context),
         ),

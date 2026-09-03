@@ -9,17 +9,13 @@ part 'screenshot_response_model.g.dart';
 sealed class ScreenshotResponseModel with _$ScreenshotResponseModel {
   const ScreenshotResponseModel._();
 
-  const factory ScreenshotResponseModel({
-    required List<Screenshot> results,
-  }) = _ScreenshotResponseModel;
+  const factory ScreenshotResponseModel({required List<Screenshot> results}) =
+      _ScreenshotResponseModel;
 
   factory ScreenshotResponseModel.fromJson(Map<String, dynamic> json) =>
       _$ScreenshotResponseModelFromJson(json);
 
   GameScreenshotEntity toEntity() => GameScreenshotEntity(
-        imageUrls: results
-            .map((e) => e.image)
-            .whereType<String>()
-            .toList(),
-      );
+    imageUrls: results.map((e) => e.image).whereType<String>().toList(),
+  );
 }

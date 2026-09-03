@@ -21,10 +21,7 @@ class ErrorRetryWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            text ?? S.current.error_results,
-            textAlign: TextAlign.center,
-          ),
+          Text(text ?? S.current.error_results, textAlign: TextAlign.center),
           const SizedBox(height: 12),
           ElevatedButton(
             onPressed: onRetryClicked,

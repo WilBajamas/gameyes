@@ -3,9 +3,9 @@ import 'package:gaming_library_assessment_flutter/features/game_detail/data/mode
 import 'platform_mock.dart';
 
 List<PlatformItem> get mockListPlatformItem => [
-      mockPlatformItem,
-      mockPlatformItem,
-      mockPlatformItem,
-    ];
+  mockPlatformItem,
+  mockPlatformItem,
+  mockPlatformItem,
+];
 
 PlatformItem get mockPlatformItem => PlatformItem(platform: mockPlatform);

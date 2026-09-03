@@ -26,10 +26,7 @@ abstract interface class TrackerDetailRepository {
     required int groupTaskId,
   });
 
-  Future<void> createTask({
-    required int savedGameId,
-    required int groupTaskId,
-  });
+  Future<void> createTask({required int savedGameId, required int groupTaskId});
 
   Future<void> addStep({
     required int taskId,

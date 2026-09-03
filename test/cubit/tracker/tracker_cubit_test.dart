@@ -37,11 +37,8 @@ void main() {
     }
   }
 
-  TrackerCubit buildCubit() => TrackerCubit(
-        repository,
-        saveTrackerSortUseCase,
-        getTrackerSortUseCase,
-      );
+  TrackerCubit buildCubit() =>
+      TrackerCubit(repository, saveTrackerSortUseCase, getTrackerSortUseCase);
 
   setUp(() {
     repository = MockTrackerRepository();
@@ -50,8 +47,9 @@ void main() {
 
     GetIt.I.registerSingleton(repository);
 
-    when(getTrackerSortUseCase())
-        .thenReturn(SavedGameFilterTag.recentlyChanged);
+    when(
+      getTrackerSortUseCase(),
+    ).thenReturn(SavedGameFilterTag.recentlyChanged);
     stubSaveSucceeds();
   });
 
@@ -72,8 +70,9 @@ void main() {
   });
 
   test('initial state falls back to the default the use case returns', () {
-    when(getTrackerSortUseCase())
-        .thenReturn(SavedGameFilterTag.recentlyChanged);
+    when(
+      getTrackerSortUseCase(),
+    ).thenReturn(SavedGameFilterTag.recentlyChanged);
 
     final cubit = buildCubit();
 
@@ -131,17 +130,15 @@ void main() {
       cubit.setSearchTerm('doom');
       cubit.setSearchTerm(null);
     },
-    expect: () => const [
-      TrackerState(searchTerm: 'doom'),
-      TrackerState(),
-    ],
+    expect: () => const [TrackerState(searchTerm: 'doom'), TrackerState()],
   );
 
   blocTest<TrackerCubit, TrackerState>(
     'a failing save still emits the new sort tag',
     build: () {
-      when(saveTrackerSortUseCase(SavedGameFilterTag.name))
-          .thenAnswer((_) async => Future<void>.error(Exception('write')));
+      when(
+        saveTrackerSortUseCase(SavedGameFilterTag.name),
+      ).thenAnswer((_) async => Future<void>.error(Exception('write')));
 
       return buildCubit();
     },

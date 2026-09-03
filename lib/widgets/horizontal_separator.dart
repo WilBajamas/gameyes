@@ -6,10 +6,6 @@ class HorizontalSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey,
-      width: context.screenWidth,
-      height: 1,
-    );
+    return Container(color: Colors.grey, width: context.screenWidth, height: 1);
   }
 }

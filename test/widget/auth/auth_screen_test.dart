@@ -54,32 +54,29 @@ void main() {
     );
   });
 
-  testWidgets(
-    'locks both actions and shows the active provider spinner while '
-    'signing in',
-    (tester) async {
-      getIt.unregister<SignInCubit>();
-      getIt.registerFactory<SignInCubit>(
-        () => _LoadingSignInCubit(
-          SignInUseCase(repository),
-          SignInProvider.discord,
-        ),
-      );
-      await _pumpAuth(tester, router, settle: false);
+  testWidgets('locks both actions and shows the active provider spinner while '
+      'signing in', (tester) async {
+    getIt.unregister<SignInCubit>();
+    getIt.registerFactory<SignInCubit>(
+      () => _LoadingSignInCubit(
+        SignInUseCase(repository),
+        SignInProvider.discord,
+      ),
+    );
+    await _pumpAuth(tester, router, settle: false);
 
-      expect(find.text(S.current.continue_with_discord), findsOneWidget);
-      expect(find.text(S.current.continue_with_google), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.text(S.current.continue_with_discord), findsOneWidget);
+    expect(find.text(S.current.continue_with_google), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-      await tester.tap(
-        find.text(S.current.continue_with_google),
-        warnIfMissed: false,
-      );
-      await tester.pump();
+    await tester.tap(
+      find.text(S.current.continue_with_google),
+      warnIfMissed: false,
+    );
+    await tester.pump();
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    },
-  );
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
 
   testWidgets('shows provider failures inline and remains retryable', (
     tester,

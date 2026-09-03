@@ -3,9 +3,9 @@ import 'package:gaming_library_assessment_flutter/features/games/presentation/bl
 import 'game_response_mock.dart';
 
 GamesState get mockExistingGamesState => GamesState(
-      status: GamesStatus.success,
-      response: mockGamesResponse.toEntity(),
-      games: mockGamesResponse.toEntity().items,
-    );
+  status: GamesStatus.success,
+  response: mockGamesResponse.toEntity(),
+  games: mockGamesResponse.toEntity().items,
+);
 
 GamesState get mockInitialGamesState => const GamesState();

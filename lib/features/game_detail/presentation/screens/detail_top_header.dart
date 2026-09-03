@@ -33,9 +33,9 @@ class DetailTopHeader extends StatelessWidget {
             return Center(
               child: ErrorRetryWidget(
                 onRetryClicked: () => gameId != null
-                    ? context
-                        .read<GameDetailCubit>()
-                        .fetchGameDetail(id: gameId!)
+                    ? context.read<GameDetailCubit>().fetchGameDetail(
+                        id: gameId!,
+                      )
                     : null,
               ),
             );
@@ -43,9 +43,7 @@ class DetailTopHeader extends StatelessWidget {
 
           return Stack(
             children: [
-              DetailBackground(
-                backgroundImage: state.game?.additionalImageUrl,
-              ),
+              DetailBackground(backgroundImage: state.game?.additionalImageUrl),
               Container(
                 padding: const EdgeInsets.fromLTRB(16, kToolbarHeight, 16, 16),
                 width: context.screenWidth,
@@ -67,9 +65,7 @@ class DetailTopHeader extends StatelessWidget {
 
                           // ** Details //
                           if (state.status == GameDetailStatus.success)
-                            DetailContent(
-                              state: state,
-                            ),
+                            DetailContent(state: state),
 
                           if (state.status == GameDetailStatus.loading)
                             const GameDetailTopContentShimmer(),
@@ -105,9 +101,7 @@ class DetailContent extends StatelessWidget {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: context.themeData.textTheme.displayMedium!.merge(
-              const TextStyle(
-                color: Colors.white,
-              ),
+              const TextStyle(color: Colors.white),
             ),
           ),
           const SizedBox(height: 8),
@@ -115,33 +109,28 @@ class DetailContent extends StatelessWidget {
           AutoSizeText(
             '${S.current.release_date}:',
             maxLines: 1,
-            style: context.themeData.textTheme.titleMedium!
-                .copyWith(color: Colors.white),
+            style: context.themeData.textTheme.titleMedium!.copyWith(
+              color: Colors.white,
+            ),
           ),
           AutoSizeText(
             state.game?.releaseDate?.stringToDateString() ?? '-',
             maxLines: 2,
-            style: context.themeData.textTheme.bodyLarge!
-                .copyWith(color: Colors.white),
+            style: context.themeData.textTheme.bodyLarge!.copyWith(
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: 16),
           // ** Metacritic score //
           Row(
             children: [
-              MetacriticIndicator(
-                score: state.game?.metacritic,
-                size: 60,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
+              MetacriticIndicator(score: state.game?.metacritic, size: 60),
+              const SizedBox(width: 10),
               Expanded(
                 child: AutoSizeText(
                   S.current.metacritic_score,
                   maxLines: 2,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],
@@ -197,10 +186,7 @@ class DetailImage extends StatelessWidget {
 class DetailBackground extends StatelessWidget {
   final String? backgroundImage;
 
-  const DetailBackground({
-    super.key,
-    this.backgroundImage,
-  });
+  const DetailBackground({super.key, this.backgroundImage});
 
   @override
   Widget build(BuildContext context) {

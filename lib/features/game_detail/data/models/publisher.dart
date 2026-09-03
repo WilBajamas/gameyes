@@ -5,10 +5,7 @@ part 'publisher.g.dart';
 
 @freezed
 sealed class Publisher with _$Publisher {
-  const factory Publisher({
-    int? id,
-    String? name,
-  }) = _Publisher;
+  const factory Publisher({int? id, String? name}) = _Publisher;
 
   factory Publisher.fromJson(Map<String, dynamic> json) =>
       _$PublisherFromJson(json);

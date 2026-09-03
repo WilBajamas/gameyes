@@ -28,8 +28,9 @@ void main() {
   });
 
   test('should ask the repository to sign in when Discord is chosen', () async {
-    when(authRepository.signIn(SignInProvider.discord))
-        .thenAnswer((_) async => const Success(null));
+    when(
+      authRepository.signIn(SignInProvider.discord),
+    ).thenAnswer((_) async => const Success(null));
 
     final result = await signInUseCase(SignInProvider.discord);
 
@@ -38,8 +39,9 @@ void main() {
   });
 
   test('should ask the repository to sign in when Google is chosen', () async {
-    when(authRepository.signIn(SignInProvider.google))
-        .thenAnswer((_) async => const Success(null));
+    when(
+      authRepository.signIn(SignInProvider.google),
+    ).thenAnswer((_) async => const Success(null));
 
     final result = await signInUseCase(SignInProvider.google);
 
@@ -48,8 +50,9 @@ void main() {
   });
 
   test('should pass the failure through when the repository fails', () async {
-    when(authRepository.signIn(SignInProvider.discord))
-        .thenAnswer((_) async => Failure(mockSignInCancelledError));
+    when(
+      authRepository.signIn(SignInProvider.discord),
+    ).thenAnswer((_) async => Failure(mockSignInCancelledError));
 
     final result = await signInUseCase(SignInProvider.discord);
 

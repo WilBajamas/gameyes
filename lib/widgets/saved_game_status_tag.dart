@@ -23,13 +23,13 @@ class SavedGameStatusTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String tagTitle() => switch (status) {
-          Status.completed => S.current.completed,
-          Status.onHold => S.current.onHold,
-          Status.toBuy => S.current.toBuy,
-          Status.ragedQuit => S.current.rageQuit,
-          Status.inProgress => S.current.inProgress,
-          Status.notStarted => S.current.not_started,
-        };
+      Status.completed => S.current.completed,
+      Status.onHold => S.current.onHold,
+      Status.toBuy => S.current.toBuy,
+      Status.ragedQuit => S.current.rageQuit,
+      Status.inProgress => S.current.inProgress,
+      Status.notStarted => S.current.not_started,
+    };
 
     return Container(
       height: 20,
@@ -38,9 +38,7 @@ class SavedGameStatusTag extends StatelessWidget {
         color: status.color,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      child: Center(
-        child: AutoSizeText(tagTitle()),
-      ),
+      child: Center(child: AutoSizeText(tagTitle())),
     );
   }
 }

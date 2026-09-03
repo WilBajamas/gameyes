@@ -28,12 +28,12 @@ sealed class GameDetailModel with _$GameDetailModel {
       _$GameDetailModelFromJson(json);
 
   GameDetailEntity toEntity() => GameDetailEntity(
-        id: id ?? 0,
-        name: name ?? 'Unknown',
-        description: summary,
-        imageUrl: cover?.url,
-        platforms: platforms?.map((p) => p.toEntity()).toList(),
-        genres: [],
-        developers: [],
-      );
+    id: id ?? 0,
+    name: name ?? 'Unknown',
+    description: summary,
+    imageUrl: cover?.url,
+    platforms: platforms?.map((p) => p.toEntity()).toList(),
+    genres: [],
+    developers: [],
+  );
 }

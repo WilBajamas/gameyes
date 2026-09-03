@@ -6,9 +6,7 @@ part 'platform_item.g.dart';
 
 @freezed
 sealed class PlatformItem with _$PlatformItem {
-  const factory PlatformItem({
-    Platform? platform,
-  }) = _PlatformItem;
+  const factory PlatformItem({Platform? platform}) = _PlatformItem;
 
   factory PlatformItem.fromJson(Map<String, dynamic> json) =>
       _$PlatformItemFromJson(json);

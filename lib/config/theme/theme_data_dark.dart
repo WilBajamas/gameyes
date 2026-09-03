@@ -25,18 +25,12 @@ final kDarkColorScheme = ColorScheme.fromSeed(
 
 ThemeData buildDarkTheme() {
   //** Base theme*/
-  final baseTheme = ThemeData().copyWith(
-    colorScheme: kDarkColorScheme,
-  );
+  final baseTheme = ThemeData().copyWith(colorScheme: kDarkColorScheme);
 
   final filledButtonTheme = FilledButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: WidgetStateProperty.all<Color>(
-        _colors.accentIndigo,
-      ),
-      foregroundColor: WidgetStateProperty.all<Color>(
-        _colors.ink,
-      ),
+      backgroundColor: WidgetStateProperty.all<Color>(_colors.accentIndigo),
+      foregroundColor: WidgetStateProperty.all<Color>(_colors.ink),
     ),
   );
 
@@ -60,25 +54,17 @@ ThemeData buildDarkTheme() {
 
   final elevatedButtonTheme = ElevatedButtonThemeData(
     style: const ButtonStyle().copyWith(
-      backgroundColor: WidgetStateProperty.all<Color>(
-        _colors.accentIndigo,
-      ),
-      foregroundColor: WidgetStateProperty.all<Color>(
-        _colors.ink,
-      ),
+      backgroundColor: WidgetStateProperty.all<Color>(_colors.accentIndigo),
+      foregroundColor: WidgetStateProperty.all<Color>(_colors.ink),
       textStyle: WidgetStateProperty.all<TextStyle?>(textTheme.bodyLarge),
     ),
   );
 
-  final iconTheme = IconThemeData(
-    color: _colors.ink,
-  );
+  final iconTheme = IconThemeData(color: _colors.ink);
 
   final iconButtonTheme = IconButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: WidgetStateProperty.all<Color>(
-        _colors.ink,
-      ),
+      foregroundColor: WidgetStateProperty.all<Color>(_colors.ink),
     ),
   );
 
@@ -98,9 +84,7 @@ ThemeData buildDarkTheme() {
     ),
     labelStyle: textTheme.bodyMedium,
     suffixIconColor: _colors.ink55,
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(_radius.sm),
-    ),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(_radius.sm)),
   );
 
   final appBarTheme = const AppBarTheme().copyWith(

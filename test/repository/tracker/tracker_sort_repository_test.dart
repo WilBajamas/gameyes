@@ -69,8 +69,9 @@ void main() {
   });
 
   test('saveSortTag forwards the tag name to the datasource', () async {
-    when(datasource.writeSortTagName(SavedGameFilterTag.date.name))
-        .thenAnswer((_) async {});
+    when(
+      datasource.writeSortTagName(SavedGameFilterTag.date.name),
+    ).thenAnswer((_) async {});
 
     await trackerSortRepository.saveSortTag(SavedGameFilterTag.date);
 

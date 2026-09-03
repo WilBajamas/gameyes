@@ -34,12 +34,22 @@ class GamePlatform extends Equatable implements EnumSelection {
 
 class Playseason5 extends GamePlatform {
   const Playseason5()
-      : super(id: 187, name: 'Playstation 5', slug: 'playstation5', ids: const [167]);
+    : super(
+        id: 187,
+        name: 'Playstation 5',
+        slug: 'playstation5',
+        ids: const [167],
+      );
 }
 
 class Playseason4 extends GamePlatform {
   const Playseason4()
-      : super(id: 18, name: 'Playstation 4', slug: 'playstation4', ids: const [48]);
+    : super(
+        id: 18,
+        name: 'Playstation 4',
+        slug: 'playstation4',
+        ids: const [48],
+      );
 }
 
 class PcPlatform extends GamePlatform {
@@ -47,17 +57,28 @@ class PcPlatform extends GamePlatform {
 }
 
 class XboxOnePlatform extends GamePlatform {
-  const XboxOnePlatform() : super(id: 1, name: 'Xbox One', slug: 'xbox-one', ids: const [49]);
+  const XboxOnePlatform()
+    : super(id: 1, name: 'Xbox One', slug: 'xbox-one', ids: const [49]);
 }
 
 class XboxSeriesPlatform extends GamePlatform {
   const XboxSeriesPlatform()
-      : super(id: 186, name: 'Xbox Series S/X', slug: 'xbox-series-x', ids: const [169]);
+    : super(
+        id: 186,
+        name: 'Xbox Series S/X',
+        slug: 'xbox-series-x',
+        ids: const [169],
+      );
 }
 
 class NintendoSwitchPlatform extends GamePlatform {
   const NintendoSwitchPlatform()
-      : super(id: 7, name: 'Nintendo Switch', slug: 'nintendo-switch', ids: const [130]);
+    : super(
+        id: 7,
+        name: 'Nintendo Switch',
+        slug: 'nintendo-switch',
+        ids: const [130],
+      );
 }
 
 class WiiPlatform extends GamePlatform {
@@ -65,6 +86,6 @@ class WiiPlatform extends GamePlatform {
 }
 
 class WiiUPlatform extends GamePlatform {
-  const WiiUPlatform() : super(id: 10, name: 'Wii U', slug: 'wii-u', ids: const [41]);
+  const WiiUPlatform()
+    : super(id: 10, name: 'Wii U', slug: 'wii-u', ids: const [41]);
 }
-

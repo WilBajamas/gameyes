@@ -31,68 +31,69 @@ void main() {
   });
 
   test(
-      // ignore: lines_longer_than_80_chars
-      'fetchGamesUsecase call function onSuccess callback should have been called when repository fetch is successful',
-      () async {
-    when(
-      gamesRepository.fetchGames(
-        page: 1,
-        searchTerm: anyNamed('searchTerm'),
-        dateRange: anyNamed('dateRange'),
-        platforms: anyNamed('platforms'),
-        genres: anyNamed('genres'),
-        ordering: anyNamed('ordering'),
-      ),
-    ).thenAnswer((_) async => Success(mockGamesResponse.toEntity()));
+    // ignore: lines_longer_than_80_chars
+    'fetchGamesUsecase call function onSuccess callback should have been called when repository fetch is successful',
+    () async {
+      when(
+        gamesRepository.fetchGames(
+          page: 1,
+          searchTerm: anyNamed('searchTerm'),
+          dateRange: anyNamed('dateRange'),
+          platforms: anyNamed('platforms'),
+          genres: anyNamed('genres'),
+          ordering: anyNamed('ordering'),
+        ),
+      ).thenAnswer((_) async => Success(mockGamesResponse.toEntity()));
 
-    final result = await fetchGamesUsecase.call(
-      page: 1,
-    );
+      final result = await fetchGamesUsecase.call(page: 1);
 
-    expect(result, isA<Success<GameListEntity>>());
-    expect((result as Success<GameListEntity>).value, mockGamesResponse.toEntity());
-    verify(
-      gamesRepository.fetchGames(
-        page: 1,
-        searchTerm: anyNamed('searchTerm'),
-        dateRange: anyNamed('dateRange'),
-        platforms: anyNamed('platforms'),
-        genres: anyNamed('genres'),
-        ordering: anyNamed('ordering'),
-      ),
-    );
-  });
+      expect(result, isA<Success<GameListEntity>>());
+      expect(
+        (result as Success<GameListEntity>).value,
+        mockGamesResponse.toEntity(),
+      );
+      verify(
+        gamesRepository.fetchGames(
+          page: 1,
+          searchTerm: anyNamed('searchTerm'),
+          dateRange: anyNamed('dateRange'),
+          platforms: anyNamed('platforms'),
+          genres: anyNamed('genres'),
+          ordering: anyNamed('ordering'),
+        ),
+      );
+    },
+  );
 
   test(
-      // ignore: lines_longer_than_80_chars
-      'fetchGamesUsecase call function onFailure callback should have been called when repository fetch has failed',
-      () async {
-    when(
-      gamesRepository.fetchGames(
-        page: 1,
-        searchTerm: anyNamed('searchTerm'),
-        dateRange: anyNamed('dateRange'),
-        platforms: anyNamed('platforms'),
-        genres: anyNamed('genres'),
-        ordering: anyNamed('ordering'),
-      ),
-    ).thenAnswer((_) async => Failure(mockResponseError));
+    // ignore: lines_longer_than_80_chars
+    'fetchGamesUsecase call function onFailure callback should have been called when repository fetch has failed',
+    () async {
+      when(
+        gamesRepository.fetchGames(
+          page: 1,
+          searchTerm: anyNamed('searchTerm'),
+          dateRange: anyNamed('dateRange'),
+          platforms: anyNamed('platforms'),
+          genres: anyNamed('genres'),
+          ordering: anyNamed('ordering'),
+        ),
+      ).thenAnswer((_) async => Failure(mockResponseError));
 
-    final result = await fetchGamesUsecase.call(
-      page: 1,
-    );
+      final result = await fetchGamesUsecase.call(page: 1);
 
-    expect(result, isA<Failure<GameListEntity>>());
-    expect((result as Failure<GameListEntity>).error, mockResponseError);
-    verify(
-      gamesRepository.fetchGames(
-        page: 1,
-        searchTerm: anyNamed('searchTerm'),
-        dateRange: anyNamed('dateRange'),
-        platforms: anyNamed('platforms'),
-        genres: anyNamed('genres'),
-        ordering: anyNamed('ordering'),
-      ),
-    );
-  });
+      expect(result, isA<Failure<GameListEntity>>());
+      expect((result as Failure<GameListEntity>).error, mockResponseError);
+      verify(
+        gamesRepository.fetchGames(
+          page: 1,
+          searchTerm: anyNamed('searchTerm'),
+          dateRange: anyNamed('dateRange'),
+          platforms: anyNamed('platforms'),
+          genres: anyNamed('genres'),
+          ordering: anyNamed('ordering'),
+        ),
+      );
+    },
+  );
 }

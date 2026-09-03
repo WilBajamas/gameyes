@@ -34,10 +34,7 @@ void main() {
   });
 
   test('initial state is empty GameDetailState', () {
-    expect(
-      gameDetailCubit.state,
-      const GameDetailState(),
-    );
+    expect(gameDetailCubit.state, const GameDetailState());
   });
 
   blocTest(
@@ -45,15 +42,11 @@ void main() {
     'emits GameDetailState with loading then GameDetailState with success when fetchGameDetail is called',
     setUp: () {
       when(
-        gameDetailRepository.fetchGameDetail(
-          id: 1,
-        ),
+        gameDetailRepository.fetchGameDetail(id: 1),
       ).thenAnswer((_) async => Success(mockGameDetailResponse.toEntity()));
     },
     build: () => gameDetailCubit,
-    act: (cubit) async => gameDetailCubit.fetchGameDetail(
-      id: 1,
-    ),
+    act: (cubit) async => gameDetailCubit.fetchGameDetail(id: 1),
     expect: () => [
       const GameDetailState(status: GameDetailStatus.loading),
       GameDetailState(
@@ -68,15 +61,11 @@ void main() {
     'emits GameDetailState with loading then GameDetailState with failure when fetchGameDetail is called',
     setUp: () {
       when(
-        gameDetailRepository.fetchGameDetail(
-          id: 1,
-        ),
+        gameDetailRepository.fetchGameDetail(id: 1),
       ).thenAnswer((_) async => Failure(mockResponseError));
     },
     build: () => gameDetailCubit,
-    act: (cubit) async => gameDetailCubit.fetchGameDetail(
-      id: 1,
-    ),
+    act: (cubit) async => gameDetailCubit.fetchGameDetail(id: 1),
     expect: () => [
       const GameDetailState(status: GameDetailStatus.loading),
       GameDetailState(

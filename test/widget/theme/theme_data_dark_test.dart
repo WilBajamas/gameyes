@@ -230,9 +230,11 @@ void main() {
 }
 
 Future<({ThemeData light, ThemeData dark})> _buildThemes() async {
-  final future =
-      runZonedGuarded<Future<({ThemeData light, ThemeData dark})>>(() async {
-        return (light: buildTheme(), dark: buildDarkTheme());
-      }, (error, stack) {});
+  final future = runZonedGuarded<Future<({ThemeData light, ThemeData dark})>>(
+    () async {
+      return (light: buildTheme(), dark: buildDarkTheme());
+    },
+    (error, stack) {},
+  );
   return await future!;
 }
