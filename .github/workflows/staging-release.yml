@@ -9,6 +9,11 @@ on:
         description: Notes shown to testers in Firebase
         required: false
         type: string
+      skip_tests:
+        description: Skip the tests (only to check the pipeline itself works)
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   release:
@@ -27,7 +32,9 @@ jobs:
           supabase-url: ${{ secrets.SUPABASE_URL }}
           supabase-anon-key: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      - run: flutter test
+      - name: Run tests
+        if: ${{ !inputs.skip_tests }}
+        run: flutter test
 
       - uses: ./.github/actions/android-signing
         with:
